@@ -13,8 +13,17 @@ import (
 type ListSalesQuotationRequest struct {
 	Ctx context.Context
 }
+
+func NewListSalesQuotationRequest(ctx context.Context) *ListSalesQuotationRequest {
+	return &ListSalesQuotationRequest{Ctx: ctx}
+}
+
 type ListSalesQuotationResponse struct {
 	Payload sale.SalesQuotationSlice
+}
+
+func NewListSalesQuotationResponse(payload sale.SalesQuotationSlice) *ListSalesQuotationResponse {
+	return &ListSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) ListSalesQuotation(req *ListSalesQuotationRequest) (*ListSalesQuotationResponse, error) {
@@ -43,8 +52,17 @@ type PreviewSalesQuotationRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateSalesQuotationDTO
 }
+
+func NewPreviewSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationRequest {
+	return &PreviewSalesQuotationRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewSalesQuotationResponse struct {
 	Payload dto.CreateSalesQuotationDTO
+}
+
+func NewPreviewSalesQuotationResponse(payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationResponse {
+	return &PreviewSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) PreviewSalesQuotation(req *PreviewSalesQuotationRequest) (*PreviewSalesQuotationResponse, error) {
@@ -69,8 +87,17 @@ type SearchSalesQuotationRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchSalesQuotationDTO
 }
+
+func NewSearchSalesQuotationRequest(ctx context.Context, payload dto.SearchSalesQuotationDTO) *SearchSalesQuotationRequest {
+	return &SearchSalesQuotationRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchSalesQuotationResponse struct {
 	Payload sale.SalesQuotationSlice
+}
+
+func NewSearchSalesQuotationResponse(payload sale.SalesQuotationSlice) *SearchSalesQuotationResponse {
+	return &SearchSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) SearchSalesQuotation(req *SearchSalesQuotationRequest) (*SearchSalesQuotationResponse, error) {
@@ -99,8 +126,17 @@ type GetSalesQuotationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetSalesQuotationRequest(ctx context.Context, id int) *GetSalesQuotationRequest {
+	return &GetSalesQuotationRequest{Ctx: ctx, ID: id}
+}
+
 type GetSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
+}
+
+func NewGetSalesQuotationResponse(payload sale.SalesQuotation) *GetSalesQuotationResponse {
+	return &GetSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) GetSalesQuotation(req *GetSalesQuotationRequest) (*GetSalesQuotationResponse, error) {
@@ -131,8 +167,17 @@ type CreateSalesQuotationRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateSalesQuotationDTO
 }
+
+func NewCreateSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *CreateSalesQuotationRequest {
+	return &CreateSalesQuotationRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
+}
+
+func NewCreateSalesQuotationResponse(payload sale.SalesQuotation) *CreateSalesQuotationResponse {
+	return &CreateSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*CreateSalesQuotationResponse, error) {
@@ -220,8 +265,17 @@ type UpdateSalesQuotationRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateSalesQuotationDTO
 }
+
+func NewUpdateSalesQuotationRequest(ctx context.Context, payload dto.UpdateSalesQuotationDTO) *UpdateSalesQuotationRequest {
+	return &UpdateSalesQuotationRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
+}
+
+func NewUpdateSalesQuotationResponse(payload sale.SalesQuotation) *UpdateSalesQuotationResponse {
+	return &UpdateSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*UpdateSalesQuotationResponse, error) {
@@ -356,8 +410,17 @@ type DeleteSalesQuotationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteSalesQuotationRequest(ctx context.Context, id int) *DeleteSalesQuotationRequest {
+	return &DeleteSalesQuotationRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteSalesQuotationResponse struct {
 	Payload bool
+}
+
+func NewDeleteSalesQuotationResponse(payload bool) *DeleteSalesQuotationResponse {
+	return &DeleteSalesQuotationResponse{Payload: payload}
 }
 
 func (s *SaleService) DeleteSalesQuotation(req *DeleteSalesQuotationRequest) (*DeleteSalesQuotationResponse, error) {

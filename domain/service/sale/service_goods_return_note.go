@@ -18,8 +18,17 @@ import (
 type ListGoodsReturnNoteRequest struct {
 	Ctx context.Context
 }
+
+func NewListGoodsReturnNoteRequest(ctx context.Context) *ListGoodsReturnNoteRequest {
+	return &ListGoodsReturnNoteRequest{Ctx: ctx}
+}
+
 type ListGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNoteSlice
+}
+
+func NewListGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *ListGoodsReturnNoteResponse {
+	return &ListGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) ListGoodsReturnNote(req *ListGoodsReturnNoteRequest) (*ListGoodsReturnNoteResponse, error) {
@@ -48,8 +57,17 @@ type PreviewGoodsReturnNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateGoodsReturnNoteDTO
 }
+
+func NewPreviewGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteRequest {
+	return &PreviewGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewGoodsReturnNoteResponse struct {
 	Payload dto.CreateGoodsReturnNoteDTO
+}
+
+func NewPreviewGoodsReturnNoteResponse(payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteResponse {
+	return &PreviewGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) PreviewGoodsReturnNote(req *PreviewGoodsReturnNoteRequest) (*PreviewGoodsReturnNoteResponse, error) {
@@ -74,8 +92,17 @@ type SearchGoodsReturnNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchGoodsReturnNoteDTO
 }
+
+func NewSearchGoodsReturnNoteRequest(ctx context.Context, payload dto.SearchGoodsReturnNoteDTO) *SearchGoodsReturnNoteRequest {
+	return &SearchGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNoteSlice
+}
+
+func NewSearchGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *SearchGoodsReturnNoteResponse {
+	return &SearchGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) SearchGoodsReturnNote(req *SearchGoodsReturnNoteRequest) (*SearchGoodsReturnNoteResponse, error) {
@@ -104,8 +131,17 @@ type GetGoodsReturnNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetGoodsReturnNoteRequest(ctx context.Context, id int) *GetGoodsReturnNoteRequest {
+	return &GetGoodsReturnNoteRequest{Ctx: ctx, ID: id}
+}
+
 type GetGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
+}
+
+func NewGetGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *GetGoodsReturnNoteResponse {
+	return &GetGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) GetGoodsReturnNote(req *GetGoodsReturnNoteRequest) (*GetGoodsReturnNoteResponse, error) {
@@ -136,8 +172,17 @@ type CreateGoodsReturnNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateGoodsReturnNoteDTO
 }
+
+func NewCreateGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *CreateGoodsReturnNoteRequest {
+	return &CreateGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
+}
+
+func NewCreateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *CreateGoodsReturnNoteResponse {
+	return &CreateGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (*CreateGoodsReturnNoteResponse, error) {
@@ -292,8 +337,17 @@ type UpdateGoodsReturnNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateGoodsReturnNoteDTO
 }
+
+func NewUpdateGoodsReturnNoteRequest(ctx context.Context, payload dto.UpdateGoodsReturnNoteDTO) *UpdateGoodsReturnNoteRequest {
+	return &UpdateGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
+}
+
+func NewUpdateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *UpdateGoodsReturnNoteResponse {
+	return &UpdateGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (*UpdateGoodsReturnNoteResponse, error) {
@@ -559,8 +613,17 @@ type DeleteGoodsReturnNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteGoodsReturnNoteRequest(ctx context.Context, id int) *DeleteGoodsReturnNoteRequest {
+	return &DeleteGoodsReturnNoteRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteGoodsReturnNoteResponse struct {
 	Payload bool
+}
+
+func NewDeleteGoodsReturnNoteResponse(payload bool) *DeleteGoodsReturnNoteResponse {
+	return &DeleteGoodsReturnNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (*DeleteGoodsReturnNoteResponse, error) {

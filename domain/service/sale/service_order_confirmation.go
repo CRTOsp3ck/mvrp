@@ -15,8 +15,17 @@ import (
 type ListOrderConfirmationRequest struct {
 	Ctx context.Context
 }
+
+func NewListOrderConfirmationRequest(ctx context.Context) *ListOrderConfirmationRequest {
+	return &ListOrderConfirmationRequest{Ctx: ctx}
+}
+
 type ListOrderConfirmationResponse struct {
 	Payload sale.OrderConfirmationSlice
+}
+
+func NewListOrderConfirmationResponse(payload sale.OrderConfirmationSlice) *ListOrderConfirmationResponse {
+	return &ListOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) ListOrderConfirmation(req *ListOrderConfirmationRequest) (*ListOrderConfirmationResponse, error) {
@@ -45,8 +54,17 @@ type PreviewOrderConfirmationRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateOrderConfirmationDTO
 }
+
+func NewPreviewOrderConfirmationRequest(ctx context.Context, payload dto.CreateOrderConfirmationDTO) *PreviewOrderConfirmationRequest {
+	return &PreviewOrderConfirmationRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewOrderConfirmationResponse struct {
 	Payload dto.CreateOrderConfirmationDTO
+}
+
+func NewPreviewOrderConfirmationResponse(payload dto.CreateOrderConfirmationDTO) *PreviewOrderConfirmationResponse {
+	return &PreviewOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) PreviewOrderConfirmation(req *PreviewOrderConfirmationRequest) (*PreviewOrderConfirmationResponse, error) {
@@ -71,8 +89,17 @@ type SearchOrderConfirmationRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchOrderConfirmationDTO
 }
+
+func NewSearchOrderConfirmationRequest(ctx context.Context, payload dto.SearchOrderConfirmationDTO) *SearchOrderConfirmationRequest {
+	return &SearchOrderConfirmationRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchOrderConfirmationResponse struct {
 	Payload sale.OrderConfirmationSlice
+}
+
+func NewSearchOrderConfirmationResponse(payload sale.OrderConfirmationSlice) *SearchOrderConfirmationResponse {
+	return &SearchOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) SearchOrderConfirmation(req *SearchOrderConfirmationRequest) (*SearchOrderConfirmationResponse, error) {
@@ -101,8 +128,17 @@ type GetOrderConfirmationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetOrderConfirmationRequest(ctx context.Context, id int) *GetOrderConfirmationRequest {
+	return &GetOrderConfirmationRequest{Ctx: ctx, ID: id}
+}
+
 type GetOrderConfirmationResponse struct {
 	Payload sale.OrderConfirmation
+}
+
+func NewGetOrderConfirmationResponse(payload sale.OrderConfirmation) *GetOrderConfirmationResponse {
+	return &GetOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) GetOrderConfirmation(req *GetOrderConfirmationRequest) (*GetOrderConfirmationResponse, error) {
@@ -134,8 +170,17 @@ type CreateOrderConfirmationRequest struct {
 	CreateFromSalesOrder bool
 	Payload              dto.CreateOrderConfirmationDTO
 }
+
+func NewCreateOrderConfirmationRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateOrderConfirmationDTO) *CreateOrderConfirmationRequest {
+	return &CreateOrderConfirmationRequest{Ctx: ctx, CreateFromSalesOrder: createFromSalesOrder, Payload: payload}
+}
+
 type CreateOrderConfirmationResponse struct {
 	Payload sale.OrderConfirmation
+}
+
+func NewCreateOrderConfirmationResponse(payload sale.OrderConfirmation) *CreateOrderConfirmationResponse {
+	return &CreateOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationRequest) (*CreateOrderConfirmationResponse, error) {
@@ -292,8 +337,17 @@ type UpdateOrderConfirmationRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateOrderConfirmationDTO
 }
+
+func NewUpdateOrderConfirmationRequest(ctx context.Context, payload dto.UpdateOrderConfirmationDTO) *UpdateOrderConfirmationRequest {
+	return &UpdateOrderConfirmationRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateOrderConfirmationResponse struct {
 	Payload sale.OrderConfirmation
+}
+
+func NewUpdateOrderConfirmationResponse(payload sale.OrderConfirmation) *UpdateOrderConfirmationResponse {
+	return &UpdateOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationRequest) (*UpdateOrderConfirmationResponse, error) {
@@ -425,8 +479,17 @@ type DeleteOrderConfirmationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteOrderConfirmationRequest(ctx context.Context, id int) *DeleteOrderConfirmationRequest {
+	return &DeleteOrderConfirmationRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteOrderConfirmationResponse struct {
 	Payload bool
+}
+
+func NewDeleteOrderConfirmationResponse(payload bool) *DeleteOrderConfirmationResponse {
+	return &DeleteOrderConfirmationResponse{Payload: payload}
 }
 
 func (s *SaleService) DeleteOrderConfirmation(req *DeleteOrderConfirmationRequest) (*DeleteOrderConfirmationResponse, error) {

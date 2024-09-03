@@ -11,8 +11,17 @@ import (
 type ListCreditNoteRequest struct {
 	Ctx context.Context
 }
+
+func NewListCreditNoteRequest(ctx context.Context) *ListCreditNoteRequest {
+	return &ListCreditNoteRequest{Ctx: ctx}
+}
+
 type ListCreditNoteResponse struct {
 	Payload invoice.CreditNoteSlice
+}
+
+func NewListCreditNoteResponse(payload invoice.CreditNoteSlice) *ListCreditNoteResponse {
+	return &ListCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) ListCreditNote(req *ListCreditNoteRequest) (*ListCreditNoteResponse, error) {
@@ -41,8 +50,17 @@ type SearchCreditNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchCreditNoteDTO
 }
+
+func NewSearchCreditNoteRequest(ctx context.Context, payload dto.SearchCreditNoteDTO) *SearchCreditNoteRequest {
+	return &SearchCreditNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchCreditNoteResponse struct {
 	Payload invoice.CreditNoteSlice
+}
+
+func NewSearchCreditNoteResponse(payload invoice.CreditNoteSlice) *SearchCreditNoteResponse {
+	return &SearchCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) SearchCreditNote(req *SearchCreditNoteRequest) (*SearchCreditNoteResponse, error) {
@@ -71,8 +89,17 @@ type GetCreditNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetCreditNoteRequest(ctx context.Context, id int) *GetCreditNoteRequest {
+	return &GetCreditNoteRequest{Ctx: ctx, ID: id}
+}
+
 type GetCreditNoteResponse struct {
 	Payload invoice.CreditNote
+}
+
+func NewGetCreditNoteResponse(payload invoice.CreditNote) *GetCreditNoteResponse {
+	return &GetCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) GetCreditNote(req *GetCreditNoteRequest) (*GetCreditNoteResponse, error) {
@@ -103,8 +130,17 @@ type CreateCreditNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateCreditNoteDTO
 }
+
+func NewCreateCreditNoteRequest(ctx context.Context, payload dto.CreateCreditNoteDTO) *CreateCreditNoteRequest {
+	return &CreateCreditNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateCreditNoteResponse struct {
 	Payload invoice.CreditNote
+}
+
+func NewCreateCreditNoteResponse(payload invoice.CreditNote) *CreateCreditNoteResponse {
+	return &CreateCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) CreateCreditNote(req *CreateCreditNoteRequest) (*CreateCreditNoteResponse, error) {
@@ -162,8 +198,17 @@ type UpdateCreditNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateCreditNoteDTO
 }
+
+func NewUpdateCreditNoteRequest(ctx context.Context, payload dto.UpdateCreditNoteDTO) *UpdateCreditNoteRequest {
+	return &UpdateCreditNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateCreditNoteResponse struct {
 	Payload invoice.CreditNote
+}
+
+func NewUpdateCreditNoteResponse(payload invoice.CreditNote) *UpdateCreditNoteResponse {
+	return &UpdateCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) UpdateCreditNote(req *UpdateCreditNoteRequest) (*UpdateCreditNoteResponse, error) {
@@ -213,8 +258,17 @@ type DeleteCreditNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteCreditNoteRequest(ctx context.Context, id int) *DeleteCreditNoteRequest {
+	return &DeleteCreditNoteRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteCreditNoteResponse struct {
 	Payload bool
+}
+
+func NewDeleteCreditNoteResponse(payload bool) *DeleteCreditNoteResponse {
+	return &DeleteCreditNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) DeleteCreditNote(req *DeleteCreditNoteRequest) (*DeleteCreditNoteResponse, error) {

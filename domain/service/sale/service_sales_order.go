@@ -18,8 +18,17 @@ import (
 type ListSalesOrderRequest struct {
 	Ctx context.Context
 }
+
+func NewListSalesOrderRequest(ctx context.Context) *ListSalesOrderRequest {
+	return &ListSalesOrderRequest{Ctx: ctx}
+}
+
 type ListSalesOrderResponse struct {
 	Payload sale.SalesOrderSlice
+}
+
+func NewListSalesOrderResponse(payload sale.SalesOrderSlice) *ListSalesOrderResponse {
+	return &ListSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) ListSalesOrder(req *ListSalesOrderRequest) (*ListSalesOrderResponse, error) {
@@ -48,8 +57,17 @@ type PreviewSalesOrderRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateSalesOrderDTO
 }
+
+func NewPreviewSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *PreviewSalesOrderRequest {
+	return &PreviewSalesOrderRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewSalesOrderResponse struct {
 	Payload dto.CreateSalesOrderDTO
+}
+
+func NewPreviewSalesOrderResponse(payload dto.CreateSalesOrderDTO) *PreviewSalesOrderResponse {
+	return &PreviewSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) PreviewSalesOrder(req *PreviewSalesOrderRequest) (*PreviewSalesOrderResponse, error) {
@@ -74,8 +92,17 @@ type SearchSalesOrderRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchSalesOrderDTO
 }
+
+func NewSearchSalesOrderRequest(ctx context.Context, payload dto.SearchSalesOrderDTO) *SearchSalesOrderRequest {
+	return &SearchSalesOrderRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchSalesOrderResponse struct {
 	Payload sale.SalesOrderSlice
+}
+
+func NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) *SearchSalesOrderResponse {
+	return &SearchSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) SearchSalesOrder(req *SearchSalesOrderRequest) (*SearchSalesOrderResponse, error) {
@@ -104,8 +131,17 @@ type GetSalesOrderRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetSalesOrderRequest(ctx context.Context, id int) *GetSalesOrderRequest {
+	return &GetSalesOrderRequest{Ctx: ctx, ID: id}
+}
+
 type GetSalesOrderResponse struct {
 	Payload sale.SalesOrder
+}
+
+func NewGetSalesOrderResponse(payload sale.SalesOrder) *GetSalesOrderResponse {
+	return &GetSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) GetSalesOrder(req *GetSalesOrderRequest) (*GetSalesOrderResponse, error) {
@@ -136,8 +172,17 @@ type CreateSalesOrderRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateSalesOrderDTO
 }
+
+func NewCreateSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *CreateSalesOrderRequest {
+	return &CreateSalesOrderRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateSalesOrderResponse struct {
 	Payload sale.SalesOrder
+}
+
+func NewCreateSalesOrderResponse(payload sale.SalesOrder) *CreateSalesOrderResponse {
+	return &CreateSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSalesOrderResponse, error) {
@@ -250,8 +295,17 @@ type UpdateSalesOrderRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateSalesOrderDTO
 }
+
+func NewUpdateSalesOrderRequest(ctx context.Context, payload dto.UpdateSalesOrderDTO) *UpdateSalesOrderRequest {
+	return &UpdateSalesOrderRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateSalesOrderResponse struct {
 	Payload sale.SalesOrder
+}
+
+func NewUpdateSalesOrderResponse(payload sale.SalesOrder) *UpdateSalesOrderResponse {
+	return &UpdateSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSalesOrderResponse, error) {
@@ -464,8 +518,17 @@ type DeleteSalesOrderRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteSalesOrderRequest(ctx context.Context, id int) *DeleteSalesOrderRequest {
+	return &DeleteSalesOrderRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteSalesOrderResponse struct {
 	Payload bool
+}
+
+func NewDeleteSalesOrderResponse(payload bool) *DeleteSalesOrderResponse {
+	return &DeleteSalesOrderResponse{Payload: payload}
 }
 
 func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSalesOrderResponse, error) {

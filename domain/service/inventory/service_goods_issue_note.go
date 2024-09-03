@@ -16,8 +16,21 @@ import (
 type ListGoodsIssueNoteRequest struct {
 	Ctx context.Context
 }
+
+func (s *InventoryService) NewListGoodsIssueNoteRequest(ctx context.Context) *ListGoodsIssueNoteRequest {
+	return &ListGoodsIssueNoteRequest{
+		Ctx: ctx,
+	}
+}
+
 type ListGoodsIssueNoteResponse struct {
 	Payload inventory.GoodsIssueNoteSlice
+}
+
+func (s *InventoryService) NewListGoodsIssueNoteResponse(payload inventory.GoodsIssueNoteSlice) *ListGoodsIssueNoteResponse {
+	return &ListGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) ListGoodsIssueNote(req *ListGoodsIssueNoteRequest) (*ListGoodsIssueNoteResponse, error) {
@@ -46,8 +59,22 @@ type SearchGoodsIssueNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchGoodsIssueNoteDTO
 }
+
+func (s *InventoryService) NewSearchGoodsIssueNoteRequest(ctx context.Context, payload dto.SearchGoodsIssueNoteDTO) *SearchGoodsIssueNoteRequest {
+	return &SearchGoodsIssueNoteRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type SearchGoodsIssueNoteResponse struct {
 	Payload inventory.GoodsIssueNoteSlice
+}
+
+func (s *InventoryService) NewSearchGoodsIssueNoteResponse(payload inventory.GoodsIssueNoteSlice) *SearchGoodsIssueNoteResponse {
+	return &SearchGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) SearchGoodsIssueNote(req *SearchGoodsIssueNoteRequest) (*SearchGoodsIssueNoteResponse, error) {
@@ -76,8 +103,22 @@ type GetGoodsIssueNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewGetGoodsIssueNoteRequest(ctx context.Context, id int) *GetGoodsIssueNoteRequest {
+	return &GetGoodsIssueNoteRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type GetGoodsIssueNoteResponse struct {
 	Payload inventory.GoodsIssueNote
+}
+
+func (s *InventoryService) NewGetGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *GetGoodsIssueNoteResponse {
+	return &GetGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) GetGoodsIssueNote(req *GetGoodsIssueNoteRequest) (*GetGoodsIssueNoteResponse, error) {
@@ -108,8 +149,22 @@ type CreateGoodsIssueNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateGoodsIssueNoteDTO
 }
+
+func (s *InventoryService) NewCreateGoodsIssueNoteRequest(ctx context.Context, payload dto.CreateGoodsIssueNoteDTO) *CreateGoodsIssueNoteRequest {
+	return &CreateGoodsIssueNoteRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type CreateGoodsIssueNoteResponse struct {
 	Payload inventory.GoodsIssueNote
+}
+
+func (s *InventoryService) NewCreateGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *CreateGoodsIssueNoteResponse {
+	return &CreateGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest) (*CreateGoodsIssueNoteResponse, error) {
@@ -202,8 +257,22 @@ type UpdateGoodsIssueNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateGoodsIssueNoteDTO
 }
+
+func (s *InventoryService) NewUpdateGoodsIssueNoteRequest(ctx context.Context, payload dto.UpdateGoodsIssueNoteDTO) *UpdateGoodsIssueNoteRequest {
+	return &UpdateGoodsIssueNoteRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type UpdateGoodsIssueNoteResponse struct {
 	Payload inventory.GoodsIssueNote
+}
+
+func (s *InventoryService) NewUpdateGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *UpdateGoodsIssueNoteResponse {
+	return &UpdateGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest) (*UpdateGoodsIssueNoteResponse, error) {
@@ -376,8 +445,22 @@ type DeleteGoodsIssueNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewDeleteGoodsIssueNoteRequest(ctx context.Context, id int) *DeleteGoodsIssueNoteRequest {
+	return &DeleteGoodsIssueNoteRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type DeleteGoodsIssueNoteResponse struct {
 	Payload bool
+}
+
+func (s *InventoryService) NewDeleteGoodsIssueNoteResponse(payload bool) *DeleteGoodsIssueNoteResponse {
+	return &DeleteGoodsIssueNoteResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) DeleteGoodsIssueNote(req *DeleteGoodsIssueNoteRequest) (*DeleteGoodsIssueNoteResponse, error) {

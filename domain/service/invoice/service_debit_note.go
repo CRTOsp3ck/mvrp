@@ -11,8 +11,17 @@ import (
 type ListDebitNoteRequest struct {
 	Ctx context.Context
 }
+
+func NewListDebitNoteRequest(ctx context.Context) *ListDebitNoteRequest {
+	return &ListDebitNoteRequest{Ctx: ctx}
+}
+
 type ListDebitNoteResponse struct {
 	Payload invoice.DebitNoteSlice
+}
+
+func NewListDebitNoteResponse(payload invoice.DebitNoteSlice) *ListDebitNoteResponse {
+	return &ListDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) ListDebitNote(req *ListDebitNoteRequest) (*ListDebitNoteResponse, error) {
@@ -41,8 +50,17 @@ type SearchDebitNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchDebitNoteDTO
 }
+
+func NewSearchDebitNoteRequest(ctx context.Context, payload dto.SearchDebitNoteDTO) *SearchDebitNoteRequest {
+	return &SearchDebitNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchDebitNoteResponse struct {
 	Payload invoice.DebitNoteSlice
+}
+
+func NewSearchDebitNoteResponse(payload invoice.DebitNoteSlice) *SearchDebitNoteResponse {
+	return &SearchDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) SearchDebitNote(req *SearchDebitNoteRequest) (*SearchDebitNoteResponse, error) {
@@ -71,8 +89,17 @@ type GetDebitNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetDebitNoteRequest(ctx context.Context, id int) *GetDebitNoteRequest {
+	return &GetDebitNoteRequest{Ctx: ctx, ID: id}
+}
+
 type GetDebitNoteResponse struct {
 	Payload invoice.DebitNote
+}
+
+func NewGetDebitNoteResponse(payload invoice.DebitNote) *GetDebitNoteResponse {
+	return &GetDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) GetDebitNote(req *GetDebitNoteRequest) (*GetDebitNoteResponse, error) {
@@ -103,8 +130,17 @@ type CreateDebitNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateDebitNoteDTO
 }
+
+func NewCreateDebitNoteRequest(ctx context.Context, payload dto.CreateDebitNoteDTO) *CreateDebitNoteRequest {
+	return &CreateDebitNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateDebitNoteResponse struct {
 	Payload invoice.DebitNote
+}
+
+func NewCreateDebitNoteResponse(payload invoice.DebitNote) *CreateDebitNoteResponse {
+	return &CreateDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDebitNoteResponse, error) {
@@ -162,8 +198,17 @@ type UpdateDebitNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateDebitNoteDTO
 }
+
+func NewUpdateDebitNoteRequest(ctx context.Context, payload dto.UpdateDebitNoteDTO) *UpdateDebitNoteRequest {
+	return &UpdateDebitNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateDebitNoteResponse struct {
 	Payload invoice.DebitNote
+}
+
+func NewUpdateDebitNoteResponse(payload invoice.DebitNote) *UpdateDebitNoteResponse {
+	return &UpdateDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) UpdateDebitNote(req *UpdateDebitNoteRequest) (*UpdateDebitNoteResponse, error) {
@@ -213,8 +258,17 @@ type DeleteDebitNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteDebitNoteRequest(ctx context.Context, id int) *DeleteDebitNoteRequest {
+	return &DeleteDebitNoteRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteDebitNoteResponse struct {
 	Payload bool
+}
+
+func NewDeleteDebitNoteResponse(payload bool) *DeleteDebitNoteResponse {
+	return &DeleteDebitNoteResponse{Payload: payload}
 }
 
 func (s *InvoiceService) DeleteDebitNote(req *DeleteDebitNoteRequest) (*DeleteDebitNoteResponse, error) {

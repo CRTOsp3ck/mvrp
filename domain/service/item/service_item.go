@@ -10,8 +10,17 @@ import (
 type ListItemRequest struct {
 	Ctx context.Context
 }
+
+func NewListItemRequest(ctx context.Context) *ListItemRequest {
+	return &ListItemRequest{Ctx: ctx}
+}
+
 type ListItemResponse struct {
 	Payload item.ItemSlice
+}
+
+func NewListItemResponse(payload item.ItemSlice) *ListItemResponse {
+	return &ListItemResponse{Payload: payload}
 }
 
 func (s *ItemService) ListItem(req *ListItemRequest) (*ListItemResponse, error) {
@@ -40,10 +49,18 @@ type SearchItemRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchItemDTO
 }
+
+func NewSearchItemRequest(ctx context.Context, payload dto.SearchItemDTO) *SearchItemRequest {
+	return &SearchItemRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchItemResponse struct {
 	Payload item.ItemSlice
 }
 
+func NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {
+	return &SearchItemResponse{Payload: payload}
+}
 func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, error) {
 	tx, err := s.Repo.Begin(req.Ctx)
 	if err != nil {
@@ -70,8 +87,17 @@ type GetItemRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetItemRequest(ctx context.Context, id int) *GetItemRequest {
+	return &GetItemRequest{Ctx: ctx, ID: id}
+}
+
 type GetItemResponse struct {
 	Payload item.Item
+}
+
+func NewGetItemResponse(payload item.Item) *GetItemResponse {
+	return &GetItemResponse{Payload: payload}
 }
 
 func (s *ItemService) GetItem(req *GetItemRequest) (*GetItemResponse, error) {
@@ -101,8 +127,17 @@ type CreateItemRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateItemDTO
 }
+
+func NewCreateItemRequest(ctx context.Context, payload dto.CreateItemDTO) *CreateItemRequest {
+	return &CreateItemRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateItemResponse struct {
 	Payload item.Item
+}
+
+func NewCreateItemResponse(payload item.Item) *CreateItemResponse {
+	return &CreateItemResponse{Payload: payload}
 }
 
 func (s *ItemService) CreateItem(req *CreateItemRequest) (*CreateItemResponse, error) {
@@ -144,8 +179,17 @@ type UpdateItemRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateItemDTO
 }
+
+func NewUpdateItemRequest(ctx context.Context, payload dto.UpdateItemDTO) *UpdateItemRequest {
+	return &UpdateItemRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateItemResponse struct {
 	Payload item.Item
+}
+
+func NewUpdateItemResponse(payload item.Item) *UpdateItemResponse {
+	return &UpdateItemResponse{Payload: payload}
 }
 
 func (s *ItemService) UpdateItem(req *UpdateItemRequest) (*UpdateItemResponse, error) {
@@ -187,8 +231,17 @@ type DeleteItemRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteItemRequest(ctx context.Context, id int) *DeleteItemRequest {
+	return &DeleteItemRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteItemResponse struct {
 	Payload bool
+}
+
+func NewDeleteItemResponse(payload bool) *DeleteItemResponse {
+	return &DeleteItemResponse{Payload: payload}
 }
 
 func (s *ItemService) DeleteItem(req *DeleteItemRequest) (*DeleteItemResponse, error) {

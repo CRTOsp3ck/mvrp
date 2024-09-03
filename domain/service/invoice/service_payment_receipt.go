@@ -16,8 +16,17 @@ import (
 type ListPaymentReceiptRequest struct {
 	Ctx context.Context
 }
+
+func NewListPaymentReceiptRequest(ctx context.Context) *ListPaymentReceiptRequest {
+	return &ListPaymentReceiptRequest{Ctx: ctx}
+}
+
 type ListPaymentReceiptResponse struct {
 	Payload invoice.PaymentReceiptSlice
+}
+
+func NewListPaymentReceiptResponse(payload invoice.PaymentReceiptSlice) *ListPaymentReceiptResponse {
+	return &ListPaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) ListPaymentReceipt(req *ListPaymentReceiptRequest) (*ListPaymentReceiptResponse, error) {
@@ -46,8 +55,17 @@ type PreviewPaymentReceiptRequest struct {
 	Ctx     context.Context
 	Payload dto.CreatePaymentReceiptDTO
 }
+
+func NewPreviewPaymentReceiptRequest(ctx context.Context, payload dto.CreatePaymentReceiptDTO) *PreviewPaymentReceiptRequest {
+	return &PreviewPaymentReceiptRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewPaymentReceiptResponse struct {
 	Payload dto.CreatePaymentReceiptDTO
+}
+
+func NewPreviewPaymentReceiptResponse(payload dto.CreatePaymentReceiptDTO) *PreviewPaymentReceiptResponse {
+	return &PreviewPaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) PreviewPaymentReceipt(req *PreviewPaymentReceiptRequest) (*PreviewPaymentReceiptResponse, error) {
@@ -71,8 +89,17 @@ type SearchPaymentReceiptRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchPaymentReceiptDTO
 }
+
+func NewSearchPaymentReceiptRequest(ctx context.Context, payload dto.SearchPaymentReceiptDTO) *SearchPaymentReceiptRequest {
+	return &SearchPaymentReceiptRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchPaymentReceiptResponse struct {
 	Payload invoice.PaymentReceiptSlice
+}
+
+func NewSearchPaymentReceiptResponse(payload invoice.PaymentReceiptSlice) *SearchPaymentReceiptResponse {
+	return &SearchPaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) SearchPaymentReceipt(req *SearchPaymentReceiptRequest) (*SearchPaymentReceiptResponse, error) {
@@ -101,8 +128,17 @@ type GetPaymentReceiptRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetPaymentReceiptRequest(ctx context.Context, id int) *GetPaymentReceiptRequest {
+	return &GetPaymentReceiptRequest{Ctx: ctx, ID: id}
+}
+
 type GetPaymentReceiptResponse struct {
 	Payload invoice.PaymentReceipt
+}
+
+func NewGetPaymentReceiptResponse(payload invoice.PaymentReceipt) *GetPaymentReceiptResponse {
+	return &GetPaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) GetPaymentReceipt(req *GetPaymentReceiptRequest) (*GetPaymentReceiptResponse, error) {
@@ -131,8 +167,17 @@ type CreatePaymentReceiptRequest struct {
 	Ctx     context.Context
 	Payload dto.CreatePaymentReceiptDTO
 }
+
+func NewCreatePaymentReceiptRequest(ctx context.Context, payload dto.CreatePaymentReceiptDTO) *CreatePaymentReceiptRequest {
+	return &CreatePaymentReceiptRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreatePaymentReceiptResponse struct {
 	Payload invoice.PaymentReceipt
+}
+
+func NewCreatePaymentReceiptResponse(payload invoice.PaymentReceipt) *CreatePaymentReceiptResponse {
+	return &CreatePaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) (*CreatePaymentReceiptResponse, error) {
@@ -216,8 +261,17 @@ type UpdatePaymentReceiptRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdatePaymentReceiptDTO
 }
+
+func NewUpdatePaymentReceiptRequest(ctx context.Context, payload dto.UpdatePaymentReceiptDTO) *UpdatePaymentReceiptRequest {
+	return &UpdatePaymentReceiptRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdatePaymentReceiptResponse struct {
 	Payload invoice.PaymentReceipt
+}
+
+func NewUpdatePaymentReceiptResponse(payload invoice.PaymentReceipt) *UpdatePaymentReceiptResponse {
+	return &UpdatePaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) (*UpdatePaymentReceiptResponse, error) {
@@ -355,8 +409,17 @@ type DeletePaymentReceiptRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeletePaymentReceiptRequest(ctx context.Context, id int) *DeletePaymentReceiptRequest {
+	return &DeletePaymentReceiptRequest{Ctx: ctx, ID: id}
+}
+
 type DeletePaymentReceiptResponse struct {
 	Payload bool
+}
+
+func NewDeletePaymentReceiptResponse(payload bool) *DeletePaymentReceiptResponse {
+	return &DeletePaymentReceiptResponse{Payload: payload}
 }
 
 func (s *InvoiceService) DeletePaymentReceipt(req *DeletePaymentReceiptRequest) (*DeletePaymentReceiptResponse, error) {

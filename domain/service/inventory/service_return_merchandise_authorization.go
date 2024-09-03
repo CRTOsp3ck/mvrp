@@ -16,8 +16,17 @@ import (
 type ListReturnMerchandiseAuthorizationRequest struct {
 	Ctx context.Context
 }
+
+func NewListReturnMerchandiseAuthorizationRequest(ctx context.Context) *ListReturnMerchandiseAuthorizationRequest {
+	return &ListReturnMerchandiseAuthorizationRequest{Ctx: ctx}
+}
+
 type ListReturnMerchandiseAuthorizationResponse struct {
 	Payload inventory.ReturnMerchandiseAuthorizationSlice
+}
+
+func NewListReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *ListReturnMerchandiseAuthorizationResponse {
+	return &ListReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
 
 func (s *InventoryService) ListReturnMerchandiseAuthorization(req *ListReturnMerchandiseAuthorizationRequest) (*ListReturnMerchandiseAuthorizationResponse, error) {
@@ -46,8 +55,17 @@ type SearchReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchReturnMerchandiseAuthorizationDTO
 }
+
+func NewSearchReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.SearchReturnMerchandiseAuthorizationDTO) *SearchReturnMerchandiseAuthorizationRequest {
+	return &SearchReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchReturnMerchandiseAuthorizationResponse struct {
 	Payload inventory.ReturnMerchandiseAuthorizationSlice
+}
+
+func NewSearchReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *SearchReturnMerchandiseAuthorizationResponse {
+	return &SearchReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
 
 func (s *InventoryService) SearchReturnMerchandiseAuthorization(req *SearchReturnMerchandiseAuthorizationRequest) (*SearchReturnMerchandiseAuthorizationResponse, error) {
@@ -76,8 +94,17 @@ type GetReturnMerchandiseAuthorizationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *GetReturnMerchandiseAuthorizationRequest {
+	return &GetReturnMerchandiseAuthorizationRequest{Ctx: ctx, ID: id}
+}
+
 type GetReturnMerchandiseAuthorizationResponse struct {
 	Payload inventory.ReturnMerchandiseAuthorization
+}
+
+func NewGetReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *GetReturnMerchandiseAuthorizationResponse {
+	return &GetReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
 
 func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerchandiseAuthorizationRequest) (*GetReturnMerchandiseAuthorizationResponse, error) {
@@ -108,8 +135,17 @@ type CreateReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateReturnMerchandiseAuthorizationDTO
 }
+
+func NewCreateReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.CreateReturnMerchandiseAuthorizationDTO) *CreateReturnMerchandiseAuthorizationRequest {
+	return &CreateReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateReturnMerchandiseAuthorizationResponse struct {
 	Payload inventory.ReturnMerchandiseAuthorization
+}
+
+func NewCreateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *CreateReturnMerchandiseAuthorizationResponse {
+	return &CreateReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
 
 func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateReturnMerchandiseAuthorizationRequest) (*CreateReturnMerchandiseAuthorizationResponse, error) {
@@ -202,10 +238,18 @@ type UpdateReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateReturnMerchandiseAuthorizationDTO
 }
+
+func NewUpdateReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.UpdateReturnMerchandiseAuthorizationDTO) *UpdateReturnMerchandiseAuthorizationRequest {
+	return &UpdateReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateReturnMerchandiseAuthorizationResponse struct {
 	Payload inventory.ReturnMerchandiseAuthorization
 }
 
+func NewUpdateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *UpdateReturnMerchandiseAuthorizationResponse {
+	return &UpdateReturnMerchandiseAuthorizationResponse{Payload: payload}
+}
 func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateReturnMerchandiseAuthorizationRequest) (*UpdateReturnMerchandiseAuthorizationResponse, error) {
 	/*
 		1. Update ReturnMerchandiseAuthorization
@@ -376,8 +420,17 @@ type DeleteReturnMerchandiseAuthorizationRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *DeleteReturnMerchandiseAuthorizationRequest {
+	return &DeleteReturnMerchandiseAuthorizationRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteReturnMerchandiseAuthorizationResponse struct {
 	Payload bool
+}
+
+func NewDeleteReturnMerchandiseAuthorizationResponse(payload bool) *DeleteReturnMerchandiseAuthorizationResponse {
+	return &DeleteReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
 
 func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteReturnMerchandiseAuthorizationRequest) (*DeleteReturnMerchandiseAuthorizationResponse, error) {

@@ -16,8 +16,21 @@ import (
 type ListInventoryRequest struct {
 	Ctx context.Context
 }
+
+func (s *InventoryService) NewListInventoryRequest(ctx context.Context) *ListInventoryRequest {
+	return &ListInventoryRequest{
+		Ctx: ctx,
+	}
+}
+
 type ListInventoryResponse struct {
 	Payload inventory.InventorySlice
+}
+
+func (s *InventoryService) NewListInventoryResponse(payload inventory.InventorySlice) *ListInventoryResponse {
+	return &ListInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) ListInventory(req *ListInventoryRequest) (*ListInventoryResponse, error) {
@@ -46,8 +59,22 @@ type SearchInventoryRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchInventoryDTO
 }
+
+func (s *InventoryService) NewSearchInventoryRequest(ctx context.Context, payload dto.SearchInventoryDTO) *SearchInventoryRequest {
+	return &SearchInventoryRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type SearchInventoryResponse struct {
 	Payload inventory.InventorySlice
+}
+
+func (s *InventoryService) NewSearchInventoryResponse(payload inventory.InventorySlice) *SearchInventoryResponse {
+	return &SearchInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) SearchInventory(req *SearchInventoryRequest) (*SearchInventoryResponse, error) {
@@ -76,8 +103,22 @@ type GetInventoryRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewGetInventoryRequest(ctx context.Context, id int) *GetInventoryRequest {
+	return &GetInventoryRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type GetInventoryResponse struct {
 	Payload inventory.Inventory
+}
+
+func (s *InventoryService) NewGetInventoryResponse(payload inventory.Inventory) *GetInventoryResponse {
+	return &GetInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) GetInventory(req *GetInventoryRequest) (*GetInventoryResponse, error) {
@@ -108,8 +149,22 @@ type CreateInventoryRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateInventoryDTO
 }
+
+func (s *InventoryService) NewCreateInventoryRequest(ctx context.Context, payload dto.CreateInventoryDTO) *CreateInventoryRequest {
+	return &CreateInventoryRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type CreateInventoryResponse struct {
 	Payload inventory.Inventory
+}
+
+func (s *InventoryService) NewCreateInventoryResponse(payload inventory.Inventory) *CreateInventoryResponse {
+	return &CreateInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*CreateInventoryResponse, error) {
@@ -159,8 +214,22 @@ type UpdateInventoryRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateInventoryDTO
 }
+
+func (s *InventoryService) NewUpdateInventoryRequest(ctx context.Context, payload dto.UpdateInventoryDTO) *UpdateInventoryRequest {
+	return &UpdateInventoryRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type UpdateInventoryResponse struct {
 	Payload inventory.Inventory
+}
+
+func (s *InventoryService) NewUpdateInventoryResponse(payload inventory.Inventory) *UpdateInventoryResponse {
+	return &UpdateInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*UpdateInventoryResponse, error) {
@@ -228,8 +297,22 @@ type DeleteInventoryRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewDeleteInventoryRequest(ctx context.Context, id int) *DeleteInventoryRequest {
+	return &DeleteInventoryRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type DeleteInventoryResponse struct {
 	Payload bool
+}
+
+func (s *InventoryService) NewDeleteInventoryResponse(payload bool) *DeleteInventoryResponse {
+	return &DeleteInventoryResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) DeleteInventory(req *DeleteInventoryRequest) (*DeleteInventoryResponse, error) {

@@ -10,10 +10,22 @@ import (
 type ListEntityRequest struct {
 	Ctx context.Context
 }
+
+func (s *EntityService) NewListEntityRequest(ctx context.Context) *ListEntityRequest {
+	return &ListEntityRequest{
+		Ctx: ctx,
+	}
+}
+
 type ListEntityResponse struct {
 	Payload entity.EntitySlice
 }
 
+func (s *EntityService) NewListEntityResponse(payload entity.EntitySlice) *ListEntityResponse {
+	return &ListEntityResponse{
+		Payload: payload,
+	}
+}
 func (s *EntityService) ListEntity(req *ListEntityRequest) (*ListEntityResponse, error) {
 	tx, err := s.Repo.Begin(req.Ctx)
 	if err != nil {
@@ -40,8 +52,22 @@ type SearchEntityRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchEntityDTO
 }
+
+func (s *EntityService) NewSearchEntityRequest(ctx context.Context, payload dto.SearchEntityDTO) *SearchEntityRequest {
+	return &SearchEntityRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type SearchEntityResponse struct {
 	Payload entity.EntitySlice
+}
+
+func (s *EntityService) NewSearchEntityResponse(payload entity.EntitySlice) *SearchEntityResponse {
+	return &SearchEntityResponse{
+		Payload: payload,
+	}
 }
 
 func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityResponse, error) {
@@ -70,8 +96,22 @@ type GetEntityRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *EntityService) NewGetEntityRequest(ctx context.Context, id int) *GetEntityRequest {
+	return &GetEntityRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type GetEntityResponse struct {
 	Payload entity.Entity
+}
+
+func (s *EntityService) NewGetEntityResponse(payload entity.Entity) *GetEntityResponse {
+	return &GetEntityResponse{
+		Payload: payload,
+	}
 }
 
 func (s *EntityService) GetEntity(req *GetEntityRequest) (*GetEntityResponse, error) {
@@ -101,8 +141,22 @@ type CreateEntityRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateEntityDTO
 }
+
+func (s *EntityService) NewCreateEntityRequest(ctx context.Context, payload dto.CreateEntityDTO) *CreateEntityRequest {
+	return &CreateEntityRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type CreateEntityResponse struct {
 	Payload entity.Entity
+}
+
+func (s *EntityService) NewCreateEntityResponse(payload entity.Entity) *CreateEntityResponse {
+	return &CreateEntityResponse{
+		Payload: payload,
+	}
 }
 
 func (s *EntityService) CreateEntity(req *CreateEntityRequest) (*CreateEntityResponse, error) {
@@ -144,8 +198,22 @@ type UpdateEntityRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateEntityDTO
 }
+
+func (s *EntityService) NewUpdateEntityRequest(ctx context.Context, payload dto.UpdateEntityDTO) *UpdateEntityRequest {
+	return &UpdateEntityRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type UpdateEntityResponse struct {
 	Payload entity.Entity
+}
+
+func (s *EntityService) NewUpdateEntityResponse(payload entity.Entity) *UpdateEntityResponse {
+	return &UpdateEntityResponse{
+		Payload: payload,
+	}
 }
 
 func (s *EntityService) UpdateEntity(req *UpdateEntityRequest) (*UpdateEntityResponse, error) {
@@ -187,8 +255,22 @@ type DeleteEntityRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *EntityService) NewDeleteEntityRequest(ctx context.Context, id int) *DeleteEntityRequest {
+	return &DeleteEntityRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type DeleteEntityResponse struct {
 	Payload bool
+}
+
+func (s *EntityService) NewDeleteEntityResponse(payload bool) *DeleteEntityResponse {
+	return &DeleteEntityResponse{
+		Payload: payload,
+	}
 }
 
 func (s *EntityService) DeleteEntity(req *DeleteEntityRequest) (*DeleteEntityResponse, error) {

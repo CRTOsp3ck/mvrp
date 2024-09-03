@@ -16,8 +16,17 @@ import (
 type ListInvoiceRequest struct {
 	Ctx context.Context
 }
+
+func NewListInvoiceRequest(ctx context.Context) *ListInvoiceRequest {
+	return &ListInvoiceRequest{Ctx: ctx}
+}
+
 type ListInvoiceResponse struct {
 	Payload invoice.InvoiceSlice
+}
+
+func NewListInvoiceResponse(payload invoice.InvoiceSlice) *ListInvoiceResponse {
+	return &ListInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) ListInvoice(req *ListInvoiceRequest) (*ListInvoiceResponse, error) {
@@ -46,8 +55,17 @@ type PreviewInvoiceRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateInvoiceDTO
 }
+
+func NewPreviewInvoiceRequest(ctx context.Context, payload dto.CreateInvoiceDTO) *PreviewInvoiceRequest {
+	return &PreviewInvoiceRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewInvoiceResponse struct {
 	Payload dto.CreateInvoiceDTO
+}
+
+func NewPreviewInvoiceResponse(payload dto.CreateInvoiceDTO) *PreviewInvoiceResponse {
+	return &PreviewInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) PreviewInvoice(req *PreviewInvoiceRequest) (*PreviewInvoiceResponse, error) {
@@ -71,8 +89,17 @@ type SearchInvoiceRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchInvoiceDTO
 }
+
+func NewSearchInvoiceRequest(ctx context.Context, payload dto.SearchInvoiceDTO) *SearchInvoiceRequest {
+	return &SearchInvoiceRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchInvoiceResponse struct {
 	Payload invoice.InvoiceSlice
+}
+
+func NewSearchInvoiceResponse(payload invoice.InvoiceSlice) *SearchInvoiceResponse {
+	return &SearchInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) SearchInvoice(req *SearchInvoiceRequest) (*SearchInvoiceResponse, error) {
@@ -101,8 +128,17 @@ type GetInvoiceRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetInvoiceRequest(ctx context.Context, id int) *GetInvoiceRequest {
+	return &GetInvoiceRequest{Ctx: ctx, ID: id}
+}
+
 type GetInvoiceResponse struct {
 	Payload invoice.Invoice
+}
+
+func NewGetInvoiceResponse(payload invoice.Invoice) *GetInvoiceResponse {
+	return &GetInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) GetInvoice(req *GetInvoiceRequest) (*GetInvoiceResponse, error) {
@@ -131,8 +167,17 @@ type CreateInvoiceRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateInvoiceDTO
 }
+
+func NewCreateInvoiceRequest(ctx context.Context, payload dto.CreateInvoiceDTO) *CreateInvoiceRequest {
+	return &CreateInvoiceRequest{Ctx: ctx, Payload: payload}
+}
+
 type CreateInvoiceResponse struct {
 	Payload invoice.Invoice
+}
+
+func NewCreateInvoiceResponse(payload invoice.Invoice) *CreateInvoiceResponse {
+	return &CreateInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoiceResponse, error) {
@@ -216,8 +261,17 @@ type UpdateInvoiceRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateInvoiceDTO
 }
+
+func NewUpdateInvoiceRequest(ctx context.Context, payload dto.UpdateInvoiceDTO) *UpdateInvoiceRequest {
+	return &UpdateInvoiceRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateInvoiceResponse struct {
 	Payload invoice.Invoice
+}
+
+func NewUpdateInvoiceResponse(payload invoice.Invoice) *UpdateInvoiceResponse {
+	return &UpdateInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoiceResponse, error) {
@@ -355,8 +409,17 @@ type DeleteInvoiceRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteInvoiceRequest(ctx context.Context, id int) *DeleteInvoiceRequest {
+	return &DeleteInvoiceRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteInvoiceResponse struct {
 	Payload bool
+}
+
+func NewDeleteInvoiceResponse(payload bool) *DeleteInvoiceResponse {
+	return &DeleteInvoiceResponse{Payload: payload}
 }
 
 func (s *InvoiceService) DeleteInvoice(req *DeleteInvoiceRequest) (*DeleteInvoiceResponse, error) {

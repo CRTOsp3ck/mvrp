@@ -19,8 +19,17 @@ import (
 type ListDeliveryNoteRequest struct {
 	Ctx context.Context
 }
+
+func NewListDeliveryNoteRequest(ctx context.Context) *ListDeliveryNoteRequest {
+	return &ListDeliveryNoteRequest{Ctx: ctx}
+}
+
 type ListDeliveryNoteResponse struct {
 	Payload sale.DeliveryNoteSlice
+}
+
+func NewListDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *ListDeliveryNoteResponse {
+	return &ListDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) ListDeliveryNote(req *ListDeliveryNoteRequest) (*ListDeliveryNoteResponse, error) {
@@ -49,8 +58,17 @@ type PreviewDeliveryNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateDeliveryNoteDTO
 }
+
+func NewPreviewDeliveryNoteRequest(ctx context.Context, payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteRequest {
+	return &PreviewDeliveryNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type PreviewDeliveryNoteResponse struct {
 	Payload dto.CreateDeliveryNoteDTO
+}
+
+func NewPreviewDeliveryNoteResponse(payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteResponse {
+	return &PreviewDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) PreviewDeliveryNote(req *PreviewDeliveryNoteRequest) (*PreviewDeliveryNoteResponse, error) {
@@ -75,8 +93,17 @@ type SearchDeliveryNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchDeliveryNoteDTO
 }
+
+func NewSearchDeliveryNoteRequest(ctx context.Context, payload dto.SearchDeliveryNoteDTO) *SearchDeliveryNoteRequest {
+	return &SearchDeliveryNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type SearchDeliveryNoteResponse struct {
 	Payload sale.DeliveryNoteSlice
+}
+
+func NewSearchDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *SearchDeliveryNoteResponse {
+	return &SearchDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) SearchDeliveryNote(req *SearchDeliveryNoteRequest) (*SearchDeliveryNoteResponse, error) {
@@ -105,8 +132,17 @@ type GetDeliveryNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewGetDeliveryNoteRequest(ctx context.Context, id int) *GetDeliveryNoteRequest {
+	return &GetDeliveryNoteRequest{Ctx: ctx, ID: id}
+}
+
 type GetDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
+}
+
+func NewGetDeliveryNoteResponse(payload sale.DeliveryNote) *GetDeliveryNoteResponse {
+	return &GetDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) GetDeliveryNote(req *GetDeliveryNoteRequest) (*GetDeliveryNoteResponse, error) {
@@ -138,8 +174,17 @@ type CreateDeliveryNoteRequest struct {
 	CreateFromSalesOrder bool
 	Payload              dto.CreateDeliveryNoteDTO
 }
+
+func NewCreateDeliveryNoteRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateDeliveryNoteDTO) *CreateDeliveryNoteRequest {
+	return &CreateDeliveryNoteRequest{Ctx: ctx, CreateFromSalesOrder: createFromSalesOrder, Payload: payload}
+}
+
 type CreateDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
+}
+
+func NewCreateDeliveryNoteResponse(payload sale.DeliveryNote) *CreateDeliveryNoteResponse {
+	return &CreateDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*CreateDeliveryNoteResponse, error) {
@@ -329,8 +374,17 @@ type UpdateDeliveryNoteRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateDeliveryNoteDTO
 }
+
+func NewUpdateDeliveryNoteRequest(ctx context.Context, payload dto.UpdateDeliveryNoteDTO) *UpdateDeliveryNoteRequest {
+	return &UpdateDeliveryNoteRequest{Ctx: ctx, Payload: payload}
+}
+
 type UpdateDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
+}
+
+func NewUpdateDeliveryNoteResponse(payload sale.DeliveryNote) *UpdateDeliveryNoteResponse {
+	return &UpdateDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*UpdateDeliveryNoteResponse, error) {
@@ -536,8 +590,17 @@ type DeleteDeliveryNoteRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func NewDeleteDeliveryNoteRequest(ctx context.Context, id int) *DeleteDeliveryNoteRequest {
+	return &DeleteDeliveryNoteRequest{Ctx: ctx, ID: id}
+}
+
 type DeleteDeliveryNoteResponse struct {
 	Payload bool
+}
+
+func NewDeleteDeliveryNoteResponse(payload bool) *DeleteDeliveryNoteResponse {
+	return &DeleteDeliveryNoteResponse{Payload: payload}
 }
 
 func (s *SaleService) DeleteDeliveryNote(req *DeleteDeliveryNoteRequest) (*DeleteDeliveryNoteResponse, error) {

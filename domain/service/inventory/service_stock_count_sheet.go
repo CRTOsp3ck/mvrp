@@ -17,8 +17,21 @@ import (
 type ListStockCountSheetRequest struct {
 	Ctx context.Context
 }
+
+func (s *InventoryService) NewListStockCountSheetRequest(ctx context.Context) *ListStockCountSheetRequest {
+	return &ListStockCountSheetRequest{
+		Ctx: ctx,
+	}
+}
+
 type ListStockCountSheetResponse struct {
 	Payload inventory.StockCountSheetSlice
+}
+
+func (s *InventoryService) NewListStockCountSheetResponse(payload inventory.StockCountSheetSlice) *ListStockCountSheetResponse {
+	return &ListStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) ListStockCountSheet(req *ListStockCountSheetRequest) (*ListStockCountSheetResponse, error) {
@@ -47,8 +60,22 @@ type SearchStockCountSheetRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchStockCountSheetDTO
 }
+
+func (s *InventoryService) NewSearchStockCountSheetRequest(ctx context.Context, payload dto.SearchStockCountSheetDTO) *SearchStockCountSheetRequest {
+	return &SearchStockCountSheetRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type SearchStockCountSheetResponse struct {
 	Payload inventory.StockCountSheetSlice
+}
+
+func (s *InventoryService) NewSearchStockCountSheetResponse(payload inventory.StockCountSheetSlice) *SearchStockCountSheetResponse {
+	return &SearchStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) SearchStockCountSheet(req *SearchStockCountSheetRequest) (*SearchStockCountSheetResponse, error) {
@@ -77,8 +104,22 @@ type GetStockCountSheetRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewGetStockCountSheetRequest(ctx context.Context, id int) *GetStockCountSheetRequest {
+	return &GetStockCountSheetRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type GetStockCountSheetResponse struct {
 	Payload inventory.StockCountSheet
+}
+
+func (s *InventoryService) NewGetStockCountSheetResponse(payload inventory.StockCountSheet) *GetStockCountSheetResponse {
+	return &GetStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) GetStockCountSheet(req *GetStockCountSheetRequest) (*GetStockCountSheetResponse, error) {
@@ -109,8 +150,22 @@ type CreateStockCountSheetRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateStockCountSheetDTO
 }
+
+func (s *InventoryService) NewCreateStockCountSheetRequest(ctx context.Context, payload dto.CreateStockCountSheetDTO) *CreateStockCountSheetRequest {
+	return &CreateStockCountSheetRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type CreateStockCountSheetResponse struct {
 	Payload inventory.StockCountSheet
+}
+
+func (s *InventoryService) NewCreateStockCountSheetResponse(payload inventory.StockCountSheet) *CreateStockCountSheetResponse {
+	return &CreateStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetRequest) (*CreateStockCountSheetResponse, error) {
@@ -188,8 +243,22 @@ type UpdateStockCountSheetRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateStockCountSheetDTO
 }
+
+func (s *InventoryService) NewUpdateStockCountSheetRequest(ctx context.Context, payload dto.CreateStockCountSheetDTO) *UpdateStockCountSheetRequest {
+	return &UpdateStockCountSheetRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
 type UpdateStockCountSheetResponse struct {
 	Payload inventory.StockCountSheet
+}
+
+func (s *InventoryService) NewUpdateStockCountSheetResponse(payload inventory.StockCountSheet) *UpdateStockCountSheetResponse {
+	return &UpdateStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetRequest) (*UpdateStockCountSheetResponse, error) {
@@ -273,8 +342,22 @@ type DeleteStockCountSheetRequest struct {
 	Ctx context.Context
 	ID  int
 }
+
+func (s *InventoryService) NewDeleteStockCountSheetRequest(ctx context.Context, id int) *DeleteStockCountSheetRequest {
+	return &DeleteStockCountSheetRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
+}
+
 type DeleteStockCountSheetResponse struct {
 	Payload bool
+}
+
+func (s *InventoryService) NewDeleteStockCountSheetResponse(payload bool) *DeleteStockCountSheetResponse {
+	return &DeleteStockCountSheetResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetRequest) (*DeleteStockCountSheetResponse, error) {
