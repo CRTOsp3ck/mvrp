@@ -1,4 +1,4 @@
-package main
+package entity
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"github.com/volatiletech/null/v8"
 )
 
-func seedCustomers(count int) error {
+func SeedSuppliers(count int) error {
 	// Create a new service
 	svc := entity.NewEntityService()
 
@@ -20,28 +20,27 @@ func seedCustomers(count int) error {
 		// Create a new request
 		data := dto.CreateEntityDTO{
 			Entity: model.Entity{
-				Code:        fmt.Sprintf("CUS%03d", i+1),
+				Code:        fmt.Sprintf("SUP%03d", i+1),
 				Name:        gofakeit.Name(),
 				Description: gofakeit.AdjectiveDescriptive(),
 				Address:     null.StringFrom(gofakeit.Address().Address),
 				Phone:       null.StringFrom(gofakeit.Phone()),
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
-				Type:        model.EntityTypeCustomer,
+				Type:        model.EntityTypeSupplier,
 			},
 		}
 		ctx := context.Background()
 		req := svc.NewCreateEntityRequest(ctx, data)
 
-		// Create a new customer
+		// Create a new supplier
 		resp, err := svc.CreateEntity(req)
 		if err != nil {
 			return err
 		}
 
-		fmt.Println("Customer created ID: ", resp.Payload.ID)
+		fmt.Println("Supplier created ID: ", resp.Payload.ID)
 		time.Sleep(10 * time.Millisecond)
 	}
-
 	return nil
 }

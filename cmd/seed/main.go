@@ -1,6 +1,7 @@
 package main
 
 import (
+	"mvrp/cmd/seed/entity"
 	"mvrp/data"
 	"mvrp/domain"
 )
@@ -16,21 +17,30 @@ func Init() {
 }
 
 func Seed() {
-	// Create 10 customers
-	err := seedCustomers(100)
+	err := seedEntity()
 	if err != nil {
 		panic(err)
+	}
+}
+
+func seedEntity() error {
+	// Create 10 customers
+	err := entity.SeedCustomers(100)
+	if err != nil {
+		return err
 	}
 
 	// Create 5 suppliers
-	err = seedSuppliers(25)
+	err = entity.SeedSuppliers(25)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// Create 3 employees
-	err = seedEmployees(5)
+	err = entity.SeedEmployees(5)
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return nil
 }
