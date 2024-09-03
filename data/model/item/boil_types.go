@@ -55,9 +55,9 @@ type ItemType string
 
 // Enum values for ItemType
 const (
-	ItemTypeProduct ItemType = "Product"
-	ItemTypeService ItemType = "Service"
-	ItemTypeOther   ItemType = "Other"
+	ItemTypeProduct ItemType = "product"
+	ItemTypeService ItemType = "service"
+	ItemTypeOther   ItemType = "other"
 )
 
 func AllItemType() []ItemType {

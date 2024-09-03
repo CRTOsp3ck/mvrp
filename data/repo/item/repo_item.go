@@ -16,6 +16,7 @@ func (r *ItemRepository) ListAllItems(ctx context.Context, exec boil.ContextExec
 }
 func (r *ItemRepository) SearchItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchItemDTO) (item.ItemSlice, error) {
 	return item.Items(
+		qm.Where("type = ?", dto.Type),
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
 		qm.GroupBy("id"),

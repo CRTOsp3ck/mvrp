@@ -2,9 +2,9 @@
 CREATE SCHEMA IF NOT EXISTS item;
 
 CREATE TYPE item.item_type AS ENUM (
-    'Product', 
-    'Service',
-    'Other'
+    'product', 
+    'service',
+    'other'
 );
 
 CREATE TABLE item.item (
