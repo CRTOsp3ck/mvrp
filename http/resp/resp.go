@@ -22,7 +22,7 @@ func RespondWithJSON(w http.ResponseWriter, status int, data interface{}, messag
 	w.WriteHeader(status)
 	err := json.NewEncoder(w).Encode(response)
 	if err != nil {
-		r.RespondWithError(w, http.StatusInternalServerError, err, "Failed to encode response")
+		RespondWithError(w, http.StatusInternalServerError, err, "Failed to encode response")
 	}
 }
 
