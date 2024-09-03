@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -127,7 +126,7 @@ func generateRepo(data TemplateData, root string, tmpl *template.Template) error
 
 func generateRepoConstructor(data TemplateData, root string) error {
 	tmplFilePath := filepath.Join(root, "cmd", "gen", "repo", "tpl", "repo.go.tpl")
-	tmplName := path.Base(tmplFilePath)
+	tmplName := filepath.Base(tmplFilePath)
 	tmpl, err := template.New(tmplName).Funcs(template.FuncMap{
 		"ToPascalCase": util.Util.NC.ToPascalCase,
 	}).ParseFiles(tmplFilePath)
@@ -149,7 +148,7 @@ func generateRepoConstructor(data TemplateData, root string) error {
 
 func loadModelTemplate(root string) (*template.Template, error) {
 	tmplFilePath := filepath.Join(root, "cmd", "gen", "repo", "tpl", "repo_model.go.tpl")
-	tmplName := path.Base(tmplFilePath)
+	tmplName := filepath.Base(tmplFilePath)
 	return template.New(tmplName).Funcs(template.FuncMap{
 		"ToPascalCase": util.Util.NC.ToPascalCase,
 	}).ParseFiles(tmplFilePath)
@@ -157,7 +156,7 @@ func loadModelTemplate(root string) (*template.Template, error) {
 
 func loadViewTemplate(root string) (*template.Template, error) {
 	tmplFilePath := filepath.Join(root, "cmd", "gen", "repo", "tpl", "repo_view.go.tpl")
-	tmplName := path.Base(tmplFilePath)
+	tmplName := filepath.Base(tmplFilePath)
 	return template.New(tmplName).Funcs(template.FuncMap{
 		"ToPascalCase": util.Util.NC.ToPascalCase,
 	}).ParseFiles(tmplFilePath)

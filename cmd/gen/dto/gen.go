@@ -5,7 +5,6 @@ import (
 	"mvrp/config/dto"
 	"mvrp/util"
 	"os"
-	"path"
 	"path/filepath"
 	"text/template"
 )
@@ -23,7 +22,7 @@ func Generate() error {
 
 	// Load the template file
 	tmplFilePath := filepath.Join(rootDir, "cmd", "gen", "dto", "tpl", "dto.go.tpl")
-	tmplName := path.Base(tmplFilePath)
+	tmplName := filepath.Base(tmplFilePath)
 	tmpl, err := template.New(tmplName).Funcs(template.FuncMap{
 		"ToPascalCase":    util.Util.NC.ToPascalCase,
 		"ToSnakeCase":     util.Util.NC.ToSnakeCase,
