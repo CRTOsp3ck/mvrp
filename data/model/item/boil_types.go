@@ -50,3 +50,47 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	strmangle.PutBuffer(buf)
 	return str
 }
+
+type ItemType string
+
+// Enum values for ItemType
+const (
+	ItemTypeProduct ItemType = "Product"
+	ItemTypeService ItemType = "Service"
+	ItemTypeOther   ItemType = "Other"
+)
+
+func AllItemType() []ItemType {
+	return []ItemType{
+		ItemTypeProduct,
+		ItemTypeService,
+		ItemTypeOther,
+	}
+}
+
+func (e ItemType) IsValid() error {
+	switch e {
+	case ItemTypeProduct, ItemTypeService, ItemTypeOther:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e ItemType) String() string {
+	return string(e)
+}
+
+func (e ItemType) Ordinal() int {
+	switch e {
+	case ItemTypeProduct:
+		return 0
+	case ItemTypeService:
+		return 1
+	case ItemTypeOther:
+		return 2
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}

@@ -8,6 +8,7 @@ import (
 
 type SearchItemDTO struct {
     Keyword      string                             `json:"keyword"`
+    Type string          `json:"type"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`

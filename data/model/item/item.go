@@ -31,6 +31,7 @@ type Item struct {
 	Description string            `boil:"description" json:"description" toml:"description" yaml:"description"`
 	Price       types.NullDecimal `boil:"price" json:"price,omitempty" toml:"price" yaml:"price,omitempty"`
 	Cost        types.NullDecimal `boil:"cost" json:"cost,omitempty" toml:"cost" yaml:"cost,omitempty"`
+	Type        ItemType          `boil:"type" json:"type" toml:"type" yaml:"type"`
 	CreatedAt   time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt   time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt   null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -46,6 +47,7 @@ var ItemColumns = struct {
 	Description string
 	Price       string
 	Cost        string
+	Type        string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
@@ -56,6 +58,7 @@ var ItemColumns = struct {
 	Description: "description",
 	Price:       "price",
 	Cost:        "cost",
+	Type:        "type",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
 	DeletedAt:   "deleted_at",
@@ -68,6 +71,7 @@ var ItemTableColumns = struct {
 	Description string
 	Price       string
 	Cost        string
+	Type        string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
@@ -78,6 +82,7 @@ var ItemTableColumns = struct {
 	Description: "item.description",
 	Price:       "item.price",
 	Cost:        "item.cost",
+	Type:        "item.type",
 	CreatedAt:   "item.created_at",
 	UpdatedAt:   "item.updated_at",
 	DeletedAt:   "item.deleted_at",
@@ -161,6 +166,41 @@ func (w whereHelpertypes_NullDecimal) IsNotNull() qm.QueryMod {
 	return qmhelper.WhereIsNotNull(w.field)
 }
 
+type whereHelperItemType struct{ field string }
+
+func (w whereHelperItemType) EQ(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperItemType) NEQ(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperItemType) LT(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperItemType) LTE(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperItemType) GT(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperItemType) GTE(x ItemType) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperItemType) IN(slice []ItemType) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperItemType) NIN(slice []ItemType) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -213,6 +253,7 @@ var ItemWhere = struct {
 	Description whereHelperstring
 	Price       whereHelpertypes_NullDecimal
 	Cost        whereHelpertypes_NullDecimal
+	Type        whereHelperItemType
 	CreatedAt   whereHelpertime_Time
 	UpdatedAt   whereHelpertime_Time
 	DeletedAt   whereHelpernull_Time
@@ -223,6 +264,7 @@ var ItemWhere = struct {
 	Description: whereHelperstring{field: "\"item\".\"item\".\"description\""},
 	Price:       whereHelpertypes_NullDecimal{field: "\"item\".\"item\".\"price\""},
 	Cost:        whereHelpertypes_NullDecimal{field: "\"item\".\"item\".\"cost\""},
+	Type:        whereHelperItemType{field: "\"item\".\"item\".\"type\""},
 	CreatedAt:   whereHelpertime_Time{field: "\"item\".\"item\".\"created_at\""},
 	UpdatedAt:   whereHelpertime_Time{field: "\"item\".\"item\".\"updated_at\""},
 	DeletedAt:   whereHelpernull_Time{field: "\"item\".\"item\".\"deleted_at\""},
@@ -245,8 +287,8 @@ func (*itemR) NewStruct() *itemR {
 type itemL struct{}
 
 var (
-	itemAllColumns            = []string{"id", "code", "name", "description", "price", "cost", "created_at", "updated_at", "deleted_at"}
-	itemColumnsWithoutDefault = []string{"id", "code", "name", "description", "created_at", "updated_at"}
+	itemAllColumns            = []string{"id", "code", "name", "description", "price", "cost", "type", "created_at", "updated_at", "deleted_at"}
+	itemColumnsWithoutDefault = []string{"id", "code", "name", "description", "type", "created_at", "updated_at"}
 	itemColumnsWithDefault    = []string{"price", "cost", "deleted_at"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{}
