@@ -11,7 +11,7 @@ import (
 
 var (
 	ErrTypeUnknown        = errors.New("unknown error")
-	ErrTypeInternal       = errors.New("internal server error")
+	ErrTypeInternal       = errors.New("internal error")
 	ErrTypeInvalid        = errors.New("invalid error")
 	ErrTypeTimeout        = errors.New("timeout error")
 	ErrTypeCanceled       = errors.New("operation canceled")
@@ -22,6 +22,8 @@ var (
 	ErrTypeUnauthorized   = errors.New("unauthorized error")
 	ErrTypeForbidden      = errors.New("forbidden error")
 	ErrTypeNotFound       = errors.New("not found error")
+	ErrTypeConversion     = errors.New("conversion error")
+	ErrTypeService        = errors.New("service error")
 )
 
 // ============================
