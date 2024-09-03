@@ -36,3 +36,6 @@ go.work
 
 # Environment variables
 .env
+
+# DB config for migrations
+dbconfig.yml
