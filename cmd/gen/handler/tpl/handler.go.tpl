@@ -9,7 +9,7 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/service/{{ .Package }}"
 	"mvrp/errors"
-	"mvrp/http/htresp"
+	"mvrp/htresp"
 	"net/http"
 	"strconv"
 

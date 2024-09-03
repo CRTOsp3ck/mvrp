@@ -9,7 +9,7 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/service/inventory"
 	"mvrp/errors"
-	"mvrp/http/htresp"
+	"mvrp/htresp"
 	"net/http"
 	"strconv"
 

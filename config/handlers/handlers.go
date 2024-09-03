@@ -20,8 +20,9 @@ type Handler struct {
 }
 
 type Package struct {
-	Package  string    `json:"package"`
-	Handlers []Handler `json:"handlers"`
+	Package   string    `json:"package"`
+	BaseRoute string    `json:"base_route"`
+	Handlers  []Handler `json:"handlers"`
 }
 
 type Root struct {

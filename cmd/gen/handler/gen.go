@@ -59,6 +59,8 @@ func Generate() error {
 			count++
 		}
 	}
+
 	fmt.Printf("%d Handler files generated\n", count)
+
 	return nil
 }
