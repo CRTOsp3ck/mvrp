@@ -241,10 +241,10 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 // UPDATE STOCK COUNT SHEET
 type UpdateStockCountSheetRequest struct {
 	Ctx     context.Context
-	Payload dto.CreateStockCountSheetDTO
+	Payload dto.UpdateStockCountSheetDTO
 }
 
-func (s *InventoryService) NewUpdateStockCountSheetRequest(ctx context.Context, payload dto.CreateStockCountSheetDTO) *UpdateStockCountSheetRequest {
+func (s *InventoryService) NewUpdateStockCountSheetRequest(ctx context.Context, payload dto.UpdateStockCountSheetDTO) *UpdateStockCountSheetRequest {
 	return &UpdateStockCountSheetRequest{
 		Ctx:     ctx,
 		Payload: payload,

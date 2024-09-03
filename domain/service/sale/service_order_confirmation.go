@@ -166,13 +166,12 @@ func (s *SaleService) GetOrderConfirmation(req *GetOrderConfirmationRequest) (*G
 
 // CREATE ORDER CONFIRMATION
 type CreateOrderConfirmationRequest struct {
-	Ctx                  context.Context
-	CreateFromSalesOrder bool
-	Payload              dto.CreateOrderConfirmationDTO
+	Ctx     context.Context
+	Payload dto.CreateOrderConfirmationDTO
 }
 
-func (s *SaleService) NewCreateOrderConfirmationRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateOrderConfirmationDTO) *CreateOrderConfirmationRequest {
-	return &CreateOrderConfirmationRequest{Ctx: ctx, CreateFromSalesOrder: createFromSalesOrder, Payload: payload}
+func (s *SaleService) NewCreateOrderConfirmationRequest(ctx context.Context, payload dto.CreateOrderConfirmationDTO) *CreateOrderConfirmationRequest {
+	return &CreateOrderConfirmationRequest{Ctx: ctx, Payload: payload}
 }
 
 type CreateOrderConfirmationResponse struct {
@@ -195,7 +194,7 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 	}
 	defer tx.Rollback()
 
-	if req.CreateFromSalesOrder {
+	if req.Payload.ToCreateFromSalesOrder {
 		// get sales order
 		salesOrder, err := s.Repo.Sale.GetSalesOrderByID(req.Ctx, tx, req.Payload.OrderConfirmation.SalesOrderID)
 		if err != nil {

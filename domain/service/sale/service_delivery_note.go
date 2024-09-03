@@ -170,13 +170,12 @@ func (s *SaleService) GetDeliveryNote(req *GetDeliveryNoteRequest) (*GetDelivery
 
 // CREATE DELIVERY NOTE
 type CreateDeliveryNoteRequest struct {
-	Ctx                  context.Context
-	CreateFromSalesOrder bool
-	Payload              dto.CreateDeliveryNoteDTO
+	Ctx     context.Context
+	Payload dto.CreateDeliveryNoteDTO
 }
 
-func (s *SaleService) NewCreateDeliveryNoteRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateDeliveryNoteDTO) *CreateDeliveryNoteRequest {
-	return &CreateDeliveryNoteRequest{Ctx: ctx, CreateFromSalesOrder: createFromSalesOrder, Payload: payload}
+func (s *SaleService) NewCreateDeliveryNoteRequest(ctx context.Context, payload dto.CreateDeliveryNoteDTO) *CreateDeliveryNoteRequest {
+	return &CreateDeliveryNoteRequest{Ctx: ctx, Payload: payload}
 }
 
 type CreateDeliveryNoteResponse struct {
@@ -202,7 +201,7 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 	}
 	defer tx.Rollback()
 
-	if req.CreateFromSalesOrder {
+	if req.Payload.ToCreateFromSalesOrder {
 		// get sales order
 		salesOrder, err := s.Repo.Sale.GetSalesOrderByID(req.Ctx, tx, req.Payload.DeliveryNote.SalesOrderID)
 		if err != nil {

@@ -29,10 +29,12 @@ type {{ .Name }} struct {
 {{- end }}
 
 {{- range .AdditionalFields }}
-{{- if not (.Type | IsObjectTypeDto) }}
-    {{ .Name }} {{ $.Package }}.{{ .Type }}     `json:"{{ .Name | ToSnakeCase }}"`
-{{- else }}
+{{- if .Type | IsObjectTypeDto }}
     {{ .Name }} {{ .Type }}                     `json:"{{ .Name | ToSnakeCase }}"`
+{{- else if eq .Type "bool"  }}
+    {{ .Name }} {{ .Type }}     `json:"{{ .Name | ToSnakeCase }}"`
+{{- else }}
+    {{ .Name }} {{ $.Package }}.{{ .Type }}     `json:"{{ .Name | ToSnakeCase }}"`
 {{- end }}
 {{- end }}
 {{- end }}

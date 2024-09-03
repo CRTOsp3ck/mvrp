@@ -12,6 +12,14 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetItemDTO", 
+                    "inherits": [
+                        { "package": "item", "model": "Item"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateItemDTO", 
                     "inherits": [
                         { "package": "item", "model": "Item"}
@@ -47,6 +55,14 @@
                     ] 
                 },
                 { 
+                    "name": "GetEntityDTO", 
+                    "inherits": [
+                        { "package": "entity", "model": "Entity"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateEntityDTO", 
                     "inherits": [
                         { "package": "entity", "model": "Entity"}
@@ -74,6 +90,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetInvoiceDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "Invoice"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateInvoiceItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateInvoiceDTO", 
@@ -106,6 +133,15 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetInvoiceItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "InvoiceItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateInvoiceItemDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -130,6 +166,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": []
+                },
+                {
+                    "name": "GetPaymentReceiptDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "PaymentReceipt"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreatePaymentReceiptItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 {
                     "name": "CreatePaymentReceiptDTO",
@@ -162,6 +209,15 @@
                     "search_query_fields": []
                 },
                 {
+                    "name": "GetPaymentReceiptItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "PaymentReceiptItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
                     "name": "CreatePaymentReceiptItemDTO",
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -188,6 +244,15 @@
                     "search_query_fields": []
                 },
                 {
+                    "name": "GetCreditNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "CreditNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
                     "name": "CreateCreditNoteDTO",
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
@@ -212,6 +277,15 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": []
+                },
+                {
+                    "name": "GetDebitNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "DebitNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 {
                     "name": "CreateDebitNoteDTO",
@@ -245,6 +319,17 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetPurchaseOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "PurchaseOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreatePurchaseOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreatePurchaseOrderDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
@@ -275,6 +360,15 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetPurchaseOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "PurchaseOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreatePurchaseOrderItemDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -299,6 +393,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetGoodsReceiptNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "GoodsReceiptNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsReceiptNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateGoodsReceiptNoteDTO",
@@ -331,6 +436,15 @@
                     "search_query_fields": []
                 },
                 { 
+                    "name": "GetGoodsReceiptNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "GoodsReceiptNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateGoodsReceiptNoteItemDTO",
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -355,6 +469,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": []
+                },
+                { 
+                    "name": "GetRequestForQuotationDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "RequestForQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateRequestForQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateRequestForQuotationDTO",
@@ -385,6 +510,15 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": []
+                },
+                { 
+                    "name": "GetRequestForQuotationItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "RequestForQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateRequestForQuotationItemDTO",
@@ -418,6 +552,17 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetSalesOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateSalesOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateSalesOrderDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
@@ -448,6 +593,15 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetSalesOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateSalesOrderItemDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -474,13 +628,25 @@
                     "search_query_fields": [] 
                 },
                 { 
-                    "name": "CreateDeliveryNoteDTO", 
+                    "name": "GetDeliveryNoteDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "sale", "model": "DeliveryNote"}
                     ],
                     "additional_fields": [
                         { "name": "Items", "type": "[]CreateDeliveryNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "CreateDeliveryNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "DeliveryNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateDeliveryNoteItemDTO" },
+                        { "name": "ToCreateFromSalesOrder", "type": "bool" }
                     ],
                     "exclude_fields_from_inherit": []
                 },
@@ -502,6 +668,15 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetDeliveryNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "DeliveryNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateDeliveryNoteItemDTO", 
@@ -528,6 +703,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetGoodsReturnNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "GoodsReturnNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsReturnNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateGoodsReturnNoteDTO", 
@@ -560,6 +746,15 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetGoodsReturnNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "GoodsReturnNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateGoodsReturnNoteItemDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocumentItem"},
@@ -586,13 +781,25 @@
                     "search_query_fields": [] 
                 },
                 { 
-                    "name": "CreateOrderConfirmationDTO", 
+                    "name": "GetOrderConfirmationDTO", 
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "sale", "model": "OrderConfirmation"}
                     ],
                     "additional_fields": [
                         { "name": "Items", "type": "[]CreateOrderConfirmationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "CreateOrderConfirmationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "OrderConfirmation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateOrderConfirmationItemDTO" },
+                        { "name": "ToCreateFromSalesOrder", "type": "bool" }
                     ],
                     "exclude_fields_from_inherit": []
                 },
@@ -614,6 +821,15 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetOrderConfirmationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "OrderConfirmationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateOrderConfirmationItemDTO", 
@@ -640,6 +856,17 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetSalesQuotationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateSalesQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateSalesQuotationDTO", 
@@ -670,6 +897,15 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetSalesQuotationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateSalesQuotationItemDTO", 
@@ -704,6 +940,14 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetInventoryDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "Inventory"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateInventoryDTO", 
                     "inherits": [
                         { "package": "inventory", "model": "Inventory"}
@@ -726,6 +970,14 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": []
+                },
+                {
+                    "name": "GetInventoryTransactionDTO",
+                    "inherits": [
+                        { "package": "inventory", "model": "InventoryTransaction" }
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 {
                     "name": "CreateInventoryTransactionDTO",
@@ -751,6 +1003,16 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetGoodsIssueNoteDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsIssueNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateGoodsIssueNoteDTO", 
@@ -781,6 +1043,14 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetGoodsIssueNoteItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateGoodsIssueNoteItemDTO", 
                     "inherits": [
                         { "package": "inventory", "model": "GoodsIssueNoteItem"}
@@ -805,6 +1075,14 @@
                     "search_query_fields": [] 
                 },
                 { 
+                    "name": "GetStockCountSheetDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "StockCountSheet"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
                     "name": "CreateStockCountSheetDTO", 
                     "inherits": [
                         { "package": "inventory", "model": "StockCountSheet"}
@@ -827,6 +1105,16 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetReturnMerchandiseAuthorizationDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorization"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateReturnMerchandiseAuthorizationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateReturnMerchandiseAuthorizationDTO", 
@@ -855,6 +1143,14 @@
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [],
                     "search_query_fields": [] 
+                },
+                { 
+                    "name": "GetReturnMerchandiseAuthorizationItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorizationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
                 },
                 { 
                     "name": "CreateReturnMerchandiseAuthorizationItemDTO", 

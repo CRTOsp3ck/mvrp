@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"mvrp/cmd/gen/dto"
+	"mvrp/cmd/gen/handler"
 	"mvrp/cmd/gen/migrate"
 	"mvrp/cmd/gen/model"
 	"mvrp/cmd/gen/repo"
@@ -10,10 +11,11 @@ import (
 	"time"
 )
 
-var migTables bool = true
-var genModels bool = true
+var migTables bool = false
+var genModels bool = false
 var genDTOs bool = true
-var genRepos bool = true
+var genRepos bool = false
+var genHandlers bool = true
 
 func main() {
 	fmt.Printf("\n%s\n", strings.Repeat("-", 50))
@@ -48,6 +50,14 @@ func main() {
 	}
 	if genRepos {
 		err = repo.Generate()
+		if err != nil {
+			logError(err)
+			return
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+	if genHandlers {
+		err = handler.Generate()
 		if err != nil {
 			logError(err)
 			return
