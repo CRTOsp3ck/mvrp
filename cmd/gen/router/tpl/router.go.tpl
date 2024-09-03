@@ -39,7 +39,7 @@ func Init() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	SetupRoutes(r)
-	// SetupSwagger(r)
+	SetupSwagger(r)
 
 	http.ListenAndServe(":6900", r)
 }
@@ -60,7 +60,7 @@ func SetupSwagger(r chi.Router) {
 	r.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/openapi.yaml"),
 	))
-	r.Get("/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/swagger/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, filename)
 	})
 }
