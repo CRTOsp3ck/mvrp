@@ -19,7 +19,7 @@ type ListGoodsReturnNoteRequest struct {
 	Ctx context.Context
 }
 
-func NewListGoodsReturnNoteRequest(ctx context.Context) *ListGoodsReturnNoteRequest {
+func (s *SaleService) NewListGoodsReturnNoteRequest(ctx context.Context) *ListGoodsReturnNoteRequest {
 	return &ListGoodsReturnNoteRequest{Ctx: ctx}
 }
 
@@ -27,7 +27,7 @@ type ListGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNoteSlice
 }
 
-func NewListGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *ListGoodsReturnNoteResponse {
+func (s *SaleService) NewListGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *ListGoodsReturnNoteResponse {
 	return &ListGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -58,7 +58,7 @@ type PreviewGoodsReturnNoteRequest struct {
 	Payload dto.CreateGoodsReturnNoteDTO
 }
 
-func NewPreviewGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteRequest {
+func (s *SaleService) NewPreviewGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteRequest {
 	return &PreviewGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -66,7 +66,7 @@ type PreviewGoodsReturnNoteResponse struct {
 	Payload dto.CreateGoodsReturnNoteDTO
 }
 
-func NewPreviewGoodsReturnNoteResponse(payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteResponse {
+func (s *SaleService) NewPreviewGoodsReturnNoteResponse(payload dto.CreateGoodsReturnNoteDTO) *PreviewGoodsReturnNoteResponse {
 	return &PreviewGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -93,7 +93,7 @@ type SearchGoodsReturnNoteRequest struct {
 	Payload dto.SearchGoodsReturnNoteDTO
 }
 
-func NewSearchGoodsReturnNoteRequest(ctx context.Context, payload dto.SearchGoodsReturnNoteDTO) *SearchGoodsReturnNoteRequest {
+func (s *SaleService) NewSearchGoodsReturnNoteRequest(ctx context.Context, payload dto.SearchGoodsReturnNoteDTO) *SearchGoodsReturnNoteRequest {
 	return &SearchGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -101,7 +101,7 @@ type SearchGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNoteSlice
 }
 
-func NewSearchGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *SearchGoodsReturnNoteResponse {
+func (s *SaleService) NewSearchGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *SearchGoodsReturnNoteResponse {
 	return &SearchGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -132,7 +132,7 @@ type GetGoodsReturnNoteRequest struct {
 	ID  int
 }
 
-func NewGetGoodsReturnNoteRequest(ctx context.Context, id int) *GetGoodsReturnNoteRequest {
+func (s *SaleService) NewGetGoodsReturnNoteRequest(ctx context.Context, id int) *GetGoodsReturnNoteRequest {
 	return &GetGoodsReturnNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -140,7 +140,7 @@ type GetGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
 }
 
-func NewGetGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *GetGoodsReturnNoteResponse {
+func (s *SaleService) NewGetGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *GetGoodsReturnNoteResponse {
 	return &GetGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -173,7 +173,7 @@ type CreateGoodsReturnNoteRequest struct {
 	Payload dto.CreateGoodsReturnNoteDTO
 }
 
-func NewCreateGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *CreateGoodsReturnNoteRequest {
+func (s *SaleService) NewCreateGoodsReturnNoteRequest(ctx context.Context, payload dto.CreateGoodsReturnNoteDTO) *CreateGoodsReturnNoteRequest {
 	return &CreateGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -181,7 +181,7 @@ type CreateGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
 }
 
-func NewCreateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *CreateGoodsReturnNoteResponse {
+func (s *SaleService) NewCreateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *CreateGoodsReturnNoteResponse {
 	return &CreateGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -338,7 +338,7 @@ type UpdateGoodsReturnNoteRequest struct {
 	Payload dto.UpdateGoodsReturnNoteDTO
 }
 
-func NewUpdateGoodsReturnNoteRequest(ctx context.Context, payload dto.UpdateGoodsReturnNoteDTO) *UpdateGoodsReturnNoteRequest {
+func (s *SaleService) NewUpdateGoodsReturnNoteRequest(ctx context.Context, payload dto.UpdateGoodsReturnNoteDTO) *UpdateGoodsReturnNoteRequest {
 	return &UpdateGoodsReturnNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -346,7 +346,7 @@ type UpdateGoodsReturnNoteResponse struct {
 	Payload sale.GoodsReturnNote
 }
 
-func NewUpdateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *UpdateGoodsReturnNoteResponse {
+func (s *SaleService) NewUpdateGoodsReturnNoteResponse(payload sale.GoodsReturnNote) *UpdateGoodsReturnNoteResponse {
 	return &UpdateGoodsReturnNoteResponse{Payload: payload}
 }
 
@@ -614,7 +614,7 @@ type DeleteGoodsReturnNoteRequest struct {
 	ID  int
 }
 
-func NewDeleteGoodsReturnNoteRequest(ctx context.Context, id int) *DeleteGoodsReturnNoteRequest {
+func (s *SaleService) NewDeleteGoodsReturnNoteRequest(ctx context.Context, id int) *DeleteGoodsReturnNoteRequest {
 	return &DeleteGoodsReturnNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -622,7 +622,7 @@ type DeleteGoodsReturnNoteResponse struct {
 	Payload bool
 }
 
-func NewDeleteGoodsReturnNoteResponse(payload bool) *DeleteGoodsReturnNoteResponse {
+func (s *SaleService) NewDeleteGoodsReturnNoteResponse(payload bool) *DeleteGoodsReturnNoteResponse {
 	return &DeleteGoodsReturnNoteResponse{Payload: payload}
 }
 

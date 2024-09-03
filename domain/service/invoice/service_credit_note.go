@@ -12,7 +12,7 @@ type ListCreditNoteRequest struct {
 	Ctx context.Context
 }
 
-func NewListCreditNoteRequest(ctx context.Context) *ListCreditNoteRequest {
+func (s *InvoiceService) NewListCreditNoteRequest(ctx context.Context) *ListCreditNoteRequest {
 	return &ListCreditNoteRequest{Ctx: ctx}
 }
 
@@ -20,7 +20,7 @@ type ListCreditNoteResponse struct {
 	Payload invoice.CreditNoteSlice
 }
 
-func NewListCreditNoteResponse(payload invoice.CreditNoteSlice) *ListCreditNoteResponse {
+func (s *InvoiceService) NewListCreditNoteResponse(payload invoice.CreditNoteSlice) *ListCreditNoteResponse {
 	return &ListCreditNoteResponse{Payload: payload}
 }
 
@@ -51,7 +51,7 @@ type SearchCreditNoteRequest struct {
 	Payload dto.SearchCreditNoteDTO
 }
 
-func NewSearchCreditNoteRequest(ctx context.Context, payload dto.SearchCreditNoteDTO) *SearchCreditNoteRequest {
+func (s *InvoiceService) NewSearchCreditNoteRequest(ctx context.Context, payload dto.SearchCreditNoteDTO) *SearchCreditNoteRequest {
 	return &SearchCreditNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -59,7 +59,7 @@ type SearchCreditNoteResponse struct {
 	Payload invoice.CreditNoteSlice
 }
 
-func NewSearchCreditNoteResponse(payload invoice.CreditNoteSlice) *SearchCreditNoteResponse {
+func (s *InvoiceService) NewSearchCreditNoteResponse(payload invoice.CreditNoteSlice) *SearchCreditNoteResponse {
 	return &SearchCreditNoteResponse{Payload: payload}
 }
 
@@ -90,7 +90,7 @@ type GetCreditNoteRequest struct {
 	ID  int
 }
 
-func NewGetCreditNoteRequest(ctx context.Context, id int) *GetCreditNoteRequest {
+func (s *InvoiceService) NewGetCreditNoteRequest(ctx context.Context, id int) *GetCreditNoteRequest {
 	return &GetCreditNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -98,7 +98,7 @@ type GetCreditNoteResponse struct {
 	Payload invoice.CreditNote
 }
 
-func NewGetCreditNoteResponse(payload invoice.CreditNote) *GetCreditNoteResponse {
+func (s *InvoiceService) NewGetCreditNoteResponse(payload invoice.CreditNote) *GetCreditNoteResponse {
 	return &GetCreditNoteResponse{Payload: payload}
 }
 
@@ -131,7 +131,7 @@ type CreateCreditNoteRequest struct {
 	Payload dto.CreateCreditNoteDTO
 }
 
-func NewCreateCreditNoteRequest(ctx context.Context, payload dto.CreateCreditNoteDTO) *CreateCreditNoteRequest {
+func (s *InvoiceService) NewCreateCreditNoteRequest(ctx context.Context, payload dto.CreateCreditNoteDTO) *CreateCreditNoteRequest {
 	return &CreateCreditNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -139,7 +139,7 @@ type CreateCreditNoteResponse struct {
 	Payload invoice.CreditNote
 }
 
-func NewCreateCreditNoteResponse(payload invoice.CreditNote) *CreateCreditNoteResponse {
+func (s *InvoiceService) NewCreateCreditNoteResponse(payload invoice.CreditNote) *CreateCreditNoteResponse {
 	return &CreateCreditNoteResponse{Payload: payload}
 }
 
@@ -199,7 +199,7 @@ type UpdateCreditNoteRequest struct {
 	Payload dto.UpdateCreditNoteDTO
 }
 
-func NewUpdateCreditNoteRequest(ctx context.Context, payload dto.UpdateCreditNoteDTO) *UpdateCreditNoteRequest {
+func (s *InvoiceService) NewUpdateCreditNoteRequest(ctx context.Context, payload dto.UpdateCreditNoteDTO) *UpdateCreditNoteRequest {
 	return &UpdateCreditNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -207,7 +207,7 @@ type UpdateCreditNoteResponse struct {
 	Payload invoice.CreditNote
 }
 
-func NewUpdateCreditNoteResponse(payload invoice.CreditNote) *UpdateCreditNoteResponse {
+func (s *InvoiceService) NewUpdateCreditNoteResponse(payload invoice.CreditNote) *UpdateCreditNoteResponse {
 	return &UpdateCreditNoteResponse{Payload: payload}
 }
 
@@ -259,7 +259,7 @@ type DeleteCreditNoteRequest struct {
 	ID  int
 }
 
-func NewDeleteCreditNoteRequest(ctx context.Context, id int) *DeleteCreditNoteRequest {
+func (s *InvoiceService) NewDeleteCreditNoteRequest(ctx context.Context, id int) *DeleteCreditNoteRequest {
 	return &DeleteCreditNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -267,7 +267,7 @@ type DeleteCreditNoteResponse struct {
 	Payload bool
 }
 
-func NewDeleteCreditNoteResponse(payload bool) *DeleteCreditNoteResponse {
+func (s *InvoiceService) NewDeleteCreditNoteResponse(payload bool) *DeleteCreditNoteResponse {
 	return &DeleteCreditNoteResponse{Payload: payload}
 }
 

@@ -20,7 +20,7 @@ type ListDeliveryNoteRequest struct {
 	Ctx context.Context
 }
 
-func NewListDeliveryNoteRequest(ctx context.Context) *ListDeliveryNoteRequest {
+func (s *SaleService) NewListDeliveryNoteRequest(ctx context.Context) *ListDeliveryNoteRequest {
 	return &ListDeliveryNoteRequest{Ctx: ctx}
 }
 
@@ -28,7 +28,7 @@ type ListDeliveryNoteResponse struct {
 	Payload sale.DeliveryNoteSlice
 }
 
-func NewListDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *ListDeliveryNoteResponse {
+func (s *SaleService) NewListDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *ListDeliveryNoteResponse {
 	return &ListDeliveryNoteResponse{Payload: payload}
 }
 
@@ -59,7 +59,7 @@ type PreviewDeliveryNoteRequest struct {
 	Payload dto.CreateDeliveryNoteDTO
 }
 
-func NewPreviewDeliveryNoteRequest(ctx context.Context, payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteRequest {
+func (s *SaleService) NewPreviewDeliveryNoteRequest(ctx context.Context, payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteRequest {
 	return &PreviewDeliveryNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -67,7 +67,7 @@ type PreviewDeliveryNoteResponse struct {
 	Payload dto.CreateDeliveryNoteDTO
 }
 
-func NewPreviewDeliveryNoteResponse(payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteResponse {
+func (s *SaleService) NewPreviewDeliveryNoteResponse(payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteResponse {
 	return &PreviewDeliveryNoteResponse{Payload: payload}
 }
 
@@ -94,7 +94,7 @@ type SearchDeliveryNoteRequest struct {
 	Payload dto.SearchDeliveryNoteDTO
 }
 
-func NewSearchDeliveryNoteRequest(ctx context.Context, payload dto.SearchDeliveryNoteDTO) *SearchDeliveryNoteRequest {
+func (s *SaleService) NewSearchDeliveryNoteRequest(ctx context.Context, payload dto.SearchDeliveryNoteDTO) *SearchDeliveryNoteRequest {
 	return &SearchDeliveryNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -102,7 +102,7 @@ type SearchDeliveryNoteResponse struct {
 	Payload sale.DeliveryNoteSlice
 }
 
-func NewSearchDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *SearchDeliveryNoteResponse {
+func (s *SaleService) NewSearchDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *SearchDeliveryNoteResponse {
 	return &SearchDeliveryNoteResponse{Payload: payload}
 }
 
@@ -133,7 +133,7 @@ type GetDeliveryNoteRequest struct {
 	ID  int
 }
 
-func NewGetDeliveryNoteRequest(ctx context.Context, id int) *GetDeliveryNoteRequest {
+func (s *SaleService) NewGetDeliveryNoteRequest(ctx context.Context, id int) *GetDeliveryNoteRequest {
 	return &GetDeliveryNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -141,7 +141,7 @@ type GetDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
 }
 
-func NewGetDeliveryNoteResponse(payload sale.DeliveryNote) *GetDeliveryNoteResponse {
+func (s *SaleService) NewGetDeliveryNoteResponse(payload sale.DeliveryNote) *GetDeliveryNoteResponse {
 	return &GetDeliveryNoteResponse{Payload: payload}
 }
 
@@ -175,7 +175,7 @@ type CreateDeliveryNoteRequest struct {
 	Payload              dto.CreateDeliveryNoteDTO
 }
 
-func NewCreateDeliveryNoteRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateDeliveryNoteDTO) *CreateDeliveryNoteRequest {
+func (s *SaleService) NewCreateDeliveryNoteRequest(ctx context.Context, createFromSalesOrder bool, payload dto.CreateDeliveryNoteDTO) *CreateDeliveryNoteRequest {
 	return &CreateDeliveryNoteRequest{Ctx: ctx, CreateFromSalesOrder: createFromSalesOrder, Payload: payload}
 }
 
@@ -183,7 +183,7 @@ type CreateDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
 }
 
-func NewCreateDeliveryNoteResponse(payload sale.DeliveryNote) *CreateDeliveryNoteResponse {
+func (s *SaleService) NewCreateDeliveryNoteResponse(payload sale.DeliveryNote) *CreateDeliveryNoteResponse {
 	return &CreateDeliveryNoteResponse{Payload: payload}
 }
 
@@ -375,7 +375,7 @@ type UpdateDeliveryNoteRequest struct {
 	Payload dto.UpdateDeliveryNoteDTO
 }
 
-func NewUpdateDeliveryNoteRequest(ctx context.Context, payload dto.UpdateDeliveryNoteDTO) *UpdateDeliveryNoteRequest {
+func (s *SaleService) NewUpdateDeliveryNoteRequest(ctx context.Context, payload dto.UpdateDeliveryNoteDTO) *UpdateDeliveryNoteRequest {
 	return &UpdateDeliveryNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -383,7 +383,7 @@ type UpdateDeliveryNoteResponse struct {
 	Payload sale.DeliveryNote
 }
 
-func NewUpdateDeliveryNoteResponse(payload sale.DeliveryNote) *UpdateDeliveryNoteResponse {
+func (s *SaleService) NewUpdateDeliveryNoteResponse(payload sale.DeliveryNote) *UpdateDeliveryNoteResponse {
 	return &UpdateDeliveryNoteResponse{Payload: payload}
 }
 
@@ -591,7 +591,7 @@ type DeleteDeliveryNoteRequest struct {
 	ID  int
 }
 
-func NewDeleteDeliveryNoteRequest(ctx context.Context, id int) *DeleteDeliveryNoteRequest {
+func (s *SaleService) NewDeleteDeliveryNoteRequest(ctx context.Context, id int) *DeleteDeliveryNoteRequest {
 	return &DeleteDeliveryNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -599,7 +599,7 @@ type DeleteDeliveryNoteResponse struct {
 	Payload bool
 }
 
-func NewDeleteDeliveryNoteResponse(payload bool) *DeleteDeliveryNoteResponse {
+func (s *SaleService) NewDeleteDeliveryNoteResponse(payload bool) *DeleteDeliveryNoteResponse {
 	return &DeleteDeliveryNoteResponse{Payload: payload}
 }
 

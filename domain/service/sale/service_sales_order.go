@@ -19,7 +19,7 @@ type ListSalesOrderRequest struct {
 	Ctx context.Context
 }
 
-func NewListSalesOrderRequest(ctx context.Context) *ListSalesOrderRequest {
+func (s *SaleService) NewListSalesOrderRequest(ctx context.Context) *ListSalesOrderRequest {
 	return &ListSalesOrderRequest{Ctx: ctx}
 }
 
@@ -27,7 +27,7 @@ type ListSalesOrderResponse struct {
 	Payload sale.SalesOrderSlice
 }
 
-func NewListSalesOrderResponse(payload sale.SalesOrderSlice) *ListSalesOrderResponse {
+func (s *SaleService) NewListSalesOrderResponse(payload sale.SalesOrderSlice) *ListSalesOrderResponse {
 	return &ListSalesOrderResponse{Payload: payload}
 }
 
@@ -58,7 +58,7 @@ type PreviewSalesOrderRequest struct {
 	Payload dto.CreateSalesOrderDTO
 }
 
-func NewPreviewSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *PreviewSalesOrderRequest {
+func (s *SaleService) NewPreviewSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *PreviewSalesOrderRequest {
 	return &PreviewSalesOrderRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -66,7 +66,7 @@ type PreviewSalesOrderResponse struct {
 	Payload dto.CreateSalesOrderDTO
 }
 
-func NewPreviewSalesOrderResponse(payload dto.CreateSalesOrderDTO) *PreviewSalesOrderResponse {
+func (s *SaleService) NewPreviewSalesOrderResponse(payload dto.CreateSalesOrderDTO) *PreviewSalesOrderResponse {
 	return &PreviewSalesOrderResponse{Payload: payload}
 }
 
@@ -93,7 +93,7 @@ type SearchSalesOrderRequest struct {
 	Payload dto.SearchSalesOrderDTO
 }
 
-func NewSearchSalesOrderRequest(ctx context.Context, payload dto.SearchSalesOrderDTO) *SearchSalesOrderRequest {
+func (s *SaleService) NewSearchSalesOrderRequest(ctx context.Context, payload dto.SearchSalesOrderDTO) *SearchSalesOrderRequest {
 	return &SearchSalesOrderRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -101,7 +101,7 @@ type SearchSalesOrderResponse struct {
 	Payload sale.SalesOrderSlice
 }
 
-func NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) *SearchSalesOrderResponse {
+func (s *SaleService) NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) *SearchSalesOrderResponse {
 	return &SearchSalesOrderResponse{Payload: payload}
 }
 
@@ -132,7 +132,7 @@ type GetSalesOrderRequest struct {
 	ID  int
 }
 
-func NewGetSalesOrderRequest(ctx context.Context, id int) *GetSalesOrderRequest {
+func (s *SaleService) NewGetSalesOrderRequest(ctx context.Context, id int) *GetSalesOrderRequest {
 	return &GetSalesOrderRequest{Ctx: ctx, ID: id}
 }
 
@@ -140,7 +140,7 @@ type GetSalesOrderResponse struct {
 	Payload sale.SalesOrder
 }
 
-func NewGetSalesOrderResponse(payload sale.SalesOrder) *GetSalesOrderResponse {
+func (s *SaleService) NewGetSalesOrderResponse(payload sale.SalesOrder) *GetSalesOrderResponse {
 	return &GetSalesOrderResponse{Payload: payload}
 }
 
@@ -173,7 +173,7 @@ type CreateSalesOrderRequest struct {
 	Payload dto.CreateSalesOrderDTO
 }
 
-func NewCreateSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *CreateSalesOrderRequest {
+func (s *SaleService) NewCreateSalesOrderRequest(ctx context.Context, payload dto.CreateSalesOrderDTO) *CreateSalesOrderRequest {
 	return &CreateSalesOrderRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -181,7 +181,7 @@ type CreateSalesOrderResponse struct {
 	Payload sale.SalesOrder
 }
 
-func NewCreateSalesOrderResponse(payload sale.SalesOrder) *CreateSalesOrderResponse {
+func (s *SaleService) NewCreateSalesOrderResponse(payload sale.SalesOrder) *CreateSalesOrderResponse {
 	return &CreateSalesOrderResponse{Payload: payload}
 }
 
@@ -296,7 +296,7 @@ type UpdateSalesOrderRequest struct {
 	Payload dto.UpdateSalesOrderDTO
 }
 
-func NewUpdateSalesOrderRequest(ctx context.Context, payload dto.UpdateSalesOrderDTO) *UpdateSalesOrderRequest {
+func (s *SaleService) NewUpdateSalesOrderRequest(ctx context.Context, payload dto.UpdateSalesOrderDTO) *UpdateSalesOrderRequest {
 	return &UpdateSalesOrderRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -304,7 +304,7 @@ type UpdateSalesOrderResponse struct {
 	Payload sale.SalesOrder
 }
 
-func NewUpdateSalesOrderResponse(payload sale.SalesOrder) *UpdateSalesOrderResponse {
+func (s *SaleService) NewUpdateSalesOrderResponse(payload sale.SalesOrder) *UpdateSalesOrderResponse {
 	return &UpdateSalesOrderResponse{Payload: payload}
 }
 
@@ -519,7 +519,7 @@ type DeleteSalesOrderRequest struct {
 	ID  int
 }
 
-func NewDeleteSalesOrderRequest(ctx context.Context, id int) *DeleteSalesOrderRequest {
+func (s *SaleService) NewDeleteSalesOrderRequest(ctx context.Context, id int) *DeleteSalesOrderRequest {
 	return &DeleteSalesOrderRequest{Ctx: ctx, ID: id}
 }
 
@@ -527,7 +527,7 @@ type DeleteSalesOrderResponse struct {
 	Payload bool
 }
 
-func NewDeleteSalesOrderResponse(payload bool) *DeleteSalesOrderResponse {
+func (s *SaleService) NewDeleteSalesOrderResponse(payload bool) *DeleteSalesOrderResponse {
 	return &DeleteSalesOrderResponse{Payload: payload}
 }
 

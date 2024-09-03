@@ -14,7 +14,7 @@ type ListSalesQuotationRequest struct {
 	Ctx context.Context
 }
 
-func NewListSalesQuotationRequest(ctx context.Context) *ListSalesQuotationRequest {
+func (s *SaleService) NewListSalesQuotationRequest(ctx context.Context) *ListSalesQuotationRequest {
 	return &ListSalesQuotationRequest{Ctx: ctx}
 }
 
@@ -22,7 +22,7 @@ type ListSalesQuotationResponse struct {
 	Payload sale.SalesQuotationSlice
 }
 
-func NewListSalesQuotationResponse(payload sale.SalesQuotationSlice) *ListSalesQuotationResponse {
+func (s *SaleService) NewListSalesQuotationResponse(payload sale.SalesQuotationSlice) *ListSalesQuotationResponse {
 	return &ListSalesQuotationResponse{Payload: payload}
 }
 
@@ -53,7 +53,7 @@ type PreviewSalesQuotationRequest struct {
 	Payload dto.CreateSalesQuotationDTO
 }
 
-func NewPreviewSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationRequest {
+func (s *SaleService) NewPreviewSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationRequest {
 	return &PreviewSalesQuotationRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -61,7 +61,7 @@ type PreviewSalesQuotationResponse struct {
 	Payload dto.CreateSalesQuotationDTO
 }
 
-func NewPreviewSalesQuotationResponse(payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationResponse {
+func (s *SaleService) NewPreviewSalesQuotationResponse(payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationResponse {
 	return &PreviewSalesQuotationResponse{Payload: payload}
 }
 
@@ -88,7 +88,7 @@ type SearchSalesQuotationRequest struct {
 	Payload dto.SearchSalesQuotationDTO
 }
 
-func NewSearchSalesQuotationRequest(ctx context.Context, payload dto.SearchSalesQuotationDTO) *SearchSalesQuotationRequest {
+func (s *SaleService) NewSearchSalesQuotationRequest(ctx context.Context, payload dto.SearchSalesQuotationDTO) *SearchSalesQuotationRequest {
 	return &SearchSalesQuotationRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -96,7 +96,7 @@ type SearchSalesQuotationResponse struct {
 	Payload sale.SalesQuotationSlice
 }
 
-func NewSearchSalesQuotationResponse(payload sale.SalesQuotationSlice) *SearchSalesQuotationResponse {
+func (s *SaleService) NewSearchSalesQuotationResponse(payload sale.SalesQuotationSlice) *SearchSalesQuotationResponse {
 	return &SearchSalesQuotationResponse{Payload: payload}
 }
 
@@ -127,7 +127,7 @@ type GetSalesQuotationRequest struct {
 	ID  int
 }
 
-func NewGetSalesQuotationRequest(ctx context.Context, id int) *GetSalesQuotationRequest {
+func (s *SaleService) NewGetSalesQuotationRequest(ctx context.Context, id int) *GetSalesQuotationRequest {
 	return &GetSalesQuotationRequest{Ctx: ctx, ID: id}
 }
 
@@ -135,7 +135,7 @@ type GetSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
 }
 
-func NewGetSalesQuotationResponse(payload sale.SalesQuotation) *GetSalesQuotationResponse {
+func (s *SaleService) NewGetSalesQuotationResponse(payload sale.SalesQuotation) *GetSalesQuotationResponse {
 	return &GetSalesQuotationResponse{Payload: payload}
 }
 
@@ -168,7 +168,7 @@ type CreateSalesQuotationRequest struct {
 	Payload dto.CreateSalesQuotationDTO
 }
 
-func NewCreateSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *CreateSalesQuotationRequest {
+func (s *SaleService) NewCreateSalesQuotationRequest(ctx context.Context, payload dto.CreateSalesQuotationDTO) *CreateSalesQuotationRequest {
 	return &CreateSalesQuotationRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -176,7 +176,7 @@ type CreateSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
 }
 
-func NewCreateSalesQuotationResponse(payload sale.SalesQuotation) *CreateSalesQuotationResponse {
+func (s *SaleService) NewCreateSalesQuotationResponse(payload sale.SalesQuotation) *CreateSalesQuotationResponse {
 	return &CreateSalesQuotationResponse{Payload: payload}
 }
 
@@ -266,7 +266,7 @@ type UpdateSalesQuotationRequest struct {
 	Payload dto.UpdateSalesQuotationDTO
 }
 
-func NewUpdateSalesQuotationRequest(ctx context.Context, payload dto.UpdateSalesQuotationDTO) *UpdateSalesQuotationRequest {
+func (s *SaleService) NewUpdateSalesQuotationRequest(ctx context.Context, payload dto.UpdateSalesQuotationDTO) *UpdateSalesQuotationRequest {
 	return &UpdateSalesQuotationRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -274,7 +274,7 @@ type UpdateSalesQuotationResponse struct {
 	Payload sale.SalesQuotation
 }
 
-func NewUpdateSalesQuotationResponse(payload sale.SalesQuotation) *UpdateSalesQuotationResponse {
+func (s *SaleService) NewUpdateSalesQuotationResponse(payload sale.SalesQuotation) *UpdateSalesQuotationResponse {
 	return &UpdateSalesQuotationResponse{Payload: payload}
 }
 
@@ -411,7 +411,7 @@ type DeleteSalesQuotationRequest struct {
 	ID  int
 }
 
-func NewDeleteSalesQuotationRequest(ctx context.Context, id int) *DeleteSalesQuotationRequest {
+func (s *SaleService) NewDeleteSalesQuotationRequest(ctx context.Context, id int) *DeleteSalesQuotationRequest {
 	return &DeleteSalesQuotationRequest{Ctx: ctx, ID: id}
 }
 
@@ -419,7 +419,7 @@ type DeleteSalesQuotationResponse struct {
 	Payload bool
 }
 
-func NewDeleteSalesQuotationResponse(payload bool) *DeleteSalesQuotationResponse {
+func (s *SaleService) NewDeleteSalesQuotationResponse(payload bool) *DeleteSalesQuotationResponse {
 	return &DeleteSalesQuotationResponse{Payload: payload}
 }
 

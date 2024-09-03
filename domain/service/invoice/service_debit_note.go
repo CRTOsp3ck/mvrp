@@ -12,7 +12,7 @@ type ListDebitNoteRequest struct {
 	Ctx context.Context
 }
 
-func NewListDebitNoteRequest(ctx context.Context) *ListDebitNoteRequest {
+func (s *InvoiceService) NewListDebitNoteRequest(ctx context.Context) *ListDebitNoteRequest {
 	return &ListDebitNoteRequest{Ctx: ctx}
 }
 
@@ -20,7 +20,7 @@ type ListDebitNoteResponse struct {
 	Payload invoice.DebitNoteSlice
 }
 
-func NewListDebitNoteResponse(payload invoice.DebitNoteSlice) *ListDebitNoteResponse {
+func (s *InvoiceService) NewListDebitNoteResponse(payload invoice.DebitNoteSlice) *ListDebitNoteResponse {
 	return &ListDebitNoteResponse{Payload: payload}
 }
 
@@ -51,7 +51,7 @@ type SearchDebitNoteRequest struct {
 	Payload dto.SearchDebitNoteDTO
 }
 
-func NewSearchDebitNoteRequest(ctx context.Context, payload dto.SearchDebitNoteDTO) *SearchDebitNoteRequest {
+func (s *InvoiceService) NewSearchDebitNoteRequest(ctx context.Context, payload dto.SearchDebitNoteDTO) *SearchDebitNoteRequest {
 	return &SearchDebitNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -59,7 +59,7 @@ type SearchDebitNoteResponse struct {
 	Payload invoice.DebitNoteSlice
 }
 
-func NewSearchDebitNoteResponse(payload invoice.DebitNoteSlice) *SearchDebitNoteResponse {
+func (s *InvoiceService) NewSearchDebitNoteResponse(payload invoice.DebitNoteSlice) *SearchDebitNoteResponse {
 	return &SearchDebitNoteResponse{Payload: payload}
 }
 
@@ -90,7 +90,7 @@ type GetDebitNoteRequest struct {
 	ID  int
 }
 
-func NewGetDebitNoteRequest(ctx context.Context, id int) *GetDebitNoteRequest {
+func (s *InvoiceService) NewGetDebitNoteRequest(ctx context.Context, id int) *GetDebitNoteRequest {
 	return &GetDebitNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -98,7 +98,7 @@ type GetDebitNoteResponse struct {
 	Payload invoice.DebitNote
 }
 
-func NewGetDebitNoteResponse(payload invoice.DebitNote) *GetDebitNoteResponse {
+func (s *InvoiceService) NewGetDebitNoteResponse(payload invoice.DebitNote) *GetDebitNoteResponse {
 	return &GetDebitNoteResponse{Payload: payload}
 }
 
@@ -131,7 +131,7 @@ type CreateDebitNoteRequest struct {
 	Payload dto.CreateDebitNoteDTO
 }
 
-func NewCreateDebitNoteRequest(ctx context.Context, payload dto.CreateDebitNoteDTO) *CreateDebitNoteRequest {
+func (s *InvoiceService) NewCreateDebitNoteRequest(ctx context.Context, payload dto.CreateDebitNoteDTO) *CreateDebitNoteRequest {
 	return &CreateDebitNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -139,7 +139,7 @@ type CreateDebitNoteResponse struct {
 	Payload invoice.DebitNote
 }
 
-func NewCreateDebitNoteResponse(payload invoice.DebitNote) *CreateDebitNoteResponse {
+func (s *InvoiceService) NewCreateDebitNoteResponse(payload invoice.DebitNote) *CreateDebitNoteResponse {
 	return &CreateDebitNoteResponse{Payload: payload}
 }
 
@@ -199,7 +199,7 @@ type UpdateDebitNoteRequest struct {
 	Payload dto.UpdateDebitNoteDTO
 }
 
-func NewUpdateDebitNoteRequest(ctx context.Context, payload dto.UpdateDebitNoteDTO) *UpdateDebitNoteRequest {
+func (s *InvoiceService) NewUpdateDebitNoteRequest(ctx context.Context, payload dto.UpdateDebitNoteDTO) *UpdateDebitNoteRequest {
 	return &UpdateDebitNoteRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -207,7 +207,7 @@ type UpdateDebitNoteResponse struct {
 	Payload invoice.DebitNote
 }
 
-func NewUpdateDebitNoteResponse(payload invoice.DebitNote) *UpdateDebitNoteResponse {
+func (s *InvoiceService) NewUpdateDebitNoteResponse(payload invoice.DebitNote) *UpdateDebitNoteResponse {
 	return &UpdateDebitNoteResponse{Payload: payload}
 }
 
@@ -259,7 +259,7 @@ type DeleteDebitNoteRequest struct {
 	ID  int
 }
 
-func NewDeleteDebitNoteRequest(ctx context.Context, id int) *DeleteDebitNoteRequest {
+func (s *InvoiceService) NewDeleteDebitNoteRequest(ctx context.Context, id int) *DeleteDebitNoteRequest {
 	return &DeleteDebitNoteRequest{Ctx: ctx, ID: id}
 }
 
@@ -267,7 +267,7 @@ type DeleteDebitNoteResponse struct {
 	Payload bool
 }
 
-func NewDeleteDebitNoteResponse(payload bool) *DeleteDebitNoteResponse {
+func (s *InvoiceService) NewDeleteDebitNoteResponse(payload bool) *DeleteDebitNoteResponse {
 	return &DeleteDebitNoteResponse{Payload: payload}
 }
 

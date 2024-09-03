@@ -11,7 +11,7 @@ type ListItemRequest struct {
 	Ctx context.Context
 }
 
-func NewListItemRequest(ctx context.Context) *ListItemRequest {
+func (s *ItemService) NewListItemRequest(ctx context.Context) *ListItemRequest {
 	return &ListItemRequest{Ctx: ctx}
 }
 
@@ -19,7 +19,7 @@ type ListItemResponse struct {
 	Payload item.ItemSlice
 }
 
-func NewListItemResponse(payload item.ItemSlice) *ListItemResponse {
+func (s *ItemService) NewListItemResponse(payload item.ItemSlice) *ListItemResponse {
 	return &ListItemResponse{Payload: payload}
 }
 
@@ -50,7 +50,7 @@ type SearchItemRequest struct {
 	Payload dto.SearchItemDTO
 }
 
-func NewSearchItemRequest(ctx context.Context, payload dto.SearchItemDTO) *SearchItemRequest {
+func (s *ItemService) NewSearchItemRequest(ctx context.Context, payload dto.SearchItemDTO) *SearchItemRequest {
 	return &SearchItemRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -58,7 +58,7 @@ type SearchItemResponse struct {
 	Payload item.ItemSlice
 }
 
-func NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {
+func (s *ItemService) NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {
 	return &SearchItemResponse{Payload: payload}
 }
 func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, error) {
@@ -88,7 +88,7 @@ type GetItemRequest struct {
 	ID  int
 }
 
-func NewGetItemRequest(ctx context.Context, id int) *GetItemRequest {
+func (s *ItemService) NewGetItemRequest(ctx context.Context, id int) *GetItemRequest {
 	return &GetItemRequest{Ctx: ctx, ID: id}
 }
 
@@ -96,7 +96,7 @@ type GetItemResponse struct {
 	Payload item.Item
 }
 
-func NewGetItemResponse(payload item.Item) *GetItemResponse {
+func (s *ItemService) NewGetItemResponse(payload item.Item) *GetItemResponse {
 	return &GetItemResponse{Payload: payload}
 }
 
@@ -128,7 +128,7 @@ type CreateItemRequest struct {
 	Payload dto.CreateItemDTO
 }
 
-func NewCreateItemRequest(ctx context.Context, payload dto.CreateItemDTO) *CreateItemRequest {
+func (s *ItemService) NewCreateItemRequest(ctx context.Context, payload dto.CreateItemDTO) *CreateItemRequest {
 	return &CreateItemRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -136,7 +136,7 @@ type CreateItemResponse struct {
 	Payload item.Item
 }
 
-func NewCreateItemResponse(payload item.Item) *CreateItemResponse {
+func (s *ItemService) NewCreateItemResponse(payload item.Item) *CreateItemResponse {
 	return &CreateItemResponse{Payload: payload}
 }
 
@@ -180,7 +180,7 @@ type UpdateItemRequest struct {
 	Payload dto.UpdateItemDTO
 }
 
-func NewUpdateItemRequest(ctx context.Context, payload dto.UpdateItemDTO) *UpdateItemRequest {
+func (s *ItemService) NewUpdateItemRequest(ctx context.Context, payload dto.UpdateItemDTO) *UpdateItemRequest {
 	return &UpdateItemRequest{Ctx: ctx, Payload: payload}
 }
 
@@ -188,7 +188,7 @@ type UpdateItemResponse struct {
 	Payload item.Item
 }
 
-func NewUpdateItemResponse(payload item.Item) *UpdateItemResponse {
+func (s *ItemService) NewUpdateItemResponse(payload item.Item) *UpdateItemResponse {
 	return &UpdateItemResponse{Payload: payload}
 }
 
@@ -232,7 +232,7 @@ type DeleteItemRequest struct {
 	ID  int
 }
 
-func NewDeleteItemRequest(ctx context.Context, id int) *DeleteItemRequest {
+func (s *ItemService) NewDeleteItemRequest(ctx context.Context, id int) *DeleteItemRequest {
 	return &DeleteItemRequest{Ctx: ctx, ID: id}
 }
 
@@ -240,7 +240,7 @@ type DeleteItemResponse struct {
 	Payload bool
 }
 
-func NewDeleteItemResponse(payload bool) *DeleteItemResponse {
+func (s *ItemService) NewDeleteItemResponse(payload bool) *DeleteItemResponse {
 	return &DeleteItemResponse{Payload: payload}
 }
 
