@@ -1,0 +1,198 @@
+{
+    "data": [
+        {
+            "package": "entity",
+            "base_route": "/entity",
+            "handlers": [
+                { 
+                    "name": "entity",
+                    "routes": [
+                        { "method": "GET", "path": "/entity", "handler": "ListEntity", "type": "list" },
+                        { "method": "POST", "path": "/entity", "handler": "CreateEntity", "type": "create" },
+                        { "method": "GET", "path": "/entity/{id}", "handler": "GetEntity", "type": "get" },
+                        { "method": "PUT", "path": "/entity/{id}", "handler": "UpdateEntity", "type": "update" },
+                        { "method": "DELETE", "path": "/entity/{id}", "handler": "DeleteEntity", "type": "delete" },
+                        { "method": "POST", "path": "/entity/search", "handler": "SearchEntity", "type": "search" }
+                    ] 
+                }
+            ]
+        },
+        {
+            "package": "inventory",
+            "base_route": "/inventory",
+            "handlers": [
+                { 
+                    "name": "goods_issue_note",
+                    "routes": [
+                        { "method": "GET", "path": "/goods_issue_note", "handler": "ListGoodsIssueNote", "type": "list" },
+                        { "method": "POST", "path": "/goods_issue_note", "handler": "CreateGoodsIssueNote", "type": "create" },
+                        { "method": "GET", "path": "/goods_issue_note/{id}", "handler": "GetGoodsIssueNote", "type": "get" },
+                        { "method": "PUT", "path": "/goods_issue_note/{id}", "handler": "UpdateGoodsIssueNote", "type": "update" },
+                        { "method": "DELETE", "path": "/goods_issue_note/{id}", "handler": "DeleteGoodsIssueNote", "type": "delete" },
+                        { "method": "POST", "path": "/goods_issue_note/search", "handler": "SearchGoodsIssueNote", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "inventory",
+                    "routes": [
+                        { "method": "GET", "path": "/inventory", "handler": "ListInventory", "type": "list" },
+                        { "method": "POST", "path": "/inventory", "handler": "CreateInventory", "type": "create" },
+                        { "method": "GET", "path": "/inventory/{id}", "handler": "GetInventory", "type": "get" },
+                        { "method": "PUT", "path": "/inventory/{id}", "handler": "UpdateInventory", "type": "update" },
+                        { "method": "DELETE", "path": "/inventory/{id}", "handler": "DeleteInventory", "type": "delete" },
+                        { "method": "POST", "path": "/inventory/search", "handler": "SearchInventory", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "return_merchandise_authorization",
+                    "routes": [
+                        { "method": "GET", "path": "/return_merchandise_authorization", "handler": "ListReturnMerchandiseAuthorization", "type": "list" },
+                        { "method": "POST", "path": "/return_merchandise_authorization", "handler": "CreateReturnMerchandiseAuthorization", "type": "create" },
+                        { "method": "GET", "path": "/return_merchandise_authorization/{id}", "handler": "GetReturnMerchandiseAuthorization", "type": "get" },
+                        { "method": "PUT", "path": "/return_merchandise_authorization/{id}", "handler": "UpdateReturnMerchandiseAuthorization", "type": "update" },
+                        { "method": "DELETE", "path": "/return_merchandise_authorization/{id}", "handler": "DeleteReturnMerchandiseAuthorization", "type": "delete" },
+                        { "method": "POST", "path": "/return_merchandise_authorization/search", "handler": "SearchReturnMerchandiseAuthorization", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "stock_count_sheet",
+                    "routes": [
+                        { "method": "GET", "path": "/stock_count_sheet", "handler": "ListStockCountSheet", "type": "list" },
+                        { "method": "POST", "path": "/stock_count_sheet", "handler": "CreateStockCountSheet", "type": "create" },
+                        { "method": "GET", "path": "/stock_count_sheet/{id}", "handler": "GetStockCountSheet", "type": "get" },
+                        { "method": "PUT", "path": "/stock_count_sheet/{id}", "handler": "UpdateStockCountSheet", "type": "update" },
+                        { "method": "DELETE", "path": "/stock_count_sheet/{id}", "handler": "DeleteStockCountSheet", "type": "delete" },
+                        { "method": "POST", "path": "/stock_count_sheet/search", "handler": "SearchStockCountSheet", "type": "search" }
+                    ] 
+                }
+            ]
+        },
+        {
+            "package": "invoice",
+            "base_route": "/invoice",
+            "handlers": [
+                { 
+                    "name": "credit_note",
+                    "routes": [
+                        { "method": "GET", "path": "/credit_note", "handler": "ListCreditNote", "type": "list" },
+                        { "method": "POST", "path": "/credit_note", "handler": "CreateCreditNote", "type": "create" },
+                        { "method": "GET", "path": "/credit_note/{id}", "handler": "GetCreditNote", "type": "get" },
+                        { "method": "PUT", "path": "/credit_note/{id}", "handler": "UpdateCreditNote", "type": "update" },
+                        { "method": "DELETE", "path": "/credit_note/{id}", "handler": "DeleteCreditNote", "type": "delete" },
+                        { "method": "POST", "path": "/credit_note/search", "handler": "SearchCreditNote", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "debit_note",
+                    "routes": [
+                        { "method": "GET", "path": "/debit_note", "handler": "ListDebitNote", "type": "list" },
+                        { "method": "POST", "path": "/debit_note", "handler": "CreateDebitNote", "type": "create" },
+                        { "method": "GET", "path": "/debit_note/{id}", "handler": "GetDebitNote", "type": "get" },
+                        { "method": "PUT", "path": "/debit_note/{id}", "handler": "UpdateDebitNote", "type": "update" },
+                        { "method": "DELETE", "path": "/debit_note/{id}", "handler": "DeleteDebitNote", "type": "delete" },
+                        { "method": "POST", "path": "/debit_note/search", "handler": "SearchDebitNote", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "invoice",
+                    "routes": [
+                        { "method": "GET", "path": "/invoice", "handler": "ListInvoice", "type": "list" },
+                        { "method": "POST", "path": "/invoice", "handler": "CreateInvoice", "type": "create" },
+                        { "method": "GET", "path": "/invoice/{id}", "handler": "GetInvoice", "type": "get" },
+                        { "method": "PUT", "path": "/invoice/{id}", "handler": "UpdateInvoice", "type": "update" },
+                        { "method": "DELETE", "path": "/invoice/{id}", "handler": "DeleteInvoice", "type": "delete" },
+                        { "method": "POST", "path": "/invoice/search", "handler": "SearchInvoice", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "payment_receipt",
+                    "routes": [
+                        { "method": "GET", "path": "/payment_receipt", "handler": "ListPaymentReceipt", "type": "list" },
+                        { "method": "POST", "path": "/payment_receipt", "handler": "CreatePaymentReceipt", "type": "create" },
+                        { "method": "GET", "path": "/payment_receipt/{id}", "handler": "GetPaymentReceipt", "type": "get" },
+                        { "method": "PUT", "path": "/payment_receipt/{id}", "handler": "UpdatePaymentReceipt", "type": "update" },
+                        { "method": "DELETE", "path": "/payment_receipt/{id}", "handler": "DeletePaymentReceipt", "type": "delete" },
+                        { "method": "POST", "path": "/payment_receipt/search", "handler": "SearchPaymentReceipt", "type": "search" }
+                    ] 
+                }
+            ]
+        },
+        {
+            "package": "item",
+            "handlers": [
+                { 
+                    "name": "item",
+                    "routes": [
+                        { "method": "GET", "path": "/item", "handler": "ListItem", "type": "list" },
+                        { "method": "POST", "path": "/item", "handler": "CreateItem", "type": "create" },
+                        { "method": "GET", "path": "/item/{id}", "handler": "GetItem", "type": "get" },
+                        { "method": "PUT", "path": "/item{id}", "handler": "UpdateItem", "type": "update" },
+                        { "method": "DELETE", "path": "/item/{id}", "handler": "DeleteItem", "type": "delete" },
+                        { "method": "POST", "path": "/item/search", "handler": "SearchItem", "type": "search" }
+                    ] 
+                }
+            ]
+        },
+        {
+            "package": "sale",
+            "base_route": "/sale",
+            "handlers": [
+                { 
+                    "name": "delivery_note",
+                    "routes": [
+                        { "method": "GET", "path": "/delivery_note", "handler": "ListDeliveryNote", "type": "list" },
+                        { "method": "POST", "path": "/delivery_note", "handler": "CreateDeliveryNote", "type": "create" },
+                        { "method": "GET", "path": "/delivery_note/{id}", "handler": "GetDeliveryNote", "type": "get" },
+                        { "method": "PUT", "path": "/delivery_note/{id}", "handler": "UpdateDeliveryNote", "type": "update" },
+                        { "method": "DELETE", "path": "/delivery_note/{id}", "handler": "DeleteDeliveryNote", "type": "delete" },
+                        { "method": "POST", "path": "/delivery_note/search", "handler": "SearchDeliveryNote", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "goods_return_note",
+                    "routes": [
+                        { "method": "GET", "path": "/goods_return_note", "handler": "ListGoodsReturnNote", "type": "list" },
+                        { "method": "POST", "path": "/goods_return_note", "handler": "CreateGoodsReturnNote", "type": "create" },
+                        { "method": "GET", "path": "/goods_return_note/{id}", "handler": "GetGoodsReturnNote", "type": "get" },
+                        { "method": "PUT", "path": "/goods_return_note/{id}", "handler": "UpdateGoodsReturnNote", "type": "update" },
+                        { "method": "DELETE", "path": "/goods_return_note/{id}", "handler": "DeleteGoodsReturnNote", "type": "delete" },
+                        { "method": "POST", "path": "/goods_return_note/search", "handler": "SearchGoodsReturnNote", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "order_confirmation",
+                    "routes": [
+                        { "method": "GET", "path": "/order_confirmation", "handler": "ListOrderConfirmation", "type": "list" },
+                        { "method": "POST", "path": "/order_confirmation", "handler": "CreateOrderConfirmation", "type": "create" },
+                        { "method": "GET", "path": "/order_confirmation/{id}", "handler": "GetOrderConfirmation", "type": "get" },
+                        { "method": "PUT", "path": "/order_confirmation/{id}", "handler": "UpdateOrderConfirmation", "type": "update" },
+                        { "method": "DELETE", "path": "/order_confirmation/{id}", "handler": "DeleteOrderConfirmation", "type": "delete" },
+                        { "method": "POST", "path": "/order_confirmation/search", "handler": "SearchOrderConfirmation", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "sales_order",
+                    "routes": [
+                        { "method": "GET", "path": "/sales_order", "handler": "ListSalesOrder", "type": "list" },
+                        { "method": "POST", "path": "/sales_order", "handler": "CreateSalesOrder", "type": "create" },
+                        { "method": "GET", "path": "/sales_order/{id}", "handler": "GetSalesOrder", "type": "get" },
+                        { "method": "PUT", "path": "/sales_order/{id}", "handler": "UpdateSalesOrder", "type": "update" },
+                        { "method": "DELETE", "path": "/sales_order/{id}", "handler": "DeleteSalesOrder", "type": "delete" },
+                        { "method": "POST", "path": "/sales_order/search", "handler": "SearchSalesOrder", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "sales_quotation",
+                    "routes": [
+                        { "method": "GET", "path": "/sales_quotation", "handler": "ListSalesQuotation", "type": "list" },
+                        { "method": "POST", "path": "/sales_quotation", "handler": "CreateSalesQuotation", "type": "create" },
+                        { "method": "GET", "path": "/sales_quotation/{id}", "handler": "GetSalesQuotation", "type": "get" },
+                        { "method": "PUT", "path": "/sales_quotation/{id}", "handler": "UpdateSalesQuotation", "type": "update" },
+                        { "method": "DELETE", "path": "/sales_quotation/{id}", "handler": "DeleteSalesQuotation", "type": "delete" },
+                        { "method": "POST", "path": "/sales_quotation/search", "handler": "SearchSalesQuotation", "type": "search" }
+                    ] 
+                }
+            ]
+        }
+    ]
+}
