@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var migTables bool = false
+var migTables bool = true
 var genModels bool = false
 var genDTOs bool = false
 var genRepos bool = false
