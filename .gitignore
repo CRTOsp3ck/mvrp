@@ -39,3 +39,7 @@ go.work
 
 # DB config for migrations
 dbconfig.yml
+
+# Live reloading
+cmd/app/.air.toml
+cmd/app/tmp/
