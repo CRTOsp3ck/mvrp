@@ -1,7 +1,9 @@
 package dto
 
 import (
+	"bytes"
 	"fmt"
+	"log"
 	"mvrp/config/dto"
 	"mvrp/util"
 	"os"
@@ -63,7 +65,35 @@ func Generate() error {
 	}
 
 	fmt.Printf("%d DTO files generated\n", len(config.Data))
+
+	// --------------------------------------------------
+	// GENERATE DTO LIST FILE
+	// --------------------------------------------------
+	err = generateList(config.Data, rootDir)
+	if err != nil {
+		log.Fatalf("Error generating DTO list file: %v\n", err)
+	}
+	fmt.Printf("1 DTO list file generated\n")
+
 	return nil
+}
+
+func generateList(pkgs []dto.Package, root string) error {
+	tmpl, err := template.ParseFiles(filepath.Join(root, "cmd", "gen", "dto", "tpl", "dto_list.go.tpl"))
+	if err != nil {
+		return err
+	}
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, pkgs)
+	if err != nil {
+		return err
+	}
+	filename := filepath.Join(root, "domain", "dto", "dto_list.gen.go")
+	dir := filepath.Dir(filename)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(filename, buf.Bytes(), 0644)
 }
 
 func deduplicateImports(pkg dto.Package) []string {

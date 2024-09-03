@@ -17,7 +17,7 @@ var genModels bool = false
 var genDTOs bool = false
 var genRepos bool = false
 var genHandlers bool = false
-var genRouter bool = true
+var genRouter bool = false
 
 func main() {
 	fmt.Printf("\n%s\n", strings.Repeat("-", 50))

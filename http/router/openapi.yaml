@@ -1,0 +1,2483 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: regedits@gmail.com
+    name: SP3CK
+  description: API documentation for MVRP
+  title: MVRP API
+  version: 1.0.0
+paths:
+  /v1/main/entity/entity:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateEntityDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/entity/entity/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateEntityDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/entity/entity/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchEntityDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/goods_issue_note:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateGoodsIssueNoteDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/inventory/goods_issue_note/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateGoodsIssueNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/goods_issue_note/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchGoodsIssueNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateInventoryDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/inventory/inventory/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateInventoryDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchInventoryDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/return_merchandise_authorization:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateReturnMerchandiseAuthorizationDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/inventory/return_merchandise_authorization/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateReturnMerchandiseAuthorizationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/return_merchandise_authorization/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchReturnMerchandiseAuthorizationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/stock_count_sheet:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateStockCountSheetDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/inventory/stock_count_sheet/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateStockCountSheetDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/stock_count_sheet/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchStockCountSheetDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/credit_note:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateCreditNoteDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/invoice/credit_note/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateCreditNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/credit_note/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchCreditNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/debit_note:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateDebitNoteDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/invoice/debit_note/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateDebitNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/debit_note/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchDebitNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/invoice:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateInvoiceDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/invoice/invoice/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateInvoiceDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/invoice/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchInvoiceDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/payment_receipt:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreatePaymentReceiptDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/invoice/payment_receipt/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdatePaymentReceiptDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/payment_receipt/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchPaymentReceiptDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/item/item:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateItemDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/item/item/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateItemDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/item/item/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchItemDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/delivery_note:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateDeliveryNoteDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/sale/delivery_note/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateDeliveryNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/delivery_note/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchDeliveryNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/goods_return_note:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateGoodsReturnNoteDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/sale/goods_return_note/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateGoodsReturnNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/goods_return_note/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchGoodsReturnNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/order_confirmation:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateOrderConfirmationDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/sale/order_confirmation/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateOrderConfirmationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/order_confirmation/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchOrderConfirmationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/sales_order:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateSalesOrderDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/sale/sales_order/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateSalesOrderDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/sales_order/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchSalesOrderDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/sales_quotation:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateSalesQuotationDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/sale/sales_quotation/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateSalesQuotationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/sale/sales_quotation/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchSalesQuotationDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+components:
+  schemas:
+    BaseBaseDocument:
+      properties:
+        additional_discount_amount:
+          type: string
+        additional_discount_rate_gen:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        custom_adjustment_amount:
+          type: string
+        deleted_at:
+          type: string
+        discount_amount:
+          type: string
+        discount_rate_gen:
+          type: string
+        gross_amount:
+          type: string
+        gross_amount_after_discount_gen:
+          type: string
+        id:
+          type: integer
+        issue_date:
+          type: string
+        net_amount_gen:
+          type: string
+        other_fees:
+          type: string
+        payment_instructions:
+          type: string
+        payment_status:
+          type: string
+        payment_terms:
+          type: string
+        remarks:
+          type: string
+        shipping_date:
+          type: string
+        shipping_fees:
+          type: string
+        shipping_method:
+          type: string
+        shipping_terms:
+          type: string
+        tax_amount:
+          type: string
+        tax_rate_gen:
+          type: string
+        terms_and_conditions:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    BaseBaseDocumentItem:
+      properties:
+        base_document_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        discount_rate_gen:
+          type: string
+        final_unit_price_gen:
+          type: string
+        id:
+          type: integer
+        item_code:
+          type: string
+        item_description:
+          type: string
+        item_id:
+          type: string
+        item_name:
+          type: string
+        quantity:
+          type: string
+        tax_rate_gen:
+          type: string
+        total_discount_amount_gen:
+          type: string
+        total_sale_price_gen:
+          type: string
+        total_shipping_fees_gen:
+          type: string
+        total_tax_amount_gen:
+          type: string
+        unit_discount_amount:
+          type: string
+        unit_price:
+          type: string
+        unit_shipping_fees:
+          type: string
+        unit_tax_amount:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    DtoCreateCreditNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        credit_note:
+          $ref: '#/components/schemas/InvoiceCreditNote'
+      type: object
+    DtoCreateDebitNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        debit_note:
+          $ref: '#/components/schemas/InvoiceDebitNote'
+      type: object
+    DtoCreateDeliveryNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        delivery_note:
+          $ref: '#/components/schemas/SaleDeliveryNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateDeliveryNoteItemDTO'
+          nullable: true
+          type: array
+        to_create_from_sales_order:
+          type: boolean
+      type: object
+    DtoCreateDeliveryNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        delivery_note_item:
+          $ref: '#/components/schemas/SaleDeliveryNoteItem'
+      type: object
+    DtoCreateEntityDTO:
+      properties:
+        entity:
+          $ref: '#/components/schemas/EntityEntity'
+      type: object
+    DtoCreateGoodsIssueNoteDTO:
+      properties:
+        goods_issue_note:
+          $ref: '#/components/schemas/InventoryGoodsIssueNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateGoodsIssueNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoCreateGoodsIssueNoteItemDTO:
+      properties:
+        goods_issue_note_item:
+          $ref: '#/components/schemas/InventoryGoodsIssueNoteItem'
+      type: object
+    DtoCreateGoodsReturnNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        goods_return_note:
+          $ref: '#/components/schemas/SaleGoodsReturnNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateGoodsReturnNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoCreateGoodsReturnNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        goods_return_note_item:
+          $ref: '#/components/schemas/SaleGoodsReturnNoteItem'
+      type: object
+    DtoCreateInventoryDTO:
+      properties:
+        inventory:
+          $ref: '#/components/schemas/InventoryInventory'
+      type: object
+    DtoCreateInvoiceDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        invoice:
+          $ref: '#/components/schemas/InvoiceInvoice'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateInvoiceItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoCreateInvoiceItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        invoice_item:
+          $ref: '#/components/schemas/InvoiceInvoiceItem'
+      type: object
+    DtoCreateItemDTO:
+      properties:
+        item:
+          $ref: '#/components/schemas/ItemItem'
+      type: object
+    DtoCreateOrderConfirmationDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateOrderConfirmationItemDTO'
+          nullable: true
+          type: array
+        order_confirmation:
+          $ref: '#/components/schemas/SaleOrderConfirmation'
+        to_create_from_sales_order:
+          type: boolean
+      type: object
+    DtoCreateOrderConfirmationItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        order_confirmation_item:
+          $ref: '#/components/schemas/SaleOrderConfirmationItem'
+      type: object
+    DtoCreatePaymentReceiptDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreatePaymentReceiptItemDTO'
+          nullable: true
+          type: array
+        payment_receipt:
+          $ref: '#/components/schemas/InvoicePaymentReceipt'
+      type: object
+    DtoCreatePaymentReceiptItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        payment_receipt_item:
+          $ref: '#/components/schemas/InvoicePaymentReceiptItem'
+      type: object
+    DtoCreateReturnMerchandiseAuthorizationDTO:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateReturnMerchandiseAuthorizationItemDTO'
+          nullable: true
+          type: array
+        return_merchandise_authorization:
+          $ref: '#/components/schemas/InventoryReturnMerchandiseAuthorization'
+      type: object
+    DtoCreateReturnMerchandiseAuthorizationItemDTO:
+      properties:
+        return_merchandise_authorization_item:
+          $ref: '#/components/schemas/InventoryReturnMerchandiseAuthorizationItem'
+      type: object
+    DtoCreateSalesOrderDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateSalesOrderItemDTO'
+          nullable: true
+          type: array
+        sales_order:
+          $ref: '#/components/schemas/SaleSalesOrder'
+      type: object
+    DtoCreateSalesOrderItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        sales_order_item:
+          $ref: '#/components/schemas/SaleSalesOrderItem'
+      type: object
+    DtoCreateSalesQuotationDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateSalesQuotationItemDTO'
+          nullable: true
+          type: array
+        sales_quotation:
+          $ref: '#/components/schemas/SaleSalesQuotation'
+      type: object
+    DtoCreateSalesQuotationItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        sales_quotation_item:
+          $ref: '#/components/schemas/SaleSalesQuotationItem'
+      type: object
+    DtoCreateStockCountSheetDTO:
+      properties:
+        stock_count_sheet:
+          $ref: '#/components/schemas/InventoryStockCountSheet'
+      type: object
+    DtoSearchCreditNoteDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchDebitNoteDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchDeliveryNoteDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchEntityDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+        type:
+          type: string
+      type: object
+    DtoSearchGoodsIssueNoteDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchGoodsReturnNoteDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchInventoryDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchInvoiceDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchItemDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchOrderConfirmationDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchPaymentReceiptDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchReturnMerchandiseAuthorizationDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchSalesOrderDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchSalesQuotationDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoSearchStockCountSheetDTO:
+      properties:
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
+    DtoUpdateCreditNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        credit_note:
+          $ref: '#/components/schemas/InvoiceCreditNote'
+      type: object
+    DtoUpdateDebitNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        debit_note:
+          $ref: '#/components/schemas/InvoiceDebitNote'
+      type: object
+    DtoUpdateDeliveryNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        delivery_note:
+          $ref: '#/components/schemas/SaleDeliveryNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateDeliveryNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateDeliveryNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        delivery_note_item:
+          $ref: '#/components/schemas/SaleDeliveryNoteItem'
+      type: object
+    DtoUpdateEntityDTO:
+      properties:
+        entity:
+          $ref: '#/components/schemas/EntityEntity'
+      type: object
+    DtoUpdateGoodsIssueNoteDTO:
+      properties:
+        goods_issue_note:
+          $ref: '#/components/schemas/InventoryGoodsIssueNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateGoodsIssueNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateGoodsIssueNoteItemDTO:
+      properties:
+        goods_issue_note_item:
+          $ref: '#/components/schemas/InventoryGoodsIssueNoteItem'
+      type: object
+    DtoUpdateGoodsReturnNoteDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        goods_return_note:
+          $ref: '#/components/schemas/SaleGoodsReturnNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateGoodsReturnNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateGoodsReturnNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        goods_return_note_item:
+          $ref: '#/components/schemas/SaleGoodsReturnNoteItem'
+      type: object
+    DtoUpdateInventoryDTO:
+      properties:
+        inventory:
+          $ref: '#/components/schemas/InventoryInventory'
+      type: object
+    DtoUpdateInvoiceDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        invoice:
+          $ref: '#/components/schemas/InvoiceInvoice'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateInvoiceItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateInvoiceItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        invoice_item:
+          $ref: '#/components/schemas/InvoiceInvoiceItem'
+      type: object
+    DtoUpdateItemDTO:
+      properties:
+        item:
+          $ref: '#/components/schemas/ItemItem'
+      type: object
+    DtoUpdateOrderConfirmationDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateOrderConfirmationItemDTO'
+          nullable: true
+          type: array
+        order_confirmation:
+          $ref: '#/components/schemas/SaleOrderConfirmation'
+      type: object
+    DtoUpdateOrderConfirmationItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        order_confirmation_item:
+          $ref: '#/components/schemas/SaleOrderConfirmationItem'
+      type: object
+    DtoUpdatePaymentReceiptDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdatePaymentReceiptItemDTO'
+          nullable: true
+          type: array
+        payment_receipt:
+          $ref: '#/components/schemas/InvoicePaymentReceipt'
+      type: object
+    DtoUpdatePaymentReceiptItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        payment_receipt_item:
+          $ref: '#/components/schemas/InvoicePaymentReceiptItem'
+      type: object
+    DtoUpdateReturnMerchandiseAuthorizationDTO:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateReturnMerchandiseAuthorizationItemDTO'
+          nullable: true
+          type: array
+        return_merchandise_authorization:
+          $ref: '#/components/schemas/InventoryReturnMerchandiseAuthorization'
+      type: object
+    DtoUpdateReturnMerchandiseAuthorizationItemDTO:
+      properties:
+        return_merchandise_authorization_item:
+          $ref: '#/components/schemas/InventoryReturnMerchandiseAuthorizationItem'
+      type: object
+    DtoUpdateSalesOrderDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateSalesOrderItemDTO'
+          nullable: true
+          type: array
+        sales_order:
+          $ref: '#/components/schemas/SaleSalesOrder'
+      type: object
+    DtoUpdateSalesOrderItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        sales_order_item:
+          $ref: '#/components/schemas/SaleSalesOrderItem'
+      type: object
+    DtoUpdateSalesQuotationDTO:
+      properties:
+        base_document:
+          $ref: '#/components/schemas/BaseBaseDocument'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateSalesQuotationItemDTO'
+          nullable: true
+          type: array
+        sales_quotation:
+          $ref: '#/components/schemas/SaleSalesQuotation'
+      type: object
+    DtoUpdateSalesQuotationItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        sales_quotation_item:
+          $ref: '#/components/schemas/SaleSalesQuotationItem'
+      type: object
+    DtoUpdateStockCountSheetDTO:
+      properties:
+        stock_count_sheet:
+          $ref: '#/components/schemas/InventoryStockCountSheet'
+      type: object
+    EntityEntity:
+      properties:
+        address:
+          type: string
+        code:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        description:
+          type: string
+        email:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        type:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        website:
+          type: string
+      type: object
+    HtrespResponse:
+      properties:
+        data: {}
+        error:
+          type: string
+        message:
+          type: string
+        status:
+          type: integer
+      type: object
+    InventoryGoodsIssueNote:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        gin_number:
+          type: string
+        id:
+          type: integer
+        issue_date:
+          type: string
+        notes:
+          type: string
+        receipient_id:
+          type: string
+        total_value:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryGoodsIssueNoteItem:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        gin_id:
+          type: string
+        id:
+          type: integer
+        inventory_id:
+          type: string
+        quantity:
+          type: string
+        unit_value:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryInventory:
+      properties:
+        cost_per_unit:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        inventory_number:
+          type: string
+        is_discontinued:
+          type: string
+        item_id:
+          type: string
+        quantity_available:
+          type: string
+        quantity_reserved:
+          type: string
+        quantity_returned:
+          type: string
+        record_end_date:
+          type: string
+        record_end_quantity:
+          type: string
+        record_start_date:
+          type: string
+        record_start_quantity:
+          type: string
+        remarks:
+          type: string
+        reorder_level:
+          type: string
+        reorder_quantity:
+          type: string
+        total_quantity_on_hand:
+          type: string
+        total_value_on_hand:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryReturnMerchandiseAuthorization:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        rma_date:
+          type: string
+        rma_number:
+          type: string
+        total_value:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryReturnMerchandiseAuthorizationItem:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        inventory_id:
+          type: string
+        quantity:
+          type: string
+        rma_id:
+          type: string
+        unit_value:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryStockCountSheet:
+      properties:
+        count_date:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        discrepancies:
+          type: string
+        id:
+          type: integer
+        inventory_id:
+          type: string
+        notes:
+          type: string
+        scs_number:
+          type: string
+        total_quantity:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoiceCreditNote:
+      properties:
+        base_document_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        credit_note_number:
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        reason_for_issuance:
+          type: string
+        reference_invoice_id:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoiceDebitNote:
+      properties:
+        additional_charges:
+          type: string
+        base_document_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        debit_note_number:
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        reason_for_issuance:
+          type: string
+        reference_invoice_id:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoiceInvoice:
+      properties:
+        base_document_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        customer_id:
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        invoice_number:
+          type: string
+        payment_due_date:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        vendor_id:
+          type: string
+      type: object
+    InvoiceInvoiceItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        invoice_id:
+          type: integer
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoicePaymentReceipt:
+      properties:
+        base_document_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        date_of_payment:
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        invoice_id:
+          type: integer
+        payee_id:
+          type: string
+        payer_id:
+          type: string
+        payment_receipt_number:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoicePaymentReceiptItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        payment_receipt_id:
+          type: integer
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    ItemItem:
+      properties:
+        code:
+          type: string
+        cost:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    SaleDeliveryNote:
+      properties:
+        base_document_id:
+          type: integer
+        bill_to_information:
+          type: string
+        customer_id:
+          type: string
+        delivery_date:
+          type: string
+        delivery_note_number:
+          type: string
+        goods_condition:
+          type: string
+        id:
+          type: integer
+        received_by:
+          type: string
+        sales_order_id:
+          type: integer
+        ship_from_information:
+          type: string
+        ship_to_information:
+          type: string
+        shipping_personnel_information:
+          type: string
+        vendor_id:
+          type: string
+      type: object
+    SaleDeliveryNoteItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        delivery_note_id:
+          type: integer
+        id:
+          type: integer
+      type: object
+    SaleGoodsReturnNote:
+      properties:
+        base_document_id:
+          type: integer
+        credit_note_id:
+          type: string
+        customer_id:
+          type: string
+        goods_return_note_number:
+          type: string
+        id:
+          type: integer
+        invoice_id:
+          type: string
+        issue_date:
+          format: date-time
+          type: string
+        overall_goods_condition:
+          type: string
+        received_by:
+          type: string
+        receiving_location_information:
+          type: string
+        return_date:
+          type: string
+        return_reason:
+          type: string
+        rma_id:
+          type: string
+        sales_order_id:
+          type: string
+      type: object
+    SaleGoodsReturnNoteItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        goods_return_note_id:
+          type: integer
+        id:
+          type: integer
+        return_condition:
+          type: string
+        return_quantity:
+          type: string
+        rma_item_id:
+          type: string
+      type: object
+    SaleOrderConfirmation:
+      properties:
+        base_document_id:
+          type: integer
+        customer_id:
+          type: string
+        id:
+          type: integer
+        order_confirmation_number:
+          type: string
+        sales_order_id:
+          type: integer
+        ship_to_information:
+          type: string
+      type: object
+    SaleOrderConfirmationItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        id:
+          type: integer
+        order_confirmation_id:
+          type: integer
+      type: object
+    SaleSalesOrder:
+      properties:
+        base_document_id:
+          type: integer
+        customer_id:
+          type: string
+        id:
+          type: integer
+        order_status:
+          type: string
+        payment_due_date:
+          type: string
+        sales_order_number:
+          type: string
+        sales_representative_information:
+          type: string
+        ship_from_information:
+          type: string
+        ship_to_information:
+          type: string
+        vendor_id:
+          type: string
+      type: object
+    SaleSalesOrderItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        id:
+          type: integer
+        sales_order_id:
+          type: integer
+      type: object
+    SaleSalesQuotation:
+      properties:
+        base_document_id:
+          type: integer
+        customer_id:
+          type: string
+        id:
+          type: integer
+        prepared_by:
+          type: string
+        quotation_status:
+          type: string
+        requested_by:
+          type: string
+        sales_quotation_number:
+          type: string
+        ship_to_information:
+          type: string
+        valid_until_date:
+          type: string
+        vendor_id:
+          type: string
+      type: object
+    SaleSalesQuotationItem:
+      properties:
+        base_document_item_id:
+          type: integer
+        id:
+          type: integer
+        sales_quotation_id:
+          type: integer
+      type: object

@@ -47,6 +47,14 @@ func Generate() error {
 	}
 
 	fmt.Printf("1 Router file generated with %d routes\n", getRoutesCount(config))
+
+	err = generateOpenAPISpec(rootDir)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("OpenAPI spec generated\n")
+
 	return nil
 }
 

@@ -16,7 +16,7 @@ func TestGetConfig(t *testing.T) {
 	util.Util.Json.PrintJson(root)
 }
 
-func TestGetDTOs(t *testing.T) {
+func TestGetDTOConfigs(t *testing.T) {
 	dtos, err := GetDTOs()
 	require.NoError(t, err)
 	assert.NotEmpty(t, dtos)
