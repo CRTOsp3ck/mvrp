@@ -1,0 +1,11 @@
+{
+    "packages": [
+        "base",
+        "entity",
+        "inventory",
+        "invoice",
+        "item",
+        "purchase",
+        "sale"
+    ]
+}

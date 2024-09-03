@@ -1,0 +1,20 @@
+pkgname = "entity"
+output   = "."
+wipe     = false
+no-tests = true
+add-enum-types = true
+add-soft-deletes = false
+
+[psql]
+  dbname = "mvrp"
+  host   = "localhost"
+  port   = 5432
+  user   = "postgres"
+  pass   = "postgres"
+  sslmode = "disable"
+  schema = "entity"
+  blacklist = ["migrations", "other"]
+
+[auto-columns]
+  created = "created_at"
+  updated = "updated_at"

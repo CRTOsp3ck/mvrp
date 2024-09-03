@@ -1,0 +1,878 @@
+{
+    "data": [
+        {
+            "package": "item",
+            "dtos": [
+                { 
+                    "name": "SearchItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateItemDTO", 
+                    "inherits": [
+                        { "package": "item", "model": "Item"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateItemDTO", 
+                    "inherits": [
+                        { "package": "item", "model": "Item"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+            ]
+        },
+        {
+            "package": "entity",
+            "dtos": [
+                { 
+                    "name": "SearchEntityDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [
+                        {"name": "type", "type": "string"}
+                    ],
+                    "search_query_fields": [
+                        {"name": "name", "type": "string"}, 
+                        {"name": "address", "type": "string"}, 
+                        {"name": "email", "type": "string"}
+                    ] 
+                },
+                { 
+                    "name": "CreateEntityDTO", 
+                    "inherits": [
+                        { "package": "entity", "model": "Entity"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateEntityDTO", 
+                    "inherits": [
+                        { "package": "entity", "model": "Entity"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+            ]
+        },
+        {
+            "package": "invoice",
+            "dtos": [
+                { 
+                    "name": "SearchInvoiceDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateInvoiceDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "Invoice"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateInvoiceItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateInvoiceDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "Invoice"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateInvoiceItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchInvoiceItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateInvoiceItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "InvoiceItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateInvoiceItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "InvoiceItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchPaymentReceiptDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "CreatePaymentReceiptDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "PaymentReceipt"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreatePaymentReceiptItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdatePaymentReceiptDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "PaymentReceipt"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdatePaymentReceiptItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchPaymentReceiptItemDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "CreatePaymentReceiptItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "PaymentReceiptItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdatePaymentReceiptItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "PaymentReceiptItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchCreditNoteDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "CreateCreditNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "CreditNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdateCreditNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "CreditNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchDebitNoteDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "CreateDebitNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "DebitNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdateDebitNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "invoice", "model": "DebitNote"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+            ]
+        },
+        {
+            "package": "purchase",
+            "dtos": [
+                { 
+                    "name": "SearchPurchaseOrderDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreatePurchaseOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "PurchaseOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreatePurchaseOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdatePurchaseOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "PurchaseOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdatePurchaseOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchPurchaseOrderItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreatePurchaseOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "PurchaseOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdatePurchaseOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "PurchaseOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchGoodsReceiptNoteDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateGoodsReceiptNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "GoodsReceiptNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsReceiptNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsReceiptNoteDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "GoodsReceiptNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateGoodsReceiptNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchGoodsReceiptNoteItemDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                { 
+                    "name": "CreateGoodsReceiptNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "GoodsReceiptNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsReceiptNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "GoodsReceiptNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchRequestForQuotationDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                { 
+                    "name": "CreateRequestForQuotationDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "RequestForQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateRequestForQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateRequestForQuotationDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "purchase", "model": "RequestForQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateRequestForQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchRequestForQuotationItemDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                { 
+                    "name": "CreateRequestForQuotationItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "RequestForQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateRequestForQuotationItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "purchase", "model": "RequestForQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+            ]
+        },
+        {
+            "package": "sale",
+            "dtos": [
+                { 
+                    "name": "SearchSalesOrderDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateSalesOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateSalesOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateSalesOrderDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesOrder"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateSalesOrderItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchSalesOrderItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateSalesOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateSalesOrderItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesOrderItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchDeliveryNoteDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateDeliveryNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "DeliveryNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateDeliveryNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateDeliveryNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "DeliveryNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateDeliveryNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchDeliveryNoteItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateDeliveryNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "DeliveryNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateDeliveryNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "DeliveryNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchGoodsReturnNoteDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateGoodsReturnNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "GoodsReturnNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsReturnNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsReturnNoteDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "GoodsReturnNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateGoodsReturnNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchGoodsReturnNoteItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateGoodsReturnNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "GoodsReturnNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsReturnNoteItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "GoodsReturnNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchOrderConfirmationDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateOrderConfirmationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "OrderConfirmation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateOrderConfirmationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateOrderConfirmationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "OrderConfirmation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateOrderConfirmationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchOrderConfirmationItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateOrderConfirmationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "OrderConfirmationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateOrderConfirmationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "OrderConfirmationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchSalesQuotationDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateSalesQuotationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateSalesQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateSalesQuotationDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocument"},
+                        { "package": "sale", "model": "SalesQuotation"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateSalesQuotationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchSalesQuotationItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateSalesQuotationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateSalesQuotationItemDTO", 
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "sale", "model": "SalesQuotationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+
+            ]
+        },
+        {
+            "package": "inventory",
+            "dtos": [
+                { 
+                    "name": "SearchInventoryDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateInventoryDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "Inventory"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateInventoryDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "Inventory"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchInventoryTransactionDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "CreateInventoryTransactionDTO",
+                    "inherits": [
+                        { "package": "inventory", "model": "InventoryTransaction" }
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdateInventoryTransactionDTO",
+                    "inherits": [
+                        { "package": "inventory", "model": "InventoryTransaction" }
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "_COMMENT": "This should never be used. Will remove in the future."
+                },
+                { 
+                    "name": "SearchGoodsIssueNoteDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateGoodsIssueNoteDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateGoodsIssueNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsIssueNoteDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateGoodsIssueNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchGoodsIssueNoteItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateGoodsIssueNoteItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateGoodsIssueNoteItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "GoodsIssueNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchStockCountSheetDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateStockCountSheetDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "StockCountSheet"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateStockCountSheetDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "StockCountSheet"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchReturnMerchandiseAuthorizationDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateReturnMerchandiseAuthorizationDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorization"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateReturnMerchandiseAuthorizationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateReturnMerchandiseAuthorizationDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorization"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateReturnMerchandiseAuthorizationItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "SearchReturnMerchandiseAuthorizationItemDTO", 
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": [] 
+                },
+                { 
+                    "name": "CreateReturnMerchandiseAuthorizationItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorizationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                { 
+                    "name": "UpdateReturnMerchandiseAuthorizationItemDTO", 
+                    "inherits": [
+                        { "package": "inventory", "model": "ReturnMerchandiseAuthorizationItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "data": [
+        {
+            "package": "base",
+            "name": "Base",
+            "enums": [
+                { "name": "PaymentTerms", "type": "string" },
+                { "name": "PaymentStatus", "type": "string"}
+            ]
+        },
+        {
+            "package": "entity",
+            "name": "Entity",
+            "enums": [
+                { "name": "EntityType", "type": "string" }
+            ]
+        },
+        {
+            "package": "inventory",
+            "name": "Inventory",
+            "enums": [
+                { "name": "InventoryTransactionStatus", "type": "string" },
+                { "name": "InventoryTransactionType", "type": "string" }
+            ]
+        },
+        {
+            "package": "purchase",
+            "name": "Purchase",
+            "enums": [
+                { "name": "PurchaseOrderStatus", "type": "string" }
+            ]
+        },
+        {
+            "package": "sale",
+            "name": "Sale",
+            "enums": [
+                { "name": "SalesOrderStatus", "type": "string" },
+                { "name": "SalesQuotationStatus", "type": "string" }
+            ]
+        }
+    ]
+}
