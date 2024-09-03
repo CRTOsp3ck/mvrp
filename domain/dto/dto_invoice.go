@@ -15,6 +15,12 @@ type SearchInvoiceDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetInvoiceDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    invoice.Invoice                 `json:"invoice"`
+    Items []CreateInvoiceItemDTO                     `json:"items"`
+}
+
 type CreateInvoiceDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.Invoice                 `json:"invoice"`
@@ -35,6 +41,11 @@ type SearchInvoiceItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetInvoiceItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.InvoiceItem                 `json:"invoice_item"`
+}
+
 type CreateInvoiceItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     invoice.InvoiceItem                 `json:"invoice_item"`
@@ -51,6 +62,12 @@ type SearchPaymentReceiptDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetPaymentReceiptDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    invoice.PaymentReceipt                 `json:"payment_receipt"`
+    Items []CreatePaymentReceiptItemDTO                     `json:"items"`
 }
 
 type CreatePaymentReceiptDTO struct {
@@ -73,6 +90,11 @@ type SearchPaymentReceiptItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetPaymentReceiptItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.PaymentReceiptItem                 `json:"payment_receipt_item"`
+}
+
 type CreatePaymentReceiptItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     invoice.PaymentReceiptItem                 `json:"payment_receipt_item"`
@@ -91,6 +113,11 @@ type SearchCreditNoteDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetCreditNoteDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    invoice.CreditNote                 `json:"credit_note"`
+}
+
 type CreateCreditNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.CreditNote                 `json:"credit_note"`
@@ -107,6 +134,11 @@ type SearchDebitNoteDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetDebitNoteDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    invoice.DebitNote                 `json:"debit_note"`
 }
 
 type CreateDebitNoteDTO struct {

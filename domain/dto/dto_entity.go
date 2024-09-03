@@ -15,6 +15,10 @@ type SearchEntityDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetEntityDTO struct {
+    entity.Entity                 `json:"entity"`
+}
+
 type CreateEntityDTO struct {
     entity.Entity                 `json:"entity"`
 }

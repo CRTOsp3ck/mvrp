@@ -14,6 +14,10 @@ type SearchInventoryDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetInventoryDTO struct {
+    inventory.Inventory                 `json:"inventory"`
+}
+
 type CreateInventoryDTO struct {
     inventory.Inventory                 `json:"inventory"`
 }
@@ -30,6 +34,10 @@ type SearchInventoryTransactionDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetInventoryTransactionDTO struct {
+    inventory.InventoryTransaction                 `json:"inventory_transaction"`
+}
+
 type CreateInventoryTransactionDTO struct {
     inventory.InventoryTransaction                 `json:"inventory_transaction"`
 }
@@ -44,6 +52,11 @@ type SearchGoodsIssueNoteDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetGoodsIssueNoteDTO struct {
+    inventory.GoodsIssueNote                 `json:"goods_issue_note"`
+    Items []CreateGoodsIssueNoteItemDTO                     `json:"items"`
 }
 
 type CreateGoodsIssueNoteDTO struct {
@@ -64,6 +77,10 @@ type SearchGoodsIssueNoteItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetGoodsIssueNoteItemDTO struct {
+    inventory.GoodsIssueNoteItem                 `json:"goods_issue_note_item"`
+}
+
 type CreateGoodsIssueNoteItemDTO struct {
     inventory.GoodsIssueNoteItem                 `json:"goods_issue_note_item"`
 }
@@ -78,6 +95,10 @@ type SearchStockCountSheetDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetStockCountSheetDTO struct {
+    inventory.StockCountSheet                 `json:"stock_count_sheet"`
 }
 
 type CreateStockCountSheetDTO struct {
@@ -96,6 +117,11 @@ type SearchReturnMerchandiseAuthorizationDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetReturnMerchandiseAuthorizationDTO struct {
+    inventory.ReturnMerchandiseAuthorization                 `json:"return_merchandise_authorization"`
+    Items []CreateReturnMerchandiseAuthorizationItemDTO                     `json:"items"`
+}
+
 type CreateReturnMerchandiseAuthorizationDTO struct {
     inventory.ReturnMerchandiseAuthorization                 `json:"return_merchandise_authorization"`
     Items []CreateReturnMerchandiseAuthorizationItemDTO                     `json:"items"`
@@ -112,6 +138,10 @@ type SearchReturnMerchandiseAuthorizationItemDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetReturnMerchandiseAuthorizationItemDTO struct {
+    inventory.ReturnMerchandiseAuthorizationItem                 `json:"return_merchandise_authorization_item"`
 }
 
 type CreateReturnMerchandiseAuthorizationItemDTO struct {

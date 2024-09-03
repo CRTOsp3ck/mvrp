@@ -15,6 +15,12 @@ type SearchSalesOrderDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetSalesOrderDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    sale.SalesOrder                 `json:"sales_order"`
+    Items []CreateSalesOrderItemDTO                     `json:"items"`
+}
+
 type CreateSalesOrderDTO struct {
     base.BaseDocument                 `json:"base_document"`
     sale.SalesOrder                 `json:"sales_order"`
@@ -35,6 +41,11 @@ type SearchSalesOrderItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetSalesOrderItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    sale.SalesOrderItem                 `json:"sales_order_item"`
+}
+
 type CreateSalesOrderItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     sale.SalesOrderItem                 `json:"sales_order_item"`
@@ -53,10 +64,17 @@ type SearchDeliveryNoteDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetDeliveryNoteDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    sale.DeliveryNote                 `json:"delivery_note"`
+    Items []CreateDeliveryNoteItemDTO                     `json:"items"`
+}
+
 type CreateDeliveryNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     sale.DeliveryNote                 `json:"delivery_note"`
     Items []CreateDeliveryNoteItemDTO                     `json:"items"`
+    ToCreateFromSalesOrder bool     `json:"to_create_from_sales_order"`
 }
 
 type UpdateDeliveryNoteDTO struct {
@@ -71,6 +89,11 @@ type SearchDeliveryNoteItemDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetDeliveryNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    sale.DeliveryNoteItem                 `json:"delivery_note_item"`
 }
 
 type CreateDeliveryNoteItemDTO struct {
@@ -89,6 +112,12 @@ type SearchGoodsReturnNoteDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetGoodsReturnNoteDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    sale.GoodsReturnNote                 `json:"goods_return_note"`
+    Items []CreateGoodsReturnNoteItemDTO                     `json:"items"`
 }
 
 type CreateGoodsReturnNoteDTO struct {
@@ -111,6 +140,11 @@ type SearchGoodsReturnNoteItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetGoodsReturnNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    sale.GoodsReturnNoteItem                 `json:"goods_return_note_item"`
+}
+
 type CreateGoodsReturnNoteItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     sale.GoodsReturnNoteItem                 `json:"goods_return_note_item"`
@@ -129,10 +163,17 @@ type SearchOrderConfirmationDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetOrderConfirmationDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    sale.OrderConfirmation                 `json:"order_confirmation"`
+    Items []CreateOrderConfirmationItemDTO                     `json:"items"`
+}
+
 type CreateOrderConfirmationDTO struct {
     base.BaseDocument                 `json:"base_document"`
     sale.OrderConfirmation                 `json:"order_confirmation"`
     Items []CreateOrderConfirmationItemDTO                     `json:"items"`
+    ToCreateFromSalesOrder bool     `json:"to_create_from_sales_order"`
 }
 
 type UpdateOrderConfirmationDTO struct {
@@ -147,6 +188,11 @@ type SearchOrderConfirmationItemDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetOrderConfirmationItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    sale.OrderConfirmationItem                 `json:"order_confirmation_item"`
 }
 
 type CreateOrderConfirmationItemDTO struct {
@@ -167,6 +213,12 @@ type SearchSalesQuotationDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetSalesQuotationDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    sale.SalesQuotation                 `json:"sales_quotation"`
+    Items []CreateSalesQuotationItemDTO                     `json:"items"`
+}
+
 type CreateSalesQuotationDTO struct {
     base.BaseDocument                 `json:"base_document"`
     sale.SalesQuotation                 `json:"sales_quotation"`
@@ -185,6 +237,11 @@ type SearchSalesQuotationItemDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetSalesQuotationItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    sale.SalesQuotationItem                 `json:"sales_quotation_item"`
 }
 
 type CreateSalesQuotationItemDTO struct {

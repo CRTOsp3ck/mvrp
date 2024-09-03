@@ -15,6 +15,12 @@ type SearchPurchaseOrderDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetPurchaseOrderDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    purchase.PurchaseOrder                 `json:"purchase_order"`
+    Items []CreatePurchaseOrderItemDTO                     `json:"items"`
+}
+
 type CreatePurchaseOrderDTO struct {
     base.BaseDocument                 `json:"base_document"`
     purchase.PurchaseOrder                 `json:"purchase_order"`
@@ -35,6 +41,11 @@ type SearchPurchaseOrderItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetPurchaseOrderItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    purchase.PurchaseOrderItem                 `json:"purchase_order_item"`
+}
+
 type CreatePurchaseOrderItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     purchase.PurchaseOrderItem                 `json:"purchase_order_item"`
@@ -51,6 +62,12 @@ type SearchGoodsReceiptNoteDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetGoodsReceiptNoteDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    purchase.GoodsReceiptNote                 `json:"goods_receipt_note"`
+    Items []CreateGoodsReceiptNoteItemDTO                     `json:"items"`
 }
 
 type CreateGoodsReceiptNoteDTO struct {
@@ -73,6 +90,11 @@ type SearchGoodsReceiptNoteItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetGoodsReceiptNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    purchase.GoodsReceiptNoteItem                 `json:"goods_receipt_note_item"`
+}
+
 type CreateGoodsReceiptNoteItemDTO struct {
     base.BaseDocumentItem                 `json:"base_document_item"`
     purchase.GoodsReceiptNoteItem                 `json:"goods_receipt_note_item"`
@@ -89,6 +111,12 @@ type SearchRequestForQuotationDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetRequestForQuotationDTO struct {
+    base.BaseDocument                 `json:"base_document"`
+    purchase.RequestForQuotation                 `json:"request_for_quotation"`
+    Items []CreateRequestForQuotationItemDTO                     `json:"items"`
 }
 
 type CreateRequestForQuotationDTO struct {
@@ -109,6 +137,11 @@ type SearchRequestForQuotationItemDTO struct {
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`
     OrderBy      string                             `json:"order_by"`
+}
+
+type GetRequestForQuotationItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    purchase.RequestForQuotationItem                 `json:"request_for_quotation_item"`
 }
 
 type CreateRequestForQuotationItemDTO struct {

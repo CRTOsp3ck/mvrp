@@ -14,6 +14,10 @@ type SearchItemDTO struct {
     OrderBy      string                             `json:"order_by"`
 }
 
+type GetItemDTO struct {
+    item.Item                 `json:"item"`
+}
+
 type CreateItemDTO struct {
     item.Item                 `json:"item"`
 }
