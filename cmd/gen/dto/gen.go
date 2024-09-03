@@ -88,7 +88,7 @@ func generateList(pkgs []dto.Package, root string) error {
 	if err != nil {
 		return err
 	}
-	filename := filepath.Join(root, "domain", "dto", "dto_list.gen.go")
+	filename := filepath.Join(root, "domain", "dto", "dto_list.go")
 	dir := filepath.Dir(filename)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return err
