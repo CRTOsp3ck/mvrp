@@ -98,7 +98,8 @@ func (s *SaleService) NewSearchSalesOrderRequest(ctx context.Context, payload dt
 }
 
 type SearchSalesOrderResponse struct {
-	Payload sale.SalesOrderSlice `json:"payload"`
+	Payload    sale.SalesOrderSlice `json:"payload"`
+	Pagination dto.PaginationDTO    `json:"pagination"`
 }
 
 func (s *SaleService) NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) *SearchSalesOrderResponse {

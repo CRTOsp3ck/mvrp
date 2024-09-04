@@ -68,7 +68,8 @@ func (s *InventoryService) NewSearchInventoryRequest(ctx context.Context, payloa
 }
 
 type SearchInventoryResponse struct {
-	Payload inventory.InventorySlice `json:"payload"`
+	Payload    inventory.InventorySlice `json:"payload"`
+	Pagination dto.PaginationDTO        `json:"pagination"`
 }
 
 func (s *InventoryService) NewSearchInventoryResponse(payload inventory.InventorySlice) *SearchInventoryResponse {

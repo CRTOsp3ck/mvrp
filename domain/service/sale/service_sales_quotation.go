@@ -93,7 +93,8 @@ func (s *SaleService) NewSearchSalesQuotationRequest(ctx context.Context, payloa
 }
 
 type SearchSalesQuotationResponse struct {
-	Payload sale.SalesQuotationSlice `json:"payload"`
+	Payload    sale.SalesQuotationSlice `json:"payload"`
+	Pagination dto.PaginationDTO        `json:"pagination"`
 }
 
 func (s *SaleService) NewSearchSalesQuotationResponse(payload sale.SalesQuotationSlice) *SearchSalesQuotationResponse {

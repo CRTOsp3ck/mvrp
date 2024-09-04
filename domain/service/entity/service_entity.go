@@ -61,7 +61,8 @@ func (s *EntityService) NewSearchEntityRequest(ctx context.Context, payload dto.
 }
 
 type SearchEntityResponse struct {
-	Payload entity.EntitySlice `json:"payload"`
+	Payload    entity.EntitySlice `json:"payload"`
+	Pagination dto.PaginationDTO  `json:"pagination"`
 }
 
 func (s *EntityService) NewSearchEntityResponse(payload entity.EntitySlice) *SearchEntityResponse {

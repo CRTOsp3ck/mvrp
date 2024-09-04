@@ -55,7 +55,8 @@ func (s *ItemService) NewSearchItemRequest(ctx context.Context, payload dto.Sear
 }
 
 type SearchItemResponse struct {
-	Payload item.ItemSlice `json:"payload"`
+	Payload    item.ItemSlice    `json:"payload"`
+	Pagination dto.PaginationDTO `json:"pagination"`
 }
 
 func (s *ItemService) NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {

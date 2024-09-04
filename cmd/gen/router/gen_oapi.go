@@ -39,21 +39,23 @@ func generateOpenAPISpec(rootDir string) error {
 	}
 	for _, pkg := range config.Data {
 		for _, handler := range pkg.Handlers {
-			dtoMap := make(map[string]interface{})
-
+			// Request structures
+			reqMap := make(map[string]interface{})
 			searchDto := dto.FindDTO(fmt.Sprintf("Search%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
-			dtoMap["search"] = searchDto
-
+			reqMap["search"] = searchDto
 			createDto := dto.FindDTO(fmt.Sprintf("Create%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
-			if err != nil {
-				return err
-			}
-			dtoMap["create"] = createDto
-
+			reqMap["create"] = createDto
 			updateDto := dto.FindDTO(fmt.Sprintf("Update%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
-			dtoMap["update"] = updateDto
+			reqMap["update"] = updateDto
 
-			err = addMainOperations(&reflector, pkg, handler, dtoMap)
+			// Response structures
+			// TODO: Nest the appropriate model inside the htresp.Response struct
+			// respMap := make(map[string]interface{})
+			// respMap["search"] = &htresp.Response{
+			// 	Data: searchDto,
+			// }
+
+			err = addMainOperations(&reflector, pkg, handler, reqMap)
 			if err != nil {
 				return err
 			}
@@ -85,7 +87,7 @@ func generateOpenAPISpec(rootDir string) error {
 	return nil
 }
 
-func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, handler handlers.Handler, dtoMap map[string]interface{}) error {
+func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, handler handlers.Handler, reqMap map[string]interface{}) error {
 	type req struct {
 		ID int `path:"id"`
 	}
@@ -95,7 +97,7 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	if err != nil {
 		return err
 	}
-	searchOp.AddReqStructure(dtoMap["search"])
+	searchOp.AddReqStructure(reqMap["search"])
 	searchOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(searchOp)
 
@@ -113,7 +115,7 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	if err != nil {
 		return err
 	}
-	createOp.AddReqStructure(dtoMap["create"])
+	createOp.AddReqStructure(reqMap["create"])
 	createOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusCreated })
 	reflector.AddOperation(createOp)
 
@@ -123,7 +125,7 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 		return err
 	}
 	updateOp.AddReqStructure(new(req))
-	updateOp.AddReqStructure(dtoMap["update"])
+	updateOp.AddReqStructure(reqMap["update"])
 	updateOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(updateOp)
 

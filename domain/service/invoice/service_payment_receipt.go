@@ -95,7 +95,8 @@ func (s *InvoiceService) NewSearchPaymentReceiptRequest(ctx context.Context, pay
 }
 
 type SearchPaymentReceiptResponse struct {
-	Payload invoice.PaymentReceiptSlice `json:"payload"`
+	Payload    invoice.PaymentReceiptSlice `json:"payload"`
+	Pagination dto.PaginationDTO           `json:"pagination"`
 }
 
 func (s *InvoiceService) NewSearchPaymentReceiptResponse(payload invoice.PaymentReceiptSlice) *SearchPaymentReceiptResponse {

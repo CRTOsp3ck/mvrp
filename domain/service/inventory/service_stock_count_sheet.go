@@ -69,7 +69,8 @@ func (s *InventoryService) NewSearchStockCountSheetRequest(ctx context.Context, 
 }
 
 type SearchStockCountSheetResponse struct {
-	Payload inventory.StockCountSheetSlice `json:"payload"`
+	Payload    inventory.StockCountSheetSlice `json:"payload"`
+	Pagination dto.PaginationDTO              `json:"pagination"`
 }
 
 func (s *InventoryService) NewSearchStockCountSheetResponse(payload inventory.StockCountSheetSlice) *SearchStockCountSheetResponse {

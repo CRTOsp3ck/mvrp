@@ -56,7 +56,8 @@ func (s *InvoiceService) NewSearchCreditNoteRequest(ctx context.Context, payload
 }
 
 type SearchCreditNoteResponse struct {
-	Payload invoice.CreditNoteSlice `json:"payload"`
+	Payload    invoice.CreditNoteSlice `json:"payload"`
+	Pagination dto.PaginationDTO       `json:"pagination"`
 }
 
 func (s *InvoiceService) NewSearchCreditNoteResponse(payload invoice.CreditNoteSlice) *SearchCreditNoteResponse {

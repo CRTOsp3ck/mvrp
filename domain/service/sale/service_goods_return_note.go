@@ -98,7 +98,8 @@ func (s *SaleService) NewSearchGoodsReturnNoteRequest(ctx context.Context, paylo
 }
 
 type SearchGoodsReturnNoteResponse struct {
-	Payload sale.GoodsReturnNoteSlice `json:"payload"`
+	Payload    sale.GoodsReturnNoteSlice `json:"payload"`
+	Pagination dto.PaginationDTO         `json:"pagination"`
 }
 
 func (s *SaleService) NewSearchGoodsReturnNoteResponse(payload sale.GoodsReturnNoteSlice) *SearchGoodsReturnNoteResponse {

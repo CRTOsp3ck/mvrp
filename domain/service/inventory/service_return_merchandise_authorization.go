@@ -61,7 +61,8 @@ func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationRequest(ctx co
 }
 
 type SearchReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorizationSlice `json:"payload"`
+	Payload    inventory.ReturnMerchandiseAuthorizationSlice `json:"payload"`
+	Pagination dto.PaginationDTO                             `json:"pagination"`
 }
 
 func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *SearchReturnMerchandiseAuthorizationResponse {

@@ -99,7 +99,8 @@ func (s *SaleService) NewSearchDeliveryNoteRequest(ctx context.Context, payload 
 }
 
 type SearchDeliveryNoteResponse struct {
-	Payload sale.DeliveryNoteSlice `json:"payload"`
+	Payload    sale.DeliveryNoteSlice `json:"payload"`
+	Pagination dto.PaginationDTO      `json:"pagination"`
 }
 
 func (s *SaleService) NewSearchDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *SearchDeliveryNoteResponse {

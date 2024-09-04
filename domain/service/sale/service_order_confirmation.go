@@ -95,7 +95,8 @@ func (s *SaleService) NewSearchOrderConfirmationRequest(ctx context.Context, pay
 }
 
 type SearchOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmationSlice `json:"payload"`
+	Payload    sale.OrderConfirmationSlice `json:"payload"`
+	Pagination dto.PaginationDTO           `json:"pagination"`
 }
 
 func (s *SaleService) NewSearchOrderConfirmationResponse(payload sale.OrderConfirmationSlice) *SearchOrderConfirmationResponse {

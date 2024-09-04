@@ -56,7 +56,8 @@ func (s *InvoiceService) NewSearchDebitNoteRequest(ctx context.Context, payload 
 }
 
 type SearchDebitNoteResponse struct {
-	Payload invoice.DebitNoteSlice `json:"payload"`
+	Payload    invoice.DebitNoteSlice `json:"payload"`
+	Pagination dto.PaginationDTO      `json:"pagination"`
 }
 
 func (s *InvoiceService) NewSearchDebitNoteResponse(payload invoice.DebitNoteSlice) *SearchDebitNoteResponse {

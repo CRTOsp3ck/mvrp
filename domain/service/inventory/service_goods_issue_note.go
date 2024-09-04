@@ -68,7 +68,8 @@ func (s *InventoryService) NewSearchGoodsIssueNoteRequest(ctx context.Context, p
 }
 
 type SearchGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNoteSlice `json:"payload"`
+	Payload    inventory.GoodsIssueNoteSlice `json:"payload"`
+	Pagination dto.PaginationDTO             `json:"pagination"`
 }
 
 func (s *InventoryService) NewSearchGoodsIssueNoteResponse(payload inventory.GoodsIssueNoteSlice) *SearchGoodsIssueNoteResponse {
