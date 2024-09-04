@@ -6,7 +6,19 @@ info:
   description: API documentation for MVRP
   title: MVRP API
   version: 1.0.0
+servers:
+- description: MVRP Development server
+  url: http://localhost:6900
 paths:
+  /v1/enum:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DtoEnumsDTO'
+          description: OK
   /v1/main/entity/entity:
     get:
       responses:
@@ -1371,6 +1383,19 @@ components:
           format: date-time
           type: string
       type: object
+    DtoBaseEnumDTO:
+      properties:
+        payment_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+        payment_terms:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+      type: object
     DtoCreateCreditNoteDTO:
       properties:
         base_document:
@@ -1571,6 +1596,73 @@ components:
       properties:
         stock_count_sheet:
           $ref: '#/components/schemas/InventoryStockCountSheet'
+      type: object
+    DtoEntityEnumDTO:
+      properties:
+        entity_type:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+      type: object
+    DtoEnum:
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      type: object
+    DtoEnumsDTO:
+      properties:
+        base_enums:
+          $ref: '#/components/schemas/DtoBaseEnumDTO'
+        entity_enums:
+          $ref: '#/components/schemas/DtoEntityEnumDTO'
+        inventory_enums:
+          $ref: '#/components/schemas/DtoInventoryEnumDTO'
+        item_enums:
+          $ref: '#/components/schemas/DtoItemEnumDTO'
+        purchase_enums:
+          $ref: '#/components/schemas/DtoPurchaseEnumDTO'
+        sale_enums:
+          $ref: '#/components/schemas/DtoSaleEnumDTO'
+      type: object
+    DtoInventoryEnumDTO:
+      properties:
+        inventory_transaction_type:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+      type: object
+    DtoItemEnumDTO:
+      properties:
+        item_type:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+      type: object
+    DtoPurchaseEnumDTO:
+      properties:
+        purchase_order_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+      type: object
+    DtoSaleEnumDTO:
+      properties:
+        sales_order_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+        sales_quotation_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
       type: object
     DtoSearchCreditNoteDTO:
       properties:

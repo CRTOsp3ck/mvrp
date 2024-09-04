@@ -18,6 +18,7 @@ import (
 	{{- range .Data }}
 	"mvrp/http/handler/{{ .Package }}"
 	{{- end }}
+	"mvrp/http/handler/enum"
 )
 
 func Init() {
@@ -48,6 +49,7 @@ func SetupRoutes(r chi.Router) {
 	r.Get("/", getHome)
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/main", getMainRoutes())
+		r.Route("/enum", getEnumRoutes())
 	})
 }
 
@@ -85,6 +87,12 @@ func getMainRoutes() func(chi.Router) {
 			{{ end }}
 		})
 		{{ end }}
+    }
+}
+
+func getEnumRoutes() func(chi.Router) {
+    return func(r chi.Router) {
+        r.Get("/", enum.ListEnum)
     }
 }
 

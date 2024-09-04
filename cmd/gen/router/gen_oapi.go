@@ -17,6 +17,12 @@ import (
 func generateOpenAPISpec(rootDir string) error {
 	reflector := openapi3.Reflector{}
 	reflector.Spec = &openapi3.Spec{Openapi: "3.0.3"}
+	reflector.Spec.Servers = []openapi3.Server{
+		{
+			URL:         "http://localhost:6900",
+			Description: util.Util.Ptr.StrPtr("MVRP Development server"),
+		},
+	}
 	reflector.Spec.Info.
 		WithTitle("MVRP API").
 		WithVersion("1.0.0").
@@ -55,10 +61,10 @@ func generateOpenAPISpec(rootDir string) error {
 	}
 
 	// Enum route operations
-	// err := addEnumOperations(&reflector)
-	// if err != nil {
-	// 	return err
-	// }
+	err = addEnumOperations(&reflector)
+	if err != nil {
+		return err
+	}
 
 	// Serialize and write the specification
 	schema, err := reflector.Spec.MarshalYAML()
@@ -140,14 +146,14 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	return nil
 }
 
-// func addEnumOperations(reflector *openapi3.Reflector) error {
-// 	// Add Get operation
-// 	getOp, err := reflector.NewOperationContext(http.MethodGet, "/v1/enum")
-// 	if err != nil {
-// 		return err
-// 	}
-// 	getOp.AddRespStructure(new(dto.EnumDTO), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
-// 	reflector.AddOperation(getOp)
+func addEnumOperations(reflector *openapi3.Reflector) error {
+	// Add Get operation
+	getOp, err := reflector.NewOperationContext(http.MethodGet, "/v1/enum")
+	if err != nil {
+		return err
+	}
+	getOp.AddRespStructure(new(dto.EnumsDTO), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+	reflector.AddOperation(getOp)
 
-// 	return nil
-// }
+	return nil
+}
