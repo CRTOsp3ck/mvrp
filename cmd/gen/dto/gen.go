@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"mvrp/config/dto"
+	"mvrp/config/enums"
 	"mvrp/util"
 	"os"
 	"path/filepath"
@@ -67,8 +68,19 @@ func Generate() error {
 	fmt.Printf("%d DTO files generated\n", len(config.Data))
 
 	// --------------------------------------------------
-	// GENERATE DTO LIST FILE
+	// ENUMS
 	// --------------------------------------------------
+
+	err = generateEnums(rootDir)
+	if err != nil {
+		log.Fatalf("Error generating DTO enum file: %v\n", err)
+	}
+	fmt.Printf("1 DTO enum file generated\n")
+
+	// --------------------------------------------------
+	// DTO LIST
+	// --------------------------------------------------
+
 	err = generateList(config.Data, rootDir)
 	if err != nil {
 		log.Fatalf("Error generating DTO list file: %v\n", err)
@@ -76,6 +88,40 @@ func Generate() error {
 	fmt.Printf("1 DTO list file generated\n")
 
 	return nil
+}
+
+func generateEnums(root string) error {
+	jsonFile, err := os.Open(filepath.Join(root, "config", "enums", "enums.json"))
+	if err != nil {
+		log.Fatalf("Failed to open JSON file: %v", err)
+	}
+	defer jsonFile.Close()
+
+	config, err := enums.GetConfig()
+	if err != nil {
+		return err
+	}
+
+	tmplFilePath := filepath.Join(root, "cmd", "gen", "dto", "tpl", "dto_enum.go.tpl")
+	tmplName := filepath.Base(tmplFilePath)
+	tmpl, err := template.New(tmplName).Funcs(template.FuncMap{
+		"ToPascalCase": util.Util.NC.ToPascalCase,
+		"ToSnakeCase":  util.Util.NC.ToSnakeCase,
+	}).ParseFiles(tmplFilePath)
+	if err != nil {
+		return err
+	}
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, config.Data)
+	if err != nil {
+		return err
+	}
+	filename := filepath.Join(root, "domain", "dto", "dto_enum.go")
+	dir := filepath.Dir(filename)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	return os.WriteFile(filename, buf.Bytes(), 0644)
 }
 
 func generateList(pkgs []dto.Package, root string) error {

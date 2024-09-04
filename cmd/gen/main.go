@@ -12,11 +12,11 @@ import (
 	"time"
 )
 
-var migTables bool = true
-var genModels bool = true
-var genDTOs bool = true
-var genRepos bool = true
-var genHandlers bool = true
+var migTables bool = false
+var genModels bool = false
+var genDTOs bool = false
+var genRepos bool = false
+var genHandlers bool = false
 var genRouter bool = true
 
 func main() {

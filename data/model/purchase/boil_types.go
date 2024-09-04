@@ -60,9 +60,9 @@ type PurchaseOrderStatus string
 
 // Enum values for PurchaseOrderStatus
 const (
-	PurchaseOrderStatusPending  PurchaseOrderStatus = "Pending"
-	PurchaseOrderStatusAccepted PurchaseOrderStatus = "Accepted"
-	PurchaseOrderStatusDeclined PurchaseOrderStatus = "Declined"
+	PurchaseOrderStatusPending  PurchaseOrderStatus = "pending"
+	PurchaseOrderStatusAccepted PurchaseOrderStatus = "accepted"
+	PurchaseOrderStatusDeclined PurchaseOrderStatus = "declined"
 )
 
 func AllPurchaseOrderStatus() []PurchaseOrderStatus {

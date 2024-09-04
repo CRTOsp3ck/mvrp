@@ -55,11 +55,11 @@ type EntityType string
 
 // Enum values for EntityType
 const (
-	EntityTypeCustomer     EntityType = "Customer"
-	EntityTypeSupplier     EntityType = "Supplier"
-	EntityTypeManufacturer EntityType = "Manufacturer"
-	EntityTypeEmployee     EntityType = "Employee"
-	EntityTypeOther        EntityType = "Other"
+	EntityTypeCustomer     EntityType = "customer"
+	EntityTypeSupplier     EntityType = "supplier"
+	EntityTypeManufacturer EntityType = "manufacturer"
+	EntityTypeEmployee     EntityType = "employee"
+	EntityTypeOther        EntityType = "other"
 )
 
 func AllEntityType() []EntityType {

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"mvrp/data/repo/base"
 	"mvrp/data/repo/entity"
+	"mvrp/data/repo/enum"
 	"mvrp/data/repo/inventory"
 	"mvrp/data/repo/invoice"
 	"mvrp/data/repo/item"
@@ -15,6 +16,7 @@ import (
 )
 
 type RepoContainer struct {
+	Enum      *enum.EnumRepository
 	Base      *base.BaseRepository
 	Entity    *entity.EntityRepository
 	Inventory *inventory.InventoryRepository
@@ -27,6 +29,7 @@ type RepoContainer struct {
 func Init() {}
 
 func NewRepoContainer() *RepoContainer {
+	enumRepo := enum.NewEnumRepository()
 	baseRepo := base.NewBaseRepository()
 	entityRepo := entity.NewEntityRepository()
 	inventoryRepo := inventory.NewInventoryRepository()
@@ -36,6 +39,7 @@ func NewRepoContainer() *RepoContainer {
 	saleRepo := sale.NewSaleRepository()
 
 	repo := &RepoContainer{
+		Enum:      &enumRepo,
 		Base:      &baseRepo,
 		Entity:    &entityRepo,
 		Inventory: &inventoryRepo,

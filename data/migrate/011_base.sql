@@ -2,17 +2,17 @@
 CREATE SCHEMA IF NOT EXISTS base;
 
 CREATE TYPE base.payment_terms AS ENUM (
-    'Full', 
-    'PartialBeforeAndAfterDelivery', 
-    'Net30',
-    'Net60',
-    'Net90'
+    'full', 
+    'partial_before_and_after_delivery', 
+    'net_30',
+    'net_60',
+    'net_90'
 );
 
 CREATE TYPE base.payment_status AS ENUM (
-    'Pending', 
-    'Paid', 
-    'PartiallyPaid'
+    'pending', 
+    'paid', 
+    'partially_paid'
 );
 
 -- tax_amount - to be inserted by the user according to items

@@ -55,11 +55,11 @@ type PaymentTerms string
 
 // Enum values for PaymentTerms
 const (
-	PaymentTermsFull                          PaymentTerms = "Full"
-	PaymentTermsPartialBeforeAndAfterDelivery PaymentTerms = "PartialBeforeAndAfterDelivery"
-	PaymentTermsNet30                         PaymentTerms = "Net30"
-	PaymentTermsNet60                         PaymentTerms = "Net60"
-	PaymentTermsNet90                         PaymentTerms = "Net90"
+	PaymentTermsFull                          PaymentTerms = "full"
+	PaymentTermsPartialBeforeAndAfterDelivery PaymentTerms = "partial_before_and_after_delivery"
+	PaymentTermsNet30                         PaymentTerms = "net_30"
+	PaymentTermsNet60                         PaymentTerms = "net_60"
+	PaymentTermsNet90                         PaymentTerms = "net_90"
 )
 
 func AllPaymentTerms() []PaymentTerms {
@@ -107,9 +107,9 @@ type PaymentStatus string
 
 // Enum values for PaymentStatus
 const (
-	PaymentStatusPending       PaymentStatus = "Pending"
-	PaymentStatusPaid          PaymentStatus = "Paid"
-	PaymentStatusPartiallyPaid PaymentStatus = "PartiallyPaid"
+	PaymentStatusPending       PaymentStatus = "pending"
+	PaymentStatusPaid          PaymentStatus = "paid"
+	PaymentStatusPartiallyPaid PaymentStatus = "partially_paid"
 )
 
 func AllPaymentStatus() []PaymentStatus {

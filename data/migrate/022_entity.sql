@@ -2,11 +2,11 @@
 CREATE SCHEMA IF NOT EXISTS entity;
 
 CREATE TYPE entity.entity_type AS ENUM (
-    'Customer', 
-    'Supplier',
-    'Manufacturer', 
-    'Employee', 
-    'Other'
+    'customer', 
+    'supplier',
+    'manufacturer', 
+    'employee', 
+    'other'
 );
 
 CREATE TABLE entity.entity (

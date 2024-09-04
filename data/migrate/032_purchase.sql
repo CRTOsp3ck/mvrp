@@ -2,9 +2,9 @@
 CREATE SCHEMA IF NOT EXISTS purchase;
 
 CREATE TYPE purchase.purchase_order_status AS ENUM (
-    'Pending', 
-    'Accepted', 
-    'Declined'
+    'pending', 
+    'accepted', 
+    'declined'
 );
 
 CREATE TABLE purchase.purchase_order (
