@@ -74,3 +74,8 @@ func (r *ItemRepository) GetNextEntryItemID(ctx context.Context, exec boil.Conte
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *ItemRepository) GetItemTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := item.Items().Count(ctx, exec)
+	return int(count), err
+}

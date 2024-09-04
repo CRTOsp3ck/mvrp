@@ -86,8 +86,22 @@ func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityRes
 	if err != nil {
 		return nil, err
 	}
+
+	totalCount, err := s.Repo.Entity.GetEntityTotalCountByType(req.Ctx, tx, req.Payload.Type)
+	if err != nil {
+		return nil, err
+	}
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
+
 	resp := SearchEntityResponse{
-		Payload: res,
+		Payload:    res,
+		Pagination: pd,
 	}
 	return &resp, nil
 }

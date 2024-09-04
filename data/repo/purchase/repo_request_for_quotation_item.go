@@ -73,3 +73,8 @@ func (r *PurchaseRepository) GetNextEntryRequestForQuotationItemID(ctx context.C
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *PurchaseRepository) GetRequestForQuotationItemTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := purchase.RequestForQuotationItems().Count(ctx, exec)
+	return int(count), err
+}

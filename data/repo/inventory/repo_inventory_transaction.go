@@ -73,3 +73,8 @@ func (r *InventoryRepository) GetNextEntryInventoryTransactionID(ctx context.Con
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *InventoryRepository) GetInventoryTransactionTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := inventory.InventoryTransactions().Count(ctx, exec)
+	return int(count), err
+}

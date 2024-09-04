@@ -73,3 +73,8 @@ func (r *SaleRepository) GetNextEntryOrderConfirmationID(ctx context.Context, ex
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *SaleRepository) GetOrderConfirmationTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := sale.OrderConfirmations().Count(ctx, exec)
+	return int(count), err
+}

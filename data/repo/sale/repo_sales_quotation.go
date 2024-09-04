@@ -73,3 +73,8 @@ func (r *SaleRepository) GetNextEntrySalesQuotationID(ctx context.Context, exec 
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *SaleRepository) GetSalesQuotationTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := sale.SalesQuotations().Count(ctx, exec)
+	return int(count), err
+}

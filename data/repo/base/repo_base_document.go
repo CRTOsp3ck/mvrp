@@ -64,3 +64,8 @@ func (r *BaseRepository) GetNextEntryBaseDocumentID(ctx context.Context, exec bo
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *BaseRepository) GetBaseDocumentTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := base.BaseDocuments().Count(ctx, exec)
+	return int(count), err
+}

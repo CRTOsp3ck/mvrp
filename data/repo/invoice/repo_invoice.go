@@ -73,3 +73,8 @@ func (r *InvoiceRepository) GetNextEntryInvoiceID(ctx context.Context, exec boil
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *InvoiceRepository) GetInvoiceTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := invoice.Invoices().Count(ctx, exec)
+	return int(count), err
+}

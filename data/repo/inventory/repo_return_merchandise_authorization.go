@@ -73,3 +73,8 @@ func (r *InventoryRepository) GetNextEntryReturnMerchandiseAuthorizationID(ctx c
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *InventoryRepository) GetReturnMerchandiseAuthorizationTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := inventory.ReturnMerchandiseAuthorizations().Count(ctx, exec)
+	return int(count), err
+}

@@ -73,3 +73,8 @@ func (r *PurchaseRepository) GetNextEntryPurchaseOrderID(ctx context.Context, ex
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *PurchaseRepository) GetPurchaseOrderTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := purchase.PurchaseOrders().Count(ctx, exec)
+	return int(count), err
+}

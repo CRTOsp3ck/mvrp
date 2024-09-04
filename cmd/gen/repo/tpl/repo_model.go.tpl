@@ -84,3 +84,8 @@ func (r *{{ .Package | ToPascalCase }}Repository) GetNextEntry{{ .ModelName }}ID
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *{{ .Package | ToPascalCase }}Repository) Get{{ .ModelName }}TotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := {{ .Package }}.{{ .PluralModelName }}().Count(ctx, exec)
+	return int(count), err
+}

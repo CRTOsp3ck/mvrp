@@ -73,3 +73,8 @@ func (r *InvoiceRepository) GetNextEntryCreditNoteID(ctx context.Context, exec b
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *InvoiceRepository) GetCreditNoteTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := invoice.CreditNotes().Count(ctx, exec)
+	return int(count), err
+}

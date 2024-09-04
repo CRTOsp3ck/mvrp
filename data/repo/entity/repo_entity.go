@@ -80,3 +80,8 @@ func (r *EntityRepository) GetNextEntryEntityID(ctx context.Context, exec boil.C
 	}
 	return currID.ID + 1, nil
 }
+
+func (r *EntityRepository) GetEntityTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {
+	count, err := entity.Entities().Count(ctx, exec)
+	return int(count), err
+}

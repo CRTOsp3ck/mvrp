@@ -15,7 +15,7 @@ import (
 var migTables bool = false
 var genModels bool = false
 var genDTOs bool = false
-var genRepos bool = false
+var genRepos bool = true
 var genHandlers bool = false
 var genRouter bool = false
 
