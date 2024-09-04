@@ -6,12 +6,24 @@ import (
 )
 
 type INCUtil interface {
+	PascalCaseToWords(input string) string
 	ToSnakeCase(s string) string
 	ToPascalCase(s string) string
 	ToCamelCase(s string) string
 }
 
 type NCUtil struct{}
+
+func (n *NCUtil) PascalCaseToWords(input string) string {
+	var result strings.Builder
+	for i, r := range input {
+		if unicode.IsUpper(r) && i != 0 {
+			result.WriteRune(' ')
+		}
+		result.WriteRune(r)
+	}
+	return strings.ToLower(result.String())
+}
 
 func (n *NCUtil) ToSnakeCase(s string) string {
 	var result strings.Builder
