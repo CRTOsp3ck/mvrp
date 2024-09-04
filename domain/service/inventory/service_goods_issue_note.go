@@ -24,7 +24,7 @@ func (s *InventoryService) NewListGoodsIssueNoteRequest(ctx context.Context) *Li
 }
 
 type ListGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNoteSlice
+	Payload inventory.GoodsIssueNoteSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewListGoodsIssueNoteResponse(payload inventory.GoodsIssueNoteSlice) *ListGoodsIssueNoteResponse {
@@ -68,7 +68,7 @@ func (s *InventoryService) NewSearchGoodsIssueNoteRequest(ctx context.Context, p
 }
 
 type SearchGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNoteSlice
+	Payload inventory.GoodsIssueNoteSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewSearchGoodsIssueNoteResponse(payload inventory.GoodsIssueNoteSlice) *SearchGoodsIssueNoteResponse {
@@ -112,7 +112,7 @@ func (s *InventoryService) NewGetGoodsIssueNoteRequest(ctx context.Context, id i
 }
 
 type GetGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNote
+	Payload inventory.GoodsIssueNote `json:"payload"`
 }
 
 func (s *InventoryService) NewGetGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *GetGoodsIssueNoteResponse {
@@ -158,7 +158,7 @@ func (s *InventoryService) NewCreateGoodsIssueNoteRequest(ctx context.Context, p
 }
 
 type CreateGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNote
+	Payload inventory.GoodsIssueNote `json:"payload"`
 }
 
 func (s *InventoryService) NewCreateGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *CreateGoodsIssueNoteResponse {
@@ -266,7 +266,7 @@ func (s *InventoryService) NewUpdateGoodsIssueNoteRequest(ctx context.Context, p
 }
 
 type UpdateGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNote
+	Payload inventory.GoodsIssueNote `json:"payload"`
 }
 
 func (s *InventoryService) NewUpdateGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *UpdateGoodsIssueNoteResponse {
@@ -454,7 +454,7 @@ func (s *InventoryService) NewDeleteGoodsIssueNoteRequest(ctx context.Context, i
 }
 
 type DeleteGoodsIssueNoteResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InventoryService) NewDeleteGoodsIssueNoteResponse(payload bool) *DeleteGoodsIssueNoteResponse {

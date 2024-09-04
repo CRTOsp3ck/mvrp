@@ -25,7 +25,7 @@ func (s *InventoryService) NewListStockCountSheetRequest(ctx context.Context) *L
 }
 
 type ListStockCountSheetResponse struct {
-	Payload inventory.StockCountSheetSlice
+	Payload inventory.StockCountSheetSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewListStockCountSheetResponse(payload inventory.StockCountSheetSlice) *ListStockCountSheetResponse {
@@ -69,7 +69,7 @@ func (s *InventoryService) NewSearchStockCountSheetRequest(ctx context.Context, 
 }
 
 type SearchStockCountSheetResponse struct {
-	Payload inventory.StockCountSheetSlice
+	Payload inventory.StockCountSheetSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewSearchStockCountSheetResponse(payload inventory.StockCountSheetSlice) *SearchStockCountSheetResponse {
@@ -113,7 +113,7 @@ func (s *InventoryService) NewGetStockCountSheetRequest(ctx context.Context, id 
 }
 
 type GetStockCountSheetResponse struct {
-	Payload inventory.StockCountSheet
+	Payload inventory.StockCountSheet `json:"payload"`
 }
 
 func (s *InventoryService) NewGetStockCountSheetResponse(payload inventory.StockCountSheet) *GetStockCountSheetResponse {
@@ -159,7 +159,7 @@ func (s *InventoryService) NewCreateStockCountSheetRequest(ctx context.Context, 
 }
 
 type CreateStockCountSheetResponse struct {
-	Payload inventory.StockCountSheet
+	Payload inventory.StockCountSheet `json:"payload"`
 }
 
 func (s *InventoryService) NewCreateStockCountSheetResponse(payload inventory.StockCountSheet) *CreateStockCountSheetResponse {
@@ -252,7 +252,7 @@ func (s *InventoryService) NewUpdateStockCountSheetRequest(ctx context.Context, 
 }
 
 type UpdateStockCountSheetResponse struct {
-	Payload inventory.StockCountSheet
+	Payload inventory.StockCountSheet `json:"payload"`
 }
 
 func (s *InventoryService) NewUpdateStockCountSheetResponse(payload inventory.StockCountSheet) *UpdateStockCountSheetResponse {
@@ -351,7 +351,7 @@ func (s *InventoryService) NewDeleteStockCountSheetRequest(ctx context.Context, 
 }
 
 type DeleteStockCountSheetResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InventoryService) NewDeleteStockCountSheetResponse(payload bool) *DeleteStockCountSheetResponse {

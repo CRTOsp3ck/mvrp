@@ -25,7 +25,7 @@ func (s *SaleService) NewListDeliveryNoteRequest(ctx context.Context) *ListDeliv
 }
 
 type ListDeliveryNoteResponse struct {
-	Payload sale.DeliveryNoteSlice
+	Payload sale.DeliveryNoteSlice `json:"payload"`
 }
 
 func (s *SaleService) NewListDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *ListDeliveryNoteResponse {
@@ -64,7 +64,7 @@ func (s *SaleService) NewPreviewDeliveryNoteRequest(ctx context.Context, payload
 }
 
 type PreviewDeliveryNoteResponse struct {
-	Payload dto.CreateDeliveryNoteDTO
+	Payload dto.CreateDeliveryNoteDTO `json:"payload"`
 }
 
 func (s *SaleService) NewPreviewDeliveryNoteResponse(payload dto.CreateDeliveryNoteDTO) *PreviewDeliveryNoteResponse {
@@ -99,7 +99,7 @@ func (s *SaleService) NewSearchDeliveryNoteRequest(ctx context.Context, payload 
 }
 
 type SearchDeliveryNoteResponse struct {
-	Payload sale.DeliveryNoteSlice
+	Payload sale.DeliveryNoteSlice `json:"payload"`
 }
 
 func (s *SaleService) NewSearchDeliveryNoteResponse(payload sale.DeliveryNoteSlice) *SearchDeliveryNoteResponse {
@@ -138,7 +138,7 @@ func (s *SaleService) NewGetDeliveryNoteRequest(ctx context.Context, id int) *Ge
 }
 
 type GetDeliveryNoteResponse struct {
-	Payload sale.DeliveryNote
+	Payload sale.DeliveryNote `json:"payload"`
 }
 
 func (s *SaleService) NewGetDeliveryNoteResponse(payload sale.DeliveryNote) *GetDeliveryNoteResponse {
@@ -179,7 +179,7 @@ func (s *SaleService) NewCreateDeliveryNoteRequest(ctx context.Context, payload 
 }
 
 type CreateDeliveryNoteResponse struct {
-	Payload sale.DeliveryNote
+	Payload sale.DeliveryNote `json:"payload"`
 }
 
 func (s *SaleService) NewCreateDeliveryNoteResponse(payload sale.DeliveryNote) *CreateDeliveryNoteResponse {
@@ -379,7 +379,7 @@ func (s *SaleService) NewUpdateDeliveryNoteRequest(ctx context.Context, payload 
 }
 
 type UpdateDeliveryNoteResponse struct {
-	Payload sale.DeliveryNote
+	Payload sale.DeliveryNote `json:"payload"`
 }
 
 func (s *SaleService) NewUpdateDeliveryNoteResponse(payload sale.DeliveryNote) *UpdateDeliveryNoteResponse {
@@ -595,7 +595,7 @@ func (s *SaleService) NewDeleteDeliveryNoteRequest(ctx context.Context, id int) 
 }
 
 type DeleteDeliveryNoteResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *SaleService) NewDeleteDeliveryNoteResponse(payload bool) *DeleteDeliveryNoteResponse {

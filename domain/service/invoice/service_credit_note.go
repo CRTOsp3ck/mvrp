@@ -17,7 +17,7 @@ func (s *InvoiceService) NewListCreditNoteRequest(ctx context.Context) *ListCred
 }
 
 type ListCreditNoteResponse struct {
-	Payload invoice.CreditNoteSlice
+	Payload invoice.CreditNoteSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewListCreditNoteResponse(payload invoice.CreditNoteSlice) *ListCreditNoteResponse {
@@ -56,7 +56,7 @@ func (s *InvoiceService) NewSearchCreditNoteRequest(ctx context.Context, payload
 }
 
 type SearchCreditNoteResponse struct {
-	Payload invoice.CreditNoteSlice
+	Payload invoice.CreditNoteSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewSearchCreditNoteResponse(payload invoice.CreditNoteSlice) *SearchCreditNoteResponse {
@@ -95,7 +95,7 @@ func (s *InvoiceService) NewGetCreditNoteRequest(ctx context.Context, id int) *G
 }
 
 type GetCreditNoteResponse struct {
-	Payload invoice.CreditNote
+	Payload invoice.CreditNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewGetCreditNoteResponse(payload invoice.CreditNote) *GetCreditNoteResponse {
@@ -136,7 +136,7 @@ func (s *InvoiceService) NewCreateCreditNoteRequest(ctx context.Context, payload
 }
 
 type CreateCreditNoteResponse struct {
-	Payload invoice.CreditNote
+	Payload invoice.CreditNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewCreateCreditNoteResponse(payload invoice.CreditNote) *CreateCreditNoteResponse {
@@ -204,7 +204,7 @@ func (s *InvoiceService) NewUpdateCreditNoteRequest(ctx context.Context, payload
 }
 
 type UpdateCreditNoteResponse struct {
-	Payload invoice.CreditNote
+	Payload invoice.CreditNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewUpdateCreditNoteResponse(payload invoice.CreditNote) *UpdateCreditNoteResponse {
@@ -264,7 +264,7 @@ func (s *InvoiceService) NewDeleteCreditNoteRequest(ctx context.Context, id int)
 }
 
 type DeleteCreditNoteResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InvoiceService) NewDeleteCreditNoteResponse(payload bool) *DeleteCreditNoteResponse {

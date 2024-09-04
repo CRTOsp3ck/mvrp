@@ -18,7 +18,7 @@ func (s *EnumService) NewListEnumRequest(ctx context.Context) *ListEnumRequest {
 }
 
 type ListEnumResponse struct {
-	Payload dto.EnumsDTO
+	Payload dto.EnumsDTO `json:"payload"`
 }
 
 func (s *EnumService) NewListEnumResponse(payload dto.EnumsDTO) *ListEnumResponse {

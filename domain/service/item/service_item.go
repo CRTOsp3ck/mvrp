@@ -16,7 +16,7 @@ func (s *ItemService) NewListItemRequest(ctx context.Context) *ListItemRequest {
 }
 
 type ListItemResponse struct {
-	Payload item.ItemSlice
+	Payload item.ItemSlice `json:"payload"`
 }
 
 func (s *ItemService) NewListItemResponse(payload item.ItemSlice) *ListItemResponse {
@@ -55,7 +55,7 @@ func (s *ItemService) NewSearchItemRequest(ctx context.Context, payload dto.Sear
 }
 
 type SearchItemResponse struct {
-	Payload item.ItemSlice
+	Payload item.ItemSlice `json:"payload"`
 }
 
 func (s *ItemService) NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {
@@ -93,7 +93,7 @@ func (s *ItemService) NewGetItemRequest(ctx context.Context, id int) *GetItemReq
 }
 
 type GetItemResponse struct {
-	Payload item.Item
+	Payload item.Item `json:"payload"`
 }
 
 func (s *ItemService) NewGetItemResponse(payload item.Item) *GetItemResponse {
@@ -133,7 +133,7 @@ func (s *ItemService) NewCreateItemRequest(ctx context.Context, payload dto.Crea
 }
 
 type CreateItemResponse struct {
-	Payload item.Item
+	Payload item.Item `json:"payload"`
 }
 
 func (s *ItemService) NewCreateItemResponse(payload item.Item) *CreateItemResponse {
@@ -185,7 +185,7 @@ func (s *ItemService) NewUpdateItemRequest(ctx context.Context, payload dto.Upda
 }
 
 type UpdateItemResponse struct {
-	Payload item.Item
+	Payload item.Item `json:"payload"`
 }
 
 func (s *ItemService) NewUpdateItemResponse(payload item.Item) *UpdateItemResponse {
@@ -237,7 +237,7 @@ func (s *ItemService) NewDeleteItemRequest(ctx context.Context, id int) *DeleteI
 }
 
 type DeleteItemResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *ItemService) NewDeleteItemResponse(payload bool) *DeleteItemResponse {

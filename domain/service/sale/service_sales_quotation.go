@@ -19,7 +19,7 @@ func (s *SaleService) NewListSalesQuotationRequest(ctx context.Context) *ListSal
 }
 
 type ListSalesQuotationResponse struct {
-	Payload sale.SalesQuotationSlice
+	Payload sale.SalesQuotationSlice `json:"payload"`
 }
 
 func (s *SaleService) NewListSalesQuotationResponse(payload sale.SalesQuotationSlice) *ListSalesQuotationResponse {
@@ -58,7 +58,7 @@ func (s *SaleService) NewPreviewSalesQuotationRequest(ctx context.Context, paylo
 }
 
 type PreviewSalesQuotationResponse struct {
-	Payload dto.CreateSalesQuotationDTO
+	Payload dto.CreateSalesQuotationDTO `json:"payload"`
 }
 
 func (s *SaleService) NewPreviewSalesQuotationResponse(payload dto.CreateSalesQuotationDTO) *PreviewSalesQuotationResponse {
@@ -93,7 +93,7 @@ func (s *SaleService) NewSearchSalesQuotationRequest(ctx context.Context, payloa
 }
 
 type SearchSalesQuotationResponse struct {
-	Payload sale.SalesQuotationSlice
+	Payload sale.SalesQuotationSlice `json:"payload"`
 }
 
 func (s *SaleService) NewSearchSalesQuotationResponse(payload sale.SalesQuotationSlice) *SearchSalesQuotationResponse {
@@ -132,7 +132,7 @@ func (s *SaleService) NewGetSalesQuotationRequest(ctx context.Context, id int) *
 }
 
 type GetSalesQuotationResponse struct {
-	Payload sale.SalesQuotation
+	Payload sale.SalesQuotation `json:"payload"`
 }
 
 func (s *SaleService) NewGetSalesQuotationResponse(payload sale.SalesQuotation) *GetSalesQuotationResponse {
@@ -173,7 +173,7 @@ func (s *SaleService) NewCreateSalesQuotationRequest(ctx context.Context, payloa
 }
 
 type CreateSalesQuotationResponse struct {
-	Payload sale.SalesQuotation
+	Payload sale.SalesQuotation `json:"payload"`
 }
 
 func (s *SaleService) NewCreateSalesQuotationResponse(payload sale.SalesQuotation) *CreateSalesQuotationResponse {
@@ -271,7 +271,7 @@ func (s *SaleService) NewUpdateSalesQuotationRequest(ctx context.Context, payloa
 }
 
 type UpdateSalesQuotationResponse struct {
-	Payload sale.SalesQuotation
+	Payload sale.SalesQuotation `json:"payload"`
 }
 
 func (s *SaleService) NewUpdateSalesQuotationResponse(payload sale.SalesQuotation) *UpdateSalesQuotationResponse {
@@ -416,7 +416,7 @@ func (s *SaleService) NewDeleteSalesQuotationRequest(ctx context.Context, id int
 }
 
 type DeleteSalesQuotationResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *SaleService) NewDeleteSalesQuotationResponse(payload bool) *DeleteSalesQuotationResponse {

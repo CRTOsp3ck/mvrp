@@ -24,7 +24,7 @@ func (s *InventoryService) NewListInventoryRequest(ctx context.Context) *ListInv
 }
 
 type ListInventoryResponse struct {
-	Payload inventory.InventorySlice
+	Payload inventory.InventorySlice `json:"payload"`
 }
 
 func (s *InventoryService) NewListInventoryResponse(payload inventory.InventorySlice) *ListInventoryResponse {
@@ -68,7 +68,7 @@ func (s *InventoryService) NewSearchInventoryRequest(ctx context.Context, payloa
 }
 
 type SearchInventoryResponse struct {
-	Payload inventory.InventorySlice
+	Payload inventory.InventorySlice `json:"payload"`
 }
 
 func (s *InventoryService) NewSearchInventoryResponse(payload inventory.InventorySlice) *SearchInventoryResponse {
@@ -112,7 +112,7 @@ func (s *InventoryService) NewGetInventoryRequest(ctx context.Context, id int) *
 }
 
 type GetInventoryResponse struct {
-	Payload inventory.Inventory
+	Payload inventory.Inventory `json:"payload"`
 }
 
 func (s *InventoryService) NewGetInventoryResponse(payload inventory.Inventory) *GetInventoryResponse {
@@ -158,7 +158,7 @@ func (s *InventoryService) NewCreateInventoryRequest(ctx context.Context, payloa
 }
 
 type CreateInventoryResponse struct {
-	Payload inventory.Inventory
+	Payload inventory.Inventory `json:"payload"`
 }
 
 func (s *InventoryService) NewCreateInventoryResponse(payload inventory.Inventory) *CreateInventoryResponse {
@@ -223,7 +223,7 @@ func (s *InventoryService) NewUpdateInventoryRequest(ctx context.Context, payloa
 }
 
 type UpdateInventoryResponse struct {
-	Payload inventory.Inventory
+	Payload inventory.Inventory `json:"payload"`
 }
 
 func (s *InventoryService) NewUpdateInventoryResponse(payload inventory.Inventory) *UpdateInventoryResponse {
@@ -306,7 +306,7 @@ func (s *InventoryService) NewDeleteInventoryRequest(ctx context.Context, id int
 }
 
 type DeleteInventoryResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InventoryService) NewDeleteInventoryResponse(payload bool) *DeleteInventoryResponse {

@@ -22,7 +22,7 @@ func (s *InvoiceService) NewListPaymentReceiptRequest(ctx context.Context) *List
 }
 
 type ListPaymentReceiptResponse struct {
-	Payload invoice.PaymentReceiptSlice
+	Payload invoice.PaymentReceiptSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewListPaymentReceiptResponse(payload invoice.PaymentReceiptSlice) *ListPaymentReceiptResponse {
@@ -61,7 +61,7 @@ func (s *InvoiceService) NewPreviewPaymentReceiptRequest(ctx context.Context, pa
 }
 
 type PreviewPaymentReceiptResponse struct {
-	Payload dto.CreatePaymentReceiptDTO
+	Payload dto.CreatePaymentReceiptDTO `json:"payload"`
 }
 
 func (s *InvoiceService) NewPreviewPaymentReceiptResponse(payload dto.CreatePaymentReceiptDTO) *PreviewPaymentReceiptResponse {
@@ -95,7 +95,7 @@ func (s *InvoiceService) NewSearchPaymentReceiptRequest(ctx context.Context, pay
 }
 
 type SearchPaymentReceiptResponse struct {
-	Payload invoice.PaymentReceiptSlice
+	Payload invoice.PaymentReceiptSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewSearchPaymentReceiptResponse(payload invoice.PaymentReceiptSlice) *SearchPaymentReceiptResponse {
@@ -134,7 +134,7 @@ func (s *InvoiceService) NewGetPaymentReceiptRequest(ctx context.Context, id int
 }
 
 type GetPaymentReceiptResponse struct {
-	Payload invoice.PaymentReceipt
+	Payload invoice.PaymentReceipt `json:"payload"`
 }
 
 func (s *InvoiceService) NewGetPaymentReceiptResponse(payload invoice.PaymentReceipt) *GetPaymentReceiptResponse {
@@ -173,7 +173,7 @@ func (s *InvoiceService) NewCreatePaymentReceiptRequest(ctx context.Context, pay
 }
 
 type CreatePaymentReceiptResponse struct {
-	Payload invoice.PaymentReceipt
+	Payload invoice.PaymentReceipt `json:"payload"`
 }
 
 func (s *InvoiceService) NewCreatePaymentReceiptResponse(payload invoice.PaymentReceipt) *CreatePaymentReceiptResponse {
@@ -267,7 +267,7 @@ func (s *InvoiceService) NewUpdatePaymentReceiptRequest(ctx context.Context, pay
 }
 
 type UpdatePaymentReceiptResponse struct {
-	Payload invoice.PaymentReceipt
+	Payload invoice.PaymentReceipt `json:"payload"`
 }
 
 func (s *InvoiceService) NewUpdatePaymentReceiptResponse(payload invoice.PaymentReceipt) *UpdatePaymentReceiptResponse {
@@ -415,7 +415,7 @@ func (s *InvoiceService) NewDeletePaymentReceiptRequest(ctx context.Context, id 
 }
 
 type DeletePaymentReceiptResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InvoiceService) NewDeletePaymentReceiptResponse(payload bool) *DeletePaymentReceiptResponse {

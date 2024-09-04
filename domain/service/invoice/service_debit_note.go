@@ -17,7 +17,7 @@ func (s *InvoiceService) NewListDebitNoteRequest(ctx context.Context) *ListDebit
 }
 
 type ListDebitNoteResponse struct {
-	Payload invoice.DebitNoteSlice
+	Payload invoice.DebitNoteSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewListDebitNoteResponse(payload invoice.DebitNoteSlice) *ListDebitNoteResponse {
@@ -56,7 +56,7 @@ func (s *InvoiceService) NewSearchDebitNoteRequest(ctx context.Context, payload 
 }
 
 type SearchDebitNoteResponse struct {
-	Payload invoice.DebitNoteSlice
+	Payload invoice.DebitNoteSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewSearchDebitNoteResponse(payload invoice.DebitNoteSlice) *SearchDebitNoteResponse {
@@ -95,7 +95,7 @@ func (s *InvoiceService) NewGetDebitNoteRequest(ctx context.Context, id int) *Ge
 }
 
 type GetDebitNoteResponse struct {
-	Payload invoice.DebitNote
+	Payload invoice.DebitNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewGetDebitNoteResponse(payload invoice.DebitNote) *GetDebitNoteResponse {
@@ -136,7 +136,7 @@ func (s *InvoiceService) NewCreateDebitNoteRequest(ctx context.Context, payload 
 }
 
 type CreateDebitNoteResponse struct {
-	Payload invoice.DebitNote
+	Payload invoice.DebitNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewCreateDebitNoteResponse(payload invoice.DebitNote) *CreateDebitNoteResponse {
@@ -204,7 +204,7 @@ func (s *InvoiceService) NewUpdateDebitNoteRequest(ctx context.Context, payload 
 }
 
 type UpdateDebitNoteResponse struct {
-	Payload invoice.DebitNote
+	Payload invoice.DebitNote `json:"payload"`
 }
 
 func (s *InvoiceService) NewUpdateDebitNoteResponse(payload invoice.DebitNote) *UpdateDebitNoteResponse {
@@ -264,7 +264,7 @@ func (s *InvoiceService) NewDeleteDebitNoteRequest(ctx context.Context, id int) 
 }
 
 type DeleteDebitNoteResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InvoiceService) NewDeleteDebitNoteResponse(payload bool) *DeleteDebitNoteResponse {

@@ -24,7 +24,7 @@ func (s *SaleService) NewListSalesOrderRequest(ctx context.Context) *ListSalesOr
 }
 
 type ListSalesOrderResponse struct {
-	Payload sale.SalesOrderSlice
+	Payload sale.SalesOrderSlice `json:"payload"`
 }
 
 func (s *SaleService) NewListSalesOrderResponse(payload sale.SalesOrderSlice) *ListSalesOrderResponse {
@@ -63,7 +63,7 @@ func (s *SaleService) NewPreviewSalesOrderRequest(ctx context.Context, payload d
 }
 
 type PreviewSalesOrderResponse struct {
-	Payload dto.CreateSalesOrderDTO
+	Payload dto.CreateSalesOrderDTO `json:"payload"`
 }
 
 func (s *SaleService) NewPreviewSalesOrderResponse(payload dto.CreateSalesOrderDTO) *PreviewSalesOrderResponse {
@@ -98,7 +98,7 @@ func (s *SaleService) NewSearchSalesOrderRequest(ctx context.Context, payload dt
 }
 
 type SearchSalesOrderResponse struct {
-	Payload sale.SalesOrderSlice
+	Payload sale.SalesOrderSlice `json:"payload"`
 }
 
 func (s *SaleService) NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) *SearchSalesOrderResponse {
@@ -137,7 +137,7 @@ func (s *SaleService) NewGetSalesOrderRequest(ctx context.Context, id int) *GetS
 }
 
 type GetSalesOrderResponse struct {
-	Payload sale.SalesOrder
+	Payload sale.SalesOrder `json:"payload"`
 }
 
 func (s *SaleService) NewGetSalesOrderResponse(payload sale.SalesOrder) *GetSalesOrderResponse {
@@ -178,7 +178,7 @@ func (s *SaleService) NewCreateSalesOrderRequest(ctx context.Context, payload dt
 }
 
 type CreateSalesOrderResponse struct {
-	Payload sale.SalesOrder
+	Payload sale.SalesOrder `json:"payload"`
 }
 
 func (s *SaleService) NewCreateSalesOrderResponse(payload sale.SalesOrder) *CreateSalesOrderResponse {
@@ -301,7 +301,7 @@ func (s *SaleService) NewUpdateSalesOrderRequest(ctx context.Context, payload dt
 }
 
 type UpdateSalesOrderResponse struct {
-	Payload sale.SalesOrder
+	Payload sale.SalesOrder `json:"payload"`
 }
 
 func (s *SaleService) NewUpdateSalesOrderResponse(payload sale.SalesOrder) *UpdateSalesOrderResponse {
@@ -524,7 +524,7 @@ func (s *SaleService) NewDeleteSalesOrderRequest(ctx context.Context, id int) *D
 }
 
 type DeleteSalesOrderResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *SaleService) NewDeleteSalesOrderResponse(payload bool) *DeleteSalesOrderResponse {

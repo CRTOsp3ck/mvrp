@@ -22,7 +22,7 @@ func (s *InvoiceService) NewListInvoiceRequest(ctx context.Context) *ListInvoice
 }
 
 type ListInvoiceResponse struct {
-	Payload invoice.InvoiceSlice
+	Payload invoice.InvoiceSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewListInvoiceResponse(payload invoice.InvoiceSlice) *ListInvoiceResponse {
@@ -61,7 +61,7 @@ func (s *InvoiceService) NewPreviewInvoiceRequest(ctx context.Context, payload d
 }
 
 type PreviewInvoiceResponse struct {
-	Payload dto.CreateInvoiceDTO
+	Payload dto.CreateInvoiceDTO `json:"payload"`
 }
 
 func (s *InvoiceService) NewPreviewInvoiceResponse(payload dto.CreateInvoiceDTO) *PreviewInvoiceResponse {
@@ -95,7 +95,7 @@ func (s *InvoiceService) NewSearchInvoiceRequest(ctx context.Context, payload dt
 }
 
 type SearchInvoiceResponse struct {
-	Payload invoice.InvoiceSlice
+	Payload invoice.InvoiceSlice `json:"payload"`
 }
 
 func (s *InvoiceService) NewSearchInvoiceResponse(payload invoice.InvoiceSlice) *SearchInvoiceResponse {
@@ -134,7 +134,7 @@ func (s *InvoiceService) NewGetInvoiceRequest(ctx context.Context, id int) *GetI
 }
 
 type GetInvoiceResponse struct {
-	Payload invoice.Invoice
+	Payload invoice.Invoice `json:"payload"`
 }
 
 func (s *InvoiceService) NewGetInvoiceResponse(payload invoice.Invoice) *GetInvoiceResponse {
@@ -173,7 +173,7 @@ func (s *InvoiceService) NewCreateInvoiceRequest(ctx context.Context, payload dt
 }
 
 type CreateInvoiceResponse struct {
-	Payload invoice.Invoice
+	Payload invoice.Invoice `json:"payload"`
 }
 
 func (s *InvoiceService) NewCreateInvoiceResponse(payload invoice.Invoice) *CreateInvoiceResponse {
@@ -267,7 +267,7 @@ func (s *InvoiceService) NewUpdateInvoiceRequest(ctx context.Context, payload dt
 }
 
 type UpdateInvoiceResponse struct {
-	Payload invoice.Invoice
+	Payload invoice.Invoice `json:"payload"`
 }
 
 func (s *InvoiceService) NewUpdateInvoiceResponse(payload invoice.Invoice) *UpdateInvoiceResponse {
@@ -415,7 +415,7 @@ func (s *InvoiceService) NewDeleteInvoiceRequest(ctx context.Context, id int) *D
 }
 
 type DeleteInvoiceResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InvoiceService) NewDeleteInvoiceResponse(payload bool) *DeleteInvoiceResponse {

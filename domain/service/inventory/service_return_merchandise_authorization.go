@@ -22,7 +22,7 @@ func (s *InventoryService) NewListReturnMerchandiseAuthorizationRequest(ctx cont
 }
 
 type ListReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorizationSlice
+	Payload inventory.ReturnMerchandiseAuthorizationSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewListReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *ListReturnMerchandiseAuthorizationResponse {
@@ -61,7 +61,7 @@ func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationRequest(ctx co
 }
 
 type SearchReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorizationSlice
+	Payload inventory.ReturnMerchandiseAuthorizationSlice `json:"payload"`
 }
 
 func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *SearchReturnMerchandiseAuthorizationResponse {
@@ -100,7 +100,7 @@ func (s *InventoryService) NewGetReturnMerchandiseAuthorizationRequest(ctx conte
 }
 
 type GetReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorization
+	Payload inventory.ReturnMerchandiseAuthorization `json:"payload"`
 }
 
 func (s *InventoryService) NewGetReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *GetReturnMerchandiseAuthorizationResponse {
@@ -141,7 +141,7 @@ func (s *InventoryService) NewCreateReturnMerchandiseAuthorizationRequest(ctx co
 }
 
 type CreateReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorization
+	Payload inventory.ReturnMerchandiseAuthorization `json:"payload"`
 }
 
 func (s *InventoryService) NewCreateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *CreateReturnMerchandiseAuthorizationResponse {
@@ -244,7 +244,7 @@ func (s *InventoryService) NewUpdateReturnMerchandiseAuthorizationRequest(ctx co
 }
 
 type UpdateReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorization
+	Payload inventory.ReturnMerchandiseAuthorization `json:"payload"`
 }
 
 func (s *InventoryService) NewUpdateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *UpdateReturnMerchandiseAuthorizationResponse {
@@ -426,7 +426,7 @@ func (s *InventoryService) NewDeleteReturnMerchandiseAuthorizationRequest(ctx co
 }
 
 type DeleteReturnMerchandiseAuthorizationResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *InventoryService) NewDeleteReturnMerchandiseAuthorizationResponse(payload bool) *DeleteReturnMerchandiseAuthorizationResponse {

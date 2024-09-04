@@ -18,7 +18,7 @@ func (s *EntityService) NewListEntityRequest(ctx context.Context) *ListEntityReq
 }
 
 type ListEntityResponse struct {
-	Payload entity.EntitySlice
+	Payload entity.EntitySlice `json:"payload"`
 }
 
 func (s *EntityService) NewListEntityResponse(payload entity.EntitySlice) *ListEntityResponse {
@@ -61,7 +61,7 @@ func (s *EntityService) NewSearchEntityRequest(ctx context.Context, payload dto.
 }
 
 type SearchEntityResponse struct {
-	Payload entity.EntitySlice
+	Payload entity.EntitySlice `json:"payload"`
 }
 
 func (s *EntityService) NewSearchEntityResponse(payload entity.EntitySlice) *SearchEntityResponse {
@@ -105,7 +105,7 @@ func (s *EntityService) NewGetEntityRequest(ctx context.Context, id int) *GetEnt
 }
 
 type GetEntityResponse struct {
-	Payload entity.Entity
+	Payload entity.Entity `json:"payload"`
 }
 
 func (s *EntityService) NewGetEntityResponse(payload entity.Entity) *GetEntityResponse {
@@ -150,7 +150,7 @@ func (s *EntityService) NewCreateEntityRequest(ctx context.Context, payload dto.
 }
 
 type CreateEntityResponse struct {
-	Payload entity.Entity
+	Payload entity.Entity `json:"payload"`
 }
 
 func (s *EntityService) NewCreateEntityResponse(payload entity.Entity) *CreateEntityResponse {
@@ -207,7 +207,7 @@ func (s *EntityService) NewUpdateEntityRequest(ctx context.Context, payload dto.
 }
 
 type UpdateEntityResponse struct {
-	Payload entity.Entity
+	Payload entity.Entity `json:"payload"`
 }
 
 func (s *EntityService) NewUpdateEntityResponse(payload entity.Entity) *UpdateEntityResponse {
@@ -264,7 +264,7 @@ func (s *EntityService) NewDeleteEntityRequest(ctx context.Context, id int) *Del
 }
 
 type DeleteEntityResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *EntityService) NewDeleteEntityResponse(payload bool) *DeleteEntityResponse {

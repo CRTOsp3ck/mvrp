@@ -21,7 +21,7 @@ func (s *SaleService) NewListOrderConfirmationRequest(ctx context.Context) *List
 }
 
 type ListOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmationSlice
+	Payload sale.OrderConfirmationSlice `json:"payload"`
 }
 
 func (s *SaleService) NewListOrderConfirmationResponse(payload sale.OrderConfirmationSlice) *ListOrderConfirmationResponse {
@@ -60,7 +60,7 @@ func (s *SaleService) NewPreviewOrderConfirmationRequest(ctx context.Context, pa
 }
 
 type PreviewOrderConfirmationResponse struct {
-	Payload dto.CreateOrderConfirmationDTO
+	Payload dto.CreateOrderConfirmationDTO `json:"payload"`
 }
 
 func (s *SaleService) NewPreviewOrderConfirmationResponse(payload dto.CreateOrderConfirmationDTO) *PreviewOrderConfirmationResponse {
@@ -95,7 +95,7 @@ func (s *SaleService) NewSearchOrderConfirmationRequest(ctx context.Context, pay
 }
 
 type SearchOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmationSlice
+	Payload sale.OrderConfirmationSlice `json:"payload"`
 }
 
 func (s *SaleService) NewSearchOrderConfirmationResponse(payload sale.OrderConfirmationSlice) *SearchOrderConfirmationResponse {
@@ -134,7 +134,7 @@ func (s *SaleService) NewGetOrderConfirmationRequest(ctx context.Context, id int
 }
 
 type GetOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmation
+	Payload sale.OrderConfirmation `json:"payload"`
 }
 
 func (s *SaleService) NewGetOrderConfirmationResponse(payload sale.OrderConfirmation) *GetOrderConfirmationResponse {
@@ -175,7 +175,7 @@ func (s *SaleService) NewCreateOrderConfirmationRequest(ctx context.Context, pay
 }
 
 type CreateOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmation
+	Payload sale.OrderConfirmation `json:"payload"`
 }
 
 func (s *SaleService) NewCreateOrderConfirmationResponse(payload sale.OrderConfirmation) *CreateOrderConfirmationResponse {
@@ -342,7 +342,7 @@ func (s *SaleService) NewUpdateOrderConfirmationRequest(ctx context.Context, pay
 }
 
 type UpdateOrderConfirmationResponse struct {
-	Payload sale.OrderConfirmation
+	Payload sale.OrderConfirmation `json:"payload"`
 }
 
 func (s *SaleService) NewUpdateOrderConfirmationResponse(payload sale.OrderConfirmation) *UpdateOrderConfirmationResponse {
@@ -484,7 +484,7 @@ func (s *SaleService) NewDeleteOrderConfirmationRequest(ctx context.Context, id 
 }
 
 type DeleteOrderConfirmationResponse struct {
-	Payload bool
+	Payload bool `json:"payload"`
 }
 
 func (s *SaleService) NewDeleteOrderConfirmationResponse(payload bool) *DeleteOrderConfirmationResponse {
