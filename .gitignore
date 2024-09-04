@@ -43,3 +43,4 @@ dbconfig.yml
 # Live reloading
 cmd/app/.air.toml
 cmd/app/tmp/
+cmd/app/tmp/main
