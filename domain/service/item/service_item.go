@@ -75,7 +75,7 @@ func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, e
 	}
 
 	// Pagination
-	totalCount, err := s.Repo.Item.GetItemTotalCount(req.Ctx, tx)
+	totalCount, err := s.Repo.Item.GetItemTotalCountByType(req.Ctx, tx, req.Payload.Type)
 	if err != nil {
 		return nil, err
 	}
