@@ -73,12 +73,28 @@ func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, e
 	if err != nil {
 		return nil, err
 	}
+
+	// Pagination
+	totalCount, err := s.Repo.Item.GetItemTotalCount(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
+
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
 	resp := SearchItemResponse{
-		Payload: res,
+		Payload:    res,
+		Pagination: pd,
 	}
 	return &resp, nil
 }

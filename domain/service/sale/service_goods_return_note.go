@@ -117,12 +117,28 @@ func (s *SaleService) SearchGoodsReturnNote(req *SearchGoodsReturnNoteRequest) (
 	if err != nil {
 		return nil, err
 	}
+
+	// Pagination
+	totalCount, err := s.Repo.Sale.GetGoodsReturnNoteTotalCount(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
+
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
 	resp := SearchGoodsReturnNoteResponse{
-		Payload: res,
+		Payload:    res,
+		Pagination: pd,
 	}
 	return &resp, nil
 }

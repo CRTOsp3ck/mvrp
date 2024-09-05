@@ -90,12 +90,28 @@ func (s *InventoryService) SearchStockCountSheet(req *SearchStockCountSheetReque
 	if err != nil {
 		return nil, err
 	}
+
+	// Pagination
+	totalCount, err := s.Repo.Inventory.GetStockCountSheetTotalCount(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
+
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
 	resp := SearchStockCountSheetResponse{
-		Payload: res,
+		Payload:    res,
+		Pagination: pd,
 	}
 	return &resp, nil
 }
