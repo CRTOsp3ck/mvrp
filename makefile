@@ -1,5 +1,5 @@
 # Variables
-APP_NAME := mverp-api
+APP_NAME := mvrp-api
 APP_CMD := app
 DOCKER_IMAGE := $(APP_NAME):latest
 DOCKERFILE := dockerfile
