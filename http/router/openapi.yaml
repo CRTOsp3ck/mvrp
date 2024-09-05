@@ -1637,6 +1637,11 @@ components:
       type: object
     DtoItemEnumDTO:
       properties:
+        item_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
         item_type:
           items:
             $ref: '#/components/schemas/DtoEnum'
@@ -2081,6 +2086,8 @@ components:
           type: string
         phone:
           type: string
+        status:
+          type: string
         type:
           type: string
         updated_at:
@@ -2381,6 +2388,10 @@ components:
       type: object
     ItemItem:
       properties:
+        brand:
+          type: string
+        category:
+          type: string
         code:
           type: string
         cost:
@@ -2396,7 +2407,13 @@ components:
           type: integer
         name:
           type: string
+        origin:
+          type: string
         price:
+          type: string
+        sku:
+          type: string
+        status:
           type: string
         type:
           type: string

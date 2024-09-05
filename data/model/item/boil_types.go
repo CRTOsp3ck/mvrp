@@ -94,3 +94,51 @@ func (e ItemType) Ordinal() int {
 		panic(errors.New("enum is not valid"))
 	}
 }
+
+type ItemStatus string
+
+// Enum values for ItemStatus
+const (
+	ItemStatusActive       ItemStatus = "active"
+	ItemStatusInactive     ItemStatus = "inactive"
+	ItemStatusDiscontinued ItemStatus = "discontinued"
+	ItemStatusTesting      ItemStatus = "testing"
+)
+
+func AllItemStatus() []ItemStatus {
+	return []ItemStatus{
+		ItemStatusActive,
+		ItemStatusInactive,
+		ItemStatusDiscontinued,
+		ItemStatusTesting,
+	}
+}
+
+func (e ItemStatus) IsValid() error {
+	switch e {
+	case ItemStatusActive, ItemStatusInactive, ItemStatusDiscontinued, ItemStatusTesting:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e ItemStatus) String() string {
+	return string(e)
+}
+
+func (e ItemStatus) Ordinal() int {
+	switch e {
+	case ItemStatusActive:
+		return 0
+	case ItemStatusInactive:
+		return 1
+	case ItemStatusDiscontinued:
+		return 2
+	case ItemStatusTesting:
+		return 3
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}

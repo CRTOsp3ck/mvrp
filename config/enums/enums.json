@@ -10,13 +10,15 @@
         {
             "package": "item",
             "enums": [
-                { "name": "ItemType", "type": "string" }
+                { "name": "ItemType", "type": "string" },
+                { "name": "ItemStatus", "type": "string" }
             ]
         },
         {
             "package": "entity",
             "enums": [
-                { "name": "EntityType", "type": "string" }
+                { "name": "EntityType", "type": "string" },
+                { "name": "EntityStatus", "type": "string" }
             ]
         },
         {

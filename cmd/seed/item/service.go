@@ -17,16 +17,22 @@ import (
 func SeedServices(count int) error {
 	svc := item.NewItemService()
 	for i := 0; i < count; i++ {
+		refProd := gofakeit.Product()
 		price := gofakeit.Price(500, 1000)
 		service := fmt.Sprintf("%s %s %s Service", gofakeit.Verb(), gofakeit.AdjectiveDescriptive(), gofakeit.Noun())
 		data := dto.CreateItemDTO{
 			Item: model.Item{
 				Code:        fmt.Sprintf("SER%03d", i+1),
+				Sku:         refProd.UPC,
+				Brand:       gofakeit.Car().Brand,
+				Category:    refProd.Categories[0],
 				Name:        util.Util.Str.CapitalizeWords(service),
 				Description: gofakeit.ProductDescription(),
-				Price:       types.NewNullDecimal(decimal.New(int64(price)*100, 2)),
+				Origin:      gofakeit.Country(),
 				Cost:        types.NewNullDecimal(decimal.New(int64(price)*75, 2)),
+				Price:       types.NewNullDecimal(decimal.New(int64(price)*100, 2)),
 				Type:        model.ItemTypeService,
+				Status:      model.ItemStatusActive,
 			},
 		}
 		ctx := context.Background()

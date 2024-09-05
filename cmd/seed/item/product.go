@@ -21,11 +21,16 @@ func SeedProducts(count int) error {
 		data := dto.CreateItemDTO{
 			Item: model.Item{
 				Code:        fmt.Sprintf("PRO%03d", i+1),
+				Sku:         fp.UPC,
+				Brand:       gofakeit.Car().Brand,
+				Category:    fp.Categories[0],
 				Name:        fp.Name,
 				Description: fp.Description,
-				Price:       types.NewNullDecimal(decimal.New(int64(fp.Price)*100, 2)),
+				Origin:      gofakeit.Country(),
 				Cost:        types.NewNullDecimal(decimal.New(int64(fp.Price)*75, 2)),
+				Price:       types.NewNullDecimal(decimal.New(int64(fp.Price)*100, 2)),
 				Type:        model.ItemTypeProduct,
+				Status:      model.ItemStatusActive,
 			},
 		}
 		ctx := context.Background()

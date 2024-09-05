@@ -28,6 +28,7 @@ func SeedEmployees(count int) error {
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
 				Type:        model.EntityTypeEmployee,
+				Status:      model.EntityStatusActive,
 			},
 		}
 		ctx := context.Background()

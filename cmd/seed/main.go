@@ -47,19 +47,19 @@ func seedItem() error {
 
 func seedEntity() error {
 	// Create 10 customers
-	err := entity.SeedCustomers(100)
+	err := entity.SeedCustomers(250)
 	if err != nil {
 		return err
 	}
 
 	// Create 5 suppliers
-	err = entity.SeedSuppliers(25)
+	err = entity.SeedSuppliers(50)
 	if err != nil {
 		return err
 	}
 
 	// Create 3 employees
-	err = entity.SeedEmployees(5)
+	err = entity.SeedEmployees(25)
 	if err != nil {
 		return err
 	}

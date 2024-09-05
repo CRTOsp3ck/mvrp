@@ -102,3 +102,43 @@ func (e EntityType) Ordinal() int {
 		panic(errors.New("enum is not valid"))
 	}
 }
+
+type EntityStatus string
+
+// Enum values for EntityStatus
+const (
+	EntityStatusActive   EntityStatus = "active"
+	EntityStatusInactive EntityStatus = "inactive"
+)
+
+func AllEntityStatus() []EntityStatus {
+	return []EntityStatus{
+		EntityStatusActive,
+		EntityStatusInactive,
+	}
+}
+
+func (e EntityStatus) IsValid() error {
+	switch e {
+	case EntityStatusActive, EntityStatusInactive:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e EntityStatus) String() string {
+	return string(e)
+}
+
+func (e EntityStatus) Ordinal() int {
+	switch e {
+	case EntityStatusActive:
+		return 0
+	case EntityStatusInactive:
+		return 1
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}

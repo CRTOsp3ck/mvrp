@@ -27,11 +27,16 @@ import (
 type Item struct {
 	ID          int               `boil:"id" json:"id" toml:"id" yaml:"id"`
 	Code        string            `boil:"code" json:"code" toml:"code" yaml:"code"`
+	Sku         string            `boil:"sku" json:"sku" toml:"sku" yaml:"sku"`
+	Brand       string            `boil:"brand" json:"brand" toml:"brand" yaml:"brand"`
+	Category    string            `boil:"category" json:"category" toml:"category" yaml:"category"`
 	Name        string            `boil:"name" json:"name" toml:"name" yaml:"name"`
 	Description string            `boil:"description" json:"description" toml:"description" yaml:"description"`
-	Price       types.NullDecimal `boil:"price" json:"price,omitempty" toml:"price" yaml:"price,omitempty"`
+	Origin      string            `boil:"origin" json:"origin" toml:"origin" yaml:"origin"`
 	Cost        types.NullDecimal `boil:"cost" json:"cost,omitempty" toml:"cost" yaml:"cost,omitempty"`
+	Price       types.NullDecimal `boil:"price" json:"price,omitempty" toml:"price" yaml:"price,omitempty"`
 	Type        ItemType          `boil:"type" json:"type" toml:"type" yaml:"type"`
+	Status      ItemStatus        `boil:"status" json:"status" toml:"status" yaml:"status"`
 	CreatedAt   time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt   time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt   null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -43,22 +48,32 @@ type Item struct {
 var ItemColumns = struct {
 	ID          string
 	Code        string
+	Sku         string
+	Brand       string
+	Category    string
 	Name        string
 	Description string
-	Price       string
+	Origin      string
 	Cost        string
+	Price       string
 	Type        string
+	Status      string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
 }{
 	ID:          "id",
 	Code:        "code",
+	Sku:         "sku",
+	Brand:       "brand",
+	Category:    "category",
 	Name:        "name",
 	Description: "description",
-	Price:       "price",
+	Origin:      "origin",
 	Cost:        "cost",
+	Price:       "price",
 	Type:        "type",
+	Status:      "status",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
 	DeletedAt:   "deleted_at",
@@ -67,22 +82,32 @@ var ItemColumns = struct {
 var ItemTableColumns = struct {
 	ID          string
 	Code        string
+	Sku         string
+	Brand       string
+	Category    string
 	Name        string
 	Description string
-	Price       string
+	Origin      string
 	Cost        string
+	Price       string
 	Type        string
+	Status      string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
 }{
 	ID:          "item.id",
 	Code:        "item.code",
+	Sku:         "item.sku",
+	Brand:       "item.brand",
+	Category:    "item.category",
 	Name:        "item.name",
 	Description: "item.description",
-	Price:       "item.price",
+	Origin:      "item.origin",
 	Cost:        "item.cost",
+	Price:       "item.price",
 	Type:        "item.type",
+	Status:      "item.status",
 	CreatedAt:   "item.created_at",
 	UpdatedAt:   "item.updated_at",
 	DeletedAt:   "item.deleted_at",
@@ -201,6 +226,41 @@ func (w whereHelperItemType) NIN(slice []ItemType) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
+type whereHelperItemStatus struct{ field string }
+
+func (w whereHelperItemStatus) EQ(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperItemStatus) NEQ(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperItemStatus) LT(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperItemStatus) LTE(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperItemStatus) GT(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperItemStatus) GTE(x ItemStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperItemStatus) IN(slice []ItemStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperItemStatus) NIN(slice []ItemStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -249,22 +309,32 @@ func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsN
 var ItemWhere = struct {
 	ID          whereHelperint
 	Code        whereHelperstring
+	Sku         whereHelperstring
+	Brand       whereHelperstring
+	Category    whereHelperstring
 	Name        whereHelperstring
 	Description whereHelperstring
-	Price       whereHelpertypes_NullDecimal
+	Origin      whereHelperstring
 	Cost        whereHelpertypes_NullDecimal
+	Price       whereHelpertypes_NullDecimal
 	Type        whereHelperItemType
+	Status      whereHelperItemStatus
 	CreatedAt   whereHelpertime_Time
 	UpdatedAt   whereHelpertime_Time
 	DeletedAt   whereHelpernull_Time
 }{
 	ID:          whereHelperint{field: "\"item\".\"item\".\"id\""},
 	Code:        whereHelperstring{field: "\"item\".\"item\".\"code\""},
+	Sku:         whereHelperstring{field: "\"item\".\"item\".\"sku\""},
+	Brand:       whereHelperstring{field: "\"item\".\"item\".\"brand\""},
+	Category:    whereHelperstring{field: "\"item\".\"item\".\"category\""},
 	Name:        whereHelperstring{field: "\"item\".\"item\".\"name\""},
 	Description: whereHelperstring{field: "\"item\".\"item\".\"description\""},
-	Price:       whereHelpertypes_NullDecimal{field: "\"item\".\"item\".\"price\""},
+	Origin:      whereHelperstring{field: "\"item\".\"item\".\"origin\""},
 	Cost:        whereHelpertypes_NullDecimal{field: "\"item\".\"item\".\"cost\""},
+	Price:       whereHelpertypes_NullDecimal{field: "\"item\".\"item\".\"price\""},
 	Type:        whereHelperItemType{field: "\"item\".\"item\".\"type\""},
+	Status:      whereHelperItemStatus{field: "\"item\".\"item\".\"status\""},
 	CreatedAt:   whereHelpertime_Time{field: "\"item\".\"item\".\"created_at\""},
 	UpdatedAt:   whereHelpertime_Time{field: "\"item\".\"item\".\"updated_at\""},
 	DeletedAt:   whereHelpernull_Time{field: "\"item\".\"item\".\"deleted_at\""},
@@ -287,9 +357,9 @@ func (*itemR) NewStruct() *itemR {
 type itemL struct{}
 
 var (
-	itemAllColumns            = []string{"id", "code", "name", "description", "price", "cost", "type", "created_at", "updated_at", "deleted_at"}
-	itemColumnsWithoutDefault = []string{"id", "code", "name", "description", "type", "created_at", "updated_at"}
-	itemColumnsWithDefault    = []string{"price", "cost", "deleted_at"}
+	itemAllColumns            = []string{"id", "code", "sku", "brand", "category", "name", "description", "origin", "cost", "price", "type", "status", "created_at", "updated_at", "deleted_at"}
+	itemColumnsWithoutDefault = []string{"id", "code", "sku", "brand", "category", "name", "description", "origin", "type", "status", "created_at", "updated_at"}
+	itemColumnsWithDefault    = []string{"cost", "price", "deleted_at"}
 	itemPrimaryKeyColumns     = []string{"id"}
 	itemGeneratedColumns      = []string{}
 )

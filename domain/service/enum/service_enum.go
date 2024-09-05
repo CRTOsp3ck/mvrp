@@ -52,6 +52,14 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		itemType = append(itemType, enum)
 	}
+	var itemStatus []dto.Enum
+	for _, enumStr := range s.Repo.Enum.GetItemStatusEnums() {
+		enum := dto.Enum{
+			Name:  parseEnumForName(enumStr.String()),
+			Value: enumStr.String(),
+		}
+		itemStatus = append(itemStatus, enum)
+	}
 	var entityType []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetEntityTypeEnums() {
 		enum := dto.Enum{
@@ -59,6 +67,14 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 			Value: enumStr.String(),
 		}
 		entityType = append(entityType, enum)
+	}
+	var entityStatus []dto.Enum
+	for _, enumStr := range s.Repo.Enum.GetEntityStatusEnums() {
+		enum := dto.Enum{
+			Name:  parseEnumForName(enumStr.String()),
+			Value: enumStr.String(),
+		}
+		entityStatus = append(entityStatus, enum)
 	}
 	var inventoryTransactionType []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetInventoryTransactionTypeEnums() {
@@ -98,10 +114,12 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 			PaymentStatus: paymentStatus,
 		},
 		ItemEnums: dto.ItemEnumDTO{
-			ItemType: itemType,
+			ItemType:   itemType,
+			ItemStatus: itemStatus,
 		},
 		EntityEnums: dto.EntityEnumDTO{
-			EntityType: entityType,
+			EntityType:   entityType,
+			EntityStatus: entityStatus,
 		},
 		InventoryEnums: dto.InventoryEnumDTO{
 			InventoryTransactionType: inventoryTransactionType,

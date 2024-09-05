@@ -28,6 +28,7 @@ func SeedSuppliers(count int) error {
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
 				Type:        model.EntityTypeSupplier,
+				Status:      model.EntityStatusActive,
 			},
 		}
 		ctx := context.Background()

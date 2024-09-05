@@ -29,12 +29,20 @@ func (r *EnumRepository) GetItemTypeEnums() []item.ItemType {
 	return item.AllItemType()
 }
 
+func (r *EnumRepository) GetItemStatusEnums() []item.ItemStatus {
+	return item.AllItemStatus()
+}
+
 // -------------------------------------------------------
 // ENTITY
 // -------------------------------------------------------
 
 func (r *EnumRepository) GetEntityTypeEnums() []entity.EntityType {
 	return entity.AllEntityType()
+}
+
+func (r *EnumRepository) GetEntityStatusEnums() []entity.EntityStatus {
+	return entity.AllEntityStatus()
 }
 
 // -------------------------------------------------------

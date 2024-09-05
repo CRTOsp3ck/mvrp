@@ -24,18 +24,19 @@ import (
 
 // Entity is an object representing the database table.
 type Entity struct {
-	ID          int         `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Code        string      `boil:"code" json:"code" toml:"code" yaml:"code"`
-	Name        string      `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Description string      `boil:"description" json:"description" toml:"description" yaml:"description"`
-	Address     null.String `boil:"address" json:"address,omitempty" toml:"address" yaml:"address,omitempty"`
-	Phone       null.String `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
-	Email       null.String `boil:"email" json:"email,omitempty" toml:"email" yaml:"email,omitempty"`
-	Website     null.String `boil:"website" json:"website,omitempty" toml:"website" yaml:"website,omitempty"`
-	Type        EntityType  `boil:"type" json:"type" toml:"type" yaml:"type"`
-	CreatedAt   time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt   time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt   null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID          int          `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Code        string       `boil:"code" json:"code" toml:"code" yaml:"code"`
+	Name        string       `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Description string       `boil:"description" json:"description" toml:"description" yaml:"description"`
+	Address     null.String  `boil:"address" json:"address,omitempty" toml:"address" yaml:"address,omitempty"`
+	Phone       null.String  `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
+	Email       null.String  `boil:"email" json:"email,omitempty" toml:"email" yaml:"email,omitempty"`
+	Website     null.String  `boil:"website" json:"website,omitempty" toml:"website" yaml:"website,omitempty"`
+	Type        EntityType   `boil:"type" json:"type" toml:"type" yaml:"type"`
+	Status      EntityStatus `boil:"status" json:"status" toml:"status" yaml:"status"`
+	CreatedAt   time.Time    `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt   time.Time    `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt   null.Time    `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *entityR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L entityL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -51,6 +52,7 @@ var EntityColumns = struct {
 	Email       string
 	Website     string
 	Type        string
+	Status      string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
@@ -64,6 +66,7 @@ var EntityColumns = struct {
 	Email:       "email",
 	Website:     "website",
 	Type:        "type",
+	Status:      "status",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
 	DeletedAt:   "deleted_at",
@@ -79,6 +82,7 @@ var EntityTableColumns = struct {
 	Email       string
 	Website     string
 	Type        string
+	Status      string
 	CreatedAt   string
 	UpdatedAt   string
 	DeletedAt   string
@@ -92,6 +96,7 @@ var EntityTableColumns = struct {
 	Email:       "entity.email",
 	Website:     "entity.website",
 	Type:        "entity.type",
+	Status:      "entity.status",
 	CreatedAt:   "entity.created_at",
 	UpdatedAt:   "entity.updated_at",
 	DeletedAt:   "entity.deleted_at",
@@ -234,6 +239,41 @@ func (w whereHelperEntityType) NIN(slice []EntityType) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
+type whereHelperEntityStatus struct{ field string }
+
+func (w whereHelperEntityStatus) EQ(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperEntityStatus) NEQ(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperEntityStatus) LT(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperEntityStatus) LTE(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperEntityStatus) GT(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperEntityStatus) GTE(x EntityStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperEntityStatus) IN(slice []EntityStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperEntityStatus) NIN(slice []EntityStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -289,6 +329,7 @@ var EntityWhere = struct {
 	Email       whereHelpernull_String
 	Website     whereHelpernull_String
 	Type        whereHelperEntityType
+	Status      whereHelperEntityStatus
 	CreatedAt   whereHelpertime_Time
 	UpdatedAt   whereHelpertime_Time
 	DeletedAt   whereHelpernull_Time
@@ -302,6 +343,7 @@ var EntityWhere = struct {
 	Email:       whereHelpernull_String{field: "\"entity\".\"entity\".\"email\""},
 	Website:     whereHelpernull_String{field: "\"entity\".\"entity\".\"website\""},
 	Type:        whereHelperEntityType{field: "\"entity\".\"entity\".\"type\""},
+	Status:      whereHelperEntityStatus{field: "\"entity\".\"entity\".\"status\""},
 	CreatedAt:   whereHelpertime_Time{field: "\"entity\".\"entity\".\"created_at\""},
 	UpdatedAt:   whereHelpertime_Time{field: "\"entity\".\"entity\".\"updated_at\""},
 	DeletedAt:   whereHelpernull_Time{field: "\"entity\".\"entity\".\"deleted_at\""},
@@ -324,8 +366,8 @@ func (*entityR) NewStruct() *entityR {
 type entityL struct{}
 
 var (
-	entityAllColumns            = []string{"id", "code", "name", "description", "address", "phone", "email", "website", "type", "created_at", "updated_at", "deleted_at"}
-	entityColumnsWithoutDefault = []string{"id", "code", "name", "description", "type", "created_at", "updated_at"}
+	entityAllColumns            = []string{"id", "code", "name", "description", "address", "phone", "email", "website", "type", "status", "created_at", "updated_at", "deleted_at"}
+	entityColumnsWithoutDefault = []string{"id", "code", "name", "description", "type", "status", "created_at", "updated_at"}
 	entityColumnsWithDefault    = []string{"address", "phone", "email", "website", "deleted_at"}
 	entityPrimaryKeyColumns     = []string{"id"}
 	entityGeneratedColumns      = []string{}

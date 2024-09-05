@@ -19,10 +19,12 @@ type BaseEnumDTO struct {
 
 type ItemEnumDTO struct {
 	ItemType     []Enum    `json:"item_type"`
+	ItemStatus     []Enum    `json:"item_status"`
 }
 
 type EntityEnumDTO struct {
 	EntityType     []Enum    `json:"entity_type"`
+	EntityStatus     []Enum    `json:"entity_status"`
 }
 
 type InventoryEnumDTO struct {
@@ -74,10 +76,12 @@ type BaseEnumDTO struct {
 
 type ItemEnumDTO struct {
 	ItemType     []item.ItemType    `json:"item_type"`
+	ItemStatus     []item.ItemStatus    `json:"item_status"`
 }
 
 type EntityEnumDTO struct {
 	EntityType     []entity.EntityType    `json:"entity_type"`
+	EntityStatus     []entity.EntityStatus    `json:"entity_status"`
 }
 
 type InventoryEnumDTO struct {

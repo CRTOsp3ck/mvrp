@@ -28,6 +28,7 @@ func SeedCustomers(count int) error {
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
 				Type:        model.EntityTypeCustomer,
+				Status:      model.EntityStatusActive,
 			},
 		}
 		ctx := context.Background()
