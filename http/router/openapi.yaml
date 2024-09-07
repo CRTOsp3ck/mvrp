@@ -187,6 +187,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
+  /v1/main/inventory/goods_issue_note_view:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/goods_issue_note_view/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/inventory/inventory:
     get:
       responses:
@@ -1599,6 +1623,11 @@ components:
       type: object
     DtoEntityEnumDTO:
       properties:
+        entity_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
         entity_type:
           items:
             $ref: '#/components/schemas/DtoEnum'
@@ -2144,6 +2173,8 @@ components:
           type: string
         quantity:
           type: string
+        total_value_gen:
+          type: string
         unit_value:
           type: string
         updated_at:
@@ -2167,19 +2198,15 @@ components:
           type: string
         item_id:
           type: string
+        price_per_unit:
+          type: string
         quantity_available:
           type: string
         quantity_reserved:
           type: string
         quantity_returned:
           type: string
-        record_end_date:
-          type: string
-        record_end_quantity:
-          type: string
-        record_start_date:
-          type: string
-        record_start_quantity:
+        quantity_total_gen:
           type: string
         remarks:
           type: string
@@ -2187,9 +2214,7 @@ components:
           type: string
         reorder_quantity:
           type: string
-        total_quantity_on_hand:
-          type: string
-        total_value_on_hand:
+        total_value_on_hand_gen:
           type: string
         updated_at:
           format: date-time

@@ -4,15 +4,21 @@ import (
 	"context"
 	"mvrp/data/model/item"
 	"mvrp/domain/dto"
+	"mvrp/errors"
 )
 
 // LIST ITEM
 type ListItemRequest struct {
-	Ctx context.Context
+	Ctx  context.Context
+	Type *item.ItemType
 }
 
 func (s *ItemService) NewListItemRequest(ctx context.Context) *ListItemRequest {
 	return &ListItemRequest{Ctx: ctx}
+}
+
+func (s *ItemService) NewListItemByTypeRequest(ctx context.Context, itemType *item.ItemType) *ListItemRequest {
+	return &ListItemRequest{Ctx: ctx, Type: itemType}
 }
 
 type ListItemResponse struct {
@@ -31,6 +37,31 @@ func (s *ItemService) ListItem(req *ListItemRequest) (*ListItemResponse, error) 
 	defer tx.Rollback()
 
 	res, err := s.Repo.Item.ListAllItems(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+	resp := ListItemResponse{
+		Payload: res,
+	}
+	return &resp, nil
+}
+
+func (s *ItemService) ListItemByType(req *ListItemRequest) (*ListItemResponse, error) {
+	if req.Type == nil {
+		return nil, errors.WrapError(errors.ErrTypeMissingField, "Item type is required")
+	}
+
+	tx, err := s.Repo.Begin(req.Ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	res, err := s.Repo.Item.ListItemsByType(req.Ctx, tx, req.Type.String())
 	if err != nil {
 		return nil, err
 	}

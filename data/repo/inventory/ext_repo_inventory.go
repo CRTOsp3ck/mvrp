@@ -19,3 +19,10 @@ func (r *InventoryRepository) GetReturnMerchandiseAuthorizationItemsByReturnMerc
 		qm.Where("rma_id=?", id),
 	).All(ctx, exec)
 }
+
+func (r *InventoryRepository) ListInventoriesByItemType(ctx context.Context, exec boil.ContextExecutor, itemType string) (inventory.InventorySlice, error) {
+	return inventory.Inventories(
+		qm.InnerJoin("item.item ON inventory.inventory.item_id = item.item.id"),
+		qm.Where("item.item.type = ?", itemType),
+	).All(ctx, exec)
+}

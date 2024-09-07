@@ -5,44 +5,61 @@ CREATE TYPE inventory.inventory_transaction_type AS ENUM (
     'sale', 
     'purchase', 
     'transfer',
-    'issue',
+    'issuance',
     'return',
     'shipping',
     'stock_count', 
     'sale_cancellation',
     'purchase_cancellation',
     'transfer_cancellation',
-    'issue_cancellation',
+    'issuance_cancellation',
     'return_cancellation',
     'shipping_cancellation',
     'stock_count_cancellation',
     'sale_adjustment',
     'purchase_adjustment',
     'transfer_adjustment',
-    'issue_adjustment',
+    'issuance_adjustment',
     'return_adjustment',
     'shipping_adjustment',
     'stock_count_adjustment',
-    'general_adjustment'
+    'general_adjustment',
+    'initial_stock'
 );
 
 CREATE TABLE inventory.inventory (
     id INT PRIMARY KEY,
     inventory_number VARCHAR(50) UNIQUE NOT NULL,
     item_id INT REFERENCES item.item(id),
-    record_start_date DATE DEFAULT CURRENT_DATE,
-    record_start_quantity DECIMAL(20, 5) DEFAULT 0,
-    record_end_date DATE,
-    record_end_quantity DECIMAL(20, 5),
     quantity_reserved DECIMAL(20, 5) DEFAULT 0, -- Quantity reserved for orders
     quantity_available DECIMAL(20, 5) DEFAULT 0, -- Quantity available for sale
     quantity_returned DECIMAL(20, 5) DEFAULT 0, -- Quantity returned by customers
-    total_quantity_on_hand DECIMAL(20, 5) DEFAULT 0, -- Current stock level
+    quantity_total_gen DECIMAL(20, 5) DEFAULT 0, -- Current stock level
     cost_per_unit DECIMAL(20, 5) DEFAULT 0,
-    total_value_on_hand DECIMAL(20, 5) DEFAULT 0,
+    price_per_unit DECIMAL(20, 5) DEFAULT 0,
+    total_value_on_hand_gen DECIMAL(20, 5) DEFAULT 0,
     reorder_level DECIMAL(20, 5) DEFAULT 0,
     reorder_quantity DECIMAL(20, 5) DEFAULT 0,
     is_discontinued BOOLEAN DEFAULT FALSE,
+    remarks TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
+);
+
+CREATE TABLE inventory.inventory_periodic_record (
+    id INT PRIMARY KEY,
+    inventory_id INT REFERENCES inventory.inventory(id) ON DELETE CASCADE NOT NULL,
+    record_start_date DATE DEFAULT CURRENT_DATE,
+    record_start_quantity_reserved DECIMAL(20, 5) DEFAULT 0, -- Quantity reserved for orders
+    record_start_quantity_available DECIMAL(20, 5) DEFAULT 0, -- Quantity available for sale
+    record_start_quantity_returned DECIMAL(20, 5) DEFAULT 0, -- Quantity returned by customers
+    record_start_quantity_total DECIMAL(20, 5),
+    record_end_date DATE,
+    record_end_quantity_reserved DECIMAL(20, 5) DEFAULT 0, 
+    record_end_quantity_available DECIMAL(20, 5) DEFAULT 0,
+    record_end_quantity_returned DECIMAL(20, 5) DEFAULT 0, 
+    record_end_quantity_total DECIMAL(20, 5),
     remarks TEXT,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
@@ -80,6 +97,7 @@ CREATE TABLE inventory.goods_issue_note_item (
     inventory_id INT REFERENCES inventory.inventory(id),
     quantity DECIMAL(20,5) NOT NULL,
     unit_value NUMERIC(15, 2) NOT NULL,
+    total_value_gen NUMERIC(15, 2) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
     deleted_at TIMESTAMPTZ
@@ -121,12 +139,31 @@ CREATE TABLE inventory.return_merchandise_authorization_item (
     deleted_at TIMESTAMPTZ
 );
 
+CREATE VIEW inventory.goods_issue_note_view AS
+SELECT
+    gin.*,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = gin.receipient_id
+    ) AS receipient,
+    (
+        SELECT json_agg(row_to_json(gin_item))
+        FROM inventory.goods_issue_note_item gin_item
+        WHERE gin_item.gin_id = gin.id
+    ) AS items
+FROM
+    inventory.goods_issue_note gin;
+
+
 -- +migrate Down
+DROP VIEW IF EXISTS inventory.goods_issue_note_view;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization_item;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization;
 DROP TABLE IF EXISTS inventory.stock_count_sheet;
 DROP TABLE IF EXISTS inventory.goods_issue_note_item;
 DROP TABLE IF EXISTS inventory.goods_issue_note;
 DROP TABLE IF EXISTS inventory.inventory_transaction;
+DROP TABLE IF EXISTS inventory.inventory_periodic_record;
 DROP TABLE IF EXISTS inventory.inventory;
 DROP TYPE IF EXISTS inventory.inventory_transaction_type;

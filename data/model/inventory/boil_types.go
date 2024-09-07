@@ -58,25 +58,26 @@ const (
 	InventoryTransactionTypeSale                   InventoryTransactionType = "sale"
 	InventoryTransactionTypePurchase               InventoryTransactionType = "purchase"
 	InventoryTransactionTypeTransfer               InventoryTransactionType = "transfer"
-	InventoryTransactionTypeIssue                  InventoryTransactionType = "issue"
+	InventoryTransactionTypeIssuance               InventoryTransactionType = "issuance"
 	InventoryTransactionTypeReturn                 InventoryTransactionType = "return"
 	InventoryTransactionTypeShipping               InventoryTransactionType = "shipping"
 	InventoryTransactionTypeStockCount             InventoryTransactionType = "stock_count"
 	InventoryTransactionTypeSaleCancellation       InventoryTransactionType = "sale_cancellation"
 	InventoryTransactionTypePurchaseCancellation   InventoryTransactionType = "purchase_cancellation"
 	InventoryTransactionTypeTransferCancellation   InventoryTransactionType = "transfer_cancellation"
-	InventoryTransactionTypeIssueCancellation      InventoryTransactionType = "issue_cancellation"
+	InventoryTransactionTypeIssuanceCancellation   InventoryTransactionType = "issuance_cancellation"
 	InventoryTransactionTypeReturnCancellation     InventoryTransactionType = "return_cancellation"
 	InventoryTransactionTypeShippingCancellation   InventoryTransactionType = "shipping_cancellation"
 	InventoryTransactionTypeStockCountCancellation InventoryTransactionType = "stock_count_cancellation"
 	InventoryTransactionTypeSaleAdjustment         InventoryTransactionType = "sale_adjustment"
 	InventoryTransactionTypePurchaseAdjustment     InventoryTransactionType = "purchase_adjustment"
 	InventoryTransactionTypeTransferAdjustment     InventoryTransactionType = "transfer_adjustment"
-	InventoryTransactionTypeIssueAdjustment        InventoryTransactionType = "issue_adjustment"
+	InventoryTransactionTypeIssuanceAdjustment     InventoryTransactionType = "issuance_adjustment"
 	InventoryTransactionTypeReturnAdjustment       InventoryTransactionType = "return_adjustment"
 	InventoryTransactionTypeShippingAdjustment     InventoryTransactionType = "shipping_adjustment"
 	InventoryTransactionTypeStockCountAdjustment   InventoryTransactionType = "stock_count_adjustment"
 	InventoryTransactionTypeGeneralAdjustment      InventoryTransactionType = "general_adjustment"
+	InventoryTransactionTypeInitialStock           InventoryTransactionType = "initial_stock"
 )
 
 func AllInventoryTransactionType() []InventoryTransactionType {
@@ -84,31 +85,32 @@ func AllInventoryTransactionType() []InventoryTransactionType {
 		InventoryTransactionTypeSale,
 		InventoryTransactionTypePurchase,
 		InventoryTransactionTypeTransfer,
-		InventoryTransactionTypeIssue,
+		InventoryTransactionTypeIssuance,
 		InventoryTransactionTypeReturn,
 		InventoryTransactionTypeShipping,
 		InventoryTransactionTypeStockCount,
 		InventoryTransactionTypeSaleCancellation,
 		InventoryTransactionTypePurchaseCancellation,
 		InventoryTransactionTypeTransferCancellation,
-		InventoryTransactionTypeIssueCancellation,
+		InventoryTransactionTypeIssuanceCancellation,
 		InventoryTransactionTypeReturnCancellation,
 		InventoryTransactionTypeShippingCancellation,
 		InventoryTransactionTypeStockCountCancellation,
 		InventoryTransactionTypeSaleAdjustment,
 		InventoryTransactionTypePurchaseAdjustment,
 		InventoryTransactionTypeTransferAdjustment,
-		InventoryTransactionTypeIssueAdjustment,
+		InventoryTransactionTypeIssuanceAdjustment,
 		InventoryTransactionTypeReturnAdjustment,
 		InventoryTransactionTypeShippingAdjustment,
 		InventoryTransactionTypeStockCountAdjustment,
 		InventoryTransactionTypeGeneralAdjustment,
+		InventoryTransactionTypeInitialStock,
 	}
 }
 
 func (e InventoryTransactionType) IsValid() error {
 	switch e {
-	case InventoryTransactionTypeSale, InventoryTransactionTypePurchase, InventoryTransactionTypeTransfer, InventoryTransactionTypeIssue, InventoryTransactionTypeReturn, InventoryTransactionTypeShipping, InventoryTransactionTypeStockCount, InventoryTransactionTypeSaleCancellation, InventoryTransactionTypePurchaseCancellation, InventoryTransactionTypeTransferCancellation, InventoryTransactionTypeIssueCancellation, InventoryTransactionTypeReturnCancellation, InventoryTransactionTypeShippingCancellation, InventoryTransactionTypeStockCountCancellation, InventoryTransactionTypeSaleAdjustment, InventoryTransactionTypePurchaseAdjustment, InventoryTransactionTypeTransferAdjustment, InventoryTransactionTypeIssueAdjustment, InventoryTransactionTypeReturnAdjustment, InventoryTransactionTypeShippingAdjustment, InventoryTransactionTypeStockCountAdjustment, InventoryTransactionTypeGeneralAdjustment:
+	case InventoryTransactionTypeSale, InventoryTransactionTypePurchase, InventoryTransactionTypeTransfer, InventoryTransactionTypeIssuance, InventoryTransactionTypeReturn, InventoryTransactionTypeShipping, InventoryTransactionTypeStockCount, InventoryTransactionTypeSaleCancellation, InventoryTransactionTypePurchaseCancellation, InventoryTransactionTypeTransferCancellation, InventoryTransactionTypeIssuanceCancellation, InventoryTransactionTypeReturnCancellation, InventoryTransactionTypeShippingCancellation, InventoryTransactionTypeStockCountCancellation, InventoryTransactionTypeSaleAdjustment, InventoryTransactionTypePurchaseAdjustment, InventoryTransactionTypeTransferAdjustment, InventoryTransactionTypeIssuanceAdjustment, InventoryTransactionTypeReturnAdjustment, InventoryTransactionTypeShippingAdjustment, InventoryTransactionTypeStockCountAdjustment, InventoryTransactionTypeGeneralAdjustment, InventoryTransactionTypeInitialStock:
 		return nil
 	default:
 		return errors.New("enum is not valid")
@@ -127,7 +129,7 @@ func (e InventoryTransactionType) Ordinal() int {
 		return 1
 	case InventoryTransactionTypeTransfer:
 		return 2
-	case InventoryTransactionTypeIssue:
+	case InventoryTransactionTypeIssuance:
 		return 3
 	case InventoryTransactionTypeReturn:
 		return 4
@@ -141,7 +143,7 @@ func (e InventoryTransactionType) Ordinal() int {
 		return 8
 	case InventoryTransactionTypeTransferCancellation:
 		return 9
-	case InventoryTransactionTypeIssueCancellation:
+	case InventoryTransactionTypeIssuanceCancellation:
 		return 10
 	case InventoryTransactionTypeReturnCancellation:
 		return 11
@@ -155,7 +157,7 @@ func (e InventoryTransactionType) Ordinal() int {
 		return 15
 	case InventoryTransactionTypeTransferAdjustment:
 		return 16
-	case InventoryTransactionTypeIssueAdjustment:
+	case InventoryTransactionTypeIssuanceAdjustment:
 		return 17
 	case InventoryTransactionTypeReturnAdjustment:
 		return 18
@@ -165,6 +167,8 @@ func (e InventoryTransactionType) Ordinal() int {
 		return 20
 	case InventoryTransactionTypeGeneralAdjustment:
 		return 21
+	case InventoryTransactionTypeInitialStock:
+		return 22
 
 	default:
 		panic(errors.New("enum is not valid"))

@@ -1012,7 +1012,7 @@
                         { "package": "inventory", "model": "GoodsIssueNote"}
                     ],
                     "additional_fields": [
-                        { "name": "Items", "type": "[]CreateGoodsIssueNoteItemDTO" }
+                        { "name": "Items", "type": "[]GetGoodsIssueNoteItemDTO" }
                     ],
                     "exclude_fields_from_inherit": []
                 },

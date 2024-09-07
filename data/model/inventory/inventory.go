@@ -28,16 +28,13 @@ type Inventory struct {
 	ID                  int               `boil:"id" json:"id" toml:"id" yaml:"id"`
 	InventoryNumber     string            `boil:"inventory_number" json:"inventory_number" toml:"inventory_number" yaml:"inventory_number"`
 	ItemID              null.Int          `boil:"item_id" json:"item_id,omitempty" toml:"item_id" yaml:"item_id,omitempty"`
-	RecordStartDate     null.Time         `boil:"record_start_date" json:"record_start_date,omitempty" toml:"record_start_date" yaml:"record_start_date,omitempty"`
-	RecordStartQuantity types.NullDecimal `boil:"record_start_quantity" json:"record_start_quantity,omitempty" toml:"record_start_quantity" yaml:"record_start_quantity,omitempty"`
-	RecordEndDate       null.Time         `boil:"record_end_date" json:"record_end_date,omitempty" toml:"record_end_date" yaml:"record_end_date,omitempty"`
-	RecordEndQuantity   types.NullDecimal `boil:"record_end_quantity" json:"record_end_quantity,omitempty" toml:"record_end_quantity" yaml:"record_end_quantity,omitempty"`
 	QuantityReserved    types.NullDecimal `boil:"quantity_reserved" json:"quantity_reserved,omitempty" toml:"quantity_reserved" yaml:"quantity_reserved,omitempty"`
 	QuantityAvailable   types.NullDecimal `boil:"quantity_available" json:"quantity_available,omitempty" toml:"quantity_available" yaml:"quantity_available,omitempty"`
 	QuantityReturned    types.NullDecimal `boil:"quantity_returned" json:"quantity_returned,omitempty" toml:"quantity_returned" yaml:"quantity_returned,omitempty"`
-	TotalQuantityOnHand types.NullDecimal `boil:"total_quantity_on_hand" json:"total_quantity_on_hand,omitempty" toml:"total_quantity_on_hand" yaml:"total_quantity_on_hand,omitempty"`
+	QuantityTotalGen    types.NullDecimal `boil:"quantity_total_gen" json:"quantity_total_gen,omitempty" toml:"quantity_total_gen" yaml:"quantity_total_gen,omitempty"`
 	CostPerUnit         types.NullDecimal `boil:"cost_per_unit" json:"cost_per_unit,omitempty" toml:"cost_per_unit" yaml:"cost_per_unit,omitempty"`
-	TotalValueOnHand    types.NullDecimal `boil:"total_value_on_hand" json:"total_value_on_hand,omitempty" toml:"total_value_on_hand" yaml:"total_value_on_hand,omitempty"`
+	PricePerUnit        types.NullDecimal `boil:"price_per_unit" json:"price_per_unit,omitempty" toml:"price_per_unit" yaml:"price_per_unit,omitempty"`
+	TotalValueOnHandGen types.NullDecimal `boil:"total_value_on_hand_gen" json:"total_value_on_hand_gen,omitempty" toml:"total_value_on_hand_gen" yaml:"total_value_on_hand_gen,omitempty"`
 	ReorderLevel        types.NullDecimal `boil:"reorder_level" json:"reorder_level,omitempty" toml:"reorder_level" yaml:"reorder_level,omitempty"`
 	ReorderQuantity     types.NullDecimal `boil:"reorder_quantity" json:"reorder_quantity,omitempty" toml:"reorder_quantity" yaml:"reorder_quantity,omitempty"`
 	IsDiscontinued      null.Bool         `boil:"is_discontinued" json:"is_discontinued,omitempty" toml:"is_discontinued" yaml:"is_discontinued,omitempty"`
@@ -54,16 +51,13 @@ var InventoryColumns = struct {
 	ID                  string
 	InventoryNumber     string
 	ItemID              string
-	RecordStartDate     string
-	RecordStartQuantity string
-	RecordEndDate       string
-	RecordEndQuantity   string
 	QuantityReserved    string
 	QuantityAvailable   string
 	QuantityReturned    string
-	TotalQuantityOnHand string
+	QuantityTotalGen    string
 	CostPerUnit         string
-	TotalValueOnHand    string
+	PricePerUnit        string
+	TotalValueOnHandGen string
 	ReorderLevel        string
 	ReorderQuantity     string
 	IsDiscontinued      string
@@ -75,16 +69,13 @@ var InventoryColumns = struct {
 	ID:                  "id",
 	InventoryNumber:     "inventory_number",
 	ItemID:              "item_id",
-	RecordStartDate:     "record_start_date",
-	RecordStartQuantity: "record_start_quantity",
-	RecordEndDate:       "record_end_date",
-	RecordEndQuantity:   "record_end_quantity",
 	QuantityReserved:    "quantity_reserved",
 	QuantityAvailable:   "quantity_available",
 	QuantityReturned:    "quantity_returned",
-	TotalQuantityOnHand: "total_quantity_on_hand",
+	QuantityTotalGen:    "quantity_total_gen",
 	CostPerUnit:         "cost_per_unit",
-	TotalValueOnHand:    "total_value_on_hand",
+	PricePerUnit:        "price_per_unit",
+	TotalValueOnHandGen: "total_value_on_hand_gen",
 	ReorderLevel:        "reorder_level",
 	ReorderQuantity:     "reorder_quantity",
 	IsDiscontinued:      "is_discontinued",
@@ -98,16 +89,13 @@ var InventoryTableColumns = struct {
 	ID                  string
 	InventoryNumber     string
 	ItemID              string
-	RecordStartDate     string
-	RecordStartQuantity string
-	RecordEndDate       string
-	RecordEndQuantity   string
 	QuantityReserved    string
 	QuantityAvailable   string
 	QuantityReturned    string
-	TotalQuantityOnHand string
+	QuantityTotalGen    string
 	CostPerUnit         string
-	TotalValueOnHand    string
+	PricePerUnit        string
+	TotalValueOnHandGen string
 	ReorderLevel        string
 	ReorderQuantity     string
 	IsDiscontinued      string
@@ -119,16 +107,13 @@ var InventoryTableColumns = struct {
 	ID:                  "inventory.id",
 	InventoryNumber:     "inventory.inventory_number",
 	ItemID:              "inventory.item_id",
-	RecordStartDate:     "inventory.record_start_date",
-	RecordStartQuantity: "inventory.record_start_quantity",
-	RecordEndDate:       "inventory.record_end_date",
-	RecordEndQuantity:   "inventory.record_end_quantity",
 	QuantityReserved:    "inventory.quantity_reserved",
 	QuantityAvailable:   "inventory.quantity_available",
 	QuantityReturned:    "inventory.quantity_returned",
-	TotalQuantityOnHand: "inventory.total_quantity_on_hand",
+	QuantityTotalGen:    "inventory.quantity_total_gen",
 	CostPerUnit:         "inventory.cost_per_unit",
-	TotalValueOnHand:    "inventory.total_value_on_hand",
+	PricePerUnit:        "inventory.price_per_unit",
+	TotalValueOnHandGen: "inventory.total_value_on_hand_gen",
 	ReorderLevel:        "inventory.reorder_level",
 	ReorderQuantity:     "inventory.reorder_quantity",
 	IsDiscontinued:      "inventory.is_discontinued",
@@ -194,16 +179,13 @@ var InventoryWhere = struct {
 	ID                  whereHelperint
 	InventoryNumber     whereHelperstring
 	ItemID              whereHelpernull_Int
-	RecordStartDate     whereHelpernull_Time
-	RecordStartQuantity whereHelpertypes_NullDecimal
-	RecordEndDate       whereHelpernull_Time
-	RecordEndQuantity   whereHelpertypes_NullDecimal
 	QuantityReserved    whereHelpertypes_NullDecimal
 	QuantityAvailable   whereHelpertypes_NullDecimal
 	QuantityReturned    whereHelpertypes_NullDecimal
-	TotalQuantityOnHand whereHelpertypes_NullDecimal
+	QuantityTotalGen    whereHelpertypes_NullDecimal
 	CostPerUnit         whereHelpertypes_NullDecimal
-	TotalValueOnHand    whereHelpertypes_NullDecimal
+	PricePerUnit        whereHelpertypes_NullDecimal
+	TotalValueOnHandGen whereHelpertypes_NullDecimal
 	ReorderLevel        whereHelpertypes_NullDecimal
 	ReorderQuantity     whereHelpertypes_NullDecimal
 	IsDiscontinued      whereHelpernull_Bool
@@ -215,16 +197,13 @@ var InventoryWhere = struct {
 	ID:                  whereHelperint{field: "\"inventory\".\"inventory\".\"id\""},
 	InventoryNumber:     whereHelperstring{field: "\"inventory\".\"inventory\".\"inventory_number\""},
 	ItemID:              whereHelpernull_Int{field: "\"inventory\".\"inventory\".\"item_id\""},
-	RecordStartDate:     whereHelpernull_Time{field: "\"inventory\".\"inventory\".\"record_start_date\""},
-	RecordStartQuantity: whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"record_start_quantity\""},
-	RecordEndDate:       whereHelpernull_Time{field: "\"inventory\".\"inventory\".\"record_end_date\""},
-	RecordEndQuantity:   whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"record_end_quantity\""},
 	QuantityReserved:    whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"quantity_reserved\""},
 	QuantityAvailable:   whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"quantity_available\""},
 	QuantityReturned:    whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"quantity_returned\""},
-	TotalQuantityOnHand: whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"total_quantity_on_hand\""},
+	QuantityTotalGen:    whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"quantity_total_gen\""},
 	CostPerUnit:         whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"cost_per_unit\""},
-	TotalValueOnHand:    whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"total_value_on_hand\""},
+	PricePerUnit:        whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"price_per_unit\""},
+	TotalValueOnHandGen: whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"total_value_on_hand_gen\""},
 	ReorderLevel:        whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"reorder_level\""},
 	ReorderQuantity:     whereHelpertypes_NullDecimal{field: "\"inventory\".\"inventory\".\"reorder_quantity\""},
 	IsDiscontinued:      whereHelpernull_Bool{field: "\"inventory\".\"inventory\".\"is_discontinued\""},
@@ -237,11 +216,13 @@ var InventoryWhere = struct {
 // InventoryRels is where relationship names are stored.
 var InventoryRels = struct {
 	GoodsIssueNoteItems                 string
+	InventoryPeriodicRecords            string
 	InventoryTransactions               string
 	ReturnMerchandiseAuthorizationItems string
 	StockCountSheets                    string
 }{
 	GoodsIssueNoteItems:                 "GoodsIssueNoteItems",
+	InventoryPeriodicRecords:            "InventoryPeriodicRecords",
 	InventoryTransactions:               "InventoryTransactions",
 	ReturnMerchandiseAuthorizationItems: "ReturnMerchandiseAuthorizationItems",
 	StockCountSheets:                    "StockCountSheets",
@@ -250,6 +231,7 @@ var InventoryRels = struct {
 // inventoryR is where relationships are stored.
 type inventoryR struct {
 	GoodsIssueNoteItems                 GoodsIssueNoteItemSlice                 `boil:"GoodsIssueNoteItems" json:"GoodsIssueNoteItems" toml:"GoodsIssueNoteItems" yaml:"GoodsIssueNoteItems"`
+	InventoryPeriodicRecords            InventoryPeriodicRecordSlice            `boil:"InventoryPeriodicRecords" json:"InventoryPeriodicRecords" toml:"InventoryPeriodicRecords" yaml:"InventoryPeriodicRecords"`
 	InventoryTransactions               InventoryTransactionSlice               `boil:"InventoryTransactions" json:"InventoryTransactions" toml:"InventoryTransactions" yaml:"InventoryTransactions"`
 	ReturnMerchandiseAuthorizationItems ReturnMerchandiseAuthorizationItemSlice `boil:"ReturnMerchandiseAuthorizationItems" json:"ReturnMerchandiseAuthorizationItems" toml:"ReturnMerchandiseAuthorizationItems" yaml:"ReturnMerchandiseAuthorizationItems"`
 	StockCountSheets                    StockCountSheetSlice                    `boil:"StockCountSheets" json:"StockCountSheets" toml:"StockCountSheets" yaml:"StockCountSheets"`
@@ -265,6 +247,13 @@ func (r *inventoryR) GetGoodsIssueNoteItems() GoodsIssueNoteItemSlice {
 		return nil
 	}
 	return r.GoodsIssueNoteItems
+}
+
+func (r *inventoryR) GetInventoryPeriodicRecords() InventoryPeriodicRecordSlice {
+	if r == nil {
+		return nil
+	}
+	return r.InventoryPeriodicRecords
 }
 
 func (r *inventoryR) GetInventoryTransactions() InventoryTransactionSlice {
@@ -292,9 +281,9 @@ func (r *inventoryR) GetStockCountSheets() StockCountSheetSlice {
 type inventoryL struct{}
 
 var (
-	inventoryAllColumns            = []string{"id", "inventory_number", "item_id", "record_start_date", "record_start_quantity", "record_end_date", "record_end_quantity", "quantity_reserved", "quantity_available", "quantity_returned", "total_quantity_on_hand", "cost_per_unit", "total_value_on_hand", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at"}
+	inventoryAllColumns            = []string{"id", "inventory_number", "item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at"}
 	inventoryColumnsWithoutDefault = []string{"id", "inventory_number", "created_at", "updated_at"}
-	inventoryColumnsWithDefault    = []string{"item_id", "record_start_date", "record_start_quantity", "record_end_date", "record_end_quantity", "quantity_reserved", "quantity_available", "quantity_returned", "total_quantity_on_hand", "cost_per_unit", "total_value_on_hand", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "deleted_at"}
+	inventoryColumnsWithDefault    = []string{"item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "deleted_at"}
 	inventoryPrimaryKeyColumns     = []string{"id"}
 	inventoryGeneratedColumns      = []string{}
 )
@@ -618,6 +607,20 @@ func (o *Inventory) GoodsIssueNoteItems(mods ...qm.QueryMod) goodsIssueNoteItemQ
 	return GoodsIssueNoteItems(queryMods...)
 }
 
+// InventoryPeriodicRecords retrieves all the inventory_periodic_record's InventoryPeriodicRecords with an executor.
+func (o *Inventory) InventoryPeriodicRecords(mods ...qm.QueryMod) inventoryPeriodicRecordQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"inventory\".\"inventory_periodic_record\".\"inventory_id\"=?", o.ID),
+	)
+
+	return InventoryPeriodicRecords(queryMods...)
+}
+
 // InventoryTransactions retrieves all the inventory_transaction's InventoryTransactions with an executor.
 func (o *Inventory) InventoryTransactions(mods ...qm.QueryMod) inventoryTransactionQuery {
 	var queryMods []qm.QueryMod
@@ -763,6 +766,119 @@ func (inventoryL) LoadGoodsIssueNoteItems(ctx context.Context, e boil.ContextExe
 				local.R.GoodsIssueNoteItems = append(local.R.GoodsIssueNoteItems, foreign)
 				if foreign.R == nil {
 					foreign.R = &goodsIssueNoteItemR{}
+				}
+				foreign.R.Inventory = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadInventoryPeriodicRecords allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (inventoryL) LoadInventoryPeriodicRecords(ctx context.Context, e boil.ContextExecutor, singular bool, maybeInventory interface{}, mods queries.Applicator) error {
+	var slice []*Inventory
+	var object *Inventory
+
+	if singular {
+		var ok bool
+		object, ok = maybeInventory.(*Inventory)
+		if !ok {
+			object = new(Inventory)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeInventory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeInventory))
+			}
+		}
+	} else {
+		s, ok := maybeInventory.(*[]*Inventory)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeInventory)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeInventory))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &inventoryR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &inventoryR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`inventory.inventory_periodic_record`),
+		qm.WhereIn(`inventory.inventory_periodic_record.inventory_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load inventory_periodic_record")
+	}
+
+	var resultSlice []*InventoryPeriodicRecord
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice inventory_periodic_record")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on inventory_periodic_record")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for inventory_periodic_record")
+	}
+
+	if len(inventoryPeriodicRecordAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.InventoryPeriodicRecords = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &inventoryPeriodicRecordR{}
+			}
+			foreign.R.Inventory = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.InventoryID {
+				local.R.InventoryPeriodicRecords = append(local.R.InventoryPeriodicRecords, foreign)
+				if foreign.R == nil {
+					foreign.R = &inventoryPeriodicRecordR{}
 				}
 				foreign.R.Inventory = local
 				break
@@ -1236,6 +1352,59 @@ func (o *Inventory) RemoveGoodsIssueNoteItems(ctx context.Context, exec boil.Con
 		}
 	}
 
+	return nil
+}
+
+// AddInventoryPeriodicRecords adds the given related objects to the existing relationships
+// of the inventory, optionally inserting them as new records.
+// Appends related to o.R.InventoryPeriodicRecords.
+// Sets related.R.Inventory appropriately.
+func (o *Inventory) AddInventoryPeriodicRecords(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*InventoryPeriodicRecord) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.InventoryID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"inventory\".\"inventory_periodic_record\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"inventory_id"}),
+				strmangle.WhereClause("\"", "\"", 2, inventoryPeriodicRecordPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.InventoryID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &inventoryR{
+			InventoryPeriodicRecords: related,
+		}
+	} else {
+		o.R.InventoryPeriodicRecords = append(o.R.InventoryPeriodicRecords, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &inventoryPeriodicRecordR{
+				Inventory: o,
+			}
+		} else {
+			rel.R.Inventory = o
+		}
+	}
 	return nil
 }
 

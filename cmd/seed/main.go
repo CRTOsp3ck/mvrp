@@ -2,6 +2,7 @@ package main
 
 import (
 	"mvrp/cmd/seed/entity"
+	"mvrp/cmd/seed/inventory"
 	"mvrp/cmd/seed/item"
 	"mvrp/data"
 	"mvrp/domain"
@@ -27,6 +28,25 @@ func Seed() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = seedInventory()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func seedInventory() error {
+	err := inventory.SeedInventory()
+	if err != nil {
+		return err
+	}
+
+	err = inventory.SeedGoodsIssueNote()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func seedItem() error {

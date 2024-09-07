@@ -129,10 +129,10 @@ func (s *InventoryService) NewGetGoodsIssueNoteRequest(ctx context.Context, id i
 }
 
 type GetGoodsIssueNoteResponse struct {
-	Payload inventory.GoodsIssueNote `json:"payload"`
+	Payload dto.GetGoodsIssueNoteDTO `json:"payload"`
 }
 
-func (s *InventoryService) NewGetGoodsIssueNoteResponse(payload inventory.GoodsIssueNote) *GetGoodsIssueNoteResponse {
+func (s *InventoryService) NewGetGoodsIssueNoteResponse(payload dto.GetGoodsIssueNoteDTO) *GetGoodsIssueNoteResponse {
 	return &GetGoodsIssueNoteResponse{
 		Payload: payload,
 	}
@@ -145,9 +145,21 @@ func (s *InventoryService) GetGoodsIssueNote(req *GetGoodsIssueNoteRequest) (*Ge
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.ID)
+	ginRes, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
+	}
+
+	// get goods issue note items
+	ginItems, err := s.Repo.Inventory.GetGoodsIssueNoteItemsByGoodsIssueNoteID(req.Ctx, tx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	ginItemRes := make([]dto.GetGoodsIssueNoteItemDTO, 0)
+	for _, item := range ginItems {
+		ginItemRes = append(ginItemRes, dto.GetGoodsIssueNoteItemDTO{
+			GoodsIssueNoteItem: *item,
+		})
 	}
 
 	err = tx.Commit()
@@ -156,7 +168,10 @@ func (s *InventoryService) GetGoodsIssueNote(req *GetGoodsIssueNoteRequest) (*Ge
 	}
 
 	resp := GetGoodsIssueNoteResponse{
-		Payload: *res,
+		Payload: dto.GetGoodsIssueNoteDTO{
+			GoodsIssueNote: *ginRes,
+			Items:          ginItemRes,
+		},
 	}
 	return &resp, nil
 }
@@ -241,8 +256,9 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 		// create inventory transaction
 		invTx := &inventory.InventoryTransaction{
 			InventoryID:     item.InventoryID,
-			TransactionType: inventory.InventoryTransactionTypeIssue,
+			TransactionType: inventory.InventoryTransactionTypeIssuance,
 			Quantity:        item.Quantity,
+			Reason:          null.StringFrom("Goods Issue Note Creation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {
@@ -252,7 +268,7 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 	}
 
 	// get created goods issue note
-	inventory, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.Payload.GoodsIssueNote.ID)
+	gin, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.Payload.GoodsIssueNote.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -263,7 +279,7 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 	}
 
 	resp := CreateGoodsIssueNoteResponse{
-		Payload: *inventory,
+		Payload: *gin,
 	}
 
 	return &resp, nil
@@ -326,7 +342,11 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	for _, currGinItem := range currGin.R.GinGoodsIssueNoteItems {
+	currGinItems, err := s.Repo.Inventory.GetGoodsIssueNoteItemsByGoodsIssueNoteID(req.Ctx, tx, currGin.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currGinItem := range currGinItems {
 		found := false
 		for _, item := range req.Payload.Items {
 			if currGinItem.ID == item.ID {
@@ -349,8 +369,9 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			// create inventory transaction
 			invTx := &inventory.InventoryTransaction{
 				InventoryID:     currGinItem.InventoryID,
-				TransactionType: inventory.InventoryTransactionTypeIssueCancellation,
+				TransactionType: inventory.InventoryTransactionTypeIssuanceCancellation,
 				Quantity:        currGinItem.Quantity,
+				Reason:          null.StringFrom("Goods Issue Note Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -387,26 +408,30 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 				return nil, err
 			}
 
-			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.InventoryID.Int)
-			if err != nil {
-				return nil, err
-			}
-			inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, amountOffset.Big)
-			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-			if err != nil {
-				return nil, err
-			}
+			quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+			if quantityChanged {
+				// update inventory
+				inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.InventoryID.Int)
+				if err != nil {
+					return nil, err
+				}
+				inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, amountOffset.Big)
+				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+				if err != nil {
+					return nil, err
+				}
 
-			// create inventory transaction
-			invTx := &inventory.InventoryTransaction{
-				InventoryID:     item.InventoryID,
-				TransactionType: inventory.InventoryTransactionTypeIssueAdjustment,
-				Quantity:        types.Decimal(amountOffset),
-			}
-			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-			if err != nil {
-				return nil, err
+				// create inventory transaction
+				invTx := &inventory.InventoryTransaction{
+					InventoryID:     item.InventoryID,
+					TransactionType: inventory.InventoryTransactionTypeIssuanceAdjustment,
+					Quantity:        types.Decimal(amountOffset),
+					Reason:          null.StringFrom("Goods Issue Note Adjustment"),
+				}
+				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+				if err != nil {
+					return nil, err
+				}
 			}
 		} else {
 			// create goods issue note item
@@ -429,8 +454,9 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			// create inventory transaction
 			invTx := &inventory.InventoryTransaction{
 				InventoryID:     item.InventoryID,
-				TransactionType: inventory.InventoryTransactionTypeIssue,
+				TransactionType: inventory.InventoryTransactionTypeIssuance,
 				Quantity:        item.Quantity,
+				Reason:          null.StringFrom("Goods Issue Note Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -439,8 +465,8 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 		}
 	}
 
-	// get updated sales order
-	salesOrder, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.Payload.GoodsIssueNote.ID)
+	// get updated goods issue note
+	gin, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.Payload.GoodsIssueNote.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -451,7 +477,7 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 	}
 
 	resp := UpdateGoodsIssueNoteResponse{
-		Payload: *salesOrder,
+		Payload: *gin,
 	}
 
 	return &resp, nil
@@ -507,7 +533,11 @@ func (s *InventoryService) DeleteGoodsIssueNote(req *DeleteGoodsIssueNoteRequest
 	}
 
 	// delete goods issue note items
-	for _, item := range gin.R.GinGoodsIssueNoteItems {
+	ginItems, err := s.Repo.Inventory.GetGoodsIssueNoteItemsByGoodsIssueNoteID(req.Ctx, tx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range ginItems {
 		// update inventory
 		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.InventoryID.Int)
 		if err != nil {
@@ -522,8 +552,9 @@ func (s *InventoryService) DeleteGoodsIssueNote(req *DeleteGoodsIssueNoteRequest
 		// create inventory transaction
 		invTx := &inventory.InventoryTransaction{
 			InventoryID:     item.InventoryID,
-			TransactionType: inventory.InventoryTransactionTypeIssueCancellation,
+			TransactionType: inventory.InventoryTransactionTypeIssuanceCancellation,
 			Quantity:        item.Quantity,
+			Reason:          null.StringFrom("Goods Issue Note Cancellation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {

@@ -17,6 +17,7 @@ type Route struct {
 type Handler struct {
 	Name   string  `json:"name"`
 	Routes []Route `json:"routes"`
+	IsView bool    `json:"is_view"`
 }
 
 type Package struct {
@@ -45,5 +46,17 @@ func GetConfig() (*Root, error) {
 		return nil, errors.WrapError(errors.ErrTypeAssertion,
 			fmt.Sprintf("expected type: %T, got: %T", root, ptrIface))
 	}
+
+	updateIsViewField(rootPtr)
+
 	return rootPtr, nil
+}
+
+func updateIsViewField(config *Root) {
+	for i, pkg := range config.Data {
+		for j, handlerGroup := range pkg.Handlers {
+			// check if the name ends with "_view"
+			config.Data[i].Handlers[j].IsView = util.Util.Str.EndsWith(handlerGroup.Name, "_view")
+		}
+	}
 }

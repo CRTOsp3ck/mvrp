@@ -33,6 +33,13 @@
                     ] 
                 },
                 { 
+                    "name": "goods_issue_note_view",
+                    "routes": [
+                        { "method": "Get", "path": "/goods_issue_note_view/", "handler": "ListGoodsIssueNoteView", "type": "list" },
+                        { "method": "Get", "path": "/goods_issue_note_view/{id}", "handler": "GetGoodsIssueNoteView", "type": "get" }
+                    ] 
+                },
+                { 
                     "name": "inventory",
                     "routes": [
                         { "method": "Get", "path": "/inventory", "handler": "ListInventory", "type": "list" },

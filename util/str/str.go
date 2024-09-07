@@ -1,11 +1,15 @@
 package str
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type IStrUtil interface {
 	IsEmpty(str string) bool
 	ToString(val interface{}) string
 	CapitalizeWords(str string) string
+	EndsWith(str, suffix string) bool
 }
 
 type StrUtil struct{}
@@ -15,7 +19,7 @@ func (s *StrUtil) IsEmpty(str string) bool {
 }
 
 func (s *StrUtil) ToString(val interface{}) string {
-	return val.(string)
+	return fmt.Sprintf("%v", val)
 }
 
 func (s *StrUtil) CapitalizeWords(str string) string {
@@ -26,4 +30,8 @@ func (s *StrUtil) CapitalizeWords(str string) string {
 		}
 	}
 	return strings.Join(words, " ")
+}
+
+func (s *StrUtil) EndsWith(str, suffix string) bool {
+	return strings.HasSuffix(str, suffix)
 }

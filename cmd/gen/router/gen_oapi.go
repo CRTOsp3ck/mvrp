@@ -92,14 +92,13 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 		ID int `path:"id"`
 	}
 
-	// Add Search operation
-	searchOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s/search", pkg.Package, handler.Name))
+	// Add List operation
+	listOp, err := reflector.NewOperationContext(http.MethodGet, fmt.Sprintf("/v1/main/%s/%s", pkg.Package, handler.Name))
 	if err != nil {
 		return err
 	}
-	searchOp.AddReqStructure(reqMap["search"])
-	searchOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
-	reflector.AddOperation(searchOp)
+	listOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+	reflector.AddOperation(listOp)
 
 	// Add Get operation
 	getOp, err := reflector.NewOperationContext(http.MethodGet, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
@@ -110,41 +109,45 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	getOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(getOp)
 
-	// Add Create operation
-	createOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s", pkg.Package, handler.Name))
-	if err != nil {
-		return err
-	}
-	createOp.AddReqStructure(reqMap["create"])
-	createOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusCreated })
-	reflector.AddOperation(createOp)
+	if !handler.IsView {
+		// Add Search operation
+		searchOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s/search", pkg.Package, handler.Name))
+		if err != nil {
+			return err
+		}
+		searchOp.AddReqStructure(reqMap["search"])
+		searchOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+		reflector.AddOperation(searchOp)
 
-	// Add Update operation
-	updateOp, err := reflector.NewOperationContext(http.MethodPut, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
-	if err != nil {
-		return err
-	}
-	updateOp.AddReqStructure(new(req))
-	updateOp.AddReqStructure(reqMap["update"])
-	updateOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
-	reflector.AddOperation(updateOp)
+		// Add Create operation
+		createOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s", pkg.Package, handler.Name))
+		if err != nil {
+			return err
+		}
+		createOp.AddReqStructure(reqMap["create"])
+		createOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusCreated })
+		reflector.AddOperation(createOp)
 
-	// Add Delete operation
-	deleteOp, err := reflector.NewOperationContext(http.MethodDelete, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
-	if err != nil {
-		return err
-	}
-	deleteOp.AddReqStructure(new(req))
-	deleteOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusNoContent })
-	reflector.AddOperation(deleteOp)
+		// Add Update operation
+		updateOp, err := reflector.NewOperationContext(http.MethodPut, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
+		if err != nil {
+			return err
+		}
+		updateOp.AddReqStructure(new(req))
+		updateOp.AddReqStructure(reqMap["update"])
+		updateOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+		reflector.AddOperation(updateOp)
 
-	// Add List operation
-	listOp, err := reflector.NewOperationContext(http.MethodGet, fmt.Sprintf("/v1/main/%s/%s", pkg.Package, handler.Name))
-	if err != nil {
-		return err
+		// Add Delete operation
+		deleteOp, err := reflector.NewOperationContext(http.MethodDelete, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
+		if err != nil {
+			return err
+		}
+		deleteOp.AddReqStructure(new(req))
+		deleteOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusNoContent })
+		reflector.AddOperation(deleteOp)
 	}
-	listOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
-	reflector.AddOperation(listOp)
+
 	return nil
 }
 

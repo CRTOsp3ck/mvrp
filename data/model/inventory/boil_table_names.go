@@ -7,6 +7,7 @@ var TableNames = struct {
 	GoodsIssueNote                     string
 	GoodsIssueNoteItem                 string
 	Inventory                          string
+	InventoryPeriodicRecord            string
 	InventoryTransaction               string
 	ReturnMerchandiseAuthorization     string
 	ReturnMerchandiseAuthorizationItem string
@@ -15,6 +16,7 @@ var TableNames = struct {
 	GoodsIssueNote:                     "goods_issue_note",
 	GoodsIssueNoteItem:                 "goods_issue_note_item",
 	Inventory:                          "inventory",
+	InventoryPeriodicRecord:            "inventory_periodic_record",
 	InventoryTransaction:               "inventory_transaction",
 	ReturnMerchandiseAuthorization:     "return_merchandise_authorization",
 	ReturnMerchandiseAuthorizationItem: "return_merchandise_authorization_item",

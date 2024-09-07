@@ -23,6 +23,9 @@
                 { "name": "ReturnMerchandiseAuthorization", "plural_name": "ReturnMerchandiseAuthorizations" },
                 { "name": "ReturnMerchandiseAuthorizationItem", "plural_name": "ReturnMerchandiseAuthorizationItems" },
                 { "name": "StockCountSheet", "plural_name": "StockCountSheets" }
+            ],
+            "views": [
+                { "name": "GoodsIssueNoteView", "plural_name": "GoodsIssueNoteViews" }
             ]
         },
         {

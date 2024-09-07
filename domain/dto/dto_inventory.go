@@ -56,7 +56,7 @@ type SearchGoodsIssueNoteDTO struct {
 
 type GetGoodsIssueNoteDTO struct {
     inventory.GoodsIssueNote                 `json:"goods_issue_note"`
-    Items []CreateGoodsIssueNoteItemDTO                     `json:"items"`
+    Items []GetGoodsIssueNoteItemDTO                     `json:"items"`
 }
 
 type CreateGoodsIssueNoteDTO struct {

@@ -4,7 +4,10 @@ import (
 	"context"
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
+	"mvrp/domain/proc"
+	"mvrp/errors"
 	"mvrp/util"
+	"time"
 
 	"github.com/ericlagergren/decimal"
 	"github.com/jinzhu/copier"
@@ -14,12 +17,20 @@ import (
 
 // LIST INVENTORY
 type ListInventoryRequest struct {
-	Ctx context.Context
+	Ctx      context.Context
+	ItemType *string
 }
 
 func (s *InventoryService) NewListInventoryRequest(ctx context.Context) *ListInventoryRequest {
 	return &ListInventoryRequest{
 		Ctx: ctx,
+	}
+}
+
+func (s *InventoryService) NewListInventoryByItemTypeRequest(ctx context.Context, itemType string) *ListInventoryRequest {
+	return &ListInventoryRequest{
+		Ctx:      ctx,
+		ItemType: &itemType,
 	}
 }
 
@@ -41,6 +52,31 @@ func (s *InventoryService) ListInventory(req *ListInventoryRequest) (*ListInvent
 	defer tx.Rollback()
 
 	res, err := s.Repo.Inventory.ListAllInventories(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+	resp := ListInventoryResponse{
+		Payload: res,
+	}
+	return &resp, nil
+}
+
+func (s *InventoryService) ListInventoryByItemType(req *ListInventoryRequest) (*ListInventoryResponse, error) {
+	if req.ItemType == nil {
+		return nil, errors.WrapError(errors.ErrTypeMissingField, "ItemType is required")
+	}
+
+	tx, err := s.Repo.Begin(req.Ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	res, err := s.Repo.Inventory.ListInventoriesByItemType(req.Ctx, tx, *req.ItemType)
 	if err != nil {
 		return nil, err
 	}
@@ -195,7 +231,13 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 	}
 	defer tx.Rollback()
 
-	// create sales order
+	// process inventory
+	err = proc.ProcessInventoryAmounts(&req.Payload.Inventory)
+	if err != nil {
+		return nil, err
+	}
+
+	// create inventory
 	if req.Payload.Inventory.InventoryNumber == "" {
 		nextID, err := s.Repo.Inventory.GetNextEntryInventoryID(req.Ctx, tx)
 		if err != nil {
@@ -208,7 +250,22 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 		return nil, err
 	}
 
-	// get created sales order
+	// create inventory transaction if quantity is not zero
+	if req.Payload.Inventory.QuantityAvailable.Big.Cmp(decimal.New(0, 2)) != 0 {
+		invTx := &inventory.InventoryTransaction{
+			InventoryID:     null.IntFrom(req.Payload.Inventory.ID),
+			TransactionType: inventory.InventoryTransactionTypeInitialStock,
+			Quantity:        types.NewDecimal(req.Payload.Inventory.QuantityAvailable.Big),
+			Reason:          null.StringFrom("Initial Stock"),
+			TransactionDate: null.TimeFrom(time.Now().UTC()),
+		}
+		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// get created inventory
 	inventory, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.Inventory.ID)
 	if err != nil {
 		return nil, err
@@ -281,18 +338,22 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	}
 
 	// create inventory transaction
-	invTx := &inventory.InventoryTransaction{
-		InventoryID:     null.IntFrom(req.Payload.Inventory.ID),
-		TransactionType: inventory.InventoryTransactionTypeGeneralAdjustment,
-		Quantity:        types.NewDecimal(amountOffset.Big),
-	}
-	err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-	if err != nil {
-		return nil, err
+	quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+	if quantityChanged {
+		invTx := &inventory.InventoryTransaction{
+			InventoryID:     null.IntFrom(req.Payload.Inventory.ID),
+			TransactionType: inventory.InventoryTransactionTypeGeneralAdjustment,
+			Quantity:        types.NewDecimal(amountOffset.Big),
+			Reason:          null.StringFrom("General Adjustment"),
+		}
+		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	// get updated sales order
-	salesOrder, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.Inventory.ID)
+	// get updated inventory
+	inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.Inventory.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -303,7 +364,7 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	}
 
 	resp := UpdateInventoryResponse{
-		Payload: *salesOrder,
+		Payload: *inv,
 	}
 
 	return &resp, nil

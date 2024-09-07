@@ -4,9 +4,13 @@ package {{ .Package }}
 
 import (
 	"context"
+	{{- if not .IsView }}
 	"encoding/json"
+	{{- end }}
 	"fmt"
+	{{- if not .IsView }}
 	"mvrp/domain/dto"
+	{{- end }}
 	"mvrp/domain/service/{{ .Package }}"
 	"mvrp/errors"
 	"mvrp/htresp"

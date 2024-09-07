@@ -29,6 +29,7 @@ func Generate() error {
 				"Package": pkg.Package,
 				"Name":    name,
 				"Routes":  handlerGroup.Routes,
+				"IsView":  handlerGroup.IsView,
 			}
 
 			// Load and parse the template

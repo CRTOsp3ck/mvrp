@@ -98,6 +98,14 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/goods_issue_note_view", func(r chi.Router) {
+				r.Get("/", inventory.ListGoodsIssueNoteView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(inventory.GoodsIssueNoteViewContext)
+					r.Get("/", inventory.GetGoodsIssueNoteView)
+				})
+			})
+			
 			r.Route("/inventory", func(r chi.Router) {
 				r.Get("/", inventory.ListInventory)
 				r.Post("/", inventory.CreateInventory)

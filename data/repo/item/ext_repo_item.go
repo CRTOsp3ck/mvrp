@@ -12,3 +12,8 @@ func (r *ItemRepository) GetItemTotalCountByType(ctx context.Context, exec boil.
 	count, err := item.Items(qm.Where("type = ?", itemType)).Count(ctx, exec)
 	return int(count), err
 }
+
+func (r *ItemRepository) ListItemsByType(ctx context.Context, exec boil.ContextExecutor, itemType string) (item.ItemSlice, error) {
+	items, err := item.Items(qm.Where("type = ?", itemType)).All(ctx, exec)
+	return items, err
+}

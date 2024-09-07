@@ -25,79 +25,86 @@ import (
 
 // GoodsIssueNoteItem is an object representing the database table.
 type GoodsIssueNoteItem struct {
-	ID          int           `boil:"id" json:"id" toml:"id" yaml:"id"`
-	GinID       null.Int      `boil:"gin_id" json:"gin_id,omitempty" toml:"gin_id" yaml:"gin_id,omitempty"`
-	InventoryID null.Int      `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
-	Quantity    types.Decimal `boil:"quantity" json:"quantity" toml:"quantity" yaml:"quantity"`
-	UnitValue   types.Decimal `boil:"unit_value" json:"unit_value" toml:"unit_value" yaml:"unit_value"`
-	CreatedAt   time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt   time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt   null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID            int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	GinID         null.Int      `boil:"gin_id" json:"gin_id,omitempty" toml:"gin_id" yaml:"gin_id,omitempty"`
+	InventoryID   null.Int      `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
+	Quantity      types.Decimal `boil:"quantity" json:"quantity" toml:"quantity" yaml:"quantity"`
+	UnitValue     types.Decimal `boil:"unit_value" json:"unit_value" toml:"unit_value" yaml:"unit_value"`
+	TotalValueGen types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	CreatedAt     time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt     time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt     null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *goodsIssueNoteItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L goodsIssueNoteItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var GoodsIssueNoteItemColumns = struct {
-	ID          string
-	GinID       string
-	InventoryID string
-	Quantity    string
-	UnitValue   string
-	CreatedAt   string
-	UpdatedAt   string
-	DeletedAt   string
+	ID            string
+	GinID         string
+	InventoryID   string
+	Quantity      string
+	UnitValue     string
+	TotalValueGen string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:          "id",
-	GinID:       "gin_id",
-	InventoryID: "inventory_id",
-	Quantity:    "quantity",
-	UnitValue:   "unit_value",
-	CreatedAt:   "created_at",
-	UpdatedAt:   "updated_at",
-	DeletedAt:   "deleted_at",
+	ID:            "id",
+	GinID:         "gin_id",
+	InventoryID:   "inventory_id",
+	Quantity:      "quantity",
+	UnitValue:     "unit_value",
+	TotalValueGen: "total_value_gen",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
+	DeletedAt:     "deleted_at",
 }
 
 var GoodsIssueNoteItemTableColumns = struct {
-	ID          string
-	GinID       string
-	InventoryID string
-	Quantity    string
-	UnitValue   string
-	CreatedAt   string
-	UpdatedAt   string
-	DeletedAt   string
+	ID            string
+	GinID         string
+	InventoryID   string
+	Quantity      string
+	UnitValue     string
+	TotalValueGen string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:          "goods_issue_note_item.id",
-	GinID:       "goods_issue_note_item.gin_id",
-	InventoryID: "goods_issue_note_item.inventory_id",
-	Quantity:    "goods_issue_note_item.quantity",
-	UnitValue:   "goods_issue_note_item.unit_value",
-	CreatedAt:   "goods_issue_note_item.created_at",
-	UpdatedAt:   "goods_issue_note_item.updated_at",
-	DeletedAt:   "goods_issue_note_item.deleted_at",
+	ID:            "goods_issue_note_item.id",
+	GinID:         "goods_issue_note_item.gin_id",
+	InventoryID:   "goods_issue_note_item.inventory_id",
+	Quantity:      "goods_issue_note_item.quantity",
+	UnitValue:     "goods_issue_note_item.unit_value",
+	TotalValueGen: "goods_issue_note_item.total_value_gen",
+	CreatedAt:     "goods_issue_note_item.created_at",
+	UpdatedAt:     "goods_issue_note_item.updated_at",
+	DeletedAt:     "goods_issue_note_item.deleted_at",
 }
 
 // Generated where
 
 var GoodsIssueNoteItemWhere = struct {
-	ID          whereHelperint
-	GinID       whereHelpernull_Int
-	InventoryID whereHelpernull_Int
-	Quantity    whereHelpertypes_Decimal
-	UnitValue   whereHelpertypes_Decimal
-	CreatedAt   whereHelpertime_Time
-	UpdatedAt   whereHelpertime_Time
-	DeletedAt   whereHelpernull_Time
+	ID            whereHelperint
+	GinID         whereHelpernull_Int
+	InventoryID   whereHelpernull_Int
+	Quantity      whereHelpertypes_Decimal
+	UnitValue     whereHelpertypes_Decimal
+	TotalValueGen whereHelpertypes_Decimal
+	CreatedAt     whereHelpertime_Time
+	UpdatedAt     whereHelpertime_Time
+	DeletedAt     whereHelpernull_Time
 }{
-	ID:          whereHelperint{field: "\"inventory\".\"goods_issue_note_item\".\"id\""},
-	GinID:       whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_item\".\"gin_id\""},
-	InventoryID: whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_item\".\"inventory_id\""},
-	Quantity:    whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note_item\".\"quantity\""},
-	UnitValue:   whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note_item\".\"unit_value\""},
-	CreatedAt:   whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note_item\".\"created_at\""},
-	UpdatedAt:   whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note_item\".\"updated_at\""},
-	DeletedAt:   whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_item\".\"deleted_at\""},
+	ID:            whereHelperint{field: "\"inventory\".\"goods_issue_note_item\".\"id\""},
+	GinID:         whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_item\".\"gin_id\""},
+	InventoryID:   whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_item\".\"inventory_id\""},
+	Quantity:      whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note_item\".\"quantity\""},
+	UnitValue:     whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note_item\".\"unit_value\""},
+	TotalValueGen: whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note_item\".\"total_value_gen\""},
+	CreatedAt:     whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note_item\".\"created_at\""},
+	UpdatedAt:     whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note_item\".\"updated_at\""},
+	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_item\".\"deleted_at\""},
 }
 
 // GoodsIssueNoteItemRels is where relationship names are stored.
@@ -138,8 +145,8 @@ func (r *goodsIssueNoteItemR) GetInventory() *Inventory {
 type goodsIssueNoteItemL struct{}
 
 var (
-	goodsIssueNoteItemAllColumns            = []string{"id", "gin_id", "inventory_id", "quantity", "unit_value", "created_at", "updated_at", "deleted_at"}
-	goodsIssueNoteItemColumnsWithoutDefault = []string{"id", "quantity", "unit_value", "created_at", "updated_at"}
+	goodsIssueNoteItemAllColumns            = []string{"id", "gin_id", "inventory_id", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at", "deleted_at"}
+	goodsIssueNoteItemColumnsWithoutDefault = []string{"id", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at"}
 	goodsIssueNoteItemColumnsWithDefault    = []string{"gin_id", "inventory_id", "deleted_at"}
 	goodsIssueNoteItemPrimaryKeyColumns     = []string{"id"}
 	goodsIssueNoteItemGeneratedColumns      = []string{}

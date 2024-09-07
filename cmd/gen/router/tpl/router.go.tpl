@@ -75,13 +75,21 @@ func getMainRoutes() func(chi.Router) {
 			{{- range .Handlers }}
 			r.Route("/{{ .Name }}", func(r chi.Router) {
 				r.Get("/", {{ $package }}.List{{ .Name | ToPascalCase }})
+				{{- if not .IsView}}
 				r.Post("/", {{ $package }}.Create{{ .Name | ToPascalCase }})
+				{{- end }}
+				{{- if not .IsView}}
 				r.Post("/search", {{ $package }}.Search{{ .Name | ToPascalCase }})
+				{{- end }}
 				r.Route("/{id}", func(r chi.Router) {
 					r.Use({{ $package }}.{{ .Name | ToPascalCase }}Context)
 					r.Get("/", {{ $package }}.Get{{ .Name | ToPascalCase }})
+					{{- if not .IsView}}
 					r.Put("/", {{ $package }}.Update{{ .Name | ToPascalCase }})
+					{{- end }}
+					{{- if not .IsView}}
 					r.Delete("/", {{ $package }}.Delete{{ .Name | ToPascalCase }})
+					{{- end }}
 				})
 			})
 			{{ end }}
