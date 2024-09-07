@@ -5,6 +5,7 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/domain/dto"
 	
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -12,6 +13,14 @@ import (
 
 func (r *InventoryRepository) ListAllGoodsIssueNoteViews(ctx context.Context, exec boil.ContextExecutor) (inventory.GoodsIssueNoteViewSlice, error) {
 	return inventory.GoodsIssueNoteViews().All(ctx, exec)
+}
+func (r *InventoryRepository) SearchGoodsIssueNoteViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsIssueNoteDTO) (inventory.GoodsIssueNoteViewSlice, error) {
+	return inventory.GoodsIssueNoteViews(
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetGoodsIssueNoteViewByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.GoodsIssueNoteView, error) {

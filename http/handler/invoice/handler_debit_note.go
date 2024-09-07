@@ -50,6 +50,7 @@ func DebitNoteContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListDebitNote(w http.ResponseWriter, r *http.Request) {
 	svc := invoice.NewInvoiceService()
 	req := svc.NewListDebitNoteRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteDebitNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchDebitNote(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchDebitNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

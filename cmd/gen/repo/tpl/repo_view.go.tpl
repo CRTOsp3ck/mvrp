@@ -5,6 +5,9 @@ package {{ .Package }}
 import (
 	"context"
 	"mvrp/data/model/{{ .Package }}"
+	{{- if .HasSearchDTO }}
+	"mvrp/domain/dto"
+	{{- end }}
 	
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -13,6 +16,23 @@ import (
 func (r *{{ .Package | ToPascalCase }}Repository) ListAll{{ .PluralModelName }}(ctx context.Context, exec boil.ContextExecutor) ({{ .Package }}.{{ .ModelName }}Slice, error) {
 	return {{ .Package }}.{{ .PluralModelName }}().All(ctx, exec)
 }
+
+{{- if .HasSearchDTO }}
+func (r *{{ .Package | ToPascalCase }}Repository) Search{{ .PluralModelName }}(ctx context.Context, exec boil.ContextExecutor, dto dto.{{ .SearchDTOName }}) ({{ .Package }}.{{ .ModelName }}Slice, error) {
+	return {{ .Package }}.{{ .PluralModelName }}(
+		{{- range .GroupQueryFields }}
+		qm.Where("{{ .Name }} = ?", dto.{{ .Name | ToPascalCase }}),
+		{{- end }}
+		{{- if .SearchQueryStatement }}
+        qm.{{.SearchQueryStatement}},
+        {{- end }}
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	).All(ctx, exec)
+}
+{{- end }}
 
 func (r *{{ .Package | ToPascalCase }}Repository) Get{{ .ModelName }}ByID(ctx context.Context, exec boil.ContextExecutor, id int) (*{{ .Package }}.{{ .ModelName }}, error) {
 	return {{ .Package }}.{{ .PluralModelName }}(qm.Where({{ .Package }}.{{ .ModelName }}Columns.ID+"=?", id)).One(ctx, exec)

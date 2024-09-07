@@ -50,6 +50,7 @@ func ReturnMerchandiseAuthorizationContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request) {
 	svc := inventory.NewInventoryService()
 	req := svc.NewListReturnMerchandiseAuthorizationRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 }
 
 func SearchReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchReturnMerchandiseAuthorizationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

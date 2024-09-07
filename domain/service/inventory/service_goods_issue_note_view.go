@@ -3,6 +3,7 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/domain/dto"
 )
 
 // LIST GOODS ISSUE NOTE VIEW
@@ -43,6 +44,67 @@ func (s *InventoryService) ListGoodsIssueNoteView(req *ListGoodsIssueNoteViewReq
 	}
 	resp := ListGoodsIssueNoteViewResponse{
 		Payload: res,
+	}
+	return &resp, nil
+}
+
+// SEARCH GOODS ISSUE NOTE VIEW
+type SearchGoodsIssueNoteViewRequest struct {
+	Ctx     context.Context
+	Payload dto.SearchGoodsIssueNoteDTO
+}
+
+func (s *InventoryService) NewSearchGoodsIssueNoteViewRequest(ctx context.Context, payload dto.SearchGoodsIssueNoteDTO) *SearchGoodsIssueNoteViewRequest {
+	return &SearchGoodsIssueNoteViewRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
+type SearchGoodsIssueNoteViewResponse struct {
+	Payload    inventory.GoodsIssueNoteViewSlice `json:"payload"`
+	Pagination dto.PaginationDTO                 `json:"pagination"`
+}
+
+func (s *InventoryService) NewSearchGoodsIssueNoteViewResponse(payload inventory.GoodsIssueNoteViewSlice) *SearchGoodsIssueNoteViewResponse {
+	return &SearchGoodsIssueNoteViewResponse{
+		Payload: payload,
+	}
+}
+
+func (s *InventoryService) SearchGoodsIssueNoteView(req *SearchGoodsIssueNoteViewRequest) (*SearchGoodsIssueNoteViewResponse, error) {
+	tx, err := s.Repo.Begin(req.Ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	res, err := s.Repo.Inventory.SearchGoodsIssueNoteViews(req.Ctx, tx, req.Payload)
+	if err != nil {
+		return nil, err
+	}
+
+	// Pagination
+	totalCount, err := s.Repo.Inventory.GetGoodsIssueNoteTotalCount(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
+	resp := SearchGoodsIssueNoteViewResponse{
+		Payload:    res,
+		Pagination: pd,
 	}
 	return &resp, nil
 }

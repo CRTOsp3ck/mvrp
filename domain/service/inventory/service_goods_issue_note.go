@@ -237,6 +237,10 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 	// create goods issue note items
 	for _, item := range req.Payload.Items {
 		item.GoodsIssueNoteItem.GinID = null.IntFrom(req.Payload.GoodsIssueNote.ID)
+		err = proc.ProcessGoodsIssueNoteItemAmounts(&item.GoodsIssueNoteItem)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.CreateGoodsIssueNoteItem(req.Ctx, tx, &item.GoodsIssueNoteItem)
 		if err != nil {
 			return nil, err
@@ -248,6 +252,10 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 			return nil, err
 		}
 		inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+		err = proc.ProcessInventoryAmounts(inv)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 		if err != nil {
 			return nil, err
@@ -361,6 +369,10 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 				return nil, err
 			}
 			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, currGinItem.Quantity.Big)
+			err = proc.ProcessInventoryAmounts(inv)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 			if err != nil {
 				return nil, err
@@ -403,6 +415,10 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			amountOffset.Sub(item.Quantity.Big, currGinItem.Quantity.Big)
 
 			// update goods issue note item
+			err = proc.ProcessGoodsIssueNoteItemAmounts(&item.GoodsIssueNoteItem)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateGoodsIssueNoteItem(req.Ctx, tx, &item.GoodsIssueNoteItem)
 			if err != nil {
 				return nil, err
@@ -416,6 +432,10 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 					return nil, err
 				}
 				inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, amountOffset.Big)
+				err = proc.ProcessInventoryAmounts(inv)
+				if err != nil {
+					return nil, err
+				}
 				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 				if err != nil {
 					return nil, err
@@ -435,6 +455,10 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			}
 		} else {
 			// create goods issue note item
+			err = proc.ProcessGoodsIssueNoteItemAmounts(&item.GoodsIssueNoteItem)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.CreateGoodsIssueNoteItem(req.Ctx, tx, &item.GoodsIssueNoteItem)
 			if err != nil {
 				return nil, err
@@ -446,6 +470,10 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 				return nil, err
 			}
 			inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+			err = proc.ProcessInventoryAmounts(inv)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 			if err != nil {
 				return nil, err
@@ -544,6 +572,10 @@ func (s *InventoryService) DeleteGoodsIssueNote(req *DeleteGoodsIssueNoteRequest
 			return nil, err
 		}
 		inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, item.Quantity.Big)
+		err = proc.ProcessInventoryAmounts(inv)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 		if err != nil {
 			return nil, err

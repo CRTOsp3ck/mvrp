@@ -50,6 +50,7 @@ func DeliveryNoteContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	svc := sale.NewSaleService()
 	req := svc.NewListDeliveryNoteRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteDeliveryNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchDeliveryNote(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchDeliveryNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

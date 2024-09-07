@@ -4,13 +4,9 @@ package {{ .Package }}
 
 import (
 	"context"
-	{{- if not .IsView }}
 	"encoding/json"
-	{{- end }}
 	"fmt"
-	{{- if not .IsView }}
 	"mvrp/domain/dto"
-	{{- end }}
 	"mvrp/domain/service/{{ .Package }}"
 	"mvrp/errors"
 	"mvrp/htresp"
@@ -53,9 +49,15 @@ func {{ .Name }}Context(next http.Handler) http.Handler {
 	})
 }
 
+{{ $isView := .IsView }}
 {{ range .Routes }}
 func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
-	{{ if eq .Type "search" }}var dto *dto.Search{{ $.Name }}DTO
+	{{ if eq .Type "search" }}
+	{{- if not $isView }}
+	var dto *dto.Search{{ $.Name }}DTO
+	{{- else }}
+	var dto *dto.Search{{ $.Name | GetCleanName }}DTO
+	{{- end }}
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")

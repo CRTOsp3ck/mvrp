@@ -50,6 +50,7 @@ func StockCountSheetContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	svc := inventory.NewInventoryService()
 	req := svc.NewListStockCountSheetRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteStockCountSheet(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchStockCountSheet(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchStockCountSheetDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

@@ -50,6 +50,7 @@ func OrderConfirmationContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	svc := sale.NewSaleService()
 	req := svc.NewListOrderConfirmationRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchOrderConfirmation(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchOrderConfirmationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

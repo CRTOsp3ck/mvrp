@@ -50,6 +50,7 @@ func SalesQuotationContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	svc := sale.NewSaleService()
 	req := svc.NewListSalesQuotationRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteSalesQuotation(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchSalesQuotation(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchSalesQuotationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

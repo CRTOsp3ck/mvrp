@@ -50,6 +50,7 @@ func InvoiceContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListInvoice(w http.ResponseWriter, r *http.Request) {
 	svc := invoice.NewInvoiceService()
 	req := svc.NewListInvoiceRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteInvoice(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchInvoice(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchInvoiceDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

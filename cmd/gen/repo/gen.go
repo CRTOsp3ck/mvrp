@@ -19,6 +19,7 @@ type TemplateData struct {
 	ModelName            string
 	PluralModelName      string
 	HasSearchDTO         bool
+	SearchDTOName        string
 	GroupQueryFields     []dto.Field
 	SearchQueryStatement string
 }
@@ -86,13 +87,37 @@ func Generate() error {
 
 		// Generate repo files for views
 		for _, view := range pkg.Views {
-			hasSearchDTO := checkForSearchDTO(view.Name)
+			// look for the search DTO of the model in pkg.Models
+			var hasSearchDTO bool
+			cleanViewName := view.Name[:len(view.Name)-4]
+			for _, model := range pkg.Models {
+				// remove last 4 characters from view.Model to remove "View" suffix
+				if model.Name == cleanViewName {
+					hasSearchDTO = checkForSearchDTO(model.Name)
+					break
+				}
+			}
+
 			data = TemplateData{
 				Package:         pkg.Package,
 				ModelName:       view.Name,
 				PluralModelName: view.PluralName,
 				HasSearchDTO:    hasSearchDTO,
+				SearchDTOName:   "Search" + cleanViewName + "DTO",
 			}
+			if hasSearchDTO {
+				sdto, err := dto.GetDTO("Search" + cleanViewName + "DTO")
+				if err != nil {
+					return errors.WrapError(errors.ErrTypeInternal, fmt.Sprintf("Failed to generate search DTO: %v", err))
+				}
+				data.GroupQueryFields = sdto.GroupQueryFields
+				sqfs, err := dto.GetSearchQueryFields(sdto.Name)
+				if err != nil {
+					return errors.WrapError(errors.ErrTypeInternal, fmt.Sprintf("Failed to get search query fields: %v", err))
+				}
+				data.SearchQueryStatement = createSearchQuery(sqfs)
+			}
+
 			err = generateRepo(data, rootDir, tmplView)
 			if err != nil {
 				return errors.WrapError(errors.ErrTypeInternal, fmt.Sprintf("Failed to generate repo: %v", err))

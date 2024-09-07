@@ -50,6 +50,7 @@ func PaymentReceiptContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListPaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	svc := invoice.NewInvoiceService()
 	req := svc.NewListPaymentReceiptRequest(r.Context())
@@ -156,6 +157,7 @@ func DeletePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchPaymentReceipt(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchPaymentReceiptDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

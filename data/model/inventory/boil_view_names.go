@@ -5,6 +5,8 @@ package inventory
 
 var ViewNames = struct {
 	GoodsIssueNoteView string
+	InventoryView      string
 }{
 	GoodsIssueNoteView: "goods_issue_note_view",
+	InventoryView:      "inventory_view",
 }

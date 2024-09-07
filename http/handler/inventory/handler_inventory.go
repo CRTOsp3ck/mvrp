@@ -50,6 +50,7 @@ func InventoryContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListInventory(w http.ResponseWriter, r *http.Request) {
 	svc := inventory.NewInventoryService()
 	req := svc.NewListInventoryRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteInventory(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchInventory(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchInventoryDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

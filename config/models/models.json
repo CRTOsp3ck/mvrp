@@ -25,7 +25,8 @@
                 { "name": "StockCountSheet", "plural_name": "StockCountSheets" }
             ],
             "views": [
-                { "name": "GoodsIssueNoteView", "plural_name": "GoodsIssueNoteViews" }
+                { "name": "GoodsIssueNoteView", "plural_name": "GoodsIssueNoteViews" },
+                { "name": "InventoryView", "plural_name": "InventoryViews" }
             ]
         },
         {
@@ -37,14 +38,6 @@
                 { "name": "InvoiceItem", "plural_name": "InvoiceItems" },
                 { "name": "PaymentReceipt", "plural_name": "PaymentReceipts" },
                 { "name": "PaymentReceiptItem", "plural_name": "PaymentReceiptItems" }
-            ],
-            "views": [
-                { "name": "InvoiceView", "plural_name": "InvoiceViews" },
-                { "name": "InvoiceItemView", "plural_name": "InvoiceItemViews" },
-                { "name": "PaymentReceiptView", "plural_name": "PaymentReceiptViews" },
-                { "name": "PaymentReceiptItemView", "plural_name": "PaymentReceiptItemViews" },
-                { "name": "CreditNoteView", "plural_name": "CreditNoteViews" },
-                { "name": "DebitNoteView", "plural_name": "DebitNoteViews" }
             ]
         },
         {
@@ -62,14 +55,6 @@
                 { "name": "PurchaseOrderItem", "plural_name": "PurchaseOrderItems" },
                 { "name": "RequestForQuotation", "plural_name": "RequestForQuotations" },
                 { "name": "RequestForQuotationItem", "plural_name": "RequestForQuotationItems" }
-            ],
-            "views": [
-                { "name": "GoodsReceiptNoteView", "plural_name": "GoodsReceiptNoteViews" },
-                { "name": "GoodsReceiptNoteItemView", "plural_name": "GoodsReceiptNoteItemViews" },
-                { "name": "PurchaseOrderView", "plural_name": "PurchaseOrderViews" },
-                { "name": "PurchaseOrderItemView", "plural_name": "PurchaseOrderItemViews" },
-                { "name": "RequestForQuotationView", "plural_name": "RequestForQuotationViews" },
-                { "name": "RequestForQuotationItemView", "plural_name": "RequestForQuotationItemViews" }
             ]
         },
         {
@@ -85,18 +70,6 @@
                 { "name": "SalesOrderItem", "plural_name": "SalesOrderItems" },
                 { "name": "SalesQuotation", "plural_name": "SalesQuotations" },
                 { "name": "SalesQuotationItem", "plural_name": "SalesQuotationItems" }
-            ],
-            "views": [
-                { "name": "DeliveryNoteView", "plural_name": "DeliveryNoteViews" },
-                { "name": "DeliveryNoteItemView", "plural_name": "DeliveryNoteItemViews" },
-                { "name": "GoodsReturnNoteView", "plural_name": "GoodsReturnNoteViews" },
-                { "name": "GoodsReturnNoteItemView", "plural_name": "GoodsReturnNoteItemViews" },
-                { "name": "OrderConfirmationView", "plural_name": "OrderConfirmationViews" },
-                { "name": "OrderConfirmationItemView", "plural_name": "OrderConfirmationItemViews" },
-                { "name": "SalesOrderView", "plural_name": "SalesOrderViews" },
-                { "name": "SalesOrderItemView", "plural_name": "SalesOrderItemViews" },
-                { "name": "SalesQuotationView", "plural_name": "SalesQuotationViews" },
-                { "name": "SalesQuotationItemView", "plural_name": "SalesQuotationItemViews" }
             ]
         }
     ]

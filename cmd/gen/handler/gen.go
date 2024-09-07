@@ -37,6 +37,7 @@ func Generate() error {
 			tmplName := filepath.Base(tmplPath)
 			tmpl, err := template.New(tmplName).Funcs(template.FuncMap{
 				"ToPascalCase": util.Util.NC.ToPascalCase,
+				"GetCleanName": getCleanName,
 			}).ParseFiles(tmplPath)
 			if err != nil {
 				return err
@@ -64,4 +65,9 @@ func Generate() error {
 	fmt.Printf("%d Handler files generated\n", count)
 
 	return nil
+}
+
+func getCleanName(viewName string) string {
+	// remove the "View" suffix
+	return viewName[:len(viewName)-4]
 }

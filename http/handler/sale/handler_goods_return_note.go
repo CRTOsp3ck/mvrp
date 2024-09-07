@@ -50,6 +50,7 @@ func GoodsReturnNoteContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	svc := sale.NewSaleService()
 	req := svc.NewListGoodsReturnNoteRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchGoodsReturnNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

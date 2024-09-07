@@ -36,7 +36,8 @@
                     "name": "goods_issue_note_view",
                     "routes": [
                         { "method": "Get", "path": "/goods_issue_note_view/", "handler": "ListGoodsIssueNoteView", "type": "list" },
-                        { "method": "Get", "path": "/goods_issue_note_view/{id}", "handler": "GetGoodsIssueNoteView", "type": "get" }
+                        { "method": "Get", "path": "/goods_issue_note_view/{id}", "handler": "GetGoodsIssueNoteView", "type": "get" },
+                        { "method": "Post", "path": "/goods_issue_note_view/search", "handler": "SearchGoodsIssueNoteView", "type": "search" }
                     ] 
                 },
                 { 
@@ -48,6 +49,14 @@
                         { "method": "Put", "path": "/inventory/{id}", "handler": "UpdateInventory", "type": "update" },
                         { "method": "Delete", "path": "/inventory/{id}", "handler": "DeleteInventory", "type": "delete" },
                         { "method": "Post", "path": "/inventory/search", "handler": "SearchInventory", "type": "search" }
+                    ] 
+                },
+                { 
+                    "name": "inventory_view",
+                    "routes": [
+                        { "method": "Get", "path": "/inventory_view", "handler": "ListInventoryView", "type": "list" },
+                        { "method": "Get", "path": "/inventory_view/{id}", "handler": "GetInventoryView", "type": "get" },
+                        { "method": "Post", "path": "/inventory_view/search", "handler": "SearchInventoryView", "type": "search" }
                     ] 
                 },
                 { 

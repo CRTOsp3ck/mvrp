@@ -100,6 +100,7 @@ func getMainRoutes() func(chi.Router) {
 			
 			r.Route("/goods_issue_note_view", func(r chi.Router) {
 				r.Get("/", inventory.ListGoodsIssueNoteView)
+				r.Post("/search", inventory.SearchGoodsIssueNoteView)
 				r.Route("/{id}", func(r chi.Router) {
 					r.Use(inventory.GoodsIssueNoteViewContext)
 					r.Get("/", inventory.GetGoodsIssueNoteView)
@@ -115,6 +116,15 @@ func getMainRoutes() func(chi.Router) {
 					r.Get("/", inventory.GetInventory)
 					r.Put("/", inventory.UpdateInventory)
 					r.Delete("/", inventory.DeleteInventory)
+				})
+			})
+			
+			r.Route("/inventory_view", func(r chi.Router) {
+				r.Get("/", inventory.ListInventoryView)
+				r.Post("/search", inventory.SearchInventoryView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(inventory.InventoryViewContext)
+					r.Get("/", inventory.GetInventoryView)
 				})
 			})
 			

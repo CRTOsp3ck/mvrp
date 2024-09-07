@@ -100,6 +100,15 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	listOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(listOp)
 
+	// Add Search operation
+	searchOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s/search", pkg.Package, handler.Name))
+	if err != nil {
+		return err
+	}
+	searchOp.AddReqStructure(reqMap["search"])
+	searchOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+	reflector.AddOperation(searchOp)
+
 	// Add Get operation
 	getOp, err := reflector.NewOperationContext(http.MethodGet, fmt.Sprintf("/v1/main/%s/%s/{id}", pkg.Package, handler.Name))
 	if err != nil {
@@ -110,15 +119,6 @@ func addMainOperations(reflector *openapi3.Reflector, pkg handlers.Package, hand
 	reflector.AddOperation(getOp)
 
 	if !handler.IsView {
-		// Add Search operation
-		searchOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s/search", pkg.Package, handler.Name))
-		if err != nil {
-			return err
-		}
-		searchOp.AddReqStructure(reqMap["search"])
-		searchOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
-		reflector.AddOperation(searchOp)
-
 		// Add Create operation
 		createOp, err := reflector.NewOperationContext(http.MethodPost, fmt.Sprintf("/v1/main/%s/%s", pkg.Package, handler.Name))
 		if err != nil {

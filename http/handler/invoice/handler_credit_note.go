@@ -50,6 +50,7 @@ func CreditNoteContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListCreditNote(w http.ResponseWriter, r *http.Request) {
 	svc := invoice.NewInvoiceService()
 	req := svc.NewListCreditNoteRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteCreditNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchCreditNote(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchCreditNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

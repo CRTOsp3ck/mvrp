@@ -50,6 +50,7 @@ func GoodsIssueNoteContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	svc := inventory.NewInventoryService()
 	req := svc.NewListGoodsIssueNoteRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchGoodsIssueNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

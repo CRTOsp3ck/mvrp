@@ -211,6 +211,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
+  /v1/main/inventory/goods_issue_note_view/search:
+    post:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/inventory/inventory:
     get:
       responses:
@@ -288,6 +297,39 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DtoSearchInventoryDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory_view:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory_view/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory_view/search:
+    post:
       responses:
         "200":
           content:

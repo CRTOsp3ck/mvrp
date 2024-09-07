@@ -245,6 +245,11 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 		}
 		req.Payload.Inventory.InventoryNumber = util.Util.Str.ToString(nextID)
 	}
+	// process generated amounts
+	err = proc.ProcessInventoryAmounts(&req.Payload.Inventory)
+	if err != nil {
+		return nil, err
+	}
 	err = s.Repo.Inventory.CreateInventory(req.Ctx, tx, &req.Payload.Inventory)
 	if err != nil {
 		return nil, err
@@ -330,7 +335,11 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	var newInventory inventory.Inventory
 	copier.Copy(&newInventory, &req.Payload.Inventory)
 	newInventory.QuantityAvailable = req.Payload.Inventory.QuantityAvailable
-
+	// process generated amounts
+	err = proc.ProcessInventoryAmounts(&newInventory)
+	if err != nil {
+		return nil, err
+	}
 	// update inventory
 	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, &newInventory)
 	if err != nil {

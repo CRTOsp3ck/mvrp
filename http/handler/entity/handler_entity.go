@@ -50,6 +50,7 @@ func EntityContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListEntity(w http.ResponseWriter, r *http.Request) {
 	svc := entity.NewEntityService()
 	req := svc.NewListEntityRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteEntity(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchEntity(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchEntityDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {

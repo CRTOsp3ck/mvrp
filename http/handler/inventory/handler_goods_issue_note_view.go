@@ -4,7 +4,9 @@ package inventory
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"mvrp/domain/dto"
 	"mvrp/domain/service/inventory"
 	"mvrp/errors"
 	"mvrp/htresp"
@@ -48,6 +50,7 @@ func GoodsIssueNoteViewContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
 	svc := inventory.NewInventoryService()
 	req := svc.NewListGoodsIssueNoteViewRequest(r.Context())
@@ -72,6 +75,28 @@ func GetGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, value, "GoodsIssueNoteView retrieved successfully")
+
+	
+}
+
+func SearchGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
+	
+	var dto *dto.SearchGoodsIssueNoteDTO
+	err := json.NewDecoder(r.Body).Decode(&dto)
+	if err != nil {
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		return
+	}
+	svc := inventory.NewInventoryService()
+	req := svc.NewSearchGoodsIssueNoteViewRequest(r.Context(), *dto)
+	resp, err := svc.SearchGoodsIssueNoteView(req)
+	if err != nil {
+		htresp.RespondWithError(w, http.StatusInternalServerError,
+			errors.WrapError(errors.ErrTypeService, err.Error()),
+			"Failed to search GoodsIssueNoteView")
+		return
+	}
+	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNoteView search successful")
 
 	
 }

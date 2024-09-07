@@ -139,6 +139,22 @@ CREATE TABLE inventory.return_merchandise_authorization_item (
     deleted_at TIMESTAMPTZ
 );
 
+CREATE VIEW inventory.inventory_view AS
+SELECT
+    i.*,
+    (
+        SELECT row_to_json(it)
+        FROM item.item it
+        WHERE it.id = i.item_id
+    ) AS item,
+    (
+        SELECT json_agg(row_to_json(it))
+        FROM inventory.inventory_transaction it
+        WHERE it.inventory_id = i.id
+    ) AS transactions
+FROM
+    inventory.inventory i;
+
 CREATE VIEW inventory.goods_issue_note_view AS
 SELECT
     gin.*,
@@ -158,6 +174,7 @@ FROM
 
 -- +migrate Down
 DROP VIEW IF EXISTS inventory.goods_issue_note_view;
+DROP VIEW IF EXISTS inventory.inventory_view;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization_item;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization;
 DROP TABLE IF EXISTS inventory.stock_count_sheet;

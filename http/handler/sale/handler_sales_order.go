@@ -50,6 +50,7 @@ func SalesOrderContext(next http.Handler) http.Handler {
 }
 
 
+
 func ListSalesOrder(w http.ResponseWriter, r *http.Request) {
 	svc := sale.NewSaleService()
 	req := svc.NewListSalesOrderRequest(r.Context())
@@ -156,6 +157,7 @@ func DeleteSalesOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func SearchSalesOrder(w http.ResponseWriter, r *http.Request) {
+	
 	var dto *dto.SearchSalesOrderDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
