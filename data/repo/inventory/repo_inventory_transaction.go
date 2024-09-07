@@ -18,7 +18,7 @@ func (r *InventoryRepository) SearchInventoryTransactions(ctx context.Context, e
 	return inventory.InventoryTransactions(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

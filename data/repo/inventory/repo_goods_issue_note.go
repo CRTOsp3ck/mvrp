@@ -18,7 +18,7 @@ func (r *InventoryRepository) SearchGoodsIssueNotes(ctx context.Context, exec bo
 	return inventory.GoodsIssueNotes(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

@@ -18,7 +18,7 @@ func (r *PurchaseRepository) SearchGoodsReceiptNotes(ctx context.Context, exec b
 	return purchase.GoodsReceiptNotes(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

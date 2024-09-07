@@ -213,6 +213,11 @@ paths:
           description: OK
   /v1/main/inventory/goods_issue_note_view/search:
     post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchGoodsIssueNoteDTO'
       responses:
         "200":
           content:
@@ -330,6 +335,11 @@ paths:
           description: OK
   /v1/main/inventory/inventory_view/search:
     post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchInventoryDTO'
       responses:
         "200":
           content:

@@ -18,7 +18,7 @@ func (r *InventoryRepository) SearchInventoryViews(ctx context.Context, exec boi
 	return inventory.InventoryViews(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

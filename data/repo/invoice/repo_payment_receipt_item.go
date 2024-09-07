@@ -18,7 +18,7 @@ func (r *InvoiceRepository) SearchPaymentReceiptItems(ctx context.Context, exec 
 	return invoice.PaymentReceiptItems(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

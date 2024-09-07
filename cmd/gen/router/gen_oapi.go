@@ -41,11 +41,11 @@ func generateOpenAPISpec(rootDir string) error {
 		for _, handler := range pkg.Handlers {
 			// Request structures
 			reqMap := make(map[string]interface{})
-			searchDto := dto.FindDTO(fmt.Sprintf("Search%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
+			searchDto := dto.FindDTO(fmt.Sprintf("Search%sDTO", util.Util.NC.ToPascalCase(getCleanName(handler.Name))))
 			reqMap["search"] = searchDto
-			createDto := dto.FindDTO(fmt.Sprintf("Create%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
+			createDto := dto.FindDTO(fmt.Sprintf("Create%sDTO", util.Util.NC.ToPascalCase(getCleanName(handler.Name))))
 			reqMap["create"] = createDto
-			updateDto := dto.FindDTO(fmt.Sprintf("Update%sDTO", util.Util.NC.ToPascalCase(handler.Name)))
+			updateDto := dto.FindDTO(fmt.Sprintf("Update%sDTO", util.Util.NC.ToPascalCase(getCleanName(handler.Name))))
 			reqMap["update"] = updateDto
 
 			// Response structures
@@ -161,4 +161,12 @@ func addEnumOperations(reflector *openapi3.Reflector) error {
 	reflector.AddOperation(getOp)
 
 	return nil
+}
+
+func getCleanName(name string) string {
+	// remove last 5 characters if they are "_view"
+	if len(name) > 5 && name[len(name)-5:] == "_view" {
+		return name[:len(name)-5]
+	}
+	return name
 }

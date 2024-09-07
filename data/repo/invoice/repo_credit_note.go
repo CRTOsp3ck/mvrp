@@ -18,7 +18,7 @@ func (r *InvoiceRepository) SearchCreditNotes(ctx context.Context, exec boil.Con
 	return invoice.CreditNotes(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }

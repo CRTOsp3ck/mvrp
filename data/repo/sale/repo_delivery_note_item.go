@@ -18,7 +18,7 @@ func (r *SaleRepository) SearchDeliveryNoteItems(ctx context.Context, exec boil.
 	return sale.DeliveryNoteItems(
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-		qm.GroupBy("id"),
+		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
 }
