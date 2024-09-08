@@ -88,7 +88,7 @@ func SeedGoodsIssueNote() error {
 		}
 
 		fmt.Println("Goods Issue Note created ID: ", updGinResp.Payload.ID)
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	return nil
 }

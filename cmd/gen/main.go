@@ -32,7 +32,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	if genModels {
 		err = model.Generate()
@@ -40,7 +40,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	if genDTOs {
 		err = dto.Generate()
@@ -48,7 +48,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	if genRepos {
 		err = repo.Generate()
@@ -56,7 +56,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	if genHandlers {
 		err = handler.Generate()
@@ -64,7 +64,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	if genRouter {
 		err = router.Generate()
@@ -72,7 +72,7 @@ func main() {
 			logError(err)
 			return
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 
 	fmt.Printf("\n%s\n", strings.Repeat("-", 50))

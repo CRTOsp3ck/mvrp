@@ -43,7 +43,7 @@ func SeedServices(count int) error {
 		}
 
 		fmt.Println("Service created ID: ", resp.Payload.ID)
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(1 * time.Millisecond)
 	}
 	return nil
 }
