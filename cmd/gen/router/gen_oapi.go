@@ -183,6 +183,15 @@ func addExtOperations(reflector *openapi3.Reflector) error {
 	getOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(getOp)
 
+	// OPERATION - /v1/ext/inventory/inventory_transaction/search_all
+	postOp, err := reflector.NewOperationContext(http.MethodPost, "/v1/ext/inventory/inventory_transaction/search_all")
+	if err != nil {
+		return err
+	}
+	postOp.AddReqStructure(new(dto.SearchInventoryTransactionDTO))
+	postOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+	reflector.AddOperation(postOp)
+
 	return nil
 }
 

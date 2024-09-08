@@ -36,5 +36,4 @@ func GetInventoryExistsByItemID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "Inventory exists retrieved successfully")
-
 }

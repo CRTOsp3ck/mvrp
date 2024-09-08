@@ -6,7 +6,7 @@ import (
 	"mvrp/domain/dto"
 )
 
-// LIST INVENTORY
+// LIST INVENTORY TRANSACTION
 type ListInventoryTransactionRequest struct {
 	Ctx context.Context
 }
@@ -48,7 +48,7 @@ func (s *InventoryService) ListInventoryTransaction(req *ListInventoryTransactio
 	return &resp, nil
 }
 
-// SEARCH INVENTORY
+// SEARCH INVENTORY TRANSACTION
 type SearchInventoryTransactionRequest struct {
 	Ctx     context.Context
 	Payload dto.SearchInventoryTransactionDTO
@@ -109,7 +109,7 @@ func (s *InventoryService) SearchInventoryTransaction(req *SearchInventoryTransa
 	return &resp, nil
 }
 
-// GET INVENTORY
+// GET INVENTORY TRANSACTION
 type GetInventoryTransactionRequest struct {
 	Ctx context.Context
 	ID  int
@@ -155,7 +155,7 @@ func (s *InventoryService) GetInventoryTransaction(req *GetInventoryTransactionR
 	return &resp, nil
 }
 
-// CREATE INVENTORY
+// CREATE INVENTORY TRANSACTION
 type CreateInventoryTransactionRequest struct {
 	Ctx     context.Context
 	Payload dto.CreateInventoryTransactionDTO
@@ -213,7 +213,7 @@ func (s *InventoryService) CreateInventoryTransaction(req *CreateInventoryTransa
 	return &resp, nil
 }
 
-// UPDATE INVENTORY
+// UPDATE INVENTORY TRANSACTION
 type UpdateInventoryTransactionRequest struct {
 	Ctx     context.Context
 	Payload dto.UpdateInventoryTransactionDTO
@@ -272,7 +272,7 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 	return &resp, nil
 }
 
-// DELETE INVENTORY
+// DELETE INVENTORY TRANSACTION
 type DeleteInventoryTransactionRequest struct {
 	Ctx context.Context
 	ID  int
@@ -327,5 +327,66 @@ func (s *InventoryService) DeleteInventoryTransaction(req *DeleteInventoryTransa
 		Payload: true,
 	}
 
+	return &resp, nil
+}
+
+// SEARCH ALL INVENTORY TRANSACTIONS
+type SearchAllInventoryTransactionRequest struct {
+	Ctx     context.Context
+	Payload dto.SearchInventoryTransactionDTO
+}
+
+func (s *InventoryService) NewSearchAllInventoryTransactionRequest(ctx context.Context, payload dto.SearchInventoryTransactionDTO) *SearchAllInventoryTransactionRequest {
+	return &SearchAllInventoryTransactionRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
+}
+
+type SearchAllInventoryTransactionResponse struct {
+	Payload    inventory.InventoryTransactionSlice `json:"payload"`
+	Pagination dto.PaginationDTO                   `json:"pagination"`
+}
+
+func (s *InventoryService) NewSearchAllInventoryTransactionResponse(payload inventory.InventoryTransactionSlice) *SearchAllInventoryTransactionResponse {
+	return &SearchAllInventoryTransactionResponse{
+		Payload: payload,
+	}
+}
+
+func (s *InventoryService) SearchAllInventoryTransaction(req *SearchAllInventoryTransactionRequest) (*SearchAllInventoryTransactionResponse, error) {
+	tx, err := s.Repo.Begin(req.Ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	res, err := s.Repo.Inventory.SearchAllInventoryTransactions(req.Ctx, tx, req.Payload)
+	if err != nil {
+		return nil, err
+	}
+
+	// Pagination
+	totalCount, err := s.Repo.Inventory.GetInventoryTransactionTotalCount(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	pd := dto.PaginationDTO{
+		TotalItems:   totalCount,
+		ItemsPerPage: req.Payload.ItemsPerPage,
+		Page:         req.Payload.Page,
+		SortBy:       req.Payload.SortBy,
+		OrderBy:      req.Payload.OrderBy,
+	}
+	resp := SearchAllInventoryTransactionResponse{
+		Payload:    res,
+		Pagination: pd,
+	}
 	return &resp, nil
 }
