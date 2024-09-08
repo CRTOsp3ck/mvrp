@@ -62,6 +62,12 @@ func generateOpenAPISpec(rootDir string) error {
 		}
 	}
 
+	// Ext route operations
+	err = addExtOperations(&reflector)
+	if err != nil {
+		return err
+	}
+
 	// Enum route operations
 	err = addEnumOperations(&reflector)
 	if err != nil {
@@ -158,6 +164,23 @@ func addEnumOperations(reflector *openapi3.Reflector) error {
 		return err
 	}
 	getOp.AddRespStructure(new(dto.EnumsDTO), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
+	reflector.AddOperation(getOp)
+
+	return nil
+}
+
+func addExtOperations(reflector *openapi3.Reflector) error {
+	type req struct {
+		ID int `path:"id"`
+	}
+
+	// OPERATION - /v1/ext/inventory/inventory/exists_by_item_id/{id}
+	getOp, err := reflector.NewOperationContext(http.MethodGet, "/v1/ext/inventory/inventory/exists_by_item_id/{id}")
+	if err != nil {
+		return err
+	}
+	getOp.AddReqStructure(new(req))
+	getOp.AddRespStructure(new(htresp.Response), func(cu *openapi.ContentUnit) { cu.HTTPStatus = http.StatusOK })
 	reflector.AddOperation(getOp)
 
 	return nil

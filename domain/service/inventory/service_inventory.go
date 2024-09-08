@@ -436,3 +436,49 @@ func (s *InventoryService) DeleteInventory(req *DeleteInventoryRequest) (*Delete
 
 	return &resp, nil
 }
+
+// GET INVENTORY EXISTS BY ITEM ID
+type GetInventoryExistsByItemIDRequest struct {
+	Ctx    context.Context
+	ItemID int
+}
+
+func (s *InventoryService) NewGetInventoryExistsByItemIDRequest(ctx context.Context, itemID int) *GetInventoryExistsByItemIDRequest {
+	return &GetInventoryExistsByItemIDRequest{
+		Ctx:    ctx,
+		ItemID: itemID,
+	}
+}
+
+type GetInventoryExistsByItemIDResponse struct {
+	Payload bool `json:"payload"`
+}
+
+func (s *InventoryService) NewGetInventoryExistsByItemIDResponse(payload bool) *GetInventoryExistsByItemIDResponse {
+	return &GetInventoryExistsByItemIDResponse{
+		Payload: payload,
+	}
+}
+
+func (s *InventoryService) GetInventoryExistsByItemID(req *GetInventoryExistsByItemIDRequest) (*GetInventoryExistsByItemIDResponse, error) {
+	tx, err := s.Repo.Begin(req.Ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
+
+	exists, err := s.Repo.Inventory.GetInventoryExistsByItemID(req.Ctx, tx, req.ItemID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	resp := GetInventoryExistsByItemIDResponse{
+		Payload: exists,
+	}
+	return &resp, nil
+}

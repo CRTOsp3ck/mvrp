@@ -49,6 +49,7 @@ func SetupRoutes(r chi.Router) {
 	r.Get("/", getHome)
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/main", getMainRoutes())
+		r.Route("/ext", getExtRoutes())
 		r.Route("/enum", getEnumRoutes())
 	})
 }

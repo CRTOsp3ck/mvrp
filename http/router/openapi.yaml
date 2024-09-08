@@ -19,6 +19,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/DtoEnumsDTO'
           description: OK
+  /v1/ext/inventory/inventory/exists_by_item_id/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/entity/entity:
     get:
       responses:

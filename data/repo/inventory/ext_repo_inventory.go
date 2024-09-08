@@ -14,6 +14,12 @@ func (r *InventoryRepository) GetInventoryByItemID(ctx context.Context, exec boi
 	).One(ctx, exec)
 }
 
+func (r *InventoryRepository) GetInventoryExistsByItemID(ctx context.Context, exec boil.ContextExecutor, id int) (bool, error) {
+	return inventory.Inventories(
+		qm.Where("item_id=?", id),
+	).Exists(ctx, exec)
+}
+
 func (r *InventoryRepository) GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(ctx context.Context, exec boil.ContextExecutor, id int) (inventory.ReturnMerchandiseAuthorizationItemSlice, error) {
 	return inventory.ReturnMerchandiseAuthorizationItems(
 		qm.Where("rma_id=?", id),
