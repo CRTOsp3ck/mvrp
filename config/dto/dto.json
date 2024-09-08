@@ -11,7 +11,14 @@
                     "group_query_fields": [
                         {"name": "type", "type": "string"}
                     ],
-                    "search_query_fields": [] 
+                    "search_query_fields": [
+                        {"name": "code", "type": "string"}, 
+                        {"name": "name", "type": "string"}, 
+                        {"name": "brand", "type": "string"}, 
+                        {"name": "description", "type": "string"},
+                        {"name": "category", "type": "string"},
+                        {"name": "origin", "type": "string"}
+                    ]
                 },
                 { 
                     "name": "GetItemDTO", 

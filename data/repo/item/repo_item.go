@@ -17,6 +17,15 @@ func (r *ItemRepository) ListAllItems(ctx context.Context, exec boil.ContextExec
 func (r *ItemRepository) SearchItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchItemDTO) (item.ItemSlice, error) {
 	return item.Items(
 		qm.Where("type = ?", dto.Type),
+        qm.And(
+			"code ILIKE ? or name ILIKE ? or brand ILIKE ? or description ILIKE ? or category ILIKE ? or origin ILIKE ?",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+		),
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
 		// qm.GroupBy("id"),
