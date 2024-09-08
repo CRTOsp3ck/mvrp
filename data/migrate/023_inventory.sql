@@ -155,6 +155,17 @@ SELECT
 FROM
     inventory.inventory i;
 
+CREATE VIEW inventory.goods_issue_note_item_view AS
+SELECT
+    gin_item.*,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = gin_item.inventory_id
+    ) AS inventory
+FROM
+    inventory.goods_issue_note_item gin_item;
+
 CREATE VIEW inventory.goods_issue_note_view AS
 SELECT
     gin.*,
@@ -165,7 +176,7 @@ SELECT
     ) AS receipient,
     (
         SELECT json_agg(row_to_json(gin_item))
-        FROM inventory.goods_issue_note_item gin_item
+        FROM inventory.goods_issue_note_item_view gin_item
         WHERE gin_item.gin_id = gin.id
     ) AS items
 FROM
