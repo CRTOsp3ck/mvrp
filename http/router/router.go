@@ -128,6 +128,18 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/inventory_transaction", func(r chi.Router) {
+				r.Get("/", inventory.ListInventoryTransaction)
+				r.Post("/", inventory.CreateInventoryTransaction)
+				r.Post("/search", inventory.SearchInventoryTransaction)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(inventory.InventoryTransactionContext)
+					r.Get("/", inventory.GetInventoryTransaction)
+					r.Put("/", inventory.UpdateInventoryTransaction)
+					r.Delete("/", inventory.DeleteInventoryTransaction)
+				})
+			})
+			
 			r.Route("/return_merchandise_authorization", func(r chi.Router) {
 				r.Get("/", inventory.ListReturnMerchandiseAuthorization)
 				r.Post("/", inventory.CreateReturnMerchandiseAuthorization)

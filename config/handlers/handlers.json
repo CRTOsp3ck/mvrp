@@ -60,6 +60,17 @@
                     ] 
                 },
                 { 
+                    "name": "inventory_transaction",
+                    "routes": [
+                        { "method": "Get", "path": "/inventory_transaction", "handler": "ListInventoryTransaction", "type": "list" },
+                        { "method": "Post", "path": "/inventory_transaction", "handler": "CreateInventoryTransaction", "type": "create" },
+                        { "method": "Get", "path": "/inventory_transaction/{id}", "handler": "GetInventoryTransaction", "type": "get" },
+                        { "method": "Put", "path": "/inventory_transaction/{id}", "handler": "UpdateInventoryTransaction", "type": "update" },
+                        { "method": "Delete", "path": "/inventory_transaction/{id}", "handler": "DeleteInventoryTransaction", "type": "delete" },
+                        { "method": "Post", "path": "/inventory_transaction/search", "handler": "SearchInventoryTransaction", "type": "search" }
+                    ] 
+                },
+                { 
                     "name": "return_merchandise_authorization",
                     "routes": [
                         { "method": "Get", "path": "/return_merchandise_authorization", "handler": "ListReturnMerchandiseAuthorization", "type": "list" },

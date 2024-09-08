@@ -309,6 +309,90 @@ paths:
               schema:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
+  /v1/main/inventory/inventory_transaction:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoCreateInventoryTransactionDTO'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: Created
+  /v1/main/inventory/inventory_transaction/{id}:
+    delete:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: No Content
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+    put:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoUpdateInventoryTransactionDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/inventory/inventory_transaction/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchInventoryTransactionDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/inventory/inventory_view:
     get:
       responses:
@@ -1551,6 +1635,11 @@ components:
         inventory:
           $ref: '#/components/schemas/InventoryInventory'
       type: object
+    DtoCreateInventoryTransactionDTO:
+      properties:
+        inventory_transaction:
+          $ref: '#/components/schemas/InventoryInventoryTransaction'
+      type: object
     DtoCreateInvoiceDTO:
       properties:
         base_document:
@@ -1843,6 +1932,21 @@ components:
         sort_by:
           type: string
       type: object
+    DtoSearchInventoryTransactionDTO:
+      properties:
+        inventory_id:
+          type: string
+        items_per_page:
+          type: integer
+        keyword:
+          type: string
+        order_by:
+          type: string
+        page:
+          type: integer
+        sort_by:
+          type: string
+      type: object
     DtoSearchInvoiceDTO:
       properties:
         items_per_page:
@@ -2025,6 +2129,11 @@ components:
       properties:
         inventory:
           $ref: '#/components/schemas/InventoryInventory'
+      type: object
+    DtoUpdateInventoryTransactionDTO:
+      properties:
+        inventory_transaction:
+          $ref: '#/components/schemas/InventoryInventoryTransaction'
       type: object
     DtoUpdateInvoiceDTO:
       properties:
@@ -2267,6 +2376,31 @@ components:
         reorder_quantity:
           type: string
         total_value_on_hand_gen:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InventoryInventoryTransaction:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        created_by:
+          type: string
+        deleted_at:
+          type: string
+        id:
+          type: integer
+        inventory_id:
+          type: string
+        quantity:
+          type: string
+        reason:
+          type: string
+        transaction_date:
+          type: string
+        transaction_type:
           type: string
         updated_at:
           format: date-time

@@ -970,7 +970,9 @@
                     "inherits": [],
                     "additional_fields": [],
                     "exclude_fields_from_inherit": [],
-                    "group_query_fields": [],
+                    "group_query_fields": [
+                        {"name": "inventory_id", "type": "string"}
+                    ],
                     "search_query_fields": []
                 },
                 {

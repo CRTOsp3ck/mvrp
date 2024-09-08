@@ -28,6 +28,7 @@ type UpdateInventoryDTO struct {
 
 type SearchInventoryTransactionDTO struct {
     Keyword      string                             `json:"keyword"`
+    InventoryId string          `json:"inventory_id"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`

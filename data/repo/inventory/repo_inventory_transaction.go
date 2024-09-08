@@ -16,6 +16,7 @@ func (r *InventoryRepository) ListAllInventoryTransactions(ctx context.Context, 
 }
 func (r *InventoryRepository) SearchInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, error) {
 	return inventory.InventoryTransactions(
+		qm.Where("inventory_id = ?", dto.InventoryId),
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
 		// qm.GroupBy("id"),
