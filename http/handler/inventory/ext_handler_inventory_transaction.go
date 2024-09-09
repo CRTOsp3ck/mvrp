@@ -13,7 +13,7 @@ func SearchAllInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchInventoryTransactionDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: "+err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -22,7 +22,7 @@ func SearchAllInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search InventoryTransaction")
+			"Failed to search InventoryTransaction: "+err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryTransaction search successful")

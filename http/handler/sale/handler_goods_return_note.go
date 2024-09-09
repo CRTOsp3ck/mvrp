@@ -35,7 +35,7 @@ func GoodsReturnNoteContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get GoodsReturnNote")
+					"Failed to get GoodsReturnNote for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list GoodsReturnNote")
+			"Failed to list GoodsReturnNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsReturnNote listed successfully")
@@ -71,7 +71,7 @@ func CreateGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -80,7 +80,7 @@ func CreateGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create GoodsReturnNote")
+			"Failed to create GoodsReturnNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "GoodsReturnNote created successfully")
@@ -116,7 +116,7 @@ func UpdateGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -125,7 +125,7 @@ func UpdateGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update GoodsReturnNote")
+			"Failed to update GoodsReturnNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsReturnNote updated successfully")
@@ -148,7 +148,7 @@ func DeleteGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete GoodsReturnNote")
+			"Failed to delete GoodsReturnNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsReturnNote deleted successfully")
@@ -161,7 +161,7 @@ func SearchGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchGoodsReturnNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -170,7 +170,7 @@ func SearchGoodsReturnNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search GoodsReturnNote")
+			"Failed to search GoodsReturnNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsReturnNote search successful")

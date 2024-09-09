@@ -35,7 +35,7 @@ func StockCountSheetContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get StockCountSheet")
+					"Failed to get StockCountSheet for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list StockCountSheet")
+			"Failed to list StockCountSheet: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "StockCountSheet listed successfully")
@@ -71,7 +71,7 @@ func CreateStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -80,7 +80,7 @@ func CreateStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create StockCountSheet")
+			"Failed to create StockCountSheet: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "StockCountSheet created successfully")
@@ -116,7 +116,7 @@ func UpdateStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -125,7 +125,7 @@ func UpdateStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update StockCountSheet")
+			"Failed to update StockCountSheet: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "StockCountSheet updated successfully")
@@ -148,7 +148,7 @@ func DeleteStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete StockCountSheet")
+			"Failed to delete StockCountSheet: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "StockCountSheet deleted successfully")
@@ -161,7 +161,7 @@ func SearchStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchStockCountSheetDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -170,7 +170,7 @@ func SearchStockCountSheet(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search StockCountSheet")
+			"Failed to search StockCountSheet: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "StockCountSheet search successful")

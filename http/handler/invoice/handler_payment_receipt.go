@@ -35,7 +35,7 @@ func PaymentReceiptContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get PaymentReceipt")
+					"Failed to get PaymentReceipt for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListPaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list PaymentReceipt")
+			"Failed to list PaymentReceipt: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "PaymentReceipt listed successfully")
@@ -71,7 +71,7 @@ func CreatePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := invoice.NewInvoiceService()
@@ -80,7 +80,7 @@ func CreatePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create PaymentReceipt")
+			"Failed to create PaymentReceipt: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "PaymentReceipt created successfully")
@@ -116,7 +116,7 @@ func UpdatePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := invoice.NewInvoiceService()
@@ -125,7 +125,7 @@ func UpdatePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update PaymentReceipt")
+			"Failed to update PaymentReceipt: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "PaymentReceipt updated successfully")
@@ -148,7 +148,7 @@ func DeletePaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete PaymentReceipt")
+			"Failed to delete PaymentReceipt: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "PaymentReceipt deleted successfully")
@@ -161,7 +161,7 @@ func SearchPaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchPaymentReceiptDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := invoice.NewInvoiceService()
@@ -170,7 +170,7 @@ func SearchPaymentReceipt(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search PaymentReceipt")
+			"Failed to search PaymentReceipt: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "PaymentReceipt search successful")

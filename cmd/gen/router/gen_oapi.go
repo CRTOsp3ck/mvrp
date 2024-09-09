@@ -9,9 +9,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/swaggest/openapi-go"
 	"github.com/swaggest/openapi-go/openapi3"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/sqlboiler/v4/types"
 )
 
 func generateOpenAPISpec(rootDir string) error {
@@ -31,6 +34,9 @@ func generateOpenAPISpec(rootDir string) error {
 			Name:  util.Util.Ptr.StrPtr("SP3CK"),
 			Email: util.Util.Ptr.StrPtr("regedits@gmail.com"),
 		})
+
+	// Add type mappings for custom types
+	addTypeMappings(&reflector)
 
 	// Main route operations
 	config, err := handlers.GetConfig()
@@ -193,6 +199,18 @@ func addExtOperations(reflector *openapi3.Reflector) error {
 	reflector.AddOperation(postOp)
 
 	return nil
+}
+
+func addTypeMappings(reflector *openapi3.Reflector) {
+	reflector.AddTypeMapping(null.Int{}, int64(1))
+	reflector.AddTypeMapping(null.Time{}, time.Now())
+	reflector.AddTypeMapping(null.String{}, "string")
+	reflector.AddTypeMapping(null.Bool{}, true)
+	reflector.AddTypeMapping(null.Float32{}, float32(1.0))
+	reflector.AddTypeMapping(null.Float64{}, float64(1.0))
+
+	reflector.AddTypeMapping(types.Decimal{}, float64(1.0))
+	reflector.AddTypeMapping(types.NullDecimal{}, float64(1.0))
 }
 
 func getCleanName(name string) string {

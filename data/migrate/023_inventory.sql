@@ -185,6 +185,7 @@ FROM
 
 -- +migrate Down
 DROP VIEW IF EXISTS inventory.goods_issue_note_view;
+DROP VIEW IF EXISTS inventory.goods_issue_note_item_view;
 DROP VIEW IF EXISTS inventory.inventory_view;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization_item;
 DROP TABLE IF EXISTS inventory.return_merchandise_authorization;

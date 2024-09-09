@@ -35,7 +35,7 @@ func OrderConfirmationContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get OrderConfirmation")
+					"Failed to get OrderConfirmation for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list OrderConfirmation")
+			"Failed to list OrderConfirmation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "OrderConfirmation listed successfully")
@@ -71,7 +71,7 @@ func CreateOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -80,7 +80,7 @@ func CreateOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create OrderConfirmation")
+			"Failed to create OrderConfirmation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "OrderConfirmation created successfully")
@@ -116,7 +116,7 @@ func UpdateOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -125,7 +125,7 @@ func UpdateOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update OrderConfirmation")
+			"Failed to update OrderConfirmation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "OrderConfirmation updated successfully")
@@ -148,7 +148,7 @@ func DeleteOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete OrderConfirmation")
+			"Failed to delete OrderConfirmation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "OrderConfirmation deleted successfully")
@@ -161,7 +161,7 @@ func SearchOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchOrderConfirmationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -170,7 +170,7 @@ func SearchOrderConfirmation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search OrderConfirmation")
+			"Failed to search OrderConfirmation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "OrderConfirmation search successful")

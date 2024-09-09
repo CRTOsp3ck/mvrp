@@ -35,7 +35,7 @@ func DeliveryNoteContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get DeliveryNote")
+					"Failed to get DeliveryNote for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list DeliveryNote")
+			"Failed to list DeliveryNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "DeliveryNote listed successfully")
@@ -71,7 +71,7 @@ func CreateDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -80,7 +80,7 @@ func CreateDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create DeliveryNote")
+			"Failed to create DeliveryNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "DeliveryNote created successfully")
@@ -116,7 +116,7 @@ func UpdateDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -125,7 +125,7 @@ func UpdateDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update DeliveryNote")
+			"Failed to update DeliveryNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "DeliveryNote updated successfully")
@@ -148,7 +148,7 @@ func DeleteDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete DeliveryNote")
+			"Failed to delete DeliveryNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "DeliveryNote deleted successfully")
@@ -161,7 +161,7 @@ func SearchDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchDeliveryNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -170,7 +170,7 @@ func SearchDeliveryNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search DeliveryNote")
+			"Failed to search DeliveryNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "DeliveryNote search successful")

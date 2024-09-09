@@ -35,7 +35,7 @@ func ReturnMerchandiseAuthorizationContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get ReturnMerchandiseAuthorization")
+					"Failed to get ReturnMerchandiseAuthorization for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list ReturnMerchandiseAuthorization")
+			"Failed to list ReturnMerchandiseAuthorization: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "ReturnMerchandiseAuthorization listed successfully")
@@ -71,7 +71,7 @@ func CreateReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -80,7 +80,7 @@ func CreateReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create ReturnMerchandiseAuthorization")
+			"Failed to create ReturnMerchandiseAuthorization: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "ReturnMerchandiseAuthorization created successfully")
@@ -116,7 +116,7 @@ func UpdateReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -125,7 +125,7 @@ func UpdateReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update ReturnMerchandiseAuthorization")
+			"Failed to update ReturnMerchandiseAuthorization: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "ReturnMerchandiseAuthorization updated successfully")
@@ -148,7 +148,7 @@ func DeleteReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete ReturnMerchandiseAuthorization")
+			"Failed to delete ReturnMerchandiseAuthorization: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "ReturnMerchandiseAuthorization deleted successfully")
@@ -161,7 +161,7 @@ func SearchReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	var dto *dto.SearchReturnMerchandiseAuthorizationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -170,7 +170,7 @@ func SearchReturnMerchandiseAuthorization(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search ReturnMerchandiseAuthorization")
+			"Failed to search ReturnMerchandiseAuthorization: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "ReturnMerchandiseAuthorization search successful")

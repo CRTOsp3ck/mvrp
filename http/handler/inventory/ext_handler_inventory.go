@@ -17,7 +17,7 @@ func GetInventoryExistsByItemID(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			htresp.RespondWithError(w, http.StatusBadRequest,
 				errors.WrapError(errors.ErrTypeConversion, "ID must be an integer"),
-				"Failed to convert ID to integer")
+				"Failed to convert ID to integer: "+err.Error())
 			return
 		}
 		svc := inventory.NewInventoryService()
@@ -26,7 +26,7 @@ func GetInventoryExistsByItemID(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			htresp.RespondWithError(w, http.StatusInternalServerError,
 				errors.WrapError(errors.ErrTypeService, err.Error()),
-				"Failed to get Inventory")
+				"Failed to get Inventory: "+err.Error())
 			return
 		}
 	} else {

@@ -10,6 +10,7 @@ import (
 	"mvrp/domain/service/inventory"
 	"mvrp/errors"
 	"mvrp/htresp"
+	"mvrp/util"
 	"net/http"
 	"strconv"
 
@@ -35,7 +36,7 @@ func GoodsIssueNoteContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get GoodsIssueNote")
+					"Failed to get GoodsIssueNote for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +59,7 @@ func ListGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list GoodsIssueNote")
+			"Failed to list GoodsIssueNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNote listed successfully")
@@ -71,7 +72,7 @@ func CreateGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -80,7 +81,7 @@ func CreateGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create GoodsIssueNote")
+			"Failed to create GoodsIssueNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "GoodsIssueNote created successfully")
@@ -116,16 +117,17 @@ func UpdateGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
+	util.Util.Json.PrintJson(data)
 	svc := inventory.NewInventoryService()
 	req := svc.NewUpdateGoodsIssueNoteRequest(r.Context(), *data)
 	resp, err := svc.UpdateGoodsIssueNote(req)
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update GoodsIssueNote")
+			"Failed to update GoodsIssueNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNote updated successfully")
@@ -148,7 +150,7 @@ func DeleteGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete GoodsIssueNote")
+			"Failed to delete GoodsIssueNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNote deleted successfully")
@@ -161,7 +163,7 @@ func SearchGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchGoodsIssueNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -170,7 +172,7 @@ func SearchGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search GoodsIssueNote")
+			"Failed to search GoodsIssueNote: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNote search successful")

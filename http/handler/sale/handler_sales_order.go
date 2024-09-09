@@ -35,7 +35,7 @@ func SalesOrderContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get SalesOrder")
+					"Failed to get SalesOrder for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list SalesOrder")
+			"Failed to list SalesOrder: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesOrder listed successfully")
@@ -71,7 +71,7 @@ func CreateSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -80,7 +80,7 @@ func CreateSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create SalesOrder")
+			"Failed to create SalesOrder: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "SalesOrder created successfully")
@@ -116,7 +116,7 @@ func UpdateSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -125,7 +125,7 @@ func UpdateSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update SalesOrder")
+			"Failed to update SalesOrder: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesOrder updated successfully")
@@ -148,7 +148,7 @@ func DeleteSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete SalesOrder")
+			"Failed to delete SalesOrder: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesOrder deleted successfully")
@@ -161,7 +161,7 @@ func SearchSalesOrder(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchSalesOrderDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -170,7 +170,7 @@ func SearchSalesOrder(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search SalesOrder")
+			"Failed to search SalesOrder: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesOrder search successful")

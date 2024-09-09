@@ -14,7 +14,7 @@ func ListEnum(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list Enum")
+			"Failed to list Enum: "+err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "Enum listed successfully")

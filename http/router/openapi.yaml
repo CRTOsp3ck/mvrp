@@ -1473,32 +1473,34 @@ components:
     BaseBaseDocument:
       properties:
         additional_discount_amount:
-          type: string
+          type: number
         additional_discount_rate_gen:
-          type: string
+          type: number
         created_at:
           format: date-time
           type: string
         custom_adjustment_amount:
-          type: string
+          type: number
         deleted_at:
+          format: date-time
           type: string
         discount_amount:
-          type: string
+          type: number
         discount_rate_gen:
-          type: string
+          type: number
         gross_amount:
-          type: string
+          type: number
         gross_amount_after_discount_gen:
-          type: string
+          type: number
         id:
           type: integer
         issue_date:
+          format: date-time
           type: string
         net_amount_gen:
-          type: string
+          type: number
         other_fees:
-          type: string
+          type: number
         payment_instructions:
           type: string
         payment_status:
@@ -1508,17 +1510,18 @@ components:
         remarks:
           type: string
         shipping_date:
+          format: date-time
           type: string
         shipping_fees:
-          type: string
+          type: number
         shipping_method:
           type: string
         shipping_terms:
           type: string
         tax_amount:
-          type: string
+          type: number
         tax_rate_gen:
-          type: string
+          type: number
         terms_and_conditions:
           type: string
         updated_at:
@@ -1533,11 +1536,12 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         discount_rate_gen:
-          type: string
+          type: number
         final_unit_price_gen:
-          type: string
+          type: number
         id:
           type: integer
         item_code:
@@ -1545,29 +1549,29 @@ components:
         item_description:
           type: string
         item_id:
-          type: string
+          type: integer
         item_name:
           type: string
         quantity:
-          type: string
+          type: number
         tax_rate_gen:
-          type: string
+          type: number
         total_discount_amount_gen:
-          type: string
+          type: number
         total_sale_price_gen:
-          type: string
+          type: number
         total_shipping_fees_gen:
-          type: string
+          type: number
         total_tax_amount_gen:
-          type: string
+          type: number
         unit_discount_amount:
-          type: string
+          type: number
         unit_price:
-          type: string
+          type: number
         unit_shipping_fees:
-          type: string
+          type: number
         unit_tax_amount:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2294,6 +2298,7 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         description:
           type: string
@@ -2331,19 +2336,21 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         gin_number:
           type: string
         id:
           type: integer
         issue_date:
+          format: date-time
           type: string
         notes:
           type: string
         receipient_id:
-          type: string
+          type: integer
         total_value:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2354,19 +2361,20 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         gin_id:
-          type: string
+          type: integer
         id:
           type: integer
         inventory_id:
-          type: string
+          type: integer
         quantity:
-          type: string
+          type: number
         total_value_gen:
-          type: string
+          type: number
         unit_value:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2374,38 +2382,39 @@ components:
     InventoryInventory:
       properties:
         cost_per_unit:
-          type: string
+          type: number
         created_at:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         inventory_number:
           type: string
         is_discontinued:
-          type: string
+          type: boolean
         item_id:
-          type: string
+          type: integer
         price_per_unit:
-          type: string
+          type: number
         quantity_available:
-          type: string
+          type: number
         quantity_reserved:
-          type: string
+          type: number
         quantity_returned:
-          type: string
+          type: number
         quantity_total_gen:
-          type: string
+          type: number
         remarks:
           type: string
         reorder_level:
-          type: string
+          type: number
         reorder_quantity:
-          type: string
+          type: number
         total_value_on_hand_gen:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2418,16 +2427,18 @@ components:
         created_by:
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         inventory_id:
-          type: string
+          type: integer
         quantity:
-          type: string
+          type: number
         reason:
           type: string
         transaction_date:
+          format: date-time
           type: string
         transaction_type:
           type: string
@@ -2441,15 +2452,17 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         rma_date:
+          format: date-time
           type: string
         rma_number:
           type: string
         total_value:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2460,17 +2473,18 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         inventory_id:
-          type: string
+          type: integer
         quantity:
-          type: string
+          type: number
         rma_id:
-          type: string
+          type: integer
         unit_value:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2478,24 +2492,26 @@ components:
     InventoryStockCountSheet:
       properties:
         count_date:
+          format: date-time
           type: string
         created_at:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         discrepancies:
-          type: string
+          type: number
         id:
           type: integer
         inventory_id:
-          type: string
+          type: integer
         notes:
           type: string
         scs_number:
           type: string
         total_quantity:
-          type: string
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2510,13 +2526,14 @@ components:
         credit_note_number:
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         reason_for_issuance:
           type: string
         reference_invoice_id:
-          type: string
+          type: integer
         updated_at:
           format: date-time
           type: string
@@ -2524,7 +2541,7 @@ components:
     InvoiceDebitNote:
       properties:
         additional_charges:
-          type: string
+          type: number
         base_document_id:
           type: integer
         created_at:
@@ -2533,13 +2550,14 @@ components:
         debit_note_number:
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         reason_for_issuance:
           type: string
         reference_invoice_id:
-          type: string
+          type: integer
         updated_at:
           format: date-time
           type: string
@@ -2552,20 +2570,22 @@ components:
           format: date-time
           type: string
         customer_id:
-          type: string
+          type: integer
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         invoice_number:
           type: string
         payment_due_date:
+          format: date-time
           type: string
         updated_at:
           format: date-time
           type: string
         vendor_id:
-          type: string
+          type: integer
       type: object
     InvoiceInvoiceItem:
       properties:
@@ -2575,6 +2595,7 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
@@ -2592,17 +2613,19 @@ components:
           format: date-time
           type: string
         date_of_payment:
+          format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
         invoice_id:
           type: integer
         payee_id:
-          type: string
+          type: integer
         payer_id:
-          type: string
+          type: integer
         payment_receipt_number:
           type: string
         updated_at:
@@ -2617,6 +2640,7 @@ components:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         id:
           type: integer
@@ -2635,11 +2659,12 @@ components:
         code:
           type: string
         cost:
-          type: string
+          type: number
         created_at:
           format: date-time
           type: string
         deleted_at:
+          format: date-time
           type: string
         description:
           type: string
@@ -2650,7 +2675,7 @@ components:
         origin:
           type: string
         price:
-          type: string
+          type: number
         sku:
           type: string
         status:
@@ -2668,8 +2693,9 @@ components:
         bill_to_information:
           type: string
         customer_id:
-          type: string
+          type: integer
         delivery_date:
+          format: date-time
           type: string
         delivery_note_number:
           type: string
@@ -2688,7 +2714,7 @@ components:
         shipping_personnel_information:
           type: string
         vendor_id:
-          type: string
+          type: integer
       type: object
     SaleDeliveryNoteItem:
       properties:
@@ -2704,15 +2730,15 @@ components:
         base_document_id:
           type: integer
         credit_note_id:
-          type: string
+          type: integer
         customer_id:
-          type: string
+          type: integer
         goods_return_note_number:
           type: string
         id:
           type: integer
         invoice_id:
-          type: string
+          type: integer
         issue_date:
           format: date-time
           type: string
@@ -2723,13 +2749,14 @@ components:
         receiving_location_information:
           type: string
         return_date:
+          format: date-time
           type: string
         return_reason:
           type: string
         rma_id:
-          type: string
+          type: integer
         sales_order_id:
-          type: string
+          type: integer
       type: object
     SaleGoodsReturnNoteItem:
       properties:
@@ -2742,16 +2769,16 @@ components:
         return_condition:
           type: string
         return_quantity:
-          type: string
+          type: number
         rma_item_id:
-          type: string
+          type: integer
       type: object
     SaleOrderConfirmation:
       properties:
         base_document_id:
           type: integer
         customer_id:
-          type: string
+          type: integer
         id:
           type: integer
         order_confirmation_number:
@@ -2775,12 +2802,13 @@ components:
         base_document_id:
           type: integer
         customer_id:
-          type: string
+          type: integer
         id:
           type: integer
         order_status:
           type: string
         payment_due_date:
+          format: date-time
           type: string
         sales_order_number:
           type: string
@@ -2791,7 +2819,7 @@ components:
         ship_to_information:
           type: string
         vendor_id:
-          type: string
+          type: integer
       type: object
     SaleSalesOrderItem:
       properties:
@@ -2807,7 +2835,7 @@ components:
         base_document_id:
           type: integer
         customer_id:
-          type: string
+          type: integer
         id:
           type: integer
         prepared_by:
@@ -2821,9 +2849,10 @@ components:
         ship_to_information:
           type: string
         valid_until_date:
+          format: date-time
           type: string
         vendor_id:
-          type: string
+          type: integer
       type: object
     SaleSalesQuotationItem:
       properties:

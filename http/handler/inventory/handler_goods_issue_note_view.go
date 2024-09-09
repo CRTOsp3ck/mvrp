@@ -35,7 +35,7 @@ func GoodsIssueNoteViewContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get GoodsIssueNoteView")
+					"Failed to get GoodsIssueNoteView for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list GoodsIssueNoteView")
+			"Failed to list GoodsIssueNoteView: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNoteView listed successfully")
@@ -84,7 +84,7 @@ func SearchGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchGoodsIssueNoteDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -93,7 +93,7 @@ func SearchGoodsIssueNoteView(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search GoodsIssueNoteView")
+			"Failed to search GoodsIssueNoteView: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "GoodsIssueNoteView search successful")

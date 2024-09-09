@@ -35,7 +35,7 @@ func InventoryTransactionContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get InventoryTransaction")
+					"Failed to get InventoryTransaction for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list InventoryTransaction")
+			"Failed to list InventoryTransaction: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryTransaction listed successfully")
@@ -71,7 +71,7 @@ func CreateInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -80,7 +80,7 @@ func CreateInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create InventoryTransaction")
+			"Failed to create InventoryTransaction: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "InventoryTransaction created successfully")
@@ -116,7 +116,7 @@ func UpdateInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -125,7 +125,7 @@ func UpdateInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update InventoryTransaction")
+			"Failed to update InventoryTransaction: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryTransaction updated successfully")
@@ -148,7 +148,7 @@ func DeleteInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete InventoryTransaction")
+			"Failed to delete InventoryTransaction: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryTransaction deleted successfully")
@@ -161,7 +161,7 @@ func SearchInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchInventoryTransactionDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -170,7 +170,7 @@ func SearchInventoryTransaction(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search InventoryTransaction")
+			"Failed to search InventoryTransaction: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryTransaction search successful")

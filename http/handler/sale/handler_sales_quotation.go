@@ -35,7 +35,7 @@ func SalesQuotationContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get SalesQuotation")
+					"Failed to get SalesQuotation for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list SalesQuotation")
+			"Failed to list SalesQuotation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesQuotation listed successfully")
@@ -71,7 +71,7 @@ func CreateSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -80,7 +80,7 @@ func CreateSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create SalesQuotation")
+			"Failed to create SalesQuotation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "SalesQuotation created successfully")
@@ -116,7 +116,7 @@ func UpdateSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -125,7 +125,7 @@ func UpdateSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update SalesQuotation")
+			"Failed to update SalesQuotation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesQuotation updated successfully")
@@ -148,7 +148,7 @@ func DeleteSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete SalesQuotation")
+			"Failed to delete SalesQuotation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesQuotation deleted successfully")
@@ -161,7 +161,7 @@ func SearchSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchSalesQuotationDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := sale.NewSaleService()
@@ -170,7 +170,7 @@ func SearchSalesQuotation(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search SalesQuotation")
+			"Failed to search SalesQuotation: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "SalesQuotation search successful")

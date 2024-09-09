@@ -35,7 +35,7 @@ func {{ .Name }}Context(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get {{ .Name }}")
+					"Failed to get {{ .Name }} for context: " + err.Error())
 				return
 			}
 		} else {
@@ -60,7 +60,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	{{- end }}
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := {{ $.Package }}.New{{ $.Package | ToPascalCase }}Service()
@@ -69,7 +69,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search {{ $.Name }}")
+			"Failed to search {{ $.Name }}: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "{{ $.Name }} search successful")
@@ -89,7 +89,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := {{ $.Package }}.New{{ $.Package | ToPascalCase }}Service()
@@ -98,7 +98,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to create {{ $.Name }}")
+			"Failed to create {{ $.Name }}: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusCreated, resp, "{{ $.Name }} created successfully")
@@ -116,7 +116,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusBadRequest,
 			errors.WrapError(errors.ErrTypeDecoding, err.Error()),
-			"Failed to decode request body")
+			"Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := {{ $.Package }}.New{{ $.Package | ToPascalCase }}Service()
@@ -125,7 +125,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to update {{ $.Name }}")
+			"Failed to update {{ $.Name }}: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "{{ $.Name }} updated successfully")
@@ -144,7 +144,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to delete {{ $.Name }}")
+			"Failed to delete {{ $.Name }}: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "{{ $.Name }} deleted successfully")
@@ -155,7 +155,7 @@ func {{ .Handler }}(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list {{ $.Name }}")
+			"Failed to list {{ $.Name }}: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "{{ $.Name }} listed successfully")

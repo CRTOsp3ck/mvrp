@@ -35,7 +35,7 @@ func InventoryViewContext(next http.Handler) http.Handler {
 			if err != nil {
 				htresp.RespondWithError(w, http.StatusInternalServerError,
 					errors.WrapError(errors.ErrTypeService, err.Error()),
-					"Failed to get InventoryView")
+					"Failed to get InventoryView for context: " + err.Error())
 				return
 			}
 		} else {
@@ -58,7 +58,7 @@ func ListInventoryView(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to list InventoryView")
+			"Failed to list InventoryView: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryView listed successfully")
@@ -84,7 +84,7 @@ func SearchInventoryView(w http.ResponseWriter, r *http.Request) {
 	var dto *dto.SearchInventoryDTO
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
-		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body")
+		htresp.RespondWithError(w, http.StatusBadRequest, err, "Failed to decode request body: " + err.Error())
 		return
 	}
 	svc := inventory.NewInventoryService()
@@ -93,7 +93,7 @@ func SearchInventoryView(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		htresp.RespondWithError(w, http.StatusInternalServerError,
 			errors.WrapError(errors.ErrTypeService, err.Error()),
-			"Failed to search InventoryView")
+			"Failed to search InventoryView: " + err.Error())
 		return
 	}
 	htresp.RespondWithJSON(w, http.StatusOK, resp, "InventoryView search successful")
