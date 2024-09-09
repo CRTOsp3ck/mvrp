@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
+	entityService "mvrp/domain/service/entity"
 	inventoryService "mvrp/domain/service/inventory"
 	itemService "mvrp/domain/service/item"
 	"time"
@@ -26,6 +27,14 @@ func SeedReturnMerchandiseAuthorization() error {
 		return err
 	}
 	invs := lsInvResp.Payload
+
+	// get all entities
+	entSvc := entityService.NewEntityService()
+	lsEntReq := entSvc.NewListEntityRequest(context.Background())
+	lsEntResp, err := entSvc.ListEntity(lsEntReq)
+	if err != nil {
+		return err
+	}
 
 	// create return merchandise authorization for each inventory
 	for _, inv := range invs {
@@ -51,8 +60,10 @@ func SeedReturnMerchandiseAuthorization() error {
 		// create return merchandise authorization
 		crRmaDto := dto.CreateReturnMerchandiseAuthorizationDTO{
 			ReturnMerchandiseAuthorization: inventory.ReturnMerchandiseAuthorization{
-				RmaDate: null.TimeFrom(time.Now()),
-				Notes:   null.StringFrom(gofakeit.Sentence(10)),
+				RmaDate:              null.TimeFrom(time.Now()),
+				Notes:                null.StringFrom(gofakeit.Sentence(10)),
+				ReceivedByEmployeeID: null.IntFrom(getRandomEmployeeData(lsEntResp.Payload).ID),
+				ReturnedByCustomerID: null.IntFrom(getRandomCustomerData(lsEntResp.Payload).ID),
 			},
 			Items: []dto.CreateReturnMerchandiseAuthorizationItemDTO{crRmaItemDto},
 		}

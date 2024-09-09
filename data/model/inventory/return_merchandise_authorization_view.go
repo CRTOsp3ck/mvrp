@@ -25,103 +25,117 @@ import (
 
 // ReturnMerchandiseAuthorizationView is an object representing the database table.
 type ReturnMerchandiseAuthorizationView struct {
-	ID             null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	RmaNumber      null.String       `boil:"rma_number" json:"rma_number,omitempty" toml:"rma_number" yaml:"rma_number,omitempty"`
-	RmaDate        null.Time         `boil:"rma_date" json:"rma_date,omitempty" toml:"rma_date" yaml:"rma_date,omitempty"`
-	TotalValueGen  types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
-	ReceivedBy     null.Int          `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
-	Notes          null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
-	CreatedAt      null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt      null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt      null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	ReceivedByInfo null.JSON         `boil:"received_by_info" json:"received_by_info,omitempty" toml:"received_by_info" yaml:"received_by_info,omitempty"`
-	Items          null.JSON         `boil:"items" json:"items,omitempty" toml:"items" yaml:"items,omitempty"`
+	ID                   null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	RmaNumber            null.String       `boil:"rma_number" json:"rma_number,omitempty" toml:"rma_number" yaml:"rma_number,omitempty"`
+	RmaDate              null.Time         `boil:"rma_date" json:"rma_date,omitempty" toml:"rma_date" yaml:"rma_date,omitempty"`
+	TotalValueGen        types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
+	ReceivedByEmployeeID null.Int          `boil:"received_by_employee_id" json:"received_by_employee_id,omitempty" toml:"received_by_employee_id" yaml:"received_by_employee_id,omitempty"`
+	ReturnedByCustomerID null.Int          `boil:"returned_by_customer_id" json:"returned_by_customer_id,omitempty" toml:"returned_by_customer_id" yaml:"returned_by_customer_id,omitempty"`
+	Notes                null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
+	CreatedAt            null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt            null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt            null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ReturnedByInfo       null.JSON         `boil:"returned_by_info" json:"returned_by_info,omitempty" toml:"returned_by_info" yaml:"returned_by_info,omitempty"`
+	ReceivedByInfo       null.JSON         `boil:"received_by_info" json:"received_by_info,omitempty" toml:"received_by_info" yaml:"received_by_info,omitempty"`
+	Items                null.JSON         `boil:"items" json:"items,omitempty" toml:"items" yaml:"items,omitempty"`
 }
 
 var ReturnMerchandiseAuthorizationViewColumns = struct {
-	ID             string
-	RmaNumber      string
-	RmaDate        string
-	TotalValueGen  string
-	ReceivedBy     string
-	Notes          string
-	CreatedAt      string
-	UpdatedAt      string
-	DeletedAt      string
-	ReceivedByInfo string
-	Items          string
+	ID                   string
+	RmaNumber            string
+	RmaDate              string
+	TotalValueGen        string
+	ReceivedByEmployeeID string
+	ReturnedByCustomerID string
+	Notes                string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
+	ReturnedByInfo       string
+	ReceivedByInfo       string
+	Items                string
 }{
-	ID:             "id",
-	RmaNumber:      "rma_number",
-	RmaDate:        "rma_date",
-	TotalValueGen:  "total_value_gen",
-	ReceivedBy:     "received_by",
-	Notes:          "notes",
-	CreatedAt:      "created_at",
-	UpdatedAt:      "updated_at",
-	DeletedAt:      "deleted_at",
-	ReceivedByInfo: "received_by_info",
-	Items:          "items",
+	ID:                   "id",
+	RmaNumber:            "rma_number",
+	RmaDate:              "rma_date",
+	TotalValueGen:        "total_value_gen",
+	ReceivedByEmployeeID: "received_by_employee_id",
+	ReturnedByCustomerID: "returned_by_customer_id",
+	Notes:                "notes",
+	CreatedAt:            "created_at",
+	UpdatedAt:            "updated_at",
+	DeletedAt:            "deleted_at",
+	ReturnedByInfo:       "returned_by_info",
+	ReceivedByInfo:       "received_by_info",
+	Items:                "items",
 }
 
 var ReturnMerchandiseAuthorizationViewTableColumns = struct {
-	ID             string
-	RmaNumber      string
-	RmaDate        string
-	TotalValueGen  string
-	ReceivedBy     string
-	Notes          string
-	CreatedAt      string
-	UpdatedAt      string
-	DeletedAt      string
-	ReceivedByInfo string
-	Items          string
+	ID                   string
+	RmaNumber            string
+	RmaDate              string
+	TotalValueGen        string
+	ReceivedByEmployeeID string
+	ReturnedByCustomerID string
+	Notes                string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
+	ReturnedByInfo       string
+	ReceivedByInfo       string
+	Items                string
 }{
-	ID:             "return_merchandise_authorization_view.id",
-	RmaNumber:      "return_merchandise_authorization_view.rma_number",
-	RmaDate:        "return_merchandise_authorization_view.rma_date",
-	TotalValueGen:  "return_merchandise_authorization_view.total_value_gen",
-	ReceivedBy:     "return_merchandise_authorization_view.received_by",
-	Notes:          "return_merchandise_authorization_view.notes",
-	CreatedAt:      "return_merchandise_authorization_view.created_at",
-	UpdatedAt:      "return_merchandise_authorization_view.updated_at",
-	DeletedAt:      "return_merchandise_authorization_view.deleted_at",
-	ReceivedByInfo: "return_merchandise_authorization_view.received_by_info",
-	Items:          "return_merchandise_authorization_view.items",
+	ID:                   "return_merchandise_authorization_view.id",
+	RmaNumber:            "return_merchandise_authorization_view.rma_number",
+	RmaDate:              "return_merchandise_authorization_view.rma_date",
+	TotalValueGen:        "return_merchandise_authorization_view.total_value_gen",
+	ReceivedByEmployeeID: "return_merchandise_authorization_view.received_by_employee_id",
+	ReturnedByCustomerID: "return_merchandise_authorization_view.returned_by_customer_id",
+	Notes:                "return_merchandise_authorization_view.notes",
+	CreatedAt:            "return_merchandise_authorization_view.created_at",
+	UpdatedAt:            "return_merchandise_authorization_view.updated_at",
+	DeletedAt:            "return_merchandise_authorization_view.deleted_at",
+	ReturnedByInfo:       "return_merchandise_authorization_view.returned_by_info",
+	ReceivedByInfo:       "return_merchandise_authorization_view.received_by_info",
+	Items:                "return_merchandise_authorization_view.items",
 }
 
 // Generated where
 
 var ReturnMerchandiseAuthorizationViewWhere = struct {
-	ID             whereHelpernull_Int
-	RmaNumber      whereHelpernull_String
-	RmaDate        whereHelpernull_Time
-	TotalValueGen  whereHelpertypes_NullDecimal
-	ReceivedBy     whereHelpernull_Int
-	Notes          whereHelpernull_String
-	CreatedAt      whereHelpernull_Time
-	UpdatedAt      whereHelpernull_Time
-	DeletedAt      whereHelpernull_Time
-	ReceivedByInfo whereHelpernull_JSON
-	Items          whereHelpernull_JSON
+	ID                   whereHelpernull_Int
+	RmaNumber            whereHelpernull_String
+	RmaDate              whereHelpernull_Time
+	TotalValueGen        whereHelpertypes_NullDecimal
+	ReceivedByEmployeeID whereHelpernull_Int
+	ReturnedByCustomerID whereHelpernull_Int
+	Notes                whereHelpernull_String
+	CreatedAt            whereHelpernull_Time
+	UpdatedAt            whereHelpernull_Time
+	DeletedAt            whereHelpernull_Time
+	ReturnedByInfo       whereHelpernull_JSON
+	ReceivedByInfo       whereHelpernull_JSON
+	Items                whereHelpernull_JSON
 }{
-	ID:             whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_view\".\"id\""},
-	RmaNumber:      whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization_view\".\"rma_number\""},
-	RmaDate:        whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"rma_date\""},
-	TotalValueGen:  whereHelpertypes_NullDecimal{field: "\"inventory\".\"return_merchandise_authorization_view\".\"total_value_gen\""},
-	ReceivedBy:     whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_view\".\"received_by\""},
-	Notes:          whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization_view\".\"notes\""},
-	CreatedAt:      whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"created_at\""},
-	UpdatedAt:      whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"updated_at\""},
-	DeletedAt:      whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"deleted_at\""},
-	ReceivedByInfo: whereHelpernull_JSON{field: "\"inventory\".\"return_merchandise_authorization_view\".\"received_by_info\""},
-	Items:          whereHelpernull_JSON{field: "\"inventory\".\"return_merchandise_authorization_view\".\"items\""},
+	ID:                   whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_view\".\"id\""},
+	RmaNumber:            whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization_view\".\"rma_number\""},
+	RmaDate:              whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"rma_date\""},
+	TotalValueGen:        whereHelpertypes_NullDecimal{field: "\"inventory\".\"return_merchandise_authorization_view\".\"total_value_gen\""},
+	ReceivedByEmployeeID: whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_view\".\"received_by_employee_id\""},
+	ReturnedByCustomerID: whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_view\".\"returned_by_customer_id\""},
+	Notes:                whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization_view\".\"notes\""},
+	CreatedAt:            whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"created_at\""},
+	UpdatedAt:            whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"updated_at\""},
+	DeletedAt:            whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_view\".\"deleted_at\""},
+	ReturnedByInfo:       whereHelpernull_JSON{field: "\"inventory\".\"return_merchandise_authorization_view\".\"returned_by_info\""},
+	ReceivedByInfo:       whereHelpernull_JSON{field: "\"inventory\".\"return_merchandise_authorization_view\".\"received_by_info\""},
+	Items:                whereHelpernull_JSON{field: "\"inventory\".\"return_merchandise_authorization_view\".\"items\""},
 }
 
 var (
-	returnMerchandiseAuthorizationViewAllColumns            = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by", "notes", "created_at", "updated_at", "deleted_at", "received_by_info", "items"}
+	returnMerchandiseAuthorizationViewAllColumns            = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by_employee_id", "returned_by_customer_id", "notes", "created_at", "updated_at", "deleted_at", "returned_by_info", "received_by_info", "items"}
 	returnMerchandiseAuthorizationViewColumnsWithoutDefault = []string{}
-	returnMerchandiseAuthorizationViewColumnsWithDefault    = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by", "notes", "created_at", "updated_at", "deleted_at", "received_by_info", "items"}
+	returnMerchandiseAuthorizationViewColumnsWithDefault    = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by_employee_id", "returned_by_customer_id", "notes", "created_at", "updated_at", "deleted_at", "returned_by_info", "received_by_info", "items"}
 	returnMerchandiseAuthorizationViewPrimaryKeyColumns     = []string{}
 	returnMerchandiseAuthorizationViewGeneratedColumns      = []string{}
 )

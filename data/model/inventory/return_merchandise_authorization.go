@@ -25,86 +25,93 @@ import (
 
 // ReturnMerchandiseAuthorization is an object representing the database table.
 type ReturnMerchandiseAuthorization struct {
-	ID            int           `boil:"id" json:"id" toml:"id" yaml:"id"`
-	RmaNumber     string        `boil:"rma_number" json:"rma_number" toml:"rma_number" yaml:"rma_number"`
-	RmaDate       null.Time     `boil:"rma_date" json:"rma_date,omitempty" toml:"rma_date" yaml:"rma_date,omitempty"`
-	TotalValueGen types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
-	ReceivedBy    null.Int      `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
-	Notes         null.String   `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
-	CreatedAt     time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt     time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt     null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                   int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	RmaNumber            string        `boil:"rma_number" json:"rma_number" toml:"rma_number" yaml:"rma_number"`
+	RmaDate              null.Time     `boil:"rma_date" json:"rma_date,omitempty" toml:"rma_date" yaml:"rma_date,omitempty"`
+	TotalValueGen        types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	ReceivedByEmployeeID null.Int      `boil:"received_by_employee_id" json:"received_by_employee_id,omitempty" toml:"received_by_employee_id" yaml:"received_by_employee_id,omitempty"`
+	ReturnedByCustomerID null.Int      `boil:"returned_by_customer_id" json:"returned_by_customer_id,omitempty" toml:"returned_by_customer_id" yaml:"returned_by_customer_id,omitempty"`
+	Notes                null.String   `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
+	CreatedAt            time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt            time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt            null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *returnMerchandiseAuthorizationR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L returnMerchandiseAuthorizationL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var ReturnMerchandiseAuthorizationColumns = struct {
-	ID            string
-	RmaNumber     string
-	RmaDate       string
-	TotalValueGen string
-	ReceivedBy    string
-	Notes         string
-	CreatedAt     string
-	UpdatedAt     string
-	DeletedAt     string
+	ID                   string
+	RmaNumber            string
+	RmaDate              string
+	TotalValueGen        string
+	ReceivedByEmployeeID string
+	ReturnedByCustomerID string
+	Notes                string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 }{
-	ID:            "id",
-	RmaNumber:     "rma_number",
-	RmaDate:       "rma_date",
-	TotalValueGen: "total_value_gen",
-	ReceivedBy:    "received_by",
-	Notes:         "notes",
-	CreatedAt:     "created_at",
-	UpdatedAt:     "updated_at",
-	DeletedAt:     "deleted_at",
+	ID:                   "id",
+	RmaNumber:            "rma_number",
+	RmaDate:              "rma_date",
+	TotalValueGen:        "total_value_gen",
+	ReceivedByEmployeeID: "received_by_employee_id",
+	ReturnedByCustomerID: "returned_by_customer_id",
+	Notes:                "notes",
+	CreatedAt:            "created_at",
+	UpdatedAt:            "updated_at",
+	DeletedAt:            "deleted_at",
 }
 
 var ReturnMerchandiseAuthorizationTableColumns = struct {
-	ID            string
-	RmaNumber     string
-	RmaDate       string
-	TotalValueGen string
-	ReceivedBy    string
-	Notes         string
-	CreatedAt     string
-	UpdatedAt     string
-	DeletedAt     string
+	ID                   string
+	RmaNumber            string
+	RmaDate              string
+	TotalValueGen        string
+	ReceivedByEmployeeID string
+	ReturnedByCustomerID string
+	Notes                string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 }{
-	ID:            "return_merchandise_authorization.id",
-	RmaNumber:     "return_merchandise_authorization.rma_number",
-	RmaDate:       "return_merchandise_authorization.rma_date",
-	TotalValueGen: "return_merchandise_authorization.total_value_gen",
-	ReceivedBy:    "return_merchandise_authorization.received_by",
-	Notes:         "return_merchandise_authorization.notes",
-	CreatedAt:     "return_merchandise_authorization.created_at",
-	UpdatedAt:     "return_merchandise_authorization.updated_at",
-	DeletedAt:     "return_merchandise_authorization.deleted_at",
+	ID:                   "return_merchandise_authorization.id",
+	RmaNumber:            "return_merchandise_authorization.rma_number",
+	RmaDate:              "return_merchandise_authorization.rma_date",
+	TotalValueGen:        "return_merchandise_authorization.total_value_gen",
+	ReceivedByEmployeeID: "return_merchandise_authorization.received_by_employee_id",
+	ReturnedByCustomerID: "return_merchandise_authorization.returned_by_customer_id",
+	Notes:                "return_merchandise_authorization.notes",
+	CreatedAt:            "return_merchandise_authorization.created_at",
+	UpdatedAt:            "return_merchandise_authorization.updated_at",
+	DeletedAt:            "return_merchandise_authorization.deleted_at",
 }
 
 // Generated where
 
 var ReturnMerchandiseAuthorizationWhere = struct {
-	ID            whereHelperint
-	RmaNumber     whereHelperstring
-	RmaDate       whereHelpernull_Time
-	TotalValueGen whereHelpertypes_Decimal
-	ReceivedBy    whereHelpernull_Int
-	Notes         whereHelpernull_String
-	CreatedAt     whereHelpertime_Time
-	UpdatedAt     whereHelpertime_Time
-	DeletedAt     whereHelpernull_Time
+	ID                   whereHelperint
+	RmaNumber            whereHelperstring
+	RmaDate              whereHelpernull_Time
+	TotalValueGen        whereHelpertypes_Decimal
+	ReceivedByEmployeeID whereHelpernull_Int
+	ReturnedByCustomerID whereHelpernull_Int
+	Notes                whereHelpernull_String
+	CreatedAt            whereHelpertime_Time
+	UpdatedAt            whereHelpertime_Time
+	DeletedAt            whereHelpernull_Time
 }{
-	ID:            whereHelperint{field: "\"inventory\".\"return_merchandise_authorization\".\"id\""},
-	RmaNumber:     whereHelperstring{field: "\"inventory\".\"return_merchandise_authorization\".\"rma_number\""},
-	RmaDate:       whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"rma_date\""},
-	TotalValueGen: whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization\".\"total_value_gen\""},
-	ReceivedBy:    whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization\".\"received_by\""},
-	Notes:         whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization\".\"notes\""},
-	CreatedAt:     whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"created_at\""},
-	UpdatedAt:     whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"updated_at\""},
-	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"deleted_at\""},
+	ID:                   whereHelperint{field: "\"inventory\".\"return_merchandise_authorization\".\"id\""},
+	RmaNumber:            whereHelperstring{field: "\"inventory\".\"return_merchandise_authorization\".\"rma_number\""},
+	RmaDate:              whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"rma_date\""},
+	TotalValueGen:        whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization\".\"total_value_gen\""},
+	ReceivedByEmployeeID: whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization\".\"received_by_employee_id\""},
+	ReturnedByCustomerID: whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization\".\"returned_by_customer_id\""},
+	Notes:                whereHelpernull_String{field: "\"inventory\".\"return_merchandise_authorization\".\"notes\""},
+	CreatedAt:            whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"created_at\""},
+	UpdatedAt:            whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"updated_at\""},
+	DeletedAt:            whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization\".\"deleted_at\""},
 }
 
 // ReturnMerchandiseAuthorizationRels is where relationship names are stored.
@@ -135,9 +142,9 @@ func (r *returnMerchandiseAuthorizationR) GetRmaReturnMerchandiseAuthorizationIt
 type returnMerchandiseAuthorizationL struct{}
 
 var (
-	returnMerchandiseAuthorizationAllColumns            = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by", "notes", "created_at", "updated_at", "deleted_at"}
+	returnMerchandiseAuthorizationAllColumns            = []string{"id", "rma_number", "rma_date", "total_value_gen", "received_by_employee_id", "returned_by_customer_id", "notes", "created_at", "updated_at", "deleted_at"}
 	returnMerchandiseAuthorizationColumnsWithoutDefault = []string{"id", "rma_number", "total_value_gen", "created_at", "updated_at"}
-	returnMerchandiseAuthorizationColumnsWithDefault    = []string{"rma_date", "received_by", "notes", "deleted_at"}
+	returnMerchandiseAuthorizationColumnsWithDefault    = []string{"rma_date", "received_by_employee_id", "returned_by_customer_id", "notes", "deleted_at"}
 	returnMerchandiseAuthorizationPrimaryKeyColumns     = []string{"id"}
 	returnMerchandiseAuthorizationGeneratedColumns      = []string{}
 )

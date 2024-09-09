@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
+	entityService "mvrp/domain/service/entity"
 	inventoryService "mvrp/domain/service/inventory"
 	itemService "mvrp/domain/service/item"
 	"time"
@@ -26,6 +27,14 @@ func SeedGoodsIssueNote() error {
 		return err
 	}
 	invs := lsInvResp.Payload
+
+	// get all entities
+	entSvc := entityService.NewEntityService()
+	lsEntReq := entSvc.NewListEntityRequest(context.Background())
+	lsEntResp, err := entSvc.ListEntity(lsEntReq)
+	if err != nil {
+		return err
+	}
 
 	// create goods issue note for each inventory
 	for _, inv := range invs {
@@ -51,8 +60,9 @@ func SeedGoodsIssueNote() error {
 		// create goods issue note
 		crGinDto := dto.CreateGoodsIssueNoteDTO{
 			GoodsIssueNote: inventory.GoodsIssueNote{
-				IssueDate: null.TimeFrom(time.Now()),
-				Notes:     null.StringFrom(gofakeit.Sentence(10)),
+				IssueDate:    null.TimeFrom(time.Now()),
+				Notes:        null.StringFrom(gofakeit.Sentence(10)),
+				ReceipientID: null.IntFrom(getRandomCustomerData(lsEntResp.Payload).ID),
 			},
 			Items: []dto.CreateGoodsIssueNoteItemDTO{crGinItemDto},
 		}

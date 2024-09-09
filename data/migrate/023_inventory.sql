@@ -123,7 +123,8 @@ CREATE TABLE inventory.return_merchandise_authorization (
     rma_number VARCHAR(50) UNIQUE NOT NULL,
     rma_date DATE DEFAULT CURRENT_DATE,
     total_value_gen NUMERIC(15, 2) NOT NULL,
-    received_by INT REFERENCES entity.entity(id),
+    received_by_employee_id INT REFERENCES entity.entity(id),
+    returned_by_customer_id INT REFERENCES entity.entity(id),
     notes TEXT,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
@@ -202,7 +203,12 @@ SELECT
     (
         SELECT row_to_json(e)
         FROM entity.entity e
-        WHERE e.id = rma.received_by
+        WHERE e.id = rma.returned_by_customer_id
+    ) AS returned_by_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = rma.received_by_employee_id
     ) AS received_by_info,
     (
         SELECT json_agg(row_to_json(rma_item))

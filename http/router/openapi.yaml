@@ -2496,7 +2496,7 @@ components:
           type: integer
         notes:
           type: string
-        received_by:
+        received_by_employee_id:
           type: integer
         rma_date:
           format: date-time
