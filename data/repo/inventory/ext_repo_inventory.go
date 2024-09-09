@@ -20,12 +20,6 @@ func (r *InventoryRepository) GetInventoryExistsByItemID(ctx context.Context, ex
 	).Exists(ctx, exec)
 }
 
-func (r *InventoryRepository) GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(ctx context.Context, exec boil.ContextExecutor, id int) (inventory.ReturnMerchandiseAuthorizationItemSlice, error) {
-	return inventory.ReturnMerchandiseAuthorizationItems(
-		qm.Where("rma_id=?", id),
-	).All(ctx, exec)
-}
-
 func (r *InventoryRepository) ListInventoriesByItemType(ctx context.Context, exec boil.ContextExecutor, itemType string) (inventory.InventorySlice, error) {
 	return inventory.Inventories(
 		qm.InnerJoin("item.item ON inventory.inventory.item_id = item.item.id"),

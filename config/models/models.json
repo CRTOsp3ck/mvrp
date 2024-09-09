@@ -26,7 +26,8 @@
             ],
             "views": [
                 { "name": "GoodsIssueNoteView", "plural_name": "GoodsIssueNoteViews" },
-                { "name": "InventoryView", "plural_name": "InventoryViews" }
+                { "name": "InventoryView", "plural_name": "InventoryViews" },
+                { "name": "ReturnMerchandiseAuthorizationView", "plural_name": "ReturnMerchandiseAuthorizationViews" }
             ]
         },
         {

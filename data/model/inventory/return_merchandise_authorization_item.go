@@ -25,79 +25,86 @@ import (
 
 // ReturnMerchandiseAuthorizationItem is an object representing the database table.
 type ReturnMerchandiseAuthorizationItem struct {
-	ID          int           `boil:"id" json:"id" toml:"id" yaml:"id"`
-	RmaID       null.Int      `boil:"rma_id" json:"rma_id,omitempty" toml:"rma_id" yaml:"rma_id,omitempty"`
-	InventoryID null.Int      `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
-	Quantity    types.Decimal `boil:"quantity" json:"quantity" toml:"quantity" yaml:"quantity"`
-	UnitValue   types.Decimal `boil:"unit_value" json:"unit_value" toml:"unit_value" yaml:"unit_value"`
-	CreatedAt   time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt   time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt   null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID            int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	RmaID         null.Int      `boil:"rma_id" json:"rma_id,omitempty" toml:"rma_id" yaml:"rma_id,omitempty"`
+	InventoryID   null.Int      `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
+	Quantity      types.Decimal `boil:"quantity" json:"quantity" toml:"quantity" yaml:"quantity"`
+	UnitValue     types.Decimal `boil:"unit_value" json:"unit_value" toml:"unit_value" yaml:"unit_value"`
+	TotalValueGen types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	CreatedAt     time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt     time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt     null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *returnMerchandiseAuthorizationItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L returnMerchandiseAuthorizationItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var ReturnMerchandiseAuthorizationItemColumns = struct {
-	ID          string
-	RmaID       string
-	InventoryID string
-	Quantity    string
-	UnitValue   string
-	CreatedAt   string
-	UpdatedAt   string
-	DeletedAt   string
+	ID            string
+	RmaID         string
+	InventoryID   string
+	Quantity      string
+	UnitValue     string
+	TotalValueGen string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:          "id",
-	RmaID:       "rma_id",
-	InventoryID: "inventory_id",
-	Quantity:    "quantity",
-	UnitValue:   "unit_value",
-	CreatedAt:   "created_at",
-	UpdatedAt:   "updated_at",
-	DeletedAt:   "deleted_at",
+	ID:            "id",
+	RmaID:         "rma_id",
+	InventoryID:   "inventory_id",
+	Quantity:      "quantity",
+	UnitValue:     "unit_value",
+	TotalValueGen: "total_value_gen",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
+	DeletedAt:     "deleted_at",
 }
 
 var ReturnMerchandiseAuthorizationItemTableColumns = struct {
-	ID          string
-	RmaID       string
-	InventoryID string
-	Quantity    string
-	UnitValue   string
-	CreatedAt   string
-	UpdatedAt   string
-	DeletedAt   string
+	ID            string
+	RmaID         string
+	InventoryID   string
+	Quantity      string
+	UnitValue     string
+	TotalValueGen string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:          "return_merchandise_authorization_item.id",
-	RmaID:       "return_merchandise_authorization_item.rma_id",
-	InventoryID: "return_merchandise_authorization_item.inventory_id",
-	Quantity:    "return_merchandise_authorization_item.quantity",
-	UnitValue:   "return_merchandise_authorization_item.unit_value",
-	CreatedAt:   "return_merchandise_authorization_item.created_at",
-	UpdatedAt:   "return_merchandise_authorization_item.updated_at",
-	DeletedAt:   "return_merchandise_authorization_item.deleted_at",
+	ID:            "return_merchandise_authorization_item.id",
+	RmaID:         "return_merchandise_authorization_item.rma_id",
+	InventoryID:   "return_merchandise_authorization_item.inventory_id",
+	Quantity:      "return_merchandise_authorization_item.quantity",
+	UnitValue:     "return_merchandise_authorization_item.unit_value",
+	TotalValueGen: "return_merchandise_authorization_item.total_value_gen",
+	CreatedAt:     "return_merchandise_authorization_item.created_at",
+	UpdatedAt:     "return_merchandise_authorization_item.updated_at",
+	DeletedAt:     "return_merchandise_authorization_item.deleted_at",
 }
 
 // Generated where
 
 var ReturnMerchandiseAuthorizationItemWhere = struct {
-	ID          whereHelperint
-	RmaID       whereHelpernull_Int
-	InventoryID whereHelpernull_Int
-	Quantity    whereHelpertypes_Decimal
-	UnitValue   whereHelpertypes_Decimal
-	CreatedAt   whereHelpertime_Time
-	UpdatedAt   whereHelpertime_Time
-	DeletedAt   whereHelpernull_Time
+	ID            whereHelperint
+	RmaID         whereHelpernull_Int
+	InventoryID   whereHelpernull_Int
+	Quantity      whereHelpertypes_Decimal
+	UnitValue     whereHelpertypes_Decimal
+	TotalValueGen whereHelpertypes_Decimal
+	CreatedAt     whereHelpertime_Time
+	UpdatedAt     whereHelpertime_Time
+	DeletedAt     whereHelpernull_Time
 }{
-	ID:          whereHelperint{field: "\"inventory\".\"return_merchandise_authorization_item\".\"id\""},
-	RmaID:       whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_item\".\"rma_id\""},
-	InventoryID: whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_item\".\"inventory_id\""},
-	Quantity:    whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization_item\".\"quantity\""},
-	UnitValue:   whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization_item\".\"unit_value\""},
-	CreatedAt:   whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"created_at\""},
-	UpdatedAt:   whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"updated_at\""},
-	DeletedAt:   whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"deleted_at\""},
+	ID:            whereHelperint{field: "\"inventory\".\"return_merchandise_authorization_item\".\"id\""},
+	RmaID:         whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_item\".\"rma_id\""},
+	InventoryID:   whereHelpernull_Int{field: "\"inventory\".\"return_merchandise_authorization_item\".\"inventory_id\""},
+	Quantity:      whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization_item\".\"quantity\""},
+	UnitValue:     whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization_item\".\"unit_value\""},
+	TotalValueGen: whereHelpertypes_Decimal{field: "\"inventory\".\"return_merchandise_authorization_item\".\"total_value_gen\""},
+	CreatedAt:     whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"created_at\""},
+	UpdatedAt:     whereHelpertime_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"updated_at\""},
+	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"return_merchandise_authorization_item\".\"deleted_at\""},
 }
 
 // ReturnMerchandiseAuthorizationItemRels is where relationship names are stored.
@@ -138,8 +145,8 @@ func (r *returnMerchandiseAuthorizationItemR) GetRma() *ReturnMerchandiseAuthori
 type returnMerchandiseAuthorizationItemL struct{}
 
 var (
-	returnMerchandiseAuthorizationItemAllColumns            = []string{"id", "rma_id", "inventory_id", "quantity", "unit_value", "created_at", "updated_at", "deleted_at"}
-	returnMerchandiseAuthorizationItemColumnsWithoutDefault = []string{"id", "quantity", "unit_value", "created_at", "updated_at"}
+	returnMerchandiseAuthorizationItemAllColumns            = []string{"id", "rma_id", "inventory_id", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at", "deleted_at"}
+	returnMerchandiseAuthorizationItemColumnsWithoutDefault = []string{"id", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at"}
 	returnMerchandiseAuthorizationItemColumnsWithDefault    = []string{"rma_id", "inventory_id", "deleted_at"}
 	returnMerchandiseAuthorizationItemPrimaryKeyColumns     = []string{"id"}
 	returnMerchandiseAuthorizationItemGeneratedColumns      = []string{}

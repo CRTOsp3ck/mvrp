@@ -203,6 +203,10 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 	// create return merchandise authorization items
 	for _, item := range req.Payload.Items {
 		item.ReturnMerchandiseAuthorizationItem.RmaID = null.IntFrom(req.Payload.ReturnMerchandiseAuthorization.ID)
+		err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.CreateReturnMerchandiseAuthorizationItem(req.Ctx, tx, &item.ReturnMerchandiseAuthorizationItem)
 		if err != nil {
 			return nil, err
@@ -267,6 +271,7 @@ type UpdateReturnMerchandiseAuthorizationResponse struct {
 func (s *InventoryService) NewUpdateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *UpdateReturnMerchandiseAuthorizationResponse {
 	return &UpdateReturnMerchandiseAuthorizationResponse{Payload: payload}
 }
+
 func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateReturnMerchandiseAuthorizationRequest) (*UpdateReturnMerchandiseAuthorizationResponse, error) {
 	/*
 		1. Update ReturnMerchandiseAuthorization
@@ -357,6 +362,10 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			amountOffset.Sub(item.Quantity.Big, currRmaItem.Quantity.Big)
 
 			// update return merchandise authorization item
+			err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorizationItem(req.Ctx, tx, &item.ReturnMerchandiseAuthorizationItem)
 			if err != nil {
 				return nil, err
@@ -385,6 +394,10 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			}
 		} else {
 			// create return merchandise authorization item
+			err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.CreateReturnMerchandiseAuthorizationItem(req.Ctx, tx, &item.ReturnMerchandiseAuthorizationItem)
 			if err != nil {
 				return nil, err

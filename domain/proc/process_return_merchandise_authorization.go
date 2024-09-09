@@ -14,17 +14,33 @@ func ProcessReturnMerchandiseAuthorizationAmounts(rma *inventory.ReturnMerchandi
 	for _, rmaItem := range rmaItems {
 		quantity, ok := rmaItem.Quantity.Float64()
 		if !ok {
-			return errors.New("invalid quantity found while processing goods issue note amounts")
+			return errors.New("invalid quantity found while processing return merchandise authorization amounts")
 		}
 		unitValue, ok := rmaItem.UnitValue.Float64()
 		if !ok {
-			return errors.New("invalid unit value found while processing goods issue note amounts")
+			return errors.New("invalid unit value found while processing return merchandise authorization amounts")
 		}
 		totalValue += quantity * unitValue
 	}
 
 	// update goods issue note amounts
-	rma.TotalValue = types.NewDecimal(decimal.New(int64(totalValue*100), 2))
+	rma.TotalValueGen = types.NewDecimal(decimal.New(int64(totalValue*100), 2))
+
+	return nil
+}
+
+func ProcessReturnMerchandiseAuthorizationItemAmounts(rmaItem *inventory.ReturnMerchandiseAuthorizationItem) error {
+	quantity, ok := rmaItem.Quantity.Float64()
+	if !ok {
+		return errors.New("invalid quantity found while processing return merchandise authorization item amounts")
+	}
+	unitValue, ok := rmaItem.UnitValue.Float64()
+	if !ok {
+		return errors.New("invalid unit value found while processing return merchandise authorization item amounts")
+	}
+
+	// update goods issue note item total value
+	rmaItem.TotalValueGen = types.NewDecimal(decimal.New(int64(quantity*unitValue*100), 2))
 
 	return nil
 }

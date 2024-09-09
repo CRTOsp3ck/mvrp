@@ -153,6 +153,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/return_merchandise_authorization_view", func(r chi.Router) {
+				r.Get("/", inventory.ListReturnMerchandiseAuthorizationView)
+				r.Post("/search", inventory.SearchReturnMerchandiseAuthorizationView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(inventory.ReturnMerchandiseAuthorizationViewContext)
+					r.Get("/", inventory.GetReturnMerchandiseAuthorizationView)
+				})
+			})
+			
 			r.Route("/stock_count_sheet", func(r chi.Router) {
 				r.Get("/", inventory.ListStockCountSheet)
 				r.Post("/", inventory.CreateStockCountSheet)

@@ -122,7 +122,9 @@ CREATE TABLE inventory.return_merchandise_authorization (
     id INT PRIMARY KEY,
     rma_number VARCHAR(50) UNIQUE NOT NULL,
     rma_date DATE DEFAULT CURRENT_DATE,
-    total_value NUMERIC(15, 2) NOT NULL,
+    total_value_gen NUMERIC(15, 2) NOT NULL,
+    received_by INT REFERENCES entity.entity(id),
+    notes TEXT,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
     deleted_at TIMESTAMPTZ
@@ -134,6 +136,7 @@ CREATE TABLE inventory.return_merchandise_authorization_item (
     inventory_id INT REFERENCES inventory.inventory(id),
     quantity DECIMAL(20,5) NOT NULL,
     unit_value NUMERIC(15, 2) NOT NULL,
+    total_value_gen NUMERIC(15, 2) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
     deleted_at TIMESTAMPTZ
@@ -182,8 +185,36 @@ SELECT
 FROM
     inventory.goods_issue_note gin;
 
+CREATE VIEW inventory.return_merchandise_authorization_item_view AS
+SELECT
+    rma_item.*,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = rma_item.inventory_id
+    ) AS inventory
+FROM
+    inventory.return_merchandise_authorization_item rma_item;
+
+CREATE VIEW inventory.return_merchandise_authorization_view AS
+SELECT
+    rma.*,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = rma.received_by
+    ) AS received_by_info,
+    (
+        SELECT json_agg(row_to_json(rma_item))
+        FROM inventory.return_merchandise_authorization_item_view rma_item
+        WHERE rma_item.rma_id = rma.id
+    ) AS items
+FROM
+    inventory.return_merchandise_authorization rma;
 
 -- +migrate Down
+DROP VIEW IF EXISTS inventory.return_merchandise_authorization_view;
+DROP VIEW IF EXISTS inventory.return_merchandise_authorization_item_view;
 DROP VIEW IF EXISTS inventory.goods_issue_note_view;
 DROP VIEW IF EXISTS inventory.goods_issue_note_item_view;
 DROP VIEW IF EXISTS inventory.inventory_view;

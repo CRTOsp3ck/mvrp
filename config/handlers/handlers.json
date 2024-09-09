@@ -82,6 +82,14 @@
                     ] 
                 },
                 { 
+                    "name": "return_merchandise_authorization_view",
+                    "routes": [
+                        { "method": "Get", "path": "/return_merchandise_authorization_view", "handler": "ListReturnMerchandiseAuthorizationView", "type": "list" },
+                        { "method": "Get", "path": "/return_merchandise_authorization_view/{id}", "handler": "GetReturnMerchandiseAuthorizationView", "type": "get" },
+                        { "method": "Post", "path": "/return_merchandise_authorization_view/search", "handler": "SearchReturnMerchandiseAuthorizationView", "type": "search" }
+                    ] 
+                },
+                { 
                     "name": "stock_count_sheet",
                     "routes": [
                         { "method": "Get", "path": "/stock_count_sheet", "handler": "ListStockCountSheet", "type": "list" },
