@@ -84,7 +84,7 @@ CREATE TABLE inventory.goods_issue_note (
     gin_number VARCHAR(50) UNIQUE NOT NULL,
     receipient_id INT REFERENCES entity.entity(id),
     issue_date DATE DEFAULT CURRENT_DATE,
-    total_value NUMERIC(15, 2) NOT NULL,
+    total_value_gen NUMERIC(15, 2) NOT NULL,
     notes TEXT,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,

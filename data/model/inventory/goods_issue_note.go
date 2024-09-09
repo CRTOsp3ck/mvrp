@@ -25,62 +25,62 @@ import (
 
 // GoodsIssueNote is an object representing the database table.
 type GoodsIssueNote struct {
-	ID           int           `boil:"id" json:"id" toml:"id" yaml:"id"`
-	GinNumber    string        `boil:"gin_number" json:"gin_number" toml:"gin_number" yaml:"gin_number"`
-	ReceipientID null.Int      `boil:"receipient_id" json:"receipient_id,omitempty" toml:"receipient_id" yaml:"receipient_id,omitempty"`
-	IssueDate    null.Time     `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
-	TotalValue   types.Decimal `boil:"total_value" json:"total_value" toml:"total_value" yaml:"total_value"`
-	Notes        null.String   `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
-	CreatedAt    time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt    time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt    null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID            int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	GinNumber     string        `boil:"gin_number" json:"gin_number" toml:"gin_number" yaml:"gin_number"`
+	ReceipientID  null.Int      `boil:"receipient_id" json:"receipient_id,omitempty" toml:"receipient_id" yaml:"receipient_id,omitempty"`
+	IssueDate     null.Time     `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
+	TotalValueGen types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	Notes         null.String   `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
+	CreatedAt     time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt     time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt     null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *goodsIssueNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L goodsIssueNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var GoodsIssueNoteColumns = struct {
-	ID           string
-	GinNumber    string
-	ReceipientID string
-	IssueDate    string
-	TotalValue   string
-	Notes        string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
+	ID            string
+	GinNumber     string
+	ReceipientID  string
+	IssueDate     string
+	TotalValueGen string
+	Notes         string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:           "id",
-	GinNumber:    "gin_number",
-	ReceipientID: "receipient_id",
-	IssueDate:    "issue_date",
-	TotalValue:   "total_value",
-	Notes:        "notes",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
-	DeletedAt:    "deleted_at",
+	ID:            "id",
+	GinNumber:     "gin_number",
+	ReceipientID:  "receipient_id",
+	IssueDate:     "issue_date",
+	TotalValueGen: "total_value_gen",
+	Notes:         "notes",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
+	DeletedAt:     "deleted_at",
 }
 
 var GoodsIssueNoteTableColumns = struct {
-	ID           string
-	GinNumber    string
-	ReceipientID string
-	IssueDate    string
-	TotalValue   string
-	Notes        string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
+	ID            string
+	GinNumber     string
+	ReceipientID  string
+	IssueDate     string
+	TotalValueGen string
+	Notes         string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
 }{
-	ID:           "goods_issue_note.id",
-	GinNumber:    "goods_issue_note.gin_number",
-	ReceipientID: "goods_issue_note.receipient_id",
-	IssueDate:    "goods_issue_note.issue_date",
-	TotalValue:   "goods_issue_note.total_value",
-	Notes:        "goods_issue_note.notes",
-	CreatedAt:    "goods_issue_note.created_at",
-	UpdatedAt:    "goods_issue_note.updated_at",
-	DeletedAt:    "goods_issue_note.deleted_at",
+	ID:            "goods_issue_note.id",
+	GinNumber:     "goods_issue_note.gin_number",
+	ReceipientID:  "goods_issue_note.receipient_id",
+	IssueDate:     "goods_issue_note.issue_date",
+	TotalValueGen: "goods_issue_note.total_value_gen",
+	Notes:         "goods_issue_note.notes",
+	CreatedAt:     "goods_issue_note.created_at",
+	UpdatedAt:     "goods_issue_note.updated_at",
+	DeletedAt:     "goods_issue_note.deleted_at",
 }
 
 // Generated where
@@ -290,25 +290,25 @@ func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
 }
 
 var GoodsIssueNoteWhere = struct {
-	ID           whereHelperint
-	GinNumber    whereHelperstring
-	ReceipientID whereHelpernull_Int
-	IssueDate    whereHelpernull_Time
-	TotalValue   whereHelpertypes_Decimal
-	Notes        whereHelpernull_String
-	CreatedAt    whereHelpertime_Time
-	UpdatedAt    whereHelpertime_Time
-	DeletedAt    whereHelpernull_Time
+	ID            whereHelperint
+	GinNumber     whereHelperstring
+	ReceipientID  whereHelpernull_Int
+	IssueDate     whereHelpernull_Time
+	TotalValueGen whereHelpertypes_Decimal
+	Notes         whereHelpernull_String
+	CreatedAt     whereHelpertime_Time
+	UpdatedAt     whereHelpertime_Time
+	DeletedAt     whereHelpernull_Time
 }{
-	ID:           whereHelperint{field: "\"inventory\".\"goods_issue_note\".\"id\""},
-	GinNumber:    whereHelperstring{field: "\"inventory\".\"goods_issue_note\".\"gin_number\""},
-	ReceipientID: whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note\".\"receipient_id\""},
-	IssueDate:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note\".\"issue_date\""},
-	TotalValue:   whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note\".\"total_value\""},
-	Notes:        whereHelpernull_String{field: "\"inventory\".\"goods_issue_note\".\"notes\""},
-	CreatedAt:    whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note\".\"created_at\""},
-	UpdatedAt:    whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note\".\"updated_at\""},
-	DeletedAt:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note\".\"deleted_at\""},
+	ID:            whereHelperint{field: "\"inventory\".\"goods_issue_note\".\"id\""},
+	GinNumber:     whereHelperstring{field: "\"inventory\".\"goods_issue_note\".\"gin_number\""},
+	ReceipientID:  whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note\".\"receipient_id\""},
+	IssueDate:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note\".\"issue_date\""},
+	TotalValueGen: whereHelpertypes_Decimal{field: "\"inventory\".\"goods_issue_note\".\"total_value_gen\""},
+	Notes:         whereHelpernull_String{field: "\"inventory\".\"goods_issue_note\".\"notes\""},
+	CreatedAt:     whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note\".\"created_at\""},
+	UpdatedAt:     whereHelpertime_Time{field: "\"inventory\".\"goods_issue_note\".\"updated_at\""},
+	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note\".\"deleted_at\""},
 }
 
 // GoodsIssueNoteRels is where relationship names are stored.
@@ -339,8 +339,8 @@ func (r *goodsIssueNoteR) GetGinGoodsIssueNoteItems() GoodsIssueNoteItemSlice {
 type goodsIssueNoteL struct{}
 
 var (
-	goodsIssueNoteAllColumns            = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value", "notes", "created_at", "updated_at", "deleted_at"}
-	goodsIssueNoteColumnsWithoutDefault = []string{"id", "gin_number", "total_value", "created_at", "updated_at"}
+	goodsIssueNoteAllColumns            = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value_gen", "notes", "created_at", "updated_at", "deleted_at"}
+	goodsIssueNoteColumnsWithoutDefault = []string{"id", "gin_number", "total_value_gen", "created_at", "updated_at"}
 	goodsIssueNoteColumnsWithDefault    = []string{"receipient_id", "issue_date", "notes", "deleted_at"}
 	goodsIssueNotePrimaryKeyColumns     = []string{"id"}
 	goodsIssueNoteGeneratedColumns      = []string{}

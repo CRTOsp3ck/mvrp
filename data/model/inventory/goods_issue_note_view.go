@@ -25,103 +25,103 @@ import (
 
 // GoodsIssueNoteView is an object representing the database table.
 type GoodsIssueNoteView struct {
-	ID           null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	GinNumber    null.String       `boil:"gin_number" json:"gin_number,omitempty" toml:"gin_number" yaml:"gin_number,omitempty"`
-	ReceipientID null.Int          `boil:"receipient_id" json:"receipient_id,omitempty" toml:"receipient_id" yaml:"receipient_id,omitempty"`
-	IssueDate    null.Time         `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
-	TotalValue   types.NullDecimal `boil:"total_value" json:"total_value,omitempty" toml:"total_value" yaml:"total_value,omitempty"`
-	Notes        null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
-	CreatedAt    null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt    null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt    null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	Receipient   null.JSON         `boil:"receipient" json:"receipient,omitempty" toml:"receipient" yaml:"receipient,omitempty"`
-	Items        null.JSON         `boil:"items" json:"items,omitempty" toml:"items" yaml:"items,omitempty"`
+	ID            null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	GinNumber     null.String       `boil:"gin_number" json:"gin_number,omitempty" toml:"gin_number" yaml:"gin_number,omitempty"`
+	ReceipientID  null.Int          `boil:"receipient_id" json:"receipient_id,omitempty" toml:"receipient_id" yaml:"receipient_id,omitempty"`
+	IssueDate     null.Time         `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
+	TotalValueGen types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
+	Notes         null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
+	CreatedAt     null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt     null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt     null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	Receipient    null.JSON         `boil:"receipient" json:"receipient,omitempty" toml:"receipient" yaml:"receipient,omitempty"`
+	Items         null.JSON         `boil:"items" json:"items,omitempty" toml:"items" yaml:"items,omitempty"`
 }
 
 var GoodsIssueNoteViewColumns = struct {
-	ID           string
-	GinNumber    string
-	ReceipientID string
-	IssueDate    string
-	TotalValue   string
-	Notes        string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
-	Receipient   string
-	Items        string
+	ID            string
+	GinNumber     string
+	ReceipientID  string
+	IssueDate     string
+	TotalValueGen string
+	Notes         string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
+	Receipient    string
+	Items         string
 }{
-	ID:           "id",
-	GinNumber:    "gin_number",
-	ReceipientID: "receipient_id",
-	IssueDate:    "issue_date",
-	TotalValue:   "total_value",
-	Notes:        "notes",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
-	DeletedAt:    "deleted_at",
-	Receipient:   "receipient",
-	Items:        "items",
+	ID:            "id",
+	GinNumber:     "gin_number",
+	ReceipientID:  "receipient_id",
+	IssueDate:     "issue_date",
+	TotalValueGen: "total_value_gen",
+	Notes:         "notes",
+	CreatedAt:     "created_at",
+	UpdatedAt:     "updated_at",
+	DeletedAt:     "deleted_at",
+	Receipient:    "receipient",
+	Items:         "items",
 }
 
 var GoodsIssueNoteViewTableColumns = struct {
-	ID           string
-	GinNumber    string
-	ReceipientID string
-	IssueDate    string
-	TotalValue   string
-	Notes        string
-	CreatedAt    string
-	UpdatedAt    string
-	DeletedAt    string
-	Receipient   string
-	Items        string
+	ID            string
+	GinNumber     string
+	ReceipientID  string
+	IssueDate     string
+	TotalValueGen string
+	Notes         string
+	CreatedAt     string
+	UpdatedAt     string
+	DeletedAt     string
+	Receipient    string
+	Items         string
 }{
-	ID:           "goods_issue_note_view.id",
-	GinNumber:    "goods_issue_note_view.gin_number",
-	ReceipientID: "goods_issue_note_view.receipient_id",
-	IssueDate:    "goods_issue_note_view.issue_date",
-	TotalValue:   "goods_issue_note_view.total_value",
-	Notes:        "goods_issue_note_view.notes",
-	CreatedAt:    "goods_issue_note_view.created_at",
-	UpdatedAt:    "goods_issue_note_view.updated_at",
-	DeletedAt:    "goods_issue_note_view.deleted_at",
-	Receipient:   "goods_issue_note_view.receipient",
-	Items:        "goods_issue_note_view.items",
+	ID:            "goods_issue_note_view.id",
+	GinNumber:     "goods_issue_note_view.gin_number",
+	ReceipientID:  "goods_issue_note_view.receipient_id",
+	IssueDate:     "goods_issue_note_view.issue_date",
+	TotalValueGen: "goods_issue_note_view.total_value_gen",
+	Notes:         "goods_issue_note_view.notes",
+	CreatedAt:     "goods_issue_note_view.created_at",
+	UpdatedAt:     "goods_issue_note_view.updated_at",
+	DeletedAt:     "goods_issue_note_view.deleted_at",
+	Receipient:    "goods_issue_note_view.receipient",
+	Items:         "goods_issue_note_view.items",
 }
 
 // Generated where
 
 var GoodsIssueNoteViewWhere = struct {
-	ID           whereHelpernull_Int
-	GinNumber    whereHelpernull_String
-	ReceipientID whereHelpernull_Int
-	IssueDate    whereHelpernull_Time
-	TotalValue   whereHelpertypes_NullDecimal
-	Notes        whereHelpernull_String
-	CreatedAt    whereHelpernull_Time
-	UpdatedAt    whereHelpernull_Time
-	DeletedAt    whereHelpernull_Time
-	Receipient   whereHelpernull_JSON
-	Items        whereHelpernull_JSON
+	ID            whereHelpernull_Int
+	GinNumber     whereHelpernull_String
+	ReceipientID  whereHelpernull_Int
+	IssueDate     whereHelpernull_Time
+	TotalValueGen whereHelpertypes_NullDecimal
+	Notes         whereHelpernull_String
+	CreatedAt     whereHelpernull_Time
+	UpdatedAt     whereHelpernull_Time
+	DeletedAt     whereHelpernull_Time
+	Receipient    whereHelpernull_JSON
+	Items         whereHelpernull_JSON
 }{
-	ID:           whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_view\".\"id\""},
-	GinNumber:    whereHelpernull_String{field: "\"inventory\".\"goods_issue_note_view\".\"gin_number\""},
-	ReceipientID: whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_view\".\"receipient_id\""},
-	IssueDate:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"issue_date\""},
-	TotalValue:   whereHelpertypes_NullDecimal{field: "\"inventory\".\"goods_issue_note_view\".\"total_value\""},
-	Notes:        whereHelpernull_String{field: "\"inventory\".\"goods_issue_note_view\".\"notes\""},
-	CreatedAt:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"created_at\""},
-	UpdatedAt:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"updated_at\""},
-	DeletedAt:    whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"deleted_at\""},
-	Receipient:   whereHelpernull_JSON{field: "\"inventory\".\"goods_issue_note_view\".\"receipient\""},
-	Items:        whereHelpernull_JSON{field: "\"inventory\".\"goods_issue_note_view\".\"items\""},
+	ID:            whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_view\".\"id\""},
+	GinNumber:     whereHelpernull_String{field: "\"inventory\".\"goods_issue_note_view\".\"gin_number\""},
+	ReceipientID:  whereHelpernull_Int{field: "\"inventory\".\"goods_issue_note_view\".\"receipient_id\""},
+	IssueDate:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"issue_date\""},
+	TotalValueGen: whereHelpertypes_NullDecimal{field: "\"inventory\".\"goods_issue_note_view\".\"total_value_gen\""},
+	Notes:         whereHelpernull_String{field: "\"inventory\".\"goods_issue_note_view\".\"notes\""},
+	CreatedAt:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"created_at\""},
+	UpdatedAt:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"updated_at\""},
+	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"goods_issue_note_view\".\"deleted_at\""},
+	Receipient:    whereHelpernull_JSON{field: "\"inventory\".\"goods_issue_note_view\".\"receipient\""},
+	Items:         whereHelpernull_JSON{field: "\"inventory\".\"goods_issue_note_view\".\"items\""},
 }
 
 var (
-	goodsIssueNoteViewAllColumns            = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value", "notes", "created_at", "updated_at", "deleted_at", "receipient", "items"}
+	goodsIssueNoteViewAllColumns            = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value_gen", "notes", "created_at", "updated_at", "deleted_at", "receipient", "items"}
 	goodsIssueNoteViewColumnsWithoutDefault = []string{}
-	goodsIssueNoteViewColumnsWithDefault    = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value", "notes", "created_at", "updated_at", "deleted_at", "receipient", "items"}
+	goodsIssueNoteViewColumnsWithDefault    = []string{"id", "gin_number", "receipient_id", "issue_date", "total_value_gen", "notes", "created_at", "updated_at", "deleted_at", "receipient", "items"}
 	goodsIssueNoteViewPrimaryKeyColumns     = []string{}
 	goodsIssueNoteViewGeneratedColumns      = []string{}
 )

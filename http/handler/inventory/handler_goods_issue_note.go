@@ -10,7 +10,6 @@ import (
 	"mvrp/domain/service/inventory"
 	"mvrp/errors"
 	"mvrp/htresp"
-	"mvrp/util"
 	"net/http"
 	"strconv"
 
@@ -120,7 +119,6 @@ func UpdateGoodsIssueNote(w http.ResponseWriter, r *http.Request) {
 			"Failed to decode request body: " + err.Error())
 		return
 	}
-	util.Util.Json.PrintJson(data)
 	svc := inventory.NewInventoryService()
 	req := svc.NewUpdateGoodsIssueNoteRequest(r.Context(), *data)
 	resp, err := svc.UpdateGoodsIssueNote(req)
