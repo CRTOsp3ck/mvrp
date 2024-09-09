@@ -120,7 +120,7 @@ type SearchReturnMerchandiseAuthorizationDTO struct {
 
 type GetReturnMerchandiseAuthorizationDTO struct {
     inventory.ReturnMerchandiseAuthorization                 `json:"return_merchandise_authorization"`
-    Items []CreateReturnMerchandiseAuthorizationItemDTO                     `json:"items"`
+    Items []GetReturnMerchandiseAuthorizationItemDTO                     `json:"items"`
 }
 
 type CreateReturnMerchandiseAuthorizationDTO struct {

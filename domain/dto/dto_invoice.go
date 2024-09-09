@@ -18,7 +18,7 @@ type SearchInvoiceDTO struct {
 type GetInvoiceDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.Invoice                 `json:"invoice"`
-    Items []CreateInvoiceItemDTO                     `json:"items"`
+    Items []GetInvoiceItemDTO                     `json:"items"`
 }
 
 type CreateInvoiceDTO struct {

@@ -46,6 +46,11 @@ func seedInventory() error {
 		return err
 	}
 
+	err = inventory.SeedReturnMerchandiseAuthorization()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

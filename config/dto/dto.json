@@ -107,7 +107,7 @@
                         { "package": "invoice", "model": "Invoice"}
                     ],
                     "additional_fields": [
-                        { "name": "Items", "type": "[]CreateInvoiceItemDTO" }
+                        { "name": "Items", "type": "[]GetInvoiceItemDTO" }
                     ],
                     "exclude_fields_from_inherit": []
                 },
@@ -1123,7 +1123,7 @@
                         { "package": "inventory", "model": "ReturnMerchandiseAuthorization"}
                     ],
                     "additional_fields": [
-                        { "name": "Items", "type": "[]CreateReturnMerchandiseAuthorizationItemDTO" }
+                        { "name": "Items", "type": "[]GetReturnMerchandiseAuthorizationItemDTO" }
                     ],
                     "exclude_fields_from_inherit": []
                 },

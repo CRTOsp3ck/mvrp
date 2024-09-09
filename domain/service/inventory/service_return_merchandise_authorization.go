@@ -18,7 +18,9 @@ type ListReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewListReturnMerchandiseAuthorizationRequest(ctx context.Context) *ListReturnMerchandiseAuthorizationRequest {
-	return &ListReturnMerchandiseAuthorizationRequest{Ctx: ctx}
+	return &ListReturnMerchandiseAuthorizationRequest{
+		Ctx: ctx,
+	}
 }
 
 type ListReturnMerchandiseAuthorizationResponse struct {
@@ -26,7 +28,9 @@ type ListReturnMerchandiseAuthorizationResponse struct {
 }
 
 func (s *InventoryService) NewListReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *ListReturnMerchandiseAuthorizationResponse {
-	return &ListReturnMerchandiseAuthorizationResponse{Payload: payload}
+	return &ListReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) ListReturnMerchandiseAuthorization(req *ListReturnMerchandiseAuthorizationRequest) (*ListReturnMerchandiseAuthorizationResponse, error) {
@@ -57,7 +61,10 @@ type SearchReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.SearchReturnMerchandiseAuthorizationDTO) *SearchReturnMerchandiseAuthorizationRequest {
-	return &SearchReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+	return &SearchReturnMerchandiseAuthorizationRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
 }
 
 type SearchReturnMerchandiseAuthorizationResponse struct {
@@ -66,7 +73,9 @@ type SearchReturnMerchandiseAuthorizationResponse struct {
 }
 
 func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorizationSlice) *SearchReturnMerchandiseAuthorizationResponse {
-	return &SearchReturnMerchandiseAuthorizationResponse{Payload: payload}
+	return &SearchReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) SearchReturnMerchandiseAuthorization(req *SearchReturnMerchandiseAuthorizationRequest) (*SearchReturnMerchandiseAuthorizationResponse, error) {
@@ -113,15 +122,20 @@ type GetReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewGetReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *GetReturnMerchandiseAuthorizationRequest {
-	return &GetReturnMerchandiseAuthorizationRequest{Ctx: ctx, ID: id}
+	return &GetReturnMerchandiseAuthorizationRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
 }
 
 type GetReturnMerchandiseAuthorizationResponse struct {
-	Payload inventory.ReturnMerchandiseAuthorization `json:"payload"`
+	Payload dto.GetReturnMerchandiseAuthorizationDTO `json:"payload"`
 }
 
-func (s *InventoryService) NewGetReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *GetReturnMerchandiseAuthorizationResponse {
-	return &GetReturnMerchandiseAuthorizationResponse{Payload: payload}
+func (s *InventoryService) NewGetReturnMerchandiseAuthorizationResponse(payload dto.GetReturnMerchandiseAuthorizationDTO) *GetReturnMerchandiseAuthorizationResponse {
+	return &GetReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerchandiseAuthorizationRequest) (*GetReturnMerchandiseAuthorizationResponse, error) {
@@ -131,9 +145,21 @@ func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerch
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
+	ginRes, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
+	}
+
+	// get return merchandise authorization items
+	ginItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	ginItemRes := make([]dto.GetReturnMerchandiseAuthorizationItemDTO, 0)
+	for _, item := range ginItems {
+		ginItemRes = append(ginItemRes, dto.GetReturnMerchandiseAuthorizationItemDTO{
+			ReturnMerchandiseAuthorizationItem: *item,
+		})
 	}
 
 	err = tx.Commit()
@@ -142,7 +168,10 @@ func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerch
 	}
 
 	resp := GetReturnMerchandiseAuthorizationResponse{
-		Payload: *res,
+		Payload: dto.GetReturnMerchandiseAuthorizationDTO{
+			ReturnMerchandiseAuthorization: *ginRes,
+			Items:                          ginItemRes,
+		},
 	}
 	return &resp, nil
 }
@@ -154,7 +183,10 @@ type CreateReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewCreateReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.CreateReturnMerchandiseAuthorizationDTO) *CreateReturnMerchandiseAuthorizationRequest {
-	return &CreateReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+	return &CreateReturnMerchandiseAuthorizationRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
 }
 
 type CreateReturnMerchandiseAuthorizationResponse struct {
@@ -162,7 +194,9 @@ type CreateReturnMerchandiseAuthorizationResponse struct {
 }
 
 func (s *InventoryService) NewCreateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *CreateReturnMerchandiseAuthorizationResponse {
-	return &CreateReturnMerchandiseAuthorizationResponse{Payload: payload}
+	return &CreateReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateReturnMerchandiseAuthorizationRequest) (*CreateReturnMerchandiseAuthorizationResponse, error) {
@@ -187,11 +221,11 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		}
 		req.Payload.ReturnMerchandiseAuthorization.RmaNumber = util.Util.Str.ToString(nextID)
 	}
-	var rmaItems []*inventory.ReturnMerchandiseAuthorizationItem
+	var ginItems []*inventory.ReturnMerchandiseAuthorizationItem
 	for _, item := range req.Payload.Items {
-		rmaItems = append(rmaItems, &item.ReturnMerchandiseAuthorizationItem)
+		ginItems = append(ginItems, &item.ReturnMerchandiseAuthorizationItem)
 	}
-	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(&req.Payload.ReturnMerchandiseAuthorization, rmaItems)
+	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(&req.Payload.ReturnMerchandiseAuthorization, ginItems)
 	if err != nil {
 		return nil, err
 	}
@@ -217,7 +251,11 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		if err != nil {
 			return nil, err
 		}
-		inv.QuantityReturned.Add(inv.QuantityReturned.Big, item.Quantity.Big)
+		inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+		err = proc.ProcessInventoryAmounts(inv)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 		if err != nil {
 			return nil, err
@@ -225,9 +263,10 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 
 		// create inventory transaction
 		invTx := &inventory.InventoryTransaction{
-			InventoryID:     null.IntFrom(inv.ID),
+			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeReturn,
 			Quantity:        item.Quantity,
+			Reason:          null.StringFrom("Return Merchandise Authorization Creation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {
@@ -237,7 +276,7 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 	}
 
 	// get created return merchandise authorization
-	inventory, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
+	gin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -248,7 +287,7 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 	}
 
 	resp := CreateReturnMerchandiseAuthorizationResponse{
-		Payload: *inventory,
+		Payload: *gin,
 	}
 
 	return &resp, nil
@@ -261,7 +300,10 @@ type UpdateReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewUpdateReturnMerchandiseAuthorizationRequest(ctx context.Context, payload dto.UpdateReturnMerchandiseAuthorizationDTO) *UpdateReturnMerchandiseAuthorizationRequest {
-	return &UpdateReturnMerchandiseAuthorizationRequest{Ctx: ctx, Payload: payload}
+	return &UpdateReturnMerchandiseAuthorizationRequest{
+		Ctx:     ctx,
+		Payload: payload,
+	}
 }
 
 type UpdateReturnMerchandiseAuthorizationResponse struct {
@@ -269,7 +311,9 @@ type UpdateReturnMerchandiseAuthorizationResponse struct {
 }
 
 func (s *InventoryService) NewUpdateReturnMerchandiseAuthorizationResponse(payload inventory.ReturnMerchandiseAuthorization) *UpdateReturnMerchandiseAuthorizationResponse {
-	return &UpdateReturnMerchandiseAuthorizationResponse{Payload: payload}
+	return &UpdateReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateReturnMerchandiseAuthorizationRequest) (*UpdateReturnMerchandiseAuthorizationResponse, error) {
@@ -286,17 +330,17 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 	defer tx.Rollback()
 
-	currRma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
+	currGin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	// update return merchandise authorization note
-	var rmaItems []*inventory.ReturnMerchandiseAuthorizationItem
+	// update return merchandise authorization
+	var ginItems []*inventory.ReturnMerchandiseAuthorizationItem
 	for _, item := range req.Payload.Items {
-		rmaItems = append(rmaItems, &item.ReturnMerchandiseAuthorizationItem)
+		ginItems = append(ginItems, &item.ReturnMerchandiseAuthorizationItem)
 	}
-	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(&req.Payload.ReturnMerchandiseAuthorization, rmaItems)
+	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(&req.Payload.ReturnMerchandiseAuthorization, ginItems)
 	if err != nil {
 		return nil, err
 	}
@@ -306,21 +350,29 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	for _, currRmaItem := range currRma.R.RmaReturnMerchandiseAuthorizationItems {
+	currGinItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, currGin.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currGinItem := range currGinItems {
 		found := false
 		for _, item := range req.Payload.Items {
-			if currRmaItem.ID == item.ID {
+			if currGinItem.ID == item.ID {
 				found = true
 				break
 			}
 		}
 		if !found {
 			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currRmaItem.InventoryID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currGinItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
-			inv.QuantityReturned.Sub(inv.QuantityReturned.Big, currRmaItem.Quantity.Big)
+			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, currGinItem.Quantity.Big)
+			err = proc.ProcessInventoryAmounts(inv)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 			if err != nil {
 				return nil, err
@@ -328,9 +380,10 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 
 			// create inventory transaction
 			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
+				InventoryID:     currGinItem.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
-				Quantity:        currRmaItem.Quantity,
+				Quantity:        currGinItem.Quantity,
+				Reason:          null.StringFrom("Return Merchandise Authorization Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -338,7 +391,7 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			}
 
 			// delete return merchandise authorization item
-			err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, currRmaItem)
+			err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, currGinItem)
 			if err != nil {
 				return nil, err
 			}
@@ -354,12 +407,12 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 		}
 
 		if itemExists {
-			currRmaItem, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemByID(req.Ctx, tx, item.ID)
+			currGinItem, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemByID(req.Ctx, tx, item.ID)
 			if err != nil {
 				return nil, err
 			}
 			amountOffset := types.NewNullDecimal(decimal.New(0, 2))
-			amountOffset.Sub(item.Quantity.Big, currRmaItem.Quantity.Big)
+			amountOffset.Sub(item.Quantity.Big, currGinItem.Quantity.Big)
 
 			// update return merchandise authorization item
 			err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)
@@ -371,26 +424,34 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 				return nil, err
 			}
 
-			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currRmaItem.InventoryID.Int)
-			if err != nil {
-				return nil, err
-			}
-			inv.QuantityReturned.Add(inv.QuantityReturned.Big, amountOffset.Big)
-			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-			if err != nil {
-				return nil, err
-			}
+			quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+			if quantityChanged {
+				// update inventory
+				inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.InventoryID.Int)
+				if err != nil {
+					return nil, err
+				}
+				inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, amountOffset.Big)
+				err = proc.ProcessInventoryAmounts(inv)
+				if err != nil {
+					return nil, err
+				}
+				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+				if err != nil {
+					return nil, err
+				}
 
-			// create inventory transaction
-			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
-				TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
-				Quantity:        types.Decimal(amountOffset),
-			}
-			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-			if err != nil {
-				return nil, err
+				// create inventory transaction
+				invTx := &inventory.InventoryTransaction{
+					InventoryID:     item.InventoryID,
+					TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
+					Quantity:        types.Decimal(amountOffset),
+					Reason:          null.StringFrom("Return Merchandise Authorization Adjustment"),
+				}
+				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+				if err != nil {
+					return nil, err
+				}
 			}
 		} else {
 			// create return merchandise authorization item
@@ -408,7 +469,11 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			if err != nil {
 				return nil, err
 			}
-			inv.QuantityReturned.Add(inv.QuantityReturned.Big, item.Quantity.Big)
+			inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+			err = proc.ProcessInventoryAmounts(inv)
+			if err != nil {
+				return nil, err
+			}
 			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 			if err != nil {
 				return nil, err
@@ -416,9 +481,10 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 
 			// create inventory transaction
 			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
+				InventoryID:     item.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeReturn,
 				Quantity:        item.Quantity,
+				Reason:          null.StringFrom("Return Merchandise Authorization Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -428,7 +494,7 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 
 	// get updated return merchandise authorization
-	salesOrder, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
+	gin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -439,7 +505,7 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 
 	resp := UpdateReturnMerchandiseAuthorizationResponse{
-		Payload: *salesOrder,
+		Payload: *gin,
 	}
 
 	return &resp, nil
@@ -452,7 +518,10 @@ type DeleteReturnMerchandiseAuthorizationRequest struct {
 }
 
 func (s *InventoryService) NewDeleteReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *DeleteReturnMerchandiseAuthorizationRequest {
-	return &DeleteReturnMerchandiseAuthorizationRequest{Ctx: ctx, ID: id}
+	return &DeleteReturnMerchandiseAuthorizationRequest{
+		Ctx: ctx,
+		ID:  id,
+	}
 }
 
 type DeleteReturnMerchandiseAuthorizationResponse struct {
@@ -460,7 +529,9 @@ type DeleteReturnMerchandiseAuthorizationResponse struct {
 }
 
 func (s *InventoryService) NewDeleteReturnMerchandiseAuthorizationResponse(payload bool) *DeleteReturnMerchandiseAuthorizationResponse {
-	return &DeleteReturnMerchandiseAuthorizationResponse{Payload: payload}
+	return &DeleteReturnMerchandiseAuthorizationResponse{
+		Payload: payload,
+	}
 }
 
 func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteReturnMerchandiseAuthorizationRequest) (*DeleteReturnMerchandiseAuthorizationResponse, error) {
@@ -477,26 +548,34 @@ func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteRetur
 	}
 	defer tx.Rollback()
 
-	// get return merchandise authorization note
-	rma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
+	// get return merchandise authorization
+	gin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	// delete return merchandise authorization note
-	err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	// delete return merchandise authorization
+	err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorization(req.Ctx, tx, gin)
 	if err != nil {
 		return nil, err
 	}
 
-	// delete return merchandise authorization note items
-	for _, item := range rma.R.RmaReturnMerchandiseAuthorizationItems {
+	// delete return merchandise authorization items
+	ginItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range ginItems {
 		// update inventory
 		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.InventoryID.Int)
 		if err != nil {
 			return nil, err
 		}
-		inv.QuantityReturned.Sub(inv.QuantityReturned.Big, item.Quantity.Big)
+		inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, item.Quantity.Big)
+		err = proc.ProcessInventoryAmounts(inv)
+		if err != nil {
+			return nil, err
+		}
 		err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 		if err != nil {
 			return nil, err
@@ -504,11 +583,18 @@ func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteRetur
 
 		// create inventory transaction
 		invTx := &inventory.InventoryTransaction{
-			InventoryID:     null.IntFrom(inv.ID),
+			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
 			Quantity:        item.Quantity,
+			Reason:          null.StringFrom("Return Merchandise Authorization Cancellation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+		if err != nil {
+			return nil, err
+		}
+
+		// delete return merchandise authorization item
+		err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, item)
 		if err != nil {
 			return nil, err
 		}
