@@ -306,8 +306,8 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 		return nil, errors.New("invalid stock count sheet quantity found while updating stock count sheet")
 	}
 	offsetQuantity := newScsQuantity - currScsQuantity
-	req.Payload.StockCountSheet.Discrepancies.Add(
-		req.Payload.StockCountSheet.Discrepancies.Big,
+	req.Payload.StockCountSheet.DiscrepanciesGen.Add(
+		req.Payload.StockCountSheet.DiscrepanciesGen.Big,
 		types.NewNullDecimal(decimal.New(int64(offsetQuantity*100), 2)).Big,
 	)
 
@@ -415,7 +415,7 @@ func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetReque
 	if err != nil {
 		return nil, err
 	}
-	discrepencyValue, ok := scs.Discrepancies.Float64()
+	discrepencyValue, ok := scs.DiscrepanciesGen.Float64()
 	if !ok {
 		return nil, errors.New("invalid stock count sheet discrepancies found while deleting stock count sheet")
 	}

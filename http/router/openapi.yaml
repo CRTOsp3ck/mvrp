@@ -2540,13 +2540,15 @@ components:
         count_date:
           format: date-time
           type: string
+        counted_by_employee_id:
+          type: integer
         created_at:
           format: date-time
           type: string
         deleted_at:
           format: date-time
           type: string
-        discrepancies:
+        discrepancies_gen:
           type: number
         id:
           type: integer

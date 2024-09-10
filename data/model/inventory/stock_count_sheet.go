@@ -25,93 +25,100 @@ import (
 
 // StockCountSheet is an object representing the database table.
 type StockCountSheet struct {
-	ID            int               `boil:"id" json:"id" toml:"id" yaml:"id"`
-	SCSNumber     string            `boil:"scs_number" json:"scs_number" toml:"scs_number" yaml:"scs_number"`
-	InventoryID   null.Int          `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
-	CountDate     null.Time         `boil:"count_date" json:"count_date,omitempty" toml:"count_date" yaml:"count_date,omitempty"`
-	TotalQuantity types.Decimal     `boil:"total_quantity" json:"total_quantity" toml:"total_quantity" yaml:"total_quantity"`
-	Discrepancies types.NullDecimal `boil:"discrepancies" json:"discrepancies,omitempty" toml:"discrepancies" yaml:"discrepancies,omitempty"`
-	Notes         null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
-	CreatedAt     time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt     time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt     null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                  int               `boil:"id" json:"id" toml:"id" yaml:"id"`
+	SCSNumber           string            `boil:"scs_number" json:"scs_number" toml:"scs_number" yaml:"scs_number"`
+	InventoryID         null.Int          `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
+	CountDate           null.Time         `boil:"count_date" json:"count_date,omitempty" toml:"count_date" yaml:"count_date,omitempty"`
+	CountedByEmployeeID null.Int          `boil:"counted_by_employee_id" json:"counted_by_employee_id,omitempty" toml:"counted_by_employee_id" yaml:"counted_by_employee_id,omitempty"`
+	TotalQuantity       types.Decimal     `boil:"total_quantity" json:"total_quantity" toml:"total_quantity" yaml:"total_quantity"`
+	DiscrepanciesGen    types.NullDecimal `boil:"discrepancies_gen" json:"discrepancies_gen,omitempty" toml:"discrepancies_gen" yaml:"discrepancies_gen,omitempty"`
+	Notes               null.String       `boil:"notes" json:"notes,omitempty" toml:"notes" yaml:"notes,omitempty"`
+	CreatedAt           time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt           time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt           null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *stockCountSheetR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L stockCountSheetL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var StockCountSheetColumns = struct {
-	ID            string
-	SCSNumber     string
-	InventoryID   string
-	CountDate     string
-	TotalQuantity string
-	Discrepancies string
-	Notes         string
-	CreatedAt     string
-	UpdatedAt     string
-	DeletedAt     string
+	ID                  string
+	SCSNumber           string
+	InventoryID         string
+	CountDate           string
+	CountedByEmployeeID string
+	TotalQuantity       string
+	DiscrepanciesGen    string
+	Notes               string
+	CreatedAt           string
+	UpdatedAt           string
+	DeletedAt           string
 }{
-	ID:            "id",
-	SCSNumber:     "scs_number",
-	InventoryID:   "inventory_id",
-	CountDate:     "count_date",
-	TotalQuantity: "total_quantity",
-	Discrepancies: "discrepancies",
-	Notes:         "notes",
-	CreatedAt:     "created_at",
-	UpdatedAt:     "updated_at",
-	DeletedAt:     "deleted_at",
+	ID:                  "id",
+	SCSNumber:           "scs_number",
+	InventoryID:         "inventory_id",
+	CountDate:           "count_date",
+	CountedByEmployeeID: "counted_by_employee_id",
+	TotalQuantity:       "total_quantity",
+	DiscrepanciesGen:    "discrepancies_gen",
+	Notes:               "notes",
+	CreatedAt:           "created_at",
+	UpdatedAt:           "updated_at",
+	DeletedAt:           "deleted_at",
 }
 
 var StockCountSheetTableColumns = struct {
-	ID            string
-	SCSNumber     string
-	InventoryID   string
-	CountDate     string
-	TotalQuantity string
-	Discrepancies string
-	Notes         string
-	CreatedAt     string
-	UpdatedAt     string
-	DeletedAt     string
+	ID                  string
+	SCSNumber           string
+	InventoryID         string
+	CountDate           string
+	CountedByEmployeeID string
+	TotalQuantity       string
+	DiscrepanciesGen    string
+	Notes               string
+	CreatedAt           string
+	UpdatedAt           string
+	DeletedAt           string
 }{
-	ID:            "stock_count_sheet.id",
-	SCSNumber:     "stock_count_sheet.scs_number",
-	InventoryID:   "stock_count_sheet.inventory_id",
-	CountDate:     "stock_count_sheet.count_date",
-	TotalQuantity: "stock_count_sheet.total_quantity",
-	Discrepancies: "stock_count_sheet.discrepancies",
-	Notes:         "stock_count_sheet.notes",
-	CreatedAt:     "stock_count_sheet.created_at",
-	UpdatedAt:     "stock_count_sheet.updated_at",
-	DeletedAt:     "stock_count_sheet.deleted_at",
+	ID:                  "stock_count_sheet.id",
+	SCSNumber:           "stock_count_sheet.scs_number",
+	InventoryID:         "stock_count_sheet.inventory_id",
+	CountDate:           "stock_count_sheet.count_date",
+	CountedByEmployeeID: "stock_count_sheet.counted_by_employee_id",
+	TotalQuantity:       "stock_count_sheet.total_quantity",
+	DiscrepanciesGen:    "stock_count_sheet.discrepancies_gen",
+	Notes:               "stock_count_sheet.notes",
+	CreatedAt:           "stock_count_sheet.created_at",
+	UpdatedAt:           "stock_count_sheet.updated_at",
+	DeletedAt:           "stock_count_sheet.deleted_at",
 }
 
 // Generated where
 
 var StockCountSheetWhere = struct {
-	ID            whereHelperint
-	SCSNumber     whereHelperstring
-	InventoryID   whereHelpernull_Int
-	CountDate     whereHelpernull_Time
-	TotalQuantity whereHelpertypes_Decimal
-	Discrepancies whereHelpertypes_NullDecimal
-	Notes         whereHelpernull_String
-	CreatedAt     whereHelpertime_Time
-	UpdatedAt     whereHelpertime_Time
-	DeletedAt     whereHelpernull_Time
+	ID                  whereHelperint
+	SCSNumber           whereHelperstring
+	InventoryID         whereHelpernull_Int
+	CountDate           whereHelpernull_Time
+	CountedByEmployeeID whereHelpernull_Int
+	TotalQuantity       whereHelpertypes_Decimal
+	DiscrepanciesGen    whereHelpertypes_NullDecimal
+	Notes               whereHelpernull_String
+	CreatedAt           whereHelpertime_Time
+	UpdatedAt           whereHelpertime_Time
+	DeletedAt           whereHelpernull_Time
 }{
-	ID:            whereHelperint{field: "\"inventory\".\"stock_count_sheet\".\"id\""},
-	SCSNumber:     whereHelperstring{field: "\"inventory\".\"stock_count_sheet\".\"scs_number\""},
-	InventoryID:   whereHelpernull_Int{field: "\"inventory\".\"stock_count_sheet\".\"inventory_id\""},
-	CountDate:     whereHelpernull_Time{field: "\"inventory\".\"stock_count_sheet\".\"count_date\""},
-	TotalQuantity: whereHelpertypes_Decimal{field: "\"inventory\".\"stock_count_sheet\".\"total_quantity\""},
-	Discrepancies: whereHelpertypes_NullDecimal{field: "\"inventory\".\"stock_count_sheet\".\"discrepancies\""},
-	Notes:         whereHelpernull_String{field: "\"inventory\".\"stock_count_sheet\".\"notes\""},
-	CreatedAt:     whereHelpertime_Time{field: "\"inventory\".\"stock_count_sheet\".\"created_at\""},
-	UpdatedAt:     whereHelpertime_Time{field: "\"inventory\".\"stock_count_sheet\".\"updated_at\""},
-	DeletedAt:     whereHelpernull_Time{field: "\"inventory\".\"stock_count_sheet\".\"deleted_at\""},
+	ID:                  whereHelperint{field: "\"inventory\".\"stock_count_sheet\".\"id\""},
+	SCSNumber:           whereHelperstring{field: "\"inventory\".\"stock_count_sheet\".\"scs_number\""},
+	InventoryID:         whereHelpernull_Int{field: "\"inventory\".\"stock_count_sheet\".\"inventory_id\""},
+	CountDate:           whereHelpernull_Time{field: "\"inventory\".\"stock_count_sheet\".\"count_date\""},
+	CountedByEmployeeID: whereHelpernull_Int{field: "\"inventory\".\"stock_count_sheet\".\"counted_by_employee_id\""},
+	TotalQuantity:       whereHelpertypes_Decimal{field: "\"inventory\".\"stock_count_sheet\".\"total_quantity\""},
+	DiscrepanciesGen:    whereHelpertypes_NullDecimal{field: "\"inventory\".\"stock_count_sheet\".\"discrepancies_gen\""},
+	Notes:               whereHelpernull_String{field: "\"inventory\".\"stock_count_sheet\".\"notes\""},
+	CreatedAt:           whereHelpertime_Time{field: "\"inventory\".\"stock_count_sheet\".\"created_at\""},
+	UpdatedAt:           whereHelpertime_Time{field: "\"inventory\".\"stock_count_sheet\".\"updated_at\""},
+	DeletedAt:           whereHelpernull_Time{field: "\"inventory\".\"stock_count_sheet\".\"deleted_at\""},
 }
 
 // StockCountSheetRels is where relationship names are stored.
@@ -142,9 +149,9 @@ func (r *stockCountSheetR) GetInventory() *Inventory {
 type stockCountSheetL struct{}
 
 var (
-	stockCountSheetAllColumns            = []string{"id", "scs_number", "inventory_id", "count_date", "total_quantity", "discrepancies", "notes", "created_at", "updated_at", "deleted_at"}
+	stockCountSheetAllColumns            = []string{"id", "scs_number", "inventory_id", "count_date", "counted_by_employee_id", "total_quantity", "discrepancies_gen", "notes", "created_at", "updated_at", "deleted_at"}
 	stockCountSheetColumnsWithoutDefault = []string{"id", "scs_number", "total_quantity", "created_at", "updated_at"}
-	stockCountSheetColumnsWithDefault    = []string{"inventory_id", "count_date", "discrepancies", "notes", "deleted_at"}
+	stockCountSheetColumnsWithDefault    = []string{"inventory_id", "count_date", "counted_by_employee_id", "discrepancies_gen", "notes", "deleted_at"}
 	stockCountSheetPrimaryKeyColumns     = []string{"id"}
 	stockCountSheetGeneratedColumns      = []string{}
 )

@@ -21,7 +21,7 @@ func ProcessStockCountSheetAmounts(scs *inventory.StockCountSheet, sysInv *inven
 	discrepencyValue = scsQuantity - systemInventoryCount
 
 	// update stock count sheet amounts
-	scs.Discrepancies = types.NewNullDecimal(decimal.New(int64(discrepencyValue*100), 2))
+	scs.DiscrepanciesGen = types.NewNullDecimal(decimal.New(int64(discrepencyValue*100), 2))
 
 	return nil
 }
