@@ -2498,6 +2498,8 @@ components:
           type: string
         received_by_employee_id:
           type: integer
+        returned_by_customer_id:
+          type: integer
         rma_date:
           format: date-time
           type: string

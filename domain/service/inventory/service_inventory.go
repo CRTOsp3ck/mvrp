@@ -6,11 +6,11 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/errors"
+	"mvrp/merge"
 	"mvrp/util"
 	"time"
 
 	"github.com/ericlagergren/decimal"
-	"github.com/jinzhu/copier"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/types"
 )
@@ -331,17 +331,19 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	amountOffset := types.NewNullDecimal(decimal.New(0, 2))
 	amountOffset.Sub(req.Payload.Inventory.QuantityAvailable.Big, currInventory.QuantityAvailable.Big)
 
-	// preserve other fields (only modify QuantityAvailable)
-	var newInventory inventory.Inventory
-	copier.Copy(&newInventory, &req.Payload.Inventory)
-	newInventory.QuantityAvailable = req.Payload.Inventory.QuantityAvailable
+	// merge empty fields
+	err = merge.MergeNilOrEmptyValueFields(currInventory, &req.Payload.Inventory, true)
+	if err != nil {
+		return nil, err
+	}
+
 	// process generated amounts
-	err = proc.ProcessInventoryAmounts(&newInventory)
+	err = proc.ProcessInventoryAmounts(&req.Payload.Inventory)
 	if err != nil {
 		return nil, err
 	}
 	// update inventory
-	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, &newInventory)
+	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, &req.Payload.Inventory)
 	if err != nil {
 		return nil, err
 	}

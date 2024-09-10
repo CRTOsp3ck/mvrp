@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
+	"mvrp/merge"
 )
 
 // LIST INVENTORY TRANSACTION
@@ -248,6 +249,18 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 	}
 	defer tx.Rollback()
 
+	// get inventory
+	invTx, err := s.Repo.Inventory.GetInventoryTransactionByID(req.Ctx, tx, req.Payload.InventoryTransaction.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// merge empty fields
+	err = merge.MergeNilOrEmptyValueFields(req.Payload.InventoryTransaction, invTx, true)
+	if err != nil {
+		return nil, err
+	}
+
 	// update inventory
 	err = s.Repo.Inventory.UpdateInventoryTransaction(req.Ctx, tx, &req.Payload.InventoryTransaction)
 	if err != nil {
@@ -255,7 +268,7 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 	}
 
 	// get updated inventory
-	invTx, err := s.Repo.Inventory.GetInventoryTransactionByID(req.Ctx, tx, req.Payload.InventoryTransaction.ID)
+	invTx, err = s.Repo.Inventory.GetInventoryTransactionByID(req.Ctx, tx, req.Payload.InventoryTransaction.ID)
 	if err != nil {
 		return nil, err
 	}

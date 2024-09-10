@@ -5,6 +5,7 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
+	"mvrp/merge"
 	"mvrp/util"
 
 	"github.com/ericlagergren/decimal"
@@ -330,7 +331,13 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 	defer tx.Rollback()
 
-	currGin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
+	currRma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// merge empty values
+	err = merge.MergeNilOrEmptyValueFields(currRma, &req.Payload.ReturnMerchandiseAuthorization, true)
 	if err != nil {
 		return nil, err
 	}
@@ -350,25 +357,25 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	currGinItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, currGin.ID)
+	currRmaItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, currRma.ID)
 	if err != nil {
 		return nil, err
 	}
-	for _, currGinItem := range currGinItems {
+	for _, currRmaItem := range currRmaItems {
 		found := false
 		for _, item := range req.Payload.Items {
-			if currGinItem.ID == item.ID {
+			if currRmaItem.ID == item.ID {
 				found = true
 				break
 			}
 		}
 		if !found {
 			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currGinItem.InventoryID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currRmaItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
-			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, currGinItem.Quantity.Big)
+			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, currRmaItem.Quantity.Big)
 			err = proc.ProcessInventoryAmounts(inv)
 			if err != nil {
 				return nil, err
@@ -380,9 +387,9 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 
 			// create inventory transaction
 			invTx := &inventory.InventoryTransaction{
-				InventoryID:     currGinItem.InventoryID,
+				InventoryID:     currRmaItem.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
-				Quantity:        currGinItem.Quantity,
+				Quantity:        currRmaItem.Quantity,
 				Reason:          null.StringFrom("Return Merchandise Authorization Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
@@ -391,7 +398,7 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			}
 
 			// delete return merchandise authorization item
-			err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, currGinItem)
+			err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, currRmaItem)
 			if err != nil {
 				return nil, err
 			}
@@ -407,12 +414,12 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 		}
 
 		if itemExists {
-			currGinItem, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemByID(req.Ctx, tx, item.ID)
+			currRmaItem, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemByID(req.Ctx, tx, item.ID)
 			if err != nil {
 				return nil, err
 			}
 			amountOffset := types.NewNullDecimal(decimal.New(0, 2))
-			amountOffset.Sub(item.Quantity.Big, currGinItem.Quantity.Big)
+			amountOffset.Sub(item.Quantity.Big, currRmaItem.Quantity.Big)
 
 			// update return merchandise authorization item
 			err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)

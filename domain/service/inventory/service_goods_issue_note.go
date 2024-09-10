@@ -5,6 +5,7 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
+	"mvrp/merge"
 	"mvrp/util"
 
 	"github.com/ericlagergren/decimal"
@@ -331,6 +332,12 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 	defer tx.Rollback()
 
 	currGin, err := s.Repo.Inventory.GetGoodsIssueNoteByID(req.Ctx, tx, req.Payload.GoodsIssueNote.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	// merge values
+	err = merge.MergeNilOrEmptyValueFields(currGin, &req.Payload.GoodsIssueNote, true)
 	if err != nil {
 		return nil, err
 	}

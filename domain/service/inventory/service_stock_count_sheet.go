@@ -6,6 +6,7 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
+	"mvrp/merge"
 	"mvrp/util"
 
 	"github.com/ericlagergren/decimal"
@@ -309,6 +310,13 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 		req.Payload.StockCountSheet.Discrepancies.Big,
 		types.NewNullDecimal(decimal.New(int64(offsetQuantity*100), 2)).Big,
 	)
+
+	// merge empty values
+	err = merge.MergeNilOrEmptyValueFields(currScs, &req.Payload.StockCountSheet, true)
+	if err != nil {
+		return nil, err
+	}
+
 	err = s.Repo.Inventory.UpdateStockCountSheet(req.Ctx, tx, &req.Payload.StockCountSheet)
 	if err != nil {
 		return nil, err
