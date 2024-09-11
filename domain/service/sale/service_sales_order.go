@@ -306,7 +306,7 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 			return nil, err
 		}
 
-		time.Sleep(time.Duration(loopInterval) * time.Second)
+		time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 	}
 
 	// get created sales order
@@ -548,7 +548,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				return nil, err
 			}
 
-			time.Sleep(time.Duration(loopInterval) * time.Second)
+			time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 		}
 	}
 
