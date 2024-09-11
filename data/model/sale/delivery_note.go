@@ -19,6 +19,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
@@ -30,13 +31,13 @@ type DeliveryNote struct {
 	SalesOrderID                 int         `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
 	VendorID                     null.Int    `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
 	CustomerID                   null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation            null.String `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	ShipFromInformation          null.String `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
-	BillToInformation            null.String `boil:"bill_to_information" json:"bill_to_information,omitempty" toml:"bill_to_information" yaml:"bill_to_information,omitempty"`
-	DeliveryDate                 null.Time   `boil:"delivery_date" json:"delivery_date,omitempty" toml:"delivery_date" yaml:"delivery_date,omitempty"`
-	ShippingPersonnelInformation null.String `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
-	ReceivedBy                   null.String `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
-	GoodsCondition               null.String `boil:"goods_condition" json:"goods_condition,omitempty" toml:"goods_condition" yaml:"goods_condition,omitempty"`
+	ShipToInformation            types.JSON  `boil:"ship_to_information" json:"ship_to_information" toml:"ship_to_information" yaml:"ship_to_information"`
+	ShipFromInformation          types.JSON  `boil:"ship_from_information" json:"ship_from_information" toml:"ship_from_information" yaml:"ship_from_information"`
+	BillToInformation            types.JSON  `boil:"bill_to_information" json:"bill_to_information" toml:"bill_to_information" yaml:"bill_to_information"`
+	DeliveryDate                 time.Time   `boil:"delivery_date" json:"delivery_date" toml:"delivery_date" yaml:"delivery_date"`
+	ShippingPersonnelInformation null.JSON   `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
+	ReceivedBy                   null.JSON   `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
+	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
 
 	R *deliveryNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L deliveryNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -55,7 +56,7 @@ var DeliveryNoteColumns = struct {
 	DeliveryDate                 string
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
-	GoodsCondition               string
+	OverallGoodsCondition        string
 }{
 	ID:                           "id",
 	BaseDocumentID:               "base_document_id",
@@ -69,7 +70,7 @@ var DeliveryNoteColumns = struct {
 	DeliveryDate:                 "delivery_date",
 	ShippingPersonnelInformation: "shipping_personnel_information",
 	ReceivedBy:                   "received_by",
-	GoodsCondition:               "goods_condition",
+	OverallGoodsCondition:        "overall_goods_condition",
 }
 
 var DeliveryNoteTableColumns = struct {
@@ -85,7 +86,7 @@ var DeliveryNoteTableColumns = struct {
 	DeliveryDate                 string
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
-	GoodsCondition               string
+	OverallGoodsCondition        string
 }{
 	ID:                           "delivery_note.id",
 	BaseDocumentID:               "delivery_note.base_document_id",
@@ -99,7 +100,7 @@ var DeliveryNoteTableColumns = struct {
 	DeliveryDate:                 "delivery_note.delivery_date",
 	ShippingPersonnelInformation: "delivery_note.shipping_personnel_information",
 	ReceivedBy:                   "delivery_note.received_by",
-	GoodsCondition:               "delivery_note.goods_condition",
+	OverallGoodsCondition:        "delivery_note.overall_goods_condition",
 }
 
 // Generated where
@@ -192,6 +193,72 @@ func (w whereHelpernull_Int) NIN(slice []int) qm.QueryMod {
 func (w whereHelpernull_Int) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
+type whereHelpertypes_JSON struct{ field string }
+
+func (w whereHelpertypes_JSON) EQ(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertypes_JSON) NEQ(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertypes_JSON) LT(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertypes_JSON) LTE(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertypes_JSON) GT(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertypes_JSON) GTE(x types.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+type whereHelpertime_Time struct{ field string }
+
+func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+type whereHelpernull_JSON struct{ field string }
+
+func (w whereHelpernull_JSON) EQ(x null.JSON) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpernull_JSON) NEQ(x null.JSON) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpernull_JSON) LT(x null.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpernull_JSON) LTE(x null.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpernull_JSON) GT(x null.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpernull_JSON) GTE(x null.JSON) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+func (w whereHelpernull_JSON) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_JSON) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+
 type whereHelpernull_String struct{ field string }
 
 func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
@@ -242,30 +309,6 @@ func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
 func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
-type whereHelpernull_Time struct{ field string }
-
-func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Time) NEQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Time) LT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Time) LTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Time) GT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var DeliveryNoteWhere = struct {
 	ID                           whereHelperint
 	BaseDocumentID               whereHelperint
@@ -273,13 +316,13 @@ var DeliveryNoteWhere = struct {
 	SalesOrderID                 whereHelperint
 	VendorID                     whereHelpernull_Int
 	CustomerID                   whereHelpernull_Int
-	ShipToInformation            whereHelpernull_String
-	ShipFromInformation          whereHelpernull_String
-	BillToInformation            whereHelpernull_String
-	DeliveryDate                 whereHelpernull_Time
-	ShippingPersonnelInformation whereHelpernull_String
-	ReceivedBy                   whereHelpernull_String
-	GoodsCondition               whereHelpernull_String
+	ShipToInformation            whereHelpertypes_JSON
+	ShipFromInformation          whereHelpertypes_JSON
+	BillToInformation            whereHelpertypes_JSON
+	DeliveryDate                 whereHelpertime_Time
+	ShippingPersonnelInformation whereHelpernull_JSON
+	ReceivedBy                   whereHelpernull_JSON
+	OverallGoodsCondition        whereHelpernull_String
 }{
 	ID:                           whereHelperint{field: "\"sale\".\"delivery_note\".\"id\""},
 	BaseDocumentID:               whereHelperint{field: "\"sale\".\"delivery_note\".\"base_document_id\""},
@@ -287,13 +330,13 @@ var DeliveryNoteWhere = struct {
 	SalesOrderID:                 whereHelperint{field: "\"sale\".\"delivery_note\".\"sales_order_id\""},
 	VendorID:                     whereHelpernull_Int{field: "\"sale\".\"delivery_note\".\"vendor_id\""},
 	CustomerID:                   whereHelpernull_Int{field: "\"sale\".\"delivery_note\".\"customer_id\""},
-	ShipToInformation:            whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"ship_to_information\""},
-	ShipFromInformation:          whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"ship_from_information\""},
-	BillToInformation:            whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"bill_to_information\""},
-	DeliveryDate:                 whereHelpernull_Time{field: "\"sale\".\"delivery_note\".\"delivery_date\""},
-	ShippingPersonnelInformation: whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"shipping_personnel_information\""},
-	ReceivedBy:                   whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"received_by\""},
-	GoodsCondition:               whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"goods_condition\""},
+	ShipToInformation:            whereHelpertypes_JSON{field: "\"sale\".\"delivery_note\".\"ship_to_information\""},
+	ShipFromInformation:          whereHelpertypes_JSON{field: "\"sale\".\"delivery_note\".\"ship_from_information\""},
+	BillToInformation:            whereHelpertypes_JSON{field: "\"sale\".\"delivery_note\".\"bill_to_information\""},
+	DeliveryDate:                 whereHelpertime_Time{field: "\"sale\".\"delivery_note\".\"delivery_date\""},
+	ShippingPersonnelInformation: whereHelpernull_JSON{field: "\"sale\".\"delivery_note\".\"shipping_personnel_information\""},
+	ReceivedBy:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note\".\"received_by\""},
+	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"overall_goods_condition\""},
 }
 
 // DeliveryNoteRels is where relationship names are stored.
@@ -334,9 +377,9 @@ func (r *deliveryNoteR) GetDeliveryNoteItems() DeliveryNoteItemSlice {
 type deliveryNoteL struct{}
 
 var (
-	deliveryNoteAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "goods_condition"}
-	deliveryNoteColumnsWithoutDefault = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id"}
-	deliveryNoteColumnsWithDefault    = []string{"vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "goods_condition"}
+	deliveryNoteAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition"}
+	deliveryNoteColumnsWithoutDefault = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date"}
+	deliveryNoteColumnsWithDefault    = []string{"vendor_id", "customer_id", "shipping_personnel_information", "received_by", "overall_goods_condition"}
 	deliveryNotePrimaryKeyColumns     = []string{"id"}
 	deliveryNoteGeneratedColumns      = []string{}
 )

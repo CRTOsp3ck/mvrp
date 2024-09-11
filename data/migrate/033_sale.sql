@@ -19,9 +19,9 @@ CREATE TABLE sale.sales_order (
     sales_order_number VARCHAR(50) UNIQUE NOT NULL,
     vendor_id INT REFERENCES entity.entity(id),
     customer_id INT REFERENCES entity.entity(id),
-    sales_representative_information TEXT,
-    ship_to_information TEXT,
-    ship_from_information TEXT,
+    sales_representative_employee_id INT REFERENCES entity.entity(id),
+    ship_to_information JSONB,
+    ship_from_information JSONB,
     payment_due_date DATE,
     order_status sale.sales_order_status NOT NULL
 );
@@ -39,19 +39,20 @@ CREATE TABLE sale.delivery_note (
     sales_order_id INT NOT NULL REFERENCES sale.sales_order(id) ON DELETE CASCADE,
     vendor_id INT REFERENCES entity.entity(id),
     customer_id INT REFERENCES entity.entity(id),
-    ship_to_information TEXT,
-    ship_from_information TEXT,
-    bill_to_information TEXT,
-    delivery_date DATE,
-    shipping_personnel_information TEXT,
-    received_by TEXT,
-    goods_condition TEXT
+    ship_to_information JSONB NOT NULL,
+    ship_from_information JSONB NOT NULL,
+    bill_to_information JSONB NOT NULL,
+    delivery_date DATE NOT NULL,
+    shipping_personnel_information JSONB,
+    received_by JSONB,
+    overall_goods_condition TEXT
 );
 
 CREATE TABLE sale.delivery_note_item (
     id INT PRIMARY KEY,
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
-    delivery_note_id INT NOT NULL REFERENCES sale.delivery_note(id) ON DELETE CASCADE
+    delivery_note_id INT NOT NULL REFERENCES sale.delivery_note(id) ON DELETE CASCADE,
+    goods_condition TEXT NOT NULL
 );
 
 CREATE TABLE sale.goods_return_note (
@@ -62,13 +63,11 @@ CREATE TABLE sale.goods_return_note (
     invoice_id INT REFERENCES invoice.invoice(id),
     credit_note_id INT REFERENCES invoice.credit_note(id),
     rma_id INT REFERENCES inventory.return_merchandise_authorization(id),
-    issue_date DATE NOT NULL,
-    return_date DATE,
-    customer_id INT REFERENCES entity.entity(id),
-    receiving_location_information TEXT,
-    received_by TEXT,
-    overall_goods_condition TEXT,
-    return_reason TEXT
+    return_date DATE NOT NULL,
+    returned_by_customer_id INT REFERENCES entity.entity(id),
+    receiving_location_information JSONB,
+    received_by_employee_id INT REFERENCES entity.entity(id),
+    overall_goods_condition TEXT
 );
 
 CREATE TABLE sale.goods_return_note_item (
@@ -77,7 +76,8 @@ CREATE TABLE sale.goods_return_note_item (
     goods_return_note_id INT NOT NULL REFERENCES sale.goods_return_note(id) ON DELETE CASCADE,
     rma_item_id INT REFERENCES inventory.return_merchandise_authorization_item(id),
     return_quantity NUMERIC(12, 2) DEFAULT 0,
-    return_condition TEXT
+    return_condition TEXT,
+    return_reason TEXT
 );
 
 CREATE TABLE sale.order_confirmation (
@@ -86,7 +86,7 @@ CREATE TABLE sale.order_confirmation (
     order_confirmation_number VARCHAR(50) UNIQUE NOT NULL,
     sales_order_id INT NOT NULL REFERENCES sale.sales_order(id) ON DELETE CASCADE,
     customer_id INT REFERENCES entity.entity(id),
-    ship_to_information TEXT
+    ship_to_information JSONB
 );
 
 CREATE TABLE sale.order_confirmation_item (
@@ -102,9 +102,9 @@ CREATE TABLE sale.sales_quotation (
     valid_until_date DATE,
     vendor_id INT REFERENCES entity.entity(id),
     customer_id INT REFERENCES entity.entity(id),
-    ship_to_information TEXT,
-    requested_by TEXT,
-    prepared_by TEXT,
+    ship_to_information JSONB,
+    requested_by JSONB,
+    prepared_by_employee_id INT REFERENCES entity.entity(id),
     quotation_status sale.sales_quotation_status NOT NULL
 );
 

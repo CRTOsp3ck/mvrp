@@ -30,9 +30,9 @@ type SalesQuotation struct {
 	ValidUntilDate       null.Time            `boil:"valid_until_date" json:"valid_until_date,omitempty" toml:"valid_until_date" yaml:"valid_until_date,omitempty"`
 	VendorID             null.Int             `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
 	CustomerID           null.Int             `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation    null.String          `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	RequestedBy          null.String          `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
-	PreparedBy           null.String          `boil:"prepared_by" json:"prepared_by,omitempty" toml:"prepared_by" yaml:"prepared_by,omitempty"`
+	ShipToInformation    null.JSON            `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	RequestedBy          null.JSON            `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
+	PreparedByEmployeeID null.Int             `boil:"prepared_by_employee_id" json:"prepared_by_employee_id,omitempty" toml:"prepared_by_employee_id" yaml:"prepared_by_employee_id,omitempty"`
 	QuotationStatus      SalesQuotationStatus `boil:"quotation_status" json:"quotation_status" toml:"quotation_status" yaml:"quotation_status"`
 
 	R *salesQuotationR `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -48,7 +48,7 @@ var SalesQuotationColumns = struct {
 	CustomerID           string
 	ShipToInformation    string
 	RequestedBy          string
-	PreparedBy           string
+	PreparedByEmployeeID string
 	QuotationStatus      string
 }{
 	ID:                   "id",
@@ -59,7 +59,7 @@ var SalesQuotationColumns = struct {
 	CustomerID:           "customer_id",
 	ShipToInformation:    "ship_to_information",
 	RequestedBy:          "requested_by",
-	PreparedBy:           "prepared_by",
+	PreparedByEmployeeID: "prepared_by_employee_id",
 	QuotationStatus:      "quotation_status",
 }
 
@@ -72,7 +72,7 @@ var SalesQuotationTableColumns = struct {
 	CustomerID           string
 	ShipToInformation    string
 	RequestedBy          string
-	PreparedBy           string
+	PreparedByEmployeeID string
 	QuotationStatus      string
 }{
 	ID:                   "sales_quotation.id",
@@ -83,7 +83,7 @@ var SalesQuotationTableColumns = struct {
 	CustomerID:           "sales_quotation.customer_id",
 	ShipToInformation:    "sales_quotation.ship_to_information",
 	RequestedBy:          "sales_quotation.requested_by",
-	PreparedBy:           "sales_quotation.prepared_by",
+	PreparedByEmployeeID: "sales_quotation.prepared_by_employee_id",
 	QuotationStatus:      "sales_quotation.quotation_status",
 }
 
@@ -131,9 +131,9 @@ var SalesQuotationWhere = struct {
 	ValidUntilDate       whereHelpernull_Time
 	VendorID             whereHelpernull_Int
 	CustomerID           whereHelpernull_Int
-	ShipToInformation    whereHelpernull_String
-	RequestedBy          whereHelpernull_String
-	PreparedBy           whereHelpernull_String
+	ShipToInformation    whereHelpernull_JSON
+	RequestedBy          whereHelpernull_JSON
+	PreparedByEmployeeID whereHelpernull_Int
 	QuotationStatus      whereHelperSalesQuotationStatus
 }{
 	ID:                   whereHelperint{field: "\"sale\".\"sales_quotation\".\"id\""},
@@ -142,9 +142,9 @@ var SalesQuotationWhere = struct {
 	ValidUntilDate:       whereHelpernull_Time{field: "\"sale\".\"sales_quotation\".\"valid_until_date\""},
 	VendorID:             whereHelpernull_Int{field: "\"sale\".\"sales_quotation\".\"vendor_id\""},
 	CustomerID:           whereHelpernull_Int{field: "\"sale\".\"sales_quotation\".\"customer_id\""},
-	ShipToInformation:    whereHelpernull_String{field: "\"sale\".\"sales_quotation\".\"ship_to_information\""},
-	RequestedBy:          whereHelpernull_String{field: "\"sale\".\"sales_quotation\".\"requested_by\""},
-	PreparedBy:           whereHelpernull_String{field: "\"sale\".\"sales_quotation\".\"prepared_by\""},
+	ShipToInformation:    whereHelpernull_JSON{field: "\"sale\".\"sales_quotation\".\"ship_to_information\""},
+	RequestedBy:          whereHelpernull_JSON{field: "\"sale\".\"sales_quotation\".\"requested_by\""},
+	PreparedByEmployeeID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation\".\"prepared_by_employee_id\""},
 	QuotationStatus:      whereHelperSalesQuotationStatus{field: "\"sale\".\"sales_quotation\".\"quotation_status\""},
 }
 
@@ -176,9 +176,9 @@ func (r *salesQuotationR) GetSalesQuotationItems() SalesQuotationItemSlice {
 type salesQuotationL struct{}
 
 var (
-	salesQuotationAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by", "quotation_status"}
+	salesQuotationAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status"}
 	salesQuotationColumnsWithoutDefault = []string{"id", "base_document_id", "sales_quotation_number", "quotation_status"}
-	salesQuotationColumnsWithDefault    = []string{"valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by"}
+	salesQuotationColumnsWithDefault    = []string{"valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id"}
 	salesQuotationPrimaryKeyColumns     = []string{"id"}
 	salesQuotationGeneratedColumns      = []string{}
 )

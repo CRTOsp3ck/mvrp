@@ -191,6 +191,14 @@
                         { "method": "Post", "path": "/delivery_note/search", "handler": "SearchDeliveryNote", "type": "search" }
                     ] 
                 },
+                {
+                    "name": "delivery_note_view",
+                    "routes": [
+                        { "method": "Get", "path": "/delivery_note_view", "handler": "ListDeliveryNoteView", "type": "list" },
+                        { "method": "Get", "path": "/delivery_note_view/{id}", "handler": "GetDeliveryNoteView", "type": "get" },
+                        { "method": "Post", "path": "/delivery_note_view/search", "handler": "SearchDeliveryNoteView", "type": "search" }
+                    ]
+                },
                 { 
                     "name": "goods_return_note",
                     "routes": [
@@ -201,6 +209,14 @@
                         { "method": "Delete", "path": "/goods_return_note/{id}", "handler": "DeleteGoodsReturnNote", "type": "delete" },
                         { "method": "Post", "path": "/goods_return_note/search", "handler": "SearchGoodsReturnNote", "type": "search" }
                     ] 
+                },
+                {
+                    "name": "goods_return_note_view",
+                    "routes": [
+                        { "method": "Get", "path": "/goods_return_note_view", "handler": "ListGoodsReturnNoteView", "type": "list" },
+                        { "method": "Get", "path": "/goods_return_note_view/{id}", "handler": "GetGoodsReturnNoteView", "type": "get" },
+                        { "method": "Post", "path": "/goods_return_note_view/search", "handler": "SearchGoodsReturnNoteView", "type": "search" }
+                    ]
                 },
                 { 
                     "name": "order_confirmation",
@@ -213,6 +229,14 @@
                         { "method": "Post", "path": "/order_confirmation/search", "handler": "SearchOrderConfirmation", "type": "search" }
                     ] 
                 },
+                {
+                    "name": "order_confirmation_view",
+                    "routes": [
+                        { "method": "Get", "path": "/order_confirmation_view", "handler": "ListOrderConfirmationView", "type": "list" },
+                        { "method": "Get", "path": "/order_confirmation_view/{id}", "handler": "GetOrderConfirmationView", "type": "get" },
+                        { "method": "Post", "path": "/order_confirmation_view/search", "handler": "SearchOrderConfirmationView", "type": "search" }
+                    ]
+                },
                 { 
                     "name": "sales_order",
                     "routes": [
@@ -224,6 +248,14 @@
                         { "method": "Post", "path": "/sales_order/search", "handler": "SearchSalesOrder", "type": "search" }
                     ] 
                 },
+                {
+                    "name": "sales_order_view",
+                    "routes": [
+                        { "method": "Get", "path": "/sales_order_view", "handler": "ListSalesOrderView", "type": "list" },
+                        { "method": "Get", "path": "/sales_order_view/{id}", "handler": "GetSalesOrderView", "type": "get" },
+                        { "method": "Post", "path": "/sales_order_view/search", "handler": "SearchSalesOrderView", "type": "search" }
+                    ]
+                },
                 { 
                     "name": "sales_quotation",
                     "routes": [
@@ -234,6 +266,14 @@
                         { "method": "Delete", "path": "/sales_quotation/{id}", "handler": "DeleteSalesQuotation", "type": "delete" },
                         { "method": "Post", "path": "/sales_quotation/search", "handler": "SearchSalesQuotation", "type": "search" }
                     ] 
+                },
+                {
+                    "name": "sales_quotation_view",
+                    "routes": [
+                        { "method": "Get", "path": "/sales_quotation_view", "handler": "ListSalesQuotationView", "type": "list" },
+                        { "method": "Get", "path": "/sales_quotation_view/{id}", "handler": "GetSalesQuotationView", "type": "get" },
+                        { "method": "Post", "path": "/sales_quotation_view/search", "handler": "SearchSalesQuotationView", "type": "search" }
+                    ]
                 }
             ]
         }

@@ -24,21 +24,24 @@ import (
 
 // DeliveryNoteItemView is an object representing the database table.
 type DeliveryNoteItemView struct {
-	ID                 null.Int  `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentItemID null.Int  `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
-	DeliveryNoteID     null.Int  `boil:"delivery_note_id" json:"delivery_note_id,omitempty" toml:"delivery_note_id" yaml:"delivery_note_id,omitempty"`
-	BaseDocumentItem   null.JSON `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
+	ID                 null.Int    `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentItemID null.Int    `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
+	DeliveryNoteID     null.Int    `boil:"delivery_note_id" json:"delivery_note_id,omitempty" toml:"delivery_note_id" yaml:"delivery_note_id,omitempty"`
+	GoodsCondition     null.String `boil:"goods_condition" json:"goods_condition,omitempty" toml:"goods_condition" yaml:"goods_condition,omitempty"`
+	BaseDocumentItem   null.JSON   `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
 var DeliveryNoteItemViewColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	DeliveryNoteID     string
+	GoodsCondition     string
 	BaseDocumentItem   string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	DeliveryNoteID:     "delivery_note_id",
+	GoodsCondition:     "goods_condition",
 	BaseDocumentItem:   "base_document_item",
 }
 
@@ -46,56 +49,36 @@ var DeliveryNoteItemViewTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	DeliveryNoteID     string
+	GoodsCondition     string
 	BaseDocumentItem   string
 }{
 	ID:                 "delivery_note_item_view.id",
 	BaseDocumentItemID: "delivery_note_item_view.base_document_item_id",
 	DeliveryNoteID:     "delivery_note_item_view.delivery_note_id",
+	GoodsCondition:     "delivery_note_item_view.goods_condition",
 	BaseDocumentItem:   "delivery_note_item_view.base_document_item",
 }
 
 // Generated where
 
-type whereHelpernull_JSON struct{ field string }
-
-func (w whereHelpernull_JSON) EQ(x null.JSON) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_JSON) NEQ(x null.JSON) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_JSON) LT(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_JSON) LTE(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_JSON) GT(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_JSON) GTE(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_JSON) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_JSON) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var DeliveryNoteItemViewWhere = struct {
 	ID                 whereHelpernull_Int
 	BaseDocumentItemID whereHelpernull_Int
 	DeliveryNoteID     whereHelpernull_Int
+	GoodsCondition     whereHelpernull_String
 	BaseDocumentItem   whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item_id\""},
 	DeliveryNoteID:     whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"delivery_note_id\""},
+	GoodsCondition:     whereHelpernull_String{field: "\"sale\".\"delivery_note_item_view\".\"goods_condition\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item\""},
 }
 
 var (
-	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "base_document_item"}
+	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "base_document_item"}
 	deliveryNoteItemViewColumnsWithoutDefault = []string{}
-	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "base_document_item"}
+	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "base_document_item"}
 	deliveryNoteItemViewPrimaryKeyColumns     = []string{}
 	deliveryNoteItemViewGeneratedColumns      = []string{}
 )

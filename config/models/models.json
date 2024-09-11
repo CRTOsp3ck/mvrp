@@ -72,6 +72,13 @@
                 { "name": "SalesOrderItem", "plural_name": "SalesOrderItems" },
                 { "name": "SalesQuotation", "plural_name": "SalesQuotations" },
                 { "name": "SalesQuotationItem", "plural_name": "SalesQuotationItems" }
+            ],
+            "views": [
+                { "name": "DeliveryNoteView", "plural_name": "DeliveryNoteViews" },
+                { "name": "GoodsReturnNoteView", "plural_name": "GoodsReturnNoteViews" },
+                { "name": "OrderConfirmationView", "plural_name": "OrderConfirmationViews" },
+                { "name": "SalesOrderView", "plural_name": "SalesOrderViews" },
+                { "name": "SalesQuotationView", "plural_name": "SalesQuotationViews" }
             ]
         }
     ]

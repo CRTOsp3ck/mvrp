@@ -24,12 +24,12 @@ import (
 
 // OrderConfirmation is an object representing the database table.
 type OrderConfirmation struct {
-	ID                      int         `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentID          int         `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
-	OrderConfirmationNumber string      `boil:"order_confirmation_number" json:"order_confirmation_number" toml:"order_confirmation_number" yaml:"order_confirmation_number"`
-	SalesOrderID            int         `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
-	CustomerID              null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation       null.String `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	ID                      int       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentID          int       `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
+	OrderConfirmationNumber string    `boil:"order_confirmation_number" json:"order_confirmation_number" toml:"order_confirmation_number" yaml:"order_confirmation_number"`
+	SalesOrderID            int       `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
+	CustomerID              null.Int  `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	ShipToInformation       null.JSON `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
 
 	R *orderConfirmationR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L orderConfirmationL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -75,14 +75,14 @@ var OrderConfirmationWhere = struct {
 	OrderConfirmationNumber whereHelperstring
 	SalesOrderID            whereHelperint
 	CustomerID              whereHelpernull_Int
-	ShipToInformation       whereHelpernull_String
+	ShipToInformation       whereHelpernull_JSON
 }{
 	ID:                      whereHelperint{field: "\"sale\".\"order_confirmation\".\"id\""},
 	BaseDocumentID:          whereHelperint{field: "\"sale\".\"order_confirmation\".\"base_document_id\""},
 	OrderConfirmationNumber: whereHelperstring{field: "\"sale\".\"order_confirmation\".\"order_confirmation_number\""},
 	SalesOrderID:            whereHelperint{field: "\"sale\".\"order_confirmation\".\"sales_order_id\""},
 	CustomerID:              whereHelpernull_Int{field: "\"sale\".\"order_confirmation\".\"customer_id\""},
-	ShipToInformation:       whereHelpernull_String{field: "\"sale\".\"order_confirmation\".\"ship_to_information\""},
+	ShipToInformation:       whereHelpernull_JSON{field: "\"sale\".\"order_confirmation\".\"ship_to_information\""},
 }
 
 // OrderConfirmationRels is where relationship names are stored.

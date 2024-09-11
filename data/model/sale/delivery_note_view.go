@@ -30,13 +30,13 @@ type DeliveryNoteView struct {
 	SalesOrderID                 null.Int    `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
 	VendorID                     null.Int    `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
 	CustomerID                   null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation            null.String `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	ShipFromInformation          null.String `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
-	BillToInformation            null.String `boil:"bill_to_information" json:"bill_to_information,omitempty" toml:"bill_to_information" yaml:"bill_to_information,omitempty"`
+	ShipToInformation            null.JSON   `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	ShipFromInformation          null.JSON   `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
+	BillToInformation            null.JSON   `boil:"bill_to_information" json:"bill_to_information,omitempty" toml:"bill_to_information" yaml:"bill_to_information,omitempty"`
 	DeliveryDate                 null.Time   `boil:"delivery_date" json:"delivery_date,omitempty" toml:"delivery_date" yaml:"delivery_date,omitempty"`
-	ShippingPersonnelInformation null.String `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
-	ReceivedBy                   null.String `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
-	GoodsCondition               null.String `boil:"goods_condition" json:"goods_condition,omitempty" toml:"goods_condition" yaml:"goods_condition,omitempty"`
+	ShippingPersonnelInformation null.JSON   `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
+	ReceivedBy                   null.JSON   `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
+	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
 	BaseDocument                 null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	DeliveryNoteItems            null.JSON   `boil:"delivery_note_items" json:"delivery_note_items,omitempty" toml:"delivery_note_items" yaml:"delivery_note_items,omitempty"`
 }
@@ -54,7 +54,7 @@ var DeliveryNoteViewColumns = struct {
 	DeliveryDate                 string
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
-	GoodsCondition               string
+	OverallGoodsCondition        string
 	BaseDocument                 string
 	DeliveryNoteItems            string
 }{
@@ -70,7 +70,7 @@ var DeliveryNoteViewColumns = struct {
 	DeliveryDate:                 "delivery_date",
 	ShippingPersonnelInformation: "shipping_personnel_information",
 	ReceivedBy:                   "received_by",
-	GoodsCondition:               "goods_condition",
+	OverallGoodsCondition:        "overall_goods_condition",
 	BaseDocument:                 "base_document",
 	DeliveryNoteItems:            "delivery_note_items",
 }
@@ -88,7 +88,7 @@ var DeliveryNoteViewTableColumns = struct {
 	DeliveryDate                 string
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
-	GoodsCondition               string
+	OverallGoodsCondition        string
 	BaseDocument                 string
 	DeliveryNoteItems            string
 }{
@@ -104,7 +104,7 @@ var DeliveryNoteViewTableColumns = struct {
 	DeliveryDate:                 "delivery_note_view.delivery_date",
 	ShippingPersonnelInformation: "delivery_note_view.shipping_personnel_information",
 	ReceivedBy:                   "delivery_note_view.received_by",
-	GoodsCondition:               "delivery_note_view.goods_condition",
+	OverallGoodsCondition:        "delivery_note_view.overall_goods_condition",
 	BaseDocument:                 "delivery_note_view.base_document",
 	DeliveryNoteItems:            "delivery_note_view.delivery_note_items",
 }
@@ -118,13 +118,13 @@ var DeliveryNoteViewWhere = struct {
 	SalesOrderID                 whereHelpernull_Int
 	VendorID                     whereHelpernull_Int
 	CustomerID                   whereHelpernull_Int
-	ShipToInformation            whereHelpernull_String
-	ShipFromInformation          whereHelpernull_String
-	BillToInformation            whereHelpernull_String
+	ShipToInformation            whereHelpernull_JSON
+	ShipFromInformation          whereHelpernull_JSON
+	BillToInformation            whereHelpernull_JSON
 	DeliveryDate                 whereHelpernull_Time
-	ShippingPersonnelInformation whereHelpernull_String
-	ReceivedBy                   whereHelpernull_String
-	GoodsCondition               whereHelpernull_String
+	ShippingPersonnelInformation whereHelpernull_JSON
+	ReceivedBy                   whereHelpernull_JSON
+	OverallGoodsCondition        whereHelpernull_String
 	BaseDocument                 whereHelpernull_JSON
 	DeliveryNoteItems            whereHelpernull_JSON
 }{
@@ -134,21 +134,21 @@ var DeliveryNoteViewWhere = struct {
 	SalesOrderID:                 whereHelpernull_Int{field: "\"sale\".\"delivery_note_view\".\"sales_order_id\""},
 	VendorID:                     whereHelpernull_Int{field: "\"sale\".\"delivery_note_view\".\"vendor_id\""},
 	CustomerID:                   whereHelpernull_Int{field: "\"sale\".\"delivery_note_view\".\"customer_id\""},
-	ShipToInformation:            whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"ship_to_information\""},
-	ShipFromInformation:          whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"ship_from_information\""},
-	BillToInformation:            whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"bill_to_information\""},
+	ShipToInformation:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"ship_to_information\""},
+	ShipFromInformation:          whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"ship_from_information\""},
+	BillToInformation:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"bill_to_information\""},
 	DeliveryDate:                 whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"delivery_date\""},
-	ShippingPersonnelInformation: whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"shipping_personnel_information\""},
-	ReceivedBy:                   whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"received_by\""},
-	GoodsCondition:               whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"goods_condition\""},
+	ShippingPersonnelInformation: whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"shipping_personnel_information\""},
+	ReceivedBy:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"received_by\""},
+	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"overall_goods_condition\""},
 	BaseDocument:                 whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"base_document\""},
 	DeliveryNoteItems:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"delivery_note_items\""},
 }
 
 var (
-	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "goods_condition", "base_document", "delivery_note_items"}
+	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "base_document", "delivery_note_items"}
 	deliveryNoteViewColumnsWithoutDefault = []string{}
-	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "goods_condition", "base_document", "delivery_note_items"}
+	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "base_document", "delivery_note_items"}
 	deliveryNoteViewPrimaryKeyColumns     = []string{}
 	deliveryNoteViewGeneratedColumns      = []string{}
 )

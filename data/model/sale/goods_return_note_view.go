@@ -31,13 +31,11 @@ type GoodsReturnNoteView struct {
 	InvoiceID                    null.Int    `boil:"invoice_id" json:"invoice_id,omitempty" toml:"invoice_id" yaml:"invoice_id,omitempty"`
 	CreditNoteID                 null.Int    `boil:"credit_note_id" json:"credit_note_id,omitempty" toml:"credit_note_id" yaml:"credit_note_id,omitempty"`
 	RmaID                        null.Int    `boil:"rma_id" json:"rma_id,omitempty" toml:"rma_id" yaml:"rma_id,omitempty"`
-	IssueDate                    null.Time   `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
 	ReturnDate                   null.Time   `boil:"return_date" json:"return_date,omitempty" toml:"return_date" yaml:"return_date,omitempty"`
-	CustomerID                   null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ReceivingLocationInformation null.String `boil:"receiving_location_information" json:"receiving_location_information,omitempty" toml:"receiving_location_information" yaml:"receiving_location_information,omitempty"`
-	ReceivedBy                   null.String `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
+	ReturnedByCustomerID         null.Int    `boil:"returned_by_customer_id" json:"returned_by_customer_id,omitempty" toml:"returned_by_customer_id" yaml:"returned_by_customer_id,omitempty"`
+	ReceivingLocationInformation null.JSON   `boil:"receiving_location_information" json:"receiving_location_information,omitempty" toml:"receiving_location_information" yaml:"receiving_location_information,omitempty"`
+	ReceivedByEmployeeID         null.Int    `boil:"received_by_employee_id" json:"received_by_employee_id,omitempty" toml:"received_by_employee_id" yaml:"received_by_employee_id,omitempty"`
 	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
-	ReturnReason                 null.String `boil:"return_reason" json:"return_reason,omitempty" toml:"return_reason" yaml:"return_reason,omitempty"`
 	BaseDocument                 null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	GoodsReturnNoteItems         null.JSON   `boil:"goods_return_note_items" json:"goods_return_note_items,omitempty" toml:"goods_return_note_items" yaml:"goods_return_note_items,omitempty"`
 }
@@ -50,13 +48,11 @@ var GoodsReturnNoteViewColumns = struct {
 	InvoiceID                    string
 	CreditNoteID                 string
 	RmaID                        string
-	IssueDate                    string
 	ReturnDate                   string
-	CustomerID                   string
+	ReturnedByCustomerID         string
 	ReceivingLocationInformation string
-	ReceivedBy                   string
+	ReceivedByEmployeeID         string
 	OverallGoodsCondition        string
-	ReturnReason                 string
 	BaseDocument                 string
 	GoodsReturnNoteItems         string
 }{
@@ -67,13 +63,11 @@ var GoodsReturnNoteViewColumns = struct {
 	InvoiceID:                    "invoice_id",
 	CreditNoteID:                 "credit_note_id",
 	RmaID:                        "rma_id",
-	IssueDate:                    "issue_date",
 	ReturnDate:                   "return_date",
-	CustomerID:                   "customer_id",
+	ReturnedByCustomerID:         "returned_by_customer_id",
 	ReceivingLocationInformation: "receiving_location_information",
-	ReceivedBy:                   "received_by",
+	ReceivedByEmployeeID:         "received_by_employee_id",
 	OverallGoodsCondition:        "overall_goods_condition",
-	ReturnReason:                 "return_reason",
 	BaseDocument:                 "base_document",
 	GoodsReturnNoteItems:         "goods_return_note_items",
 }
@@ -86,13 +80,11 @@ var GoodsReturnNoteViewTableColumns = struct {
 	InvoiceID                    string
 	CreditNoteID                 string
 	RmaID                        string
-	IssueDate                    string
 	ReturnDate                   string
-	CustomerID                   string
+	ReturnedByCustomerID         string
 	ReceivingLocationInformation string
-	ReceivedBy                   string
+	ReceivedByEmployeeID         string
 	OverallGoodsCondition        string
-	ReturnReason                 string
 	BaseDocument                 string
 	GoodsReturnNoteItems         string
 }{
@@ -103,13 +95,11 @@ var GoodsReturnNoteViewTableColumns = struct {
 	InvoiceID:                    "goods_return_note_view.invoice_id",
 	CreditNoteID:                 "goods_return_note_view.credit_note_id",
 	RmaID:                        "goods_return_note_view.rma_id",
-	IssueDate:                    "goods_return_note_view.issue_date",
 	ReturnDate:                   "goods_return_note_view.return_date",
-	CustomerID:                   "goods_return_note_view.customer_id",
+	ReturnedByCustomerID:         "goods_return_note_view.returned_by_customer_id",
 	ReceivingLocationInformation: "goods_return_note_view.receiving_location_information",
-	ReceivedBy:                   "goods_return_note_view.received_by",
+	ReceivedByEmployeeID:         "goods_return_note_view.received_by_employee_id",
 	OverallGoodsCondition:        "goods_return_note_view.overall_goods_condition",
-	ReturnReason:                 "goods_return_note_view.return_reason",
 	BaseDocument:                 "goods_return_note_view.base_document",
 	GoodsReturnNoteItems:         "goods_return_note_view.goods_return_note_items",
 }
@@ -124,13 +114,11 @@ var GoodsReturnNoteViewWhere = struct {
 	InvoiceID                    whereHelpernull_Int
 	CreditNoteID                 whereHelpernull_Int
 	RmaID                        whereHelpernull_Int
-	IssueDate                    whereHelpernull_Time
 	ReturnDate                   whereHelpernull_Time
-	CustomerID                   whereHelpernull_Int
-	ReceivingLocationInformation whereHelpernull_String
-	ReceivedBy                   whereHelpernull_String
+	ReturnedByCustomerID         whereHelpernull_Int
+	ReceivingLocationInformation whereHelpernull_JSON
+	ReceivedByEmployeeID         whereHelpernull_Int
 	OverallGoodsCondition        whereHelpernull_String
-	ReturnReason                 whereHelpernull_String
 	BaseDocument                 whereHelpernull_JSON
 	GoodsReturnNoteItems         whereHelpernull_JSON
 }{
@@ -141,21 +129,19 @@ var GoodsReturnNoteViewWhere = struct {
 	InvoiceID:                    whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"invoice_id\""},
 	CreditNoteID:                 whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"credit_note_id\""},
 	RmaID:                        whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"rma_id\""},
-	IssueDate:                    whereHelpernull_Time{field: "\"sale\".\"goods_return_note_view\".\"issue_date\""},
 	ReturnDate:                   whereHelpernull_Time{field: "\"sale\".\"goods_return_note_view\".\"return_date\""},
-	CustomerID:                   whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"customer_id\""},
-	ReceivingLocationInformation: whereHelpernull_String{field: "\"sale\".\"goods_return_note_view\".\"receiving_location_information\""},
-	ReceivedBy:                   whereHelpernull_String{field: "\"sale\".\"goods_return_note_view\".\"received_by\""},
+	ReturnedByCustomerID:         whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"returned_by_customer_id\""},
+	ReceivingLocationInformation: whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_view\".\"receiving_location_information\""},
+	ReceivedByEmployeeID:         whereHelpernull_Int{field: "\"sale\".\"goods_return_note_view\".\"received_by_employee_id\""},
 	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"goods_return_note_view\".\"overall_goods_condition\""},
-	ReturnReason:                 whereHelpernull_String{field: "\"sale\".\"goods_return_note_view\".\"return_reason\""},
 	BaseDocument:                 whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_view\".\"base_document\""},
 	GoodsReturnNoteItems:         whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_view\".\"goods_return_note_items\""},
 }
 
 var (
-	goodsReturnNoteViewAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "issue_date", "return_date", "customer_id", "receiving_location_information", "received_by", "overall_goods_condition", "return_reason", "base_document", "goods_return_note_items"}
+	goodsReturnNoteViewAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "base_document", "goods_return_note_items"}
 	goodsReturnNoteViewColumnsWithoutDefault = []string{}
-	goodsReturnNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "issue_date", "return_date", "customer_id", "receiving_location_information", "received_by", "overall_goods_condition", "return_reason", "base_document", "goods_return_note_items"}
+	goodsReturnNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "base_document", "goods_return_note_items"}
 	goodsReturnNoteViewPrimaryKeyColumns     = []string{}
 	goodsReturnNoteViewGeneratedColumns      = []string{}
 )

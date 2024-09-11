@@ -264,6 +264,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/delivery_note_view", func(r chi.Router) {
+				r.Get("/", sale.ListDeliveryNoteView)
+				r.Post("/search", sale.SearchDeliveryNoteView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(sale.DeliveryNoteViewContext)
+					r.Get("/", sale.GetDeliveryNoteView)
+				})
+			})
+			
 			r.Route("/goods_return_note", func(r chi.Router) {
 				r.Get("/", sale.ListGoodsReturnNote)
 				r.Post("/", sale.CreateGoodsReturnNote)
@@ -273,6 +282,15 @@ func getMainRoutes() func(chi.Router) {
 					r.Get("/", sale.GetGoodsReturnNote)
 					r.Put("/", sale.UpdateGoodsReturnNote)
 					r.Delete("/", sale.DeleteGoodsReturnNote)
+				})
+			})
+			
+			r.Route("/goods_return_note_view", func(r chi.Router) {
+				r.Get("/", sale.ListGoodsReturnNoteView)
+				r.Post("/search", sale.SearchGoodsReturnNoteView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(sale.GoodsReturnNoteViewContext)
+					r.Get("/", sale.GetGoodsReturnNoteView)
 				})
 			})
 			
@@ -288,6 +306,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/order_confirmation_view", func(r chi.Router) {
+				r.Get("/", sale.ListOrderConfirmationView)
+				r.Post("/search", sale.SearchOrderConfirmationView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(sale.OrderConfirmationViewContext)
+					r.Get("/", sale.GetOrderConfirmationView)
+				})
+			})
+			
 			r.Route("/sales_order", func(r chi.Router) {
 				r.Get("/", sale.ListSalesOrder)
 				r.Post("/", sale.CreateSalesOrder)
@@ -300,6 +327,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/sales_order_view", func(r chi.Router) {
+				r.Get("/", sale.ListSalesOrderView)
+				r.Post("/search", sale.SearchSalesOrderView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(sale.SalesOrderViewContext)
+					r.Get("/", sale.GetSalesOrderView)
+				})
+			})
+			
 			r.Route("/sales_quotation", func(r chi.Router) {
 				r.Get("/", sale.ListSalesQuotation)
 				r.Post("/", sale.CreateSalesQuotation)
@@ -309,6 +345,15 @@ func getMainRoutes() func(chi.Router) {
 					r.Get("/", sale.GetSalesQuotation)
 					r.Put("/", sale.UpdateSalesQuotation)
 					r.Delete("/", sale.DeleteSalesQuotation)
+				})
+			})
+			
+			r.Route("/sales_quotation_view", func(r chi.Router) {
+				r.Get("/", sale.ListSalesQuotationView)
+				r.Post("/search", sale.SearchSalesQuotationView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(sale.SalesQuotationViewContext)
+					r.Get("/", sale.GetSalesQuotationView)
 				})
 			})
 			

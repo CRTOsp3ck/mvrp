@@ -23,9 +23,10 @@ import (
 
 // DeliveryNoteItem is an object representing the database table.
 type DeliveryNoteItem struct {
-	ID                 int `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentItemID int `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
-	DeliveryNoteID     int `boil:"delivery_note_id" json:"delivery_note_id" toml:"delivery_note_id" yaml:"delivery_note_id"`
+	ID                 int    `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentItemID int    `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
+	DeliveryNoteID     int    `boil:"delivery_note_id" json:"delivery_note_id" toml:"delivery_note_id" yaml:"delivery_note_id"`
+	GoodsCondition     string `boil:"goods_condition" json:"goods_condition" toml:"goods_condition" yaml:"goods_condition"`
 
 	R *deliveryNoteItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L deliveryNoteItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -35,20 +36,24 @@ var DeliveryNoteItemColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	DeliveryNoteID     string
+	GoodsCondition     string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	DeliveryNoteID:     "delivery_note_id",
+	GoodsCondition:     "goods_condition",
 }
 
 var DeliveryNoteItemTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	DeliveryNoteID     string
+	GoodsCondition     string
 }{
 	ID:                 "delivery_note_item.id",
 	BaseDocumentItemID: "delivery_note_item.base_document_item_id",
 	DeliveryNoteID:     "delivery_note_item.delivery_note_id",
+	GoodsCondition:     "delivery_note_item.goods_condition",
 }
 
 // Generated where
@@ -57,10 +62,12 @@ var DeliveryNoteItemWhere = struct {
 	ID                 whereHelperint
 	BaseDocumentItemID whereHelperint
 	DeliveryNoteID     whereHelperint
+	GoodsCondition     whereHelperstring
 }{
 	ID:                 whereHelperint{field: "\"sale\".\"delivery_note_item\".\"id\""},
 	BaseDocumentItemID: whereHelperint{field: "\"sale\".\"delivery_note_item\".\"base_document_item_id\""},
 	DeliveryNoteID:     whereHelperint{field: "\"sale\".\"delivery_note_item\".\"delivery_note_id\""},
+	GoodsCondition:     whereHelperstring{field: "\"sale\".\"delivery_note_item\".\"goods_condition\""},
 }
 
 // DeliveryNoteItemRels is where relationship names are stored.
@@ -91,8 +98,8 @@ func (r *deliveryNoteItemR) GetDeliveryNote() *DeliveryNote {
 type deliveryNoteItemL struct{}
 
 var (
-	deliveryNoteItemAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id"}
-	deliveryNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "delivery_note_id"}
+	deliveryNoteItemAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition"}
+	deliveryNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition"}
 	deliveryNoteItemColumnsWithDefault    = []string{}
 	deliveryNoteItemPrimaryKeyColumns     = []string{"id"}
 	deliveryNoteItemGeneratedColumns      = []string{}

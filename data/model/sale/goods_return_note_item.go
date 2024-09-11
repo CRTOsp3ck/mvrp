@@ -31,6 +31,7 @@ type GoodsReturnNoteItem struct {
 	RmaItemID          null.Int          `boil:"rma_item_id" json:"rma_item_id,omitempty" toml:"rma_item_id" yaml:"rma_item_id,omitempty"`
 	ReturnQuantity     types.NullDecimal `boil:"return_quantity" json:"return_quantity,omitempty" toml:"return_quantity" yaml:"return_quantity,omitempty"`
 	ReturnCondition    null.String       `boil:"return_condition" json:"return_condition,omitempty" toml:"return_condition" yaml:"return_condition,omitempty"`
+	ReturnReason       null.String       `boil:"return_reason" json:"return_reason,omitempty" toml:"return_reason" yaml:"return_reason,omitempty"`
 
 	R *goodsReturnNoteItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L goodsReturnNoteItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -43,6 +44,7 @@ var GoodsReturnNoteItemColumns = struct {
 	RmaItemID          string
 	ReturnQuantity     string
 	ReturnCondition    string
+	ReturnReason       string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
@@ -50,6 +52,7 @@ var GoodsReturnNoteItemColumns = struct {
 	RmaItemID:          "rma_item_id",
 	ReturnQuantity:     "return_quantity",
 	ReturnCondition:    "return_condition",
+	ReturnReason:       "return_reason",
 }
 
 var GoodsReturnNoteItemTableColumns = struct {
@@ -59,6 +62,7 @@ var GoodsReturnNoteItemTableColumns = struct {
 	RmaItemID          string
 	ReturnQuantity     string
 	ReturnCondition    string
+	ReturnReason       string
 }{
 	ID:                 "goods_return_note_item.id",
 	BaseDocumentItemID: "goods_return_note_item.base_document_item_id",
@@ -66,6 +70,7 @@ var GoodsReturnNoteItemTableColumns = struct {
 	RmaItemID:          "goods_return_note_item.rma_item_id",
 	ReturnQuantity:     "goods_return_note_item.return_quantity",
 	ReturnCondition:    "goods_return_note_item.return_condition",
+	ReturnReason:       "goods_return_note_item.return_reason",
 }
 
 // Generated where
@@ -103,6 +108,7 @@ var GoodsReturnNoteItemWhere = struct {
 	RmaItemID          whereHelpernull_Int
 	ReturnQuantity     whereHelpertypes_NullDecimal
 	ReturnCondition    whereHelpernull_String
+	ReturnReason       whereHelpernull_String
 }{
 	ID:                 whereHelperint{field: "\"sale\".\"goods_return_note_item\".\"id\""},
 	BaseDocumentItemID: whereHelperint{field: "\"sale\".\"goods_return_note_item\".\"base_document_item_id\""},
@@ -110,6 +116,7 @@ var GoodsReturnNoteItemWhere = struct {
 	RmaItemID:          whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item\".\"rma_item_id\""},
 	ReturnQuantity:     whereHelpertypes_NullDecimal{field: "\"sale\".\"goods_return_note_item\".\"return_quantity\""},
 	ReturnCondition:    whereHelpernull_String{field: "\"sale\".\"goods_return_note_item\".\"return_condition\""},
+	ReturnReason:       whereHelpernull_String{field: "\"sale\".\"goods_return_note_item\".\"return_reason\""},
 }
 
 // GoodsReturnNoteItemRels is where relationship names are stored.
@@ -140,9 +147,9 @@ func (r *goodsReturnNoteItemR) GetGoodsReturnNote() *GoodsReturnNote {
 type goodsReturnNoteItemL struct{}
 
 var (
-	goodsReturnNoteItemAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition"}
+	goodsReturnNoteItemAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason"}
 	goodsReturnNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "goods_return_note_id"}
-	goodsReturnNoteItemColumnsWithDefault    = []string{"rma_item_id", "return_quantity", "return_condition"}
+	goodsReturnNoteItemColumnsWithDefault    = []string{"rma_item_id", "return_quantity", "return_condition", "return_reason"}
 	goodsReturnNoteItemPrimaryKeyColumns     = []string{"id"}
 	goodsReturnNoteItemGeneratedColumns      = []string{}
 )

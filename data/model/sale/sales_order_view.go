@@ -24,74 +24,74 @@ import (
 
 // SalesOrderView is an object representing the database table.
 type SalesOrderView struct {
-	ID                             null.Int             `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentID                 null.Int             `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
-	SalesOrderNumber               null.String          `boil:"sales_order_number" json:"sales_order_number,omitempty" toml:"sales_order_number" yaml:"sales_order_number,omitempty"`
-	VendorID                       null.Int             `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
-	CustomerID                     null.Int             `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	SalesRepresentativeInformation null.String          `boil:"sales_representative_information" json:"sales_representative_information,omitempty" toml:"sales_representative_information" yaml:"sales_representative_information,omitempty"`
-	ShipToInformation              null.String          `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	ShipFromInformation            null.String          `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
-	PaymentDueDate                 null.Time            `boil:"payment_due_date" json:"payment_due_date,omitempty" toml:"payment_due_date" yaml:"payment_due_date,omitempty"`
-	OrderStatus                    NullSalesOrderStatus `boil:"order_status" json:"order_status,omitempty" toml:"order_status" yaml:"order_status,omitempty"`
-	BaseDocument                   null.JSON            `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
-	SalesOrderItems                null.JSON            `boil:"sales_order_items" json:"sales_order_items,omitempty" toml:"sales_order_items" yaml:"sales_order_items,omitempty"`
+	ID                            null.Int             `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentID                null.Int             `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
+	SalesOrderNumber              null.String          `boil:"sales_order_number" json:"sales_order_number,omitempty" toml:"sales_order_number" yaml:"sales_order_number,omitempty"`
+	VendorID                      null.Int             `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
+	CustomerID                    null.Int             `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	SalesRepresentativeEmployeeID null.Int             `boil:"sales_representative_employee_id" json:"sales_representative_employee_id,omitempty" toml:"sales_representative_employee_id" yaml:"sales_representative_employee_id,omitempty"`
+	ShipToInformation             null.JSON            `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	ShipFromInformation           null.JSON            `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
+	PaymentDueDate                null.Time            `boil:"payment_due_date" json:"payment_due_date,omitempty" toml:"payment_due_date" yaml:"payment_due_date,omitempty"`
+	OrderStatus                   NullSalesOrderStatus `boil:"order_status" json:"order_status,omitempty" toml:"order_status" yaml:"order_status,omitempty"`
+	BaseDocument                  null.JSON            `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	SalesOrderItems               null.JSON            `boil:"sales_order_items" json:"sales_order_items,omitempty" toml:"sales_order_items" yaml:"sales_order_items,omitempty"`
 }
 
 var SalesOrderViewColumns = struct {
-	ID                             string
-	BaseDocumentID                 string
-	SalesOrderNumber               string
-	VendorID                       string
-	CustomerID                     string
-	SalesRepresentativeInformation string
-	ShipToInformation              string
-	ShipFromInformation            string
-	PaymentDueDate                 string
-	OrderStatus                    string
-	BaseDocument                   string
-	SalesOrderItems                string
+	ID                            string
+	BaseDocumentID                string
+	SalesOrderNumber              string
+	VendorID                      string
+	CustomerID                    string
+	SalesRepresentativeEmployeeID string
+	ShipToInformation             string
+	ShipFromInformation           string
+	PaymentDueDate                string
+	OrderStatus                   string
+	BaseDocument                  string
+	SalesOrderItems               string
 }{
-	ID:                             "id",
-	BaseDocumentID:                 "base_document_id",
-	SalesOrderNumber:               "sales_order_number",
-	VendorID:                       "vendor_id",
-	CustomerID:                     "customer_id",
-	SalesRepresentativeInformation: "sales_representative_information",
-	ShipToInformation:              "ship_to_information",
-	ShipFromInformation:            "ship_from_information",
-	PaymentDueDate:                 "payment_due_date",
-	OrderStatus:                    "order_status",
-	BaseDocument:                   "base_document",
-	SalesOrderItems:                "sales_order_items",
+	ID:                            "id",
+	BaseDocumentID:                "base_document_id",
+	SalesOrderNumber:              "sales_order_number",
+	VendorID:                      "vendor_id",
+	CustomerID:                    "customer_id",
+	SalesRepresentativeEmployeeID: "sales_representative_employee_id",
+	ShipToInformation:             "ship_to_information",
+	ShipFromInformation:           "ship_from_information",
+	PaymentDueDate:                "payment_due_date",
+	OrderStatus:                   "order_status",
+	BaseDocument:                  "base_document",
+	SalesOrderItems:               "sales_order_items",
 }
 
 var SalesOrderViewTableColumns = struct {
-	ID                             string
-	BaseDocumentID                 string
-	SalesOrderNumber               string
-	VendorID                       string
-	CustomerID                     string
-	SalesRepresentativeInformation string
-	ShipToInformation              string
-	ShipFromInformation            string
-	PaymentDueDate                 string
-	OrderStatus                    string
-	BaseDocument                   string
-	SalesOrderItems                string
+	ID                            string
+	BaseDocumentID                string
+	SalesOrderNumber              string
+	VendorID                      string
+	CustomerID                    string
+	SalesRepresentativeEmployeeID string
+	ShipToInformation             string
+	ShipFromInformation           string
+	PaymentDueDate                string
+	OrderStatus                   string
+	BaseDocument                  string
+	SalesOrderItems               string
 }{
-	ID:                             "sales_order_view.id",
-	BaseDocumentID:                 "sales_order_view.base_document_id",
-	SalesOrderNumber:               "sales_order_view.sales_order_number",
-	VendorID:                       "sales_order_view.vendor_id",
-	CustomerID:                     "sales_order_view.customer_id",
-	SalesRepresentativeInformation: "sales_order_view.sales_representative_information",
-	ShipToInformation:              "sales_order_view.ship_to_information",
-	ShipFromInformation:            "sales_order_view.ship_from_information",
-	PaymentDueDate:                 "sales_order_view.payment_due_date",
-	OrderStatus:                    "sales_order_view.order_status",
-	BaseDocument:                   "sales_order_view.base_document",
-	SalesOrderItems:                "sales_order_view.sales_order_items",
+	ID:                            "sales_order_view.id",
+	BaseDocumentID:                "sales_order_view.base_document_id",
+	SalesOrderNumber:              "sales_order_view.sales_order_number",
+	VendorID:                      "sales_order_view.vendor_id",
+	CustomerID:                    "sales_order_view.customer_id",
+	SalesRepresentativeEmployeeID: "sales_order_view.sales_representative_employee_id",
+	ShipToInformation:             "sales_order_view.ship_to_information",
+	ShipFromInformation:           "sales_order_view.ship_from_information",
+	PaymentDueDate:                "sales_order_view.payment_due_date",
+	OrderStatus:                   "sales_order_view.order_status",
+	BaseDocument:                  "sales_order_view.base_document",
+	SalesOrderItems:               "sales_order_view.sales_order_items",
 }
 
 // Generated where
@@ -137,37 +137,37 @@ func (w whereHelperNullSalesOrderStatus) IsNotNull() qm.QueryMod {
 }
 
 var SalesOrderViewWhere = struct {
-	ID                             whereHelpernull_Int
-	BaseDocumentID                 whereHelpernull_Int
-	SalesOrderNumber               whereHelpernull_String
-	VendorID                       whereHelpernull_Int
-	CustomerID                     whereHelpernull_Int
-	SalesRepresentativeInformation whereHelpernull_String
-	ShipToInformation              whereHelpernull_String
-	ShipFromInformation            whereHelpernull_String
-	PaymentDueDate                 whereHelpernull_Time
-	OrderStatus                    whereHelperNullSalesOrderStatus
-	BaseDocument                   whereHelpernull_JSON
-	SalesOrderItems                whereHelpernull_JSON
+	ID                            whereHelpernull_Int
+	BaseDocumentID                whereHelpernull_Int
+	SalesOrderNumber              whereHelpernull_String
+	VendorID                      whereHelpernull_Int
+	CustomerID                    whereHelpernull_Int
+	SalesRepresentativeEmployeeID whereHelpernull_Int
+	ShipToInformation             whereHelpernull_JSON
+	ShipFromInformation           whereHelpernull_JSON
+	PaymentDueDate                whereHelpernull_Time
+	OrderStatus                   whereHelperNullSalesOrderStatus
+	BaseDocument                  whereHelpernull_JSON
+	SalesOrderItems               whereHelpernull_JSON
 }{
-	ID:                             whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"id\""},
-	BaseDocumentID:                 whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"base_document_id\""},
-	SalesOrderNumber:               whereHelpernull_String{field: "\"sale\".\"sales_order_view\".\"sales_order_number\""},
-	VendorID:                       whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"vendor_id\""},
-	CustomerID:                     whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"customer_id\""},
-	SalesRepresentativeInformation: whereHelpernull_String{field: "\"sale\".\"sales_order_view\".\"sales_representative_information\""},
-	ShipToInformation:              whereHelpernull_String{field: "\"sale\".\"sales_order_view\".\"ship_to_information\""},
-	ShipFromInformation:            whereHelpernull_String{field: "\"sale\".\"sales_order_view\".\"ship_from_information\""},
-	PaymentDueDate:                 whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"payment_due_date\""},
-	OrderStatus:                    whereHelperNullSalesOrderStatus{field: "\"sale\".\"sales_order_view\".\"order_status\""},
-	BaseDocument:                   whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"base_document\""},
-	SalesOrderItems:                whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"sales_order_items\""},
+	ID:                            whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"id\""},
+	BaseDocumentID:                whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"base_document_id\""},
+	SalesOrderNumber:              whereHelpernull_String{field: "\"sale\".\"sales_order_view\".\"sales_order_number\""},
+	VendorID:                      whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"vendor_id\""},
+	CustomerID:                    whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"customer_id\""},
+	SalesRepresentativeEmployeeID: whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"sales_representative_employee_id\""},
+	ShipToInformation:             whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"ship_to_information\""},
+	ShipFromInformation:           whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"ship_from_information\""},
+	PaymentDueDate:                whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"payment_due_date\""},
+	OrderStatus:                   whereHelperNullSalesOrderStatus{field: "\"sale\".\"sales_order_view\".\"order_status\""},
+	BaseDocument:                  whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"base_document\""},
+	SalesOrderItems:               whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"sales_order_items\""},
 }
 
 var (
-	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_information", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
+	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
 	salesOrderViewColumnsWithoutDefault = []string{}
-	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_information", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
+	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
 	salesOrderViewPrimaryKeyColumns     = []string{}
 	salesOrderViewGeneratedColumns      = []string{}
 )

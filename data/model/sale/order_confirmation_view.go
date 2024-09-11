@@ -29,7 +29,7 @@ type OrderConfirmationView struct {
 	OrderConfirmationNumber null.String `boil:"order_confirmation_number" json:"order_confirmation_number,omitempty" toml:"order_confirmation_number" yaml:"order_confirmation_number,omitempty"`
 	SalesOrderID            null.Int    `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
 	CustomerID              null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation       null.String `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	ShipToInformation       null.JSON   `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
 	BaseDocument            null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	OrderConfirmationItems  null.JSON   `boil:"order_confirmation_items" json:"order_confirmation_items,omitempty" toml:"order_confirmation_items" yaml:"order_confirmation_items,omitempty"`
 }
@@ -82,7 +82,7 @@ var OrderConfirmationViewWhere = struct {
 	OrderConfirmationNumber whereHelpernull_String
 	SalesOrderID            whereHelpernull_Int
 	CustomerID              whereHelpernull_Int
-	ShipToInformation       whereHelpernull_String
+	ShipToInformation       whereHelpernull_JSON
 	BaseDocument            whereHelpernull_JSON
 	OrderConfirmationItems  whereHelpernull_JSON
 }{
@@ -91,7 +91,7 @@ var OrderConfirmationViewWhere = struct {
 	OrderConfirmationNumber: whereHelpernull_String{field: "\"sale\".\"order_confirmation_view\".\"order_confirmation_number\""},
 	SalesOrderID:            whereHelpernull_Int{field: "\"sale\".\"order_confirmation_view\".\"sales_order_id\""},
 	CustomerID:              whereHelpernull_Int{field: "\"sale\".\"order_confirmation_view\".\"customer_id\""},
-	ShipToInformation:       whereHelpernull_String{field: "\"sale\".\"order_confirmation_view\".\"ship_to_information\""},
+	ShipToInformation:       whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"ship_to_information\""},
 	BaseDocument:            whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"base_document\""},
 	OrderConfirmationItems:  whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"order_confirmation_items\""},
 }

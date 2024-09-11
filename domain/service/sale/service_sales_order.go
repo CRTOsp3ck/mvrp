@@ -282,6 +282,7 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeSale,
 			Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+			Reason:          null.StringFrom("Sales Order Creation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {
@@ -370,7 +371,11 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	for _, item := range currSo.R.SalesOrderItems {
+	currSoItems, err := s.Repo.Sale.GetSalesOrderItemsBySalesOrderID(req.Ctx, tx, currSo.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range currSoItems {
 		found := false
 		for _, newItem := range req.Payload.Items {
 			if item.ID == newItem.SalesOrderItem.ID {
@@ -414,6 +419,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeSaleCancellation,
 				Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Sales Order Item Cancellation"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -467,6 +473,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeSaleAdjustment,
 				Quantity:        types.NewDecimal(amountOffset.Big),
+				Reason:          null.StringFrom("Sales Order Item Adjustment"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -504,6 +511,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeSale,
 				Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Sales Order Item Creation"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -592,7 +600,11 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		return nil, err
 	}
 
-	for _, item := range salesOrder.R.SalesOrderItems {
+	salesOrderItems, err := s.Repo.Sale.GetSalesOrderItemsBySalesOrderID(req.Ctx, tx, salesOrder.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range salesOrderItems {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {
@@ -628,6 +640,7 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeSaleCancellation,
 			Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
+			Reason:          null.StringFrom("Sales Order Cancellation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {
