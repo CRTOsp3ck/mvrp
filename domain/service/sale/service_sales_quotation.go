@@ -275,7 +275,7 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 			return nil, err
 		}
 
-		time.Sleep(1 * time.Millisecond)
+		time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 	}
 
 	// get created sales quotation
@@ -431,7 +431,7 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 				return nil, err
 			}
 
-			time.Sleep(1 * time.Millisecond)
+			time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 		}
 	}
 

@@ -4,12 +4,16 @@ import (
 	"fmt"
 	"mvrp/data"
 	"mvrp/domain"
+	"mvrp/env"
 	"mvrp/http"
 	"strings"
 )
 
 func main() {
 	initMessage()
+
+	env.Init()
+
 	data.Init()
 	domain.Init()
 	http.Init()

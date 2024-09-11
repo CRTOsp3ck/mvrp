@@ -8,6 +8,7 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
+	"time"
 
 	"github.com/ericlagergren/decimal"
 	"github.com/volatiletech/null/v8"
@@ -230,18 +231,24 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 	}
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
 	}
 
 	// create sales order
+	nextID, err = s.Repo.Sale.GetNextEntrySalesOrderID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.SalesOrder.ID = nextID
 	req.Payload.SalesOrder.BaseDocumentID = req.Payload.BaseDocument.ID
 	if req.Payload.SalesOrder.SalesOrderNumber == "" {
-		nextID, err := s.Repo.Sale.GetNextEntrySalesOrderID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.SalesOrder.SalesOrderNumber = util.Util.Str.ToString(nextID)
 	}
 	err = s.Repo.Sale.CreateSalesOrder(req.Ctx, tx, &req.Payload.SalesOrder)
@@ -251,6 +258,11 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 
 	for _, item := range req.Payload.Items {
 		// create base document items
+		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.BaseDocumentItem.ID = nextID
 		item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 		err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 		if err != nil {
@@ -258,6 +270,11 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		}
 
 		// create sales order items
+		nextID, err = s.Repo.Sale.GetNextEntrySalesOrderItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.SalesOrderItem.ID = nextID
 		item.SalesOrderItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		item.SalesOrderItem.SalesOrderID = req.Payload.SalesOrder.ID
 		err = s.Repo.Sale.CreateSalesOrderItem(req.Ctx, tx, &item.SalesOrderItem)
@@ -288,6 +305,8 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		if err != nil {
 			return nil, err
 		}
+
+		time.Sleep(time.Duration(loopInterval) * time.Second)
 	}
 
 	// get created sales order
@@ -481,12 +500,23 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 		} else {
 			// create base document items
+			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create sales order items
+			nextID, err = s.Repo.Sale.GetNextEntrySalesOrderItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.SalesOrderItem.ID = nextID
 			item.SalesOrderItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.SalesOrderItem.SalesOrderID = req.Payload.SalesOrder.ID
 			err = s.Repo.Sale.CreateSalesOrderItem(req.Ctx, tx, &item.SalesOrderItem)
@@ -517,6 +547,8 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			if err != nil {
 				return nil, err
 			}
+
+			time.Sleep(time.Duration(loopInterval) * time.Second)
 		}
 	}
 
