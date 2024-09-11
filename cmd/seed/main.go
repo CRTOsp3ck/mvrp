@@ -4,6 +4,7 @@ import (
 	"mvrp/cmd/seed/entity"
 	"mvrp/cmd/seed/inventory"
 	"mvrp/cmd/seed/item"
+	"mvrp/cmd/seed/sale"
 	"mvrp/data"
 	"mvrp/domain"
 	"mvrp/env"
@@ -20,6 +21,7 @@ func Init() {
 	entity.Init()
 	item.Init()
 	inventory.Init()
+	sale.Init()
 
 	data.Init()
 	domain.Init()
@@ -37,6 +39,11 @@ func Seed() {
 	}
 
 	err = seedInventory()
+	if err != nil {
+		panic(err)
+	}
+
+	err = seedSale()
 	if err != nil {
 		panic(err)
 	}
@@ -97,6 +104,15 @@ func seedEntity() error {
 
 	// Create 3 employees
 	err = entity.SeedEmployees(25)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func seedSale() error {
+	err := sale.SeedSalesQuotation(100)
 	if err != nil {
 		return err
 	}

@@ -12,6 +12,38 @@ import (
 	"github.com/volatiletech/null/v8"
 )
 
+func SeedProprietor() error {
+	// Create a new service
+	svc := entity.NewEntityService()
+
+	// Create a new request
+	data := dto.CreateEntityDTO{
+		Entity: model.Entity{
+			Code:        fmt.Sprintf("PRO%03d", 1),
+			Name:        gofakeit.Name(),
+			Description: gofakeit.AdjectiveDescriptive(),
+			Address:     null.StringFrom(gofakeit.Address().Address),
+			Phone:       null.StringFrom(gofakeit.Phone()),
+			Email:       null.StringFrom(gofakeit.Email()),
+			Website:     null.StringFrom(gofakeit.URL()),
+			Type:        model.EntityTypeProprietor,
+			Status:      model.EntityStatusActive,
+		},
+	}
+	ctx := context.Background()
+	req := svc.NewCreateEntityRequest(ctx, data)
+
+	// Create a new entity
+	resp, err := svc.CreateEntity(req)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Proprietor created ID: ", resp.Payload.ID)
+	time.Sleep(time.Duration(interval) * time.Millisecond)
+	return nil
+}
+
 func SeedSuppliers(count int) error {
 	// Create a new service
 	svc := entity.NewEntityService()
