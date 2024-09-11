@@ -222,16 +222,21 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 
 	// update inventory
 	inv.QuantityAvailable = types.NullDecimal(req.Payload.StockCountSheet.TotalQuantity)
+	err = proc.ProcessInventoryAmounts(inv)
+	if err != nil {
+		return nil, err
+	}
 	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 	if err != nil {
 		return nil, err
 	}
 
-	// create inventory transaction
+	// create scs transaction
 	invTxn := inventory.InventoryTransaction{
 		InventoryID:     null.IntFrom(inv.ID),
 		TransactionType: inventory.InventoryTransactionTypeStockCount,
-		Quantity:        req.Payload.StockCountSheet.TotalQuantity,
+		Quantity:        types.Decimal(req.Payload.StockCountSheet.DiscrepanciesGen),
+		Reason:          null.StringFrom("Stock Count Sheet Creation"),
 	}
 	err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, &invTxn)
 	if err != nil {
@@ -239,7 +244,7 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 	}
 
 	// get created stock count sheet
-	inventory, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.Payload.StockCountSheet.ID)
+	scs, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.Payload.StockCountSheet.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -250,7 +255,7 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 	}
 
 	resp := CreateStockCountSheetResponse{
-		Payload: *inventory,
+		Payload: *scs,
 	}
 
 	return &resp, nil
@@ -322,30 +327,36 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 		return nil, err
 	}
 
-	// update inventory
-	inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.StockCountSheet.InventoryID.Int)
-	if err != nil {
-		return nil, err
-	}
-	inv.QuantityAvailable = types.NullDecimal(req.Payload.StockCountSheet.TotalQuantity)
-	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-	if err != nil {
-		return nil, err
-	}
+	if offsetQuantity > 0 || offsetQuantity < 0 {
+		// update inventory
+		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.StockCountSheet.InventoryID.Int)
+		if err != nil {
+			return nil, err
+		}
+		inv.QuantityAvailable = types.NullDecimal(req.Payload.StockCountSheet.TotalQuantity)
+		err = proc.ProcessInventoryAmounts(inv)
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+		if err != nil {
+			return nil, err
+		}
 
-	// create inventory transaction
-	invTxn := inventory.InventoryTransaction{
-		InventoryID:     null.IntFrom(inv.ID),
-		TransactionType: inventory.InventoryTransactionTypeStockCountAdjustment,
-		Quantity:        types.NewDecimal(decimal.New(int64(offsetQuantity*100), 2)),
-	}
-	err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, &invTxn)
-	if err != nil {
-		return nil, err
+		// create scs transaction
+		invTxn := inventory.InventoryTransaction{
+			InventoryID:     null.IntFrom(inv.ID),
+			TransactionType: inventory.InventoryTransactionTypeStockCountAdjustment,
+			Quantity:        types.NewDecimal(decimal.New(int64(offsetQuantity*100), 2)),
+		}
+		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, &invTxn)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// get updated stock count sheet
-	inventory, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.Payload.StockCountSheet.ID)
+	scs, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.Payload.StockCountSheet.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -356,7 +367,7 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 	}
 
 	resp := UpdateStockCountSheetResponse{
-		Payload: *inventory,
+		Payload: *scs,
 	}
 
 	return &resp, nil
@@ -410,7 +421,7 @@ func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetReque
 		return nil, err
 	}
 
-	// update inventory
+	// update scs
 	inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, scs.InventoryID.Int)
 	if err != nil {
 		return nil, err
@@ -423,16 +434,21 @@ func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetReque
 		inv.QuantityAvailable.Big,
 		types.NewDecimal(decimal.New(int64(discrepencyValue*100), 2)).Big,
 	)
+	err = proc.ProcessInventoryAmounts(inv)
+	if err != nil {
+		return nil, err
+	}
 	err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
 	if err != nil {
 		return nil, err
 	}
 
-	// create inventory transaction
+	// create scs transaction
 	invTxn := inventory.InventoryTransaction{
 		InventoryID:     null.IntFrom(inv.ID),
 		TransactionType: inventory.InventoryTransactionTypeStockCountCancellation,
 		Quantity:        types.NewDecimal(decimal.New(int64(discrepencyValue*100), 2)),
+		Reason:          null.StringFrom("Stock Count Sheet Cancellation"),
 	}
 	err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, &invTxn)
 	if err != nil {

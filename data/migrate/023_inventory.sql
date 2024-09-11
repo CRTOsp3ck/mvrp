@@ -219,7 +219,24 @@ SELECT
 FROM
     inventory.return_merchandise_authorization rma;
 
+CREATE VIEW inventory.stock_count_sheet_view AS
+SELECT
+    scs.*,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = scs.inventory_id
+    ) AS inventory,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = scs.counted_by_employee_id
+    ) AS counted_by_info
+FROM
+    inventory.stock_count_sheet scs;
+
 -- +migrate Down
+DROP VIEW IF EXISTS inventory.stock_count_sheet_view;
 DROP VIEW IF EXISTS inventory.return_merchandise_authorization_view;
 DROP VIEW IF EXISTS inventory.return_merchandise_authorization_item_view;
 DROP VIEW IF EXISTS inventory.goods_issue_note_view;

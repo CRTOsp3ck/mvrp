@@ -263,10 +263,14 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 		}
 
 		// create inventory transaction
+		qtyFloat, ok := item.Quantity.Float64()
+		if !ok {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
 			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeIssuance,
-			Quantity:        item.Quantity,
+			Quantity:        types.NewDecimal(decimal.New(int64(-qtyFloat*100), 2)),
 			Reason:          null.StringFrom("Goods Issue Note Creation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)

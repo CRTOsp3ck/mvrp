@@ -252,7 +252,8 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		if err != nil {
 			return nil, err
 		}
-		inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+		inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, item.Quantity.Big)
+		inv.QuantityReturned.Add(inv.QuantityReturned.Big, item.Quantity.Big)
 		err = proc.ProcessInventoryAmounts(inv)
 		if err != nil {
 			return nil, err
@@ -438,7 +439,8 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 				if err != nil {
 					return nil, err
 				}
-				inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, amountOffset.Big)
+				inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, amountOffset.Big)
+				inv.QuantityReturned.Add(inv.QuantityReturned.Big, amountOffset.Big)
 				err = proc.ProcessInventoryAmounts(inv)
 				if err != nil {
 					return nil, err
@@ -476,7 +478,8 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			if err != nil {
 				return nil, err
 			}
-			inv.QuantityAvailable.Sub(inv.QuantityAvailable.Big, item.Quantity.Big)
+			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, item.Quantity.Big)
+			inv.QuantityReturned.Add(inv.QuantityReturned.Big, item.Quantity.Big)
 			err = proc.ProcessInventoryAmounts(inv)
 			if err != nil {
 				return nil, err

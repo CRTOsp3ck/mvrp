@@ -99,6 +99,14 @@
                         { "method": "Delete", "path": "/stock_count_sheet/{id}", "handler": "DeleteStockCountSheet", "type": "delete" },
                         { "method": "Post", "path": "/stock_count_sheet/search", "handler": "SearchStockCountSheet", "type": "search" }
                     ] 
+                },
+                { 
+                    "name": "stock_count_sheet_view",
+                    "routes": [
+                        { "method": "Get", "path": "/stock_count_sheet_view", "handler": "ListStockCountSheetView", "type": "list" },
+                        { "method": "Get", "path": "/stock_count_sheet_view/{id}", "handler": "GetStockCountSheetView", "type": "get" },
+                        { "method": "Post", "path": "/stock_count_sheet_view/search", "handler": "SearchStockCountSheetView", "type": "search" }
+                    ] 
                 }
             ]
         },

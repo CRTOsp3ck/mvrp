@@ -27,7 +27,8 @@
             "views": [
                 { "name": "GoodsIssueNoteView", "plural_name": "GoodsIssueNoteViews" },
                 { "name": "InventoryView", "plural_name": "InventoryViews" },
-                { "name": "ReturnMerchandiseAuthorizationView", "plural_name": "ReturnMerchandiseAuthorizationViews" }
+                { "name": "ReturnMerchandiseAuthorizationView", "plural_name": "ReturnMerchandiseAuthorizationViews" },
+                { "name": "StockCountSheetView", "plural_name": "StockCountSheetViews" }
             ]
         },
         {
