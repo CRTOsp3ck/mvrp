@@ -29,10 +29,10 @@ func ProcessBaseDocumentAmounts(bd *base.BaseDocument, bdis []*base.BaseDocument
 	}
 
 	// update invoice amounts
-	bd.GrossAmount = types.NewNullDecimal(totalItemsAmount)
-	bd.DiscountAmount = types.NewNullDecimal(totalItemsDiscAmount)
-	bd.TaxAmount = types.NewNullDecimal(totalItemsTaxAmount)
-	bd.ShippingFees = types.NewNullDecimal(totalItemsShippingFees)
+	bd.GrossAmountGen = types.NewNullDecimal(totalItemsAmount)
+	bd.DiscountAmountGen = types.NewNullDecimal(totalItemsDiscAmount)
+	bd.TaxAmountGen = types.NewNullDecimal(totalItemsTaxAmount)
+	bd.ShippingFeesGen = types.NewNullDecimal(totalItemsShippingFees)
 
 	return nil
 }
@@ -79,10 +79,10 @@ func ProcessBaseDocumentAmountsForPreview(bd *base.BaseDocument, bdis []*base.Ba
 	}
 
 	// update invoice amounts
-	bd.GrossAmount = types.NewNullDecimal(totalItemsAmount)
-	bd.DiscountAmount = types.NewNullDecimal(totalItemsDiscAmount)
-	bd.TaxAmount = types.NewNullDecimal(totalItemsTaxAmount)
-	bd.ShippingFees = types.NewNullDecimal(totalItemsShippingFees)
+	bd.GrossAmountGen = types.NewNullDecimal(totalItemsAmount)
+	bd.DiscountAmountGen = types.NewNullDecimal(totalItemsDiscAmount)
+	bd.TaxAmountGen = types.NewNullDecimal(totalItemsTaxAmount)
+	bd.ShippingFeesGen = types.NewNullDecimal(totalItemsShippingFees)
 
 	// Calculate generated fields for base_document
 	drg := decimal.New(0, 2).Quo(totalItemsDiscAmount, totalItemsAmount)
@@ -114,10 +114,10 @@ func ProcessBaseDocumentAmountsForPreview(bd *base.BaseDocument, bdis []*base.Ba
 }
 
 func processBaseDocumentNetAmount(bd *base.BaseDocument) error {
-	nag := decimal.New(0, 2).Sub(bd.GrossAmount.Big, bd.DiscountAmount.Big)
+	nag := decimal.New(0, 2).Sub(bd.GrossAmountGen.Big, bd.DiscountAmountGen.Big)
 	nag = nag.Sub(nag, bd.AdditionalDiscountAmount.Big)
-	nag = nag.Add(nag, bd.TaxAmount.Big)
-	nag = nag.Add(nag, bd.ShippingFees.Big)
+	nag = nag.Add(nag, bd.TaxAmountGen.Big)
+	nag = nag.Add(nag, bd.ShippingFeesGen.Big)
 	nag = nag.Add(nag, bd.OtherFees.Big)
 	nag = nag.Add(nag, bd.CustomAdjustmentAmount.Big)
 	bd.NetAmountGen = types.NewNullDecimal(nag)

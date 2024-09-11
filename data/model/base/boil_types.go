@@ -51,6 +51,150 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	return str
 }
 
+type ShippingTerms string
+
+// Enum values for ShippingTerms
+const (
+	ShippingTermsFreeOnBoard             ShippingTerms = "free_on_board"
+	ShippingTermsCostInsuranceAndFreight ShippingTerms = "cost_insurance_and_freight"
+	ShippingTermsExWorks                 ShippingTerms = "ex_works"
+	ShippingTermsDeliveredDutyPaid       ShippingTerms = "delivered_duty_paid"
+	ShippingTermsDeliveredAtPlace        ShippingTerms = "delivered_at_place"
+	ShippingTermsFreeCarrier             ShippingTerms = "free_carrier"
+	ShippingTermsCarriagePaidTo          ShippingTerms = "carriage_paid_to"
+)
+
+func AllShippingTerms() []ShippingTerms {
+	return []ShippingTerms{
+		ShippingTermsFreeOnBoard,
+		ShippingTermsCostInsuranceAndFreight,
+		ShippingTermsExWorks,
+		ShippingTermsDeliveredDutyPaid,
+		ShippingTermsDeliveredAtPlace,
+		ShippingTermsFreeCarrier,
+		ShippingTermsCarriagePaidTo,
+	}
+}
+
+func (e ShippingTerms) IsValid() error {
+	switch e {
+	case ShippingTermsFreeOnBoard, ShippingTermsCostInsuranceAndFreight, ShippingTermsExWorks, ShippingTermsDeliveredDutyPaid, ShippingTermsDeliveredAtPlace, ShippingTermsFreeCarrier, ShippingTermsCarriagePaidTo:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e ShippingTerms) String() string {
+	return string(e)
+}
+
+func (e ShippingTerms) Ordinal() int {
+	switch e {
+	case ShippingTermsFreeOnBoard:
+		return 0
+	case ShippingTermsCostInsuranceAndFreight:
+		return 1
+	case ShippingTermsExWorks:
+		return 2
+	case ShippingTermsDeliveredDutyPaid:
+		return 3
+	case ShippingTermsDeliveredAtPlace:
+		return 4
+	case ShippingTermsFreeCarrier:
+		return 5
+	case ShippingTermsCarriagePaidTo:
+		return 6
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}
+
+type ShippingMethod string
+
+// Enum values for ShippingMethod
+const (
+	ShippingMethodAirFreight     ShippingMethod = "air_freight"
+	ShippingMethodSeaFreight     ShippingMethod = "sea_freight"
+	ShippingMethodGroundShipping ShippingMethod = "ground_shipping"
+	ShippingMethodCourierService ShippingMethod = "courier_service"
+	ShippingMethodRailFreight    ShippingMethod = "rail_freight"
+	ShippingMethodMultimodal     ShippingMethod = "multimodal"
+	ShippingMethodDropShipping   ShippingMethod = "drop_shipping"
+	ShippingMethod3PL            ShippingMethod = "3pl"
+	ShippingMethodExpedited      ShippingMethod = "expedited"
+	ShippingMethodStandard       ShippingMethod = "standard"
+	ShippingMethodSameDay        ShippingMethod = "same_day"
+	ShippingMethodNextDay        ShippingMethod = "next_day"
+	ShippingMethodEconomy        ShippingMethod = "economy"
+)
+
+func AllShippingMethod() []ShippingMethod {
+	return []ShippingMethod{
+		ShippingMethodAirFreight,
+		ShippingMethodSeaFreight,
+		ShippingMethodGroundShipping,
+		ShippingMethodCourierService,
+		ShippingMethodRailFreight,
+		ShippingMethodMultimodal,
+		ShippingMethodDropShipping,
+		ShippingMethod3PL,
+		ShippingMethodExpedited,
+		ShippingMethodStandard,
+		ShippingMethodSameDay,
+		ShippingMethodNextDay,
+		ShippingMethodEconomy,
+	}
+}
+
+func (e ShippingMethod) IsValid() error {
+	switch e {
+	case ShippingMethodAirFreight, ShippingMethodSeaFreight, ShippingMethodGroundShipping, ShippingMethodCourierService, ShippingMethodRailFreight, ShippingMethodMultimodal, ShippingMethodDropShipping, ShippingMethod3PL, ShippingMethodExpedited, ShippingMethodStandard, ShippingMethodSameDay, ShippingMethodNextDay, ShippingMethodEconomy:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e ShippingMethod) String() string {
+	return string(e)
+}
+
+func (e ShippingMethod) Ordinal() int {
+	switch e {
+	case ShippingMethodAirFreight:
+		return 0
+	case ShippingMethodSeaFreight:
+		return 1
+	case ShippingMethodGroundShipping:
+		return 2
+	case ShippingMethodCourierService:
+		return 3
+	case ShippingMethodRailFreight:
+		return 4
+	case ShippingMethodMultimodal:
+		return 5
+	case ShippingMethodDropShipping:
+		return 6
+	case ShippingMethod3PL:
+		return 7
+	case ShippingMethodExpedited:
+		return 8
+	case ShippingMethodStandard:
+		return 9
+	case ShippingMethodSameDay:
+		return 10
+	case ShippingMethodNextDay:
+		return 11
+	case ShippingMethodEconomy:
+		return 12
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}
+
 type PaymentTerms string
 
 // Enum values for PaymentTerms

@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -23,9 +24,12 @@ import (
 
 // OrderConfirmationItem is an object representing the database table.
 type OrderConfirmationItem struct {
-	ID                  int `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentItemID  int `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
-	OrderConfirmationID int `boil:"order_confirmation_id" json:"order_confirmation_id" toml:"order_confirmation_id" yaml:"order_confirmation_id"`
+	ID                  int       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentItemID  int       `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
+	OrderConfirmationID int       `boil:"order_confirmation_id" json:"order_confirmation_id" toml:"order_confirmation_id" yaml:"order_confirmation_id"`
+	CreatedAt           time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt           time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt           null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *orderConfirmationItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L orderConfirmationItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -35,20 +39,32 @@ var OrderConfirmationItemColumns = struct {
 	ID                  string
 	BaseDocumentItemID  string
 	OrderConfirmationID string
+	CreatedAt           string
+	UpdatedAt           string
+	DeletedAt           string
 }{
 	ID:                  "id",
 	BaseDocumentItemID:  "base_document_item_id",
 	OrderConfirmationID: "order_confirmation_id",
+	CreatedAt:           "created_at",
+	UpdatedAt:           "updated_at",
+	DeletedAt:           "deleted_at",
 }
 
 var OrderConfirmationItemTableColumns = struct {
 	ID                  string
 	BaseDocumentItemID  string
 	OrderConfirmationID string
+	CreatedAt           string
+	UpdatedAt           string
+	DeletedAt           string
 }{
 	ID:                  "order_confirmation_item.id",
 	BaseDocumentItemID:  "order_confirmation_item.base_document_item_id",
 	OrderConfirmationID: "order_confirmation_item.order_confirmation_id",
+	CreatedAt:           "order_confirmation_item.created_at",
+	UpdatedAt:           "order_confirmation_item.updated_at",
+	DeletedAt:           "order_confirmation_item.deleted_at",
 }
 
 // Generated where
@@ -57,10 +73,16 @@ var OrderConfirmationItemWhere = struct {
 	ID                  whereHelperint
 	BaseDocumentItemID  whereHelperint
 	OrderConfirmationID whereHelperint
+	CreatedAt           whereHelpertime_Time
+	UpdatedAt           whereHelpertime_Time
+	DeletedAt           whereHelpernull_Time
 }{
 	ID:                  whereHelperint{field: "\"sale\".\"order_confirmation_item\".\"id\""},
 	BaseDocumentItemID:  whereHelperint{field: "\"sale\".\"order_confirmation_item\".\"base_document_item_id\""},
 	OrderConfirmationID: whereHelperint{field: "\"sale\".\"order_confirmation_item\".\"order_confirmation_id\""},
+	CreatedAt:           whereHelpertime_Time{field: "\"sale\".\"order_confirmation_item\".\"created_at\""},
+	UpdatedAt:           whereHelpertime_Time{field: "\"sale\".\"order_confirmation_item\".\"updated_at\""},
+	DeletedAt:           whereHelpernull_Time{field: "\"sale\".\"order_confirmation_item\".\"deleted_at\""},
 }
 
 // OrderConfirmationItemRels is where relationship names are stored.
@@ -91,9 +113,9 @@ func (r *orderConfirmationItemR) GetOrderConfirmation() *OrderConfirmation {
 type orderConfirmationItemL struct{}
 
 var (
-	orderConfirmationItemAllColumns            = []string{"id", "base_document_item_id", "order_confirmation_id"}
-	orderConfirmationItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "order_confirmation_id"}
-	orderConfirmationItemColumnsWithDefault    = []string{}
+	orderConfirmationItemAllColumns            = []string{"id", "base_document_item_id", "order_confirmation_id", "created_at", "updated_at", "deleted_at"}
+	orderConfirmationItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "order_confirmation_id", "created_at", "updated_at"}
+	orderConfirmationItemColumnsWithDefault    = []string{"deleted_at"}
 	orderConfirmationItemPrimaryKeyColumns     = []string{"id"}
 	orderConfirmationItemGeneratedColumns      = []string{}
 )
@@ -630,6 +652,16 @@ func (o *OrderConfirmationItem) Insert(ctx context.Context, exec boil.ContextExe
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -705,6 +737,12 @@ func (o *OrderConfirmationItem) Insert(ctx context.Context, exec boil.ContextExe
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *OrderConfirmationItem) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -834,6 +872,14 @@ func (o OrderConfirmationItemSlice) UpdateAll(ctx context.Context, exec boil.Con
 func (o *OrderConfirmationItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no order_confirmation_item provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

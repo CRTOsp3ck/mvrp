@@ -34,6 +34,9 @@ type SalesQuotationView struct {
 	RequestedBy          null.JSON                `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
 	PreparedByEmployeeID null.Int                 `boil:"prepared_by_employee_id" json:"prepared_by_employee_id,omitempty" toml:"prepared_by_employee_id" yaml:"prepared_by_employee_id,omitempty"`
 	QuotationStatus      NullSalesQuotationStatus `boil:"quotation_status" json:"quotation_status,omitempty" toml:"quotation_status" yaml:"quotation_status,omitempty"`
+	CreatedAt            null.Time                `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt            null.Time                `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt            null.Time                `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument         null.JSON                `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	SalesQuotationItems  null.JSON                `boil:"sales_quotation_items" json:"sales_quotation_items,omitempty" toml:"sales_quotation_items" yaml:"sales_quotation_items,omitempty"`
 }
@@ -49,6 +52,9 @@ var SalesQuotationViewColumns = struct {
 	RequestedBy          string
 	PreparedByEmployeeID string
 	QuotationStatus      string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 	BaseDocument         string
 	SalesQuotationItems  string
 }{
@@ -62,6 +68,9 @@ var SalesQuotationViewColumns = struct {
 	RequestedBy:          "requested_by",
 	PreparedByEmployeeID: "prepared_by_employee_id",
 	QuotationStatus:      "quotation_status",
+	CreatedAt:            "created_at",
+	UpdatedAt:            "updated_at",
+	DeletedAt:            "deleted_at",
 	BaseDocument:         "base_document",
 	SalesQuotationItems:  "sales_quotation_items",
 }
@@ -77,6 +86,9 @@ var SalesQuotationViewTableColumns = struct {
 	RequestedBy          string
 	PreparedByEmployeeID string
 	QuotationStatus      string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 	BaseDocument         string
 	SalesQuotationItems  string
 }{
@@ -90,6 +102,9 @@ var SalesQuotationViewTableColumns = struct {
 	RequestedBy:          "sales_quotation_view.requested_by",
 	PreparedByEmployeeID: "sales_quotation_view.prepared_by_employee_id",
 	QuotationStatus:      "sales_quotation_view.quotation_status",
+	CreatedAt:            "sales_quotation_view.created_at",
+	UpdatedAt:            "sales_quotation_view.updated_at",
+	DeletedAt:            "sales_quotation_view.deleted_at",
 	BaseDocument:         "sales_quotation_view.base_document",
 	SalesQuotationItems:  "sales_quotation_view.sales_quotation_items",
 }
@@ -149,6 +164,9 @@ var SalesQuotationViewWhere = struct {
 	RequestedBy          whereHelpernull_JSON
 	PreparedByEmployeeID whereHelpernull_Int
 	QuotationStatus      whereHelperNullSalesQuotationStatus
+	CreatedAt            whereHelpernull_Time
+	UpdatedAt            whereHelpernull_Time
+	DeletedAt            whereHelpernull_Time
 	BaseDocument         whereHelpernull_JSON
 	SalesQuotationItems  whereHelpernull_JSON
 }{
@@ -162,14 +180,17 @@ var SalesQuotationViewWhere = struct {
 	RequestedBy:          whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"requested_by\""},
 	PreparedByEmployeeID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"prepared_by_employee_id\""},
 	QuotationStatus:      whereHelperNullSalesQuotationStatus{field: "\"sale\".\"sales_quotation_view\".\"quotation_status\""},
+	CreatedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"created_at\""},
+	UpdatedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"updated_at\""},
+	DeletedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"deleted_at\""},
 	BaseDocument:         whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"base_document\""},
 	SalesQuotationItems:  whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"sales_quotation_items\""},
 }
 
 var (
-	salesQuotationViewAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "base_document", "sales_quotation_items"}
+	salesQuotationViewAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_quotation_items"}
 	salesQuotationViewColumnsWithoutDefault = []string{}
-	salesQuotationViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "base_document", "sales_quotation_items"}
+	salesQuotationViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_quotation_items"}
 	salesQuotationViewPrimaryKeyColumns     = []string{}
 	salesQuotationViewGeneratedColumns      = []string{}
 )
@@ -418,6 +439,16 @@ func (o *SalesQuotationView) Insert(ctx context.Context, exec boil.ContextExecut
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -494,6 +525,14 @@ func (o *SalesQuotationView) Insert(ctx context.Context, exec boil.ContextExecut
 func (o *SalesQuotationView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_quotation_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

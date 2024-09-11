@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -23,9 +24,12 @@ import (
 
 // SalesOrderItem is an object representing the database table.
 type SalesOrderItem struct {
-	ID                 int `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentItemID int `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
-	SalesOrderID       int `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
+	ID                 int       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentItemID int       `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
+	SalesOrderID       int       `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
+	CreatedAt          time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt          time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *salesOrderItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L salesOrderItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -35,20 +39,32 @@ var SalesOrderItemColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesOrderID       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	SalesOrderID:       "sales_order_id",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 }
 
 var SalesOrderItemTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesOrderID       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "sales_order_item.id",
 	BaseDocumentItemID: "sales_order_item.base_document_item_id",
 	SalesOrderID:       "sales_order_item.sales_order_id",
+	CreatedAt:          "sales_order_item.created_at",
+	UpdatedAt:          "sales_order_item.updated_at",
+	DeletedAt:          "sales_order_item.deleted_at",
 }
 
 // Generated where
@@ -57,10 +73,16 @@ var SalesOrderItemWhere = struct {
 	ID                 whereHelperint
 	BaseDocumentItemID whereHelperint
 	SalesOrderID       whereHelperint
+	CreatedAt          whereHelpertime_Time
+	UpdatedAt          whereHelpertime_Time
+	DeletedAt          whereHelpernull_Time
 }{
 	ID:                 whereHelperint{field: "\"sale\".\"sales_order_item\".\"id\""},
 	BaseDocumentItemID: whereHelperint{field: "\"sale\".\"sales_order_item\".\"base_document_item_id\""},
 	SalesOrderID:       whereHelperint{field: "\"sale\".\"sales_order_item\".\"sales_order_id\""},
+	CreatedAt:          whereHelpertime_Time{field: "\"sale\".\"sales_order_item\".\"created_at\""},
+	UpdatedAt:          whereHelpertime_Time{field: "\"sale\".\"sales_order_item\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_order_item\".\"deleted_at\""},
 }
 
 // SalesOrderItemRels is where relationship names are stored.
@@ -91,9 +113,9 @@ func (r *salesOrderItemR) GetSalesOrder() *SalesOrder {
 type salesOrderItemL struct{}
 
 var (
-	salesOrderItemAllColumns            = []string{"id", "base_document_item_id", "sales_order_id"}
-	salesOrderItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "sales_order_id"}
-	salesOrderItemColumnsWithDefault    = []string{}
+	salesOrderItemAllColumns            = []string{"id", "base_document_item_id", "sales_order_id", "created_at", "updated_at", "deleted_at"}
+	salesOrderItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "sales_order_id", "created_at", "updated_at"}
+	salesOrderItemColumnsWithDefault    = []string{"deleted_at"}
 	salesOrderItemPrimaryKeyColumns     = []string{"id"}
 	salesOrderItemGeneratedColumns      = []string{}
 )
@@ -630,6 +652,16 @@ func (o *SalesOrderItem) Insert(ctx context.Context, exec boil.ContextExecutor, 
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -705,6 +737,12 @@ func (o *SalesOrderItem) Insert(ctx context.Context, exec boil.ContextExecutor, 
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *SalesOrderItem) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -834,6 +872,14 @@ func (o SalesOrderItemSlice) UpdateAll(ctx context.Context, exec boil.ContextExe
 func (o *SalesOrderItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_order_item provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

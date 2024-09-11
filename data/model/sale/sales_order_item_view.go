@@ -27,6 +27,9 @@ type SalesOrderItemView struct {
 	ID                 null.Int  `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
 	BaseDocumentItemID null.Int  `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
 	SalesOrderID       null.Int  `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
+	CreatedAt          null.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt          null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
@@ -34,11 +37,17 @@ var SalesOrderItemViewColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesOrderID       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	SalesOrderID:       "sales_order_id",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
 }
 
@@ -46,11 +55,17 @@ var SalesOrderItemViewTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesOrderID       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "sales_order_item_view.id",
 	BaseDocumentItemID: "sales_order_item_view.base_document_item_id",
 	SalesOrderID:       "sales_order_item_view.sales_order_id",
+	CreatedAt:          "sales_order_item_view.created_at",
+	UpdatedAt:          "sales_order_item_view.updated_at",
+	DeletedAt:          "sales_order_item_view.deleted_at",
 	BaseDocumentItem:   "sales_order_item_view.base_document_item",
 }
 
@@ -60,18 +75,24 @@ var SalesOrderItemViewWhere = struct {
 	ID                 whereHelpernull_Int
 	BaseDocumentItemID whereHelpernull_Int
 	SalesOrderID       whereHelpernull_Int
+	CreatedAt          whereHelpernull_Time
+	UpdatedAt          whereHelpernull_Time
+	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"sales_order_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"sales_order_item_view\".\"base_document_item_id\""},
 	SalesOrderID:       whereHelpernull_Int{field: "\"sale\".\"sales_order_item_view\".\"sales_order_id\""},
+	CreatedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_order_item_view\".\"created_at\""},
+	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_order_item_view\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_order_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"sales_order_item_view\".\"base_document_item\""},
 }
 
 var (
-	salesOrderItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_order_id", "base_document_item"}
+	salesOrderItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_order_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	salesOrderItemViewColumnsWithoutDefault = []string{}
-	salesOrderItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_order_id", "base_document_item"}
+	salesOrderItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_order_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	salesOrderItemViewPrimaryKeyColumns     = []string{}
 	salesOrderItemViewGeneratedColumns      = []string{}
 )
@@ -320,6 +341,16 @@ func (o *SalesOrderItemView) Insert(ctx context.Context, exec boil.ContextExecut
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -396,6 +427,14 @@ func (o *SalesOrderItemView) Insert(ctx context.Context, exec boil.ContextExecut
 func (o *SalesOrderItemView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_order_item_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

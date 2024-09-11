@@ -1750,13 +1750,13 @@ components:
         deleted_at:
           format: date-time
           type: string
-        discount_amount:
+        discount_amount_gen:
           type: number
         discount_rate_gen:
           type: number
-        gross_amount:
-          type: number
         gross_amount_after_discount_gen:
+          type: number
+        gross_amount_gen:
           type: number
         id:
           type: integer
@@ -1778,13 +1778,13 @@ components:
         shipping_date:
           format: date-time
           type: string
-        shipping_fees:
+        shipping_fees_gen:
           type: number
         shipping_method:
           type: string
         shipping_terms:
           type: string
-        tax_amount:
+        tax_amount_gen:
           type: number
         tax_rate_gen:
           type: number
@@ -1850,6 +1850,16 @@ components:
           nullable: true
           type: array
         payment_terms:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+        shipping_methods:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
+        shipping_terms:
           items:
             $ref: '#/components/schemas/DtoEnum'
           nullable: true
@@ -2968,8 +2978,14 @@ components:
           type: integer
         bill_to_information:
           $ref: '#/components/schemas/TypesJSON'
+        created_at:
+          format: date-time
+          type: string
         customer_id:
           type: integer
+        deleted_at:
+          format: date-time
+          type: string
         delivery_date:
           format: date-time
           type: string
@@ -2989,6 +3005,9 @@ components:
           $ref: '#/components/schemas/TypesJSON'
         shipping_personnel_information:
           type: string
+        updated_at:
+          format: date-time
+          type: string
         vendor_id:
           type: integer
       type: object
@@ -2996,19 +3015,34 @@ components:
       properties:
         base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
         delivery_note_id:
           type: integer
         goods_condition:
           type: string
         id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleGoodsReturnNote:
       properties:
         base_document_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
         credit_note_id:
           type: integer
+        deleted_at:
+          format: date-time
+          type: string
         goods_return_note_number:
           type: string
         id:
@@ -3030,11 +3064,20 @@ components:
           type: integer
         sales_order_id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleGoodsReturnNoteItem:
       properties:
         base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
         goods_return_note_id:
           type: integer
         id:
@@ -3047,13 +3090,22 @@ components:
           type: string
         rma_item_id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleOrderConfirmation:
       properties:
         base_document_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
         customer_id:
           type: integer
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         order_confirmation_number:
@@ -3062,22 +3114,40 @@ components:
           type: integer
         ship_to_information:
           type: string
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleOrderConfirmationItem:
       properties:
         base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         order_confirmation_id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleSalesOrder:
       properties:
         base_document_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
         customer_id:
           type: integer
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         order_status:
@@ -3093,6 +3163,9 @@ components:
           type: string
         ship_to_information:
           type: string
+        updated_at:
+          format: date-time
+          type: string
         vendor_id:
           type: integer
       type: object
@@ -3100,17 +3173,32 @@ components:
       properties:
         base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         sales_order_id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     SaleSalesQuotation:
       properties:
         base_document_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
         customer_id:
           type: integer
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         prepared_by_employee_id:
@@ -3123,6 +3211,9 @@ components:
           type: string
         ship_to_information:
           type: string
+        updated_at:
+          format: date-time
+          type: string
         valid_until_date:
           format: date-time
           type: string
@@ -3133,10 +3224,19 @@ components:
       properties:
         base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
         id:
           type: integer
         sales_quotation_id:
           type: integer
+        updated_at:
+          format: date-time
+          type: string
       type: object
     TypesJSON:
       items:

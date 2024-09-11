@@ -34,6 +34,9 @@ type SalesOrder struct {
 	ShipFromInformation           null.JSON        `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
 	PaymentDueDate                null.Time        `boil:"payment_due_date" json:"payment_due_date,omitempty" toml:"payment_due_date" yaml:"payment_due_date,omitempty"`
 	OrderStatus                   SalesOrderStatus `boil:"order_status" json:"order_status" toml:"order_status" yaml:"order_status"`
+	CreatedAt                     time.Time        `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt                     time.Time        `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt                     null.Time        `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *salesOrderR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L salesOrderL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -50,6 +53,9 @@ var SalesOrderColumns = struct {
 	ShipFromInformation           string
 	PaymentDueDate                string
 	OrderStatus                   string
+	CreatedAt                     string
+	UpdatedAt                     string
+	DeletedAt                     string
 }{
 	ID:                            "id",
 	BaseDocumentID:                "base_document_id",
@@ -61,6 +67,9 @@ var SalesOrderColumns = struct {
 	ShipFromInformation:           "ship_from_information",
 	PaymentDueDate:                "payment_due_date",
 	OrderStatus:                   "order_status",
+	CreatedAt:                     "created_at",
+	UpdatedAt:                     "updated_at",
+	DeletedAt:                     "deleted_at",
 }
 
 var SalesOrderTableColumns = struct {
@@ -74,6 +83,9 @@ var SalesOrderTableColumns = struct {
 	ShipFromInformation           string
 	PaymentDueDate                string
 	OrderStatus                   string
+	CreatedAt                     string
+	UpdatedAt                     string
+	DeletedAt                     string
 }{
 	ID:                            "sales_order.id",
 	BaseDocumentID:                "sales_order.base_document_id",
@@ -85,33 +97,12 @@ var SalesOrderTableColumns = struct {
 	ShipFromInformation:           "sales_order.ship_from_information",
 	PaymentDueDate:                "sales_order.payment_due_date",
 	OrderStatus:                   "sales_order.order_status",
+	CreatedAt:                     "sales_order.created_at",
+	UpdatedAt:                     "sales_order.updated_at",
+	DeletedAt:                     "sales_order.deleted_at",
 }
 
 // Generated where
-
-type whereHelpernull_Time struct{ field string }
-
-func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_Time) NEQ(x null.Time) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_Time) LT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_Time) LTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_Time) GT(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 type whereHelperSalesOrderStatus struct{ field string }
 
@@ -159,6 +150,9 @@ var SalesOrderWhere = struct {
 	ShipFromInformation           whereHelpernull_JSON
 	PaymentDueDate                whereHelpernull_Time
 	OrderStatus                   whereHelperSalesOrderStatus
+	CreatedAt                     whereHelpertime_Time
+	UpdatedAt                     whereHelpertime_Time
+	DeletedAt                     whereHelpernull_Time
 }{
 	ID:                            whereHelperint{field: "\"sale\".\"sales_order\".\"id\""},
 	BaseDocumentID:                whereHelperint{field: "\"sale\".\"sales_order\".\"base_document_id\""},
@@ -170,6 +164,9 @@ var SalesOrderWhere = struct {
 	ShipFromInformation:           whereHelpernull_JSON{field: "\"sale\".\"sales_order\".\"ship_from_information\""},
 	PaymentDueDate:                whereHelpernull_Time{field: "\"sale\".\"sales_order\".\"payment_due_date\""},
 	OrderStatus:                   whereHelperSalesOrderStatus{field: "\"sale\".\"sales_order\".\"order_status\""},
+	CreatedAt:                     whereHelpertime_Time{field: "\"sale\".\"sales_order\".\"created_at\""},
+	UpdatedAt:                     whereHelpertime_Time{field: "\"sale\".\"sales_order\".\"updated_at\""},
+	DeletedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order\".\"deleted_at\""},
 }
 
 // SalesOrderRels is where relationship names are stored.
@@ -230,9 +227,9 @@ func (r *salesOrderR) GetSalesOrderItems() SalesOrderItemSlice {
 type salesOrderL struct{}
 
 var (
-	salesOrderAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status"}
-	salesOrderColumnsWithoutDefault = []string{"id", "base_document_id", "sales_order_number", "order_status"}
-	salesOrderColumnsWithDefault    = []string{"vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date"}
+	salesOrderAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at"}
+	salesOrderColumnsWithoutDefault = []string{"id", "base_document_id", "sales_order_number", "order_status", "created_at", "updated_at"}
+	salesOrderColumnsWithDefault    = []string{"vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "deleted_at"}
 	salesOrderPrimaryKeyColumns     = []string{"id"}
 	salesOrderGeneratedColumns      = []string{}
 )
@@ -1385,6 +1382,16 @@ func (o *SalesOrder) Insert(ctx context.Context, exec boil.ContextExecutor, colu
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -1460,6 +1467,12 @@ func (o *SalesOrder) Insert(ctx context.Context, exec boil.ContextExecutor, colu
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *SalesOrder) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -1589,6 +1602,14 @@ func (o SalesOrderSlice) UpdateAll(ctx context.Context, exec boil.ContextExecuto
 func (o *SalesOrder) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_order provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

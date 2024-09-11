@@ -15,6 +15,8 @@ type EnumsDTO struct {
 type BaseEnumDTO struct {
 	PaymentTerms     []Enum    `json:"payment_terms"`
 	PaymentStatus     []Enum    `json:"payment_status"`
+	ShippingTerms     []Enum    `json:"shipping_terms"`
+	ShippingMethods     []Enum    `json:"shipping_methods"`
 }
 
 type ItemEnumDTO struct {
@@ -72,6 +74,8 @@ type EnumsDTO struct {
 type BaseEnumDTO struct {
 	PaymentTerms     []base.PaymentTerms    `json:"payment_terms"`
 	PaymentStatus     []base.PaymentStatus    `json:"payment_status"`
+	ShippingTerms     []base.ShippingTerms    `json:"shipping_terms"`
+	ShippingMethods     []base.ShippingMethods    `json:"shipping_methods"`
 }
 
 type ItemEnumDTO struct {

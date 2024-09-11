@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -23,10 +24,13 @@ import (
 
 // DeliveryNoteItem is an object representing the database table.
 type DeliveryNoteItem struct {
-	ID                 int    `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentItemID int    `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
-	DeliveryNoteID     int    `boil:"delivery_note_id" json:"delivery_note_id" toml:"delivery_note_id" yaml:"delivery_note_id"`
-	GoodsCondition     string `boil:"goods_condition" json:"goods_condition" toml:"goods_condition" yaml:"goods_condition"`
+	ID                 int       `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentItemID int       `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
+	DeliveryNoteID     int       `boil:"delivery_note_id" json:"delivery_note_id" toml:"delivery_note_id" yaml:"delivery_note_id"`
+	GoodsCondition     string    `boil:"goods_condition" json:"goods_condition" toml:"goods_condition" yaml:"goods_condition"`
+	CreatedAt          time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt          time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *deliveryNoteItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L deliveryNoteItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -37,11 +41,17 @@ var DeliveryNoteItemColumns = struct {
 	BaseDocumentItemID string
 	DeliveryNoteID     string
 	GoodsCondition     string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	DeliveryNoteID:     "delivery_note_id",
 	GoodsCondition:     "goods_condition",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 }
 
 var DeliveryNoteItemTableColumns = struct {
@@ -49,11 +59,17 @@ var DeliveryNoteItemTableColumns = struct {
 	BaseDocumentItemID string
 	DeliveryNoteID     string
 	GoodsCondition     string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "delivery_note_item.id",
 	BaseDocumentItemID: "delivery_note_item.base_document_item_id",
 	DeliveryNoteID:     "delivery_note_item.delivery_note_id",
 	GoodsCondition:     "delivery_note_item.goods_condition",
+	CreatedAt:          "delivery_note_item.created_at",
+	UpdatedAt:          "delivery_note_item.updated_at",
+	DeletedAt:          "delivery_note_item.deleted_at",
 }
 
 // Generated where
@@ -63,11 +79,17 @@ var DeliveryNoteItemWhere = struct {
 	BaseDocumentItemID whereHelperint
 	DeliveryNoteID     whereHelperint
 	GoodsCondition     whereHelperstring
+	CreatedAt          whereHelpertime_Time
+	UpdatedAt          whereHelpertime_Time
+	DeletedAt          whereHelpernull_Time
 }{
 	ID:                 whereHelperint{field: "\"sale\".\"delivery_note_item\".\"id\""},
 	BaseDocumentItemID: whereHelperint{field: "\"sale\".\"delivery_note_item\".\"base_document_item_id\""},
 	DeliveryNoteID:     whereHelperint{field: "\"sale\".\"delivery_note_item\".\"delivery_note_id\""},
 	GoodsCondition:     whereHelperstring{field: "\"sale\".\"delivery_note_item\".\"goods_condition\""},
+	CreatedAt:          whereHelpertime_Time{field: "\"sale\".\"delivery_note_item\".\"created_at\""},
+	UpdatedAt:          whereHelpertime_Time{field: "\"sale\".\"delivery_note_item\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item\".\"deleted_at\""},
 }
 
 // DeliveryNoteItemRels is where relationship names are stored.
@@ -98,9 +120,9 @@ func (r *deliveryNoteItemR) GetDeliveryNote() *DeliveryNote {
 type deliveryNoteItemL struct{}
 
 var (
-	deliveryNoteItemAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition"}
-	deliveryNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition"}
-	deliveryNoteItemColumnsWithDefault    = []string{}
+	deliveryNoteItemAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at"}
+	deliveryNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at"}
+	deliveryNoteItemColumnsWithDefault    = []string{"deleted_at"}
 	deliveryNoteItemPrimaryKeyColumns     = []string{"id"}
 	deliveryNoteItemGeneratedColumns      = []string{}
 )
@@ -637,6 +659,16 @@ func (o *DeliveryNoteItem) Insert(ctx context.Context, exec boil.ContextExecutor
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -712,6 +744,12 @@ func (o *DeliveryNoteItem) Insert(ctx context.Context, exec boil.ContextExecutor
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *DeliveryNoteItem) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -841,6 +879,14 @@ func (o DeliveryNoteItemSlice) UpdateAll(ctx context.Context, exec boil.ContextE
 func (o *DeliveryNoteItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no delivery_note_item provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

@@ -32,6 +32,9 @@ type GoodsReturnNoteItem struct {
 	ReturnQuantity     types.NullDecimal `boil:"return_quantity" json:"return_quantity,omitempty" toml:"return_quantity" yaml:"return_quantity,omitempty"`
 	ReturnCondition    null.String       `boil:"return_condition" json:"return_condition,omitempty" toml:"return_condition" yaml:"return_condition,omitempty"`
 	ReturnReason       null.String       `boil:"return_reason" json:"return_reason,omitempty" toml:"return_reason" yaml:"return_reason,omitempty"`
+	CreatedAt          time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt          time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *goodsReturnNoteItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L goodsReturnNoteItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -45,6 +48,9 @@ var GoodsReturnNoteItemColumns = struct {
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
@@ -53,6 +59,9 @@ var GoodsReturnNoteItemColumns = struct {
 	ReturnQuantity:     "return_quantity",
 	ReturnCondition:    "return_condition",
 	ReturnReason:       "return_reason",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 }
 
 var GoodsReturnNoteItemTableColumns = struct {
@@ -63,6 +72,9 @@ var GoodsReturnNoteItemTableColumns = struct {
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 }{
 	ID:                 "goods_return_note_item.id",
 	BaseDocumentItemID: "goods_return_note_item.base_document_item_id",
@@ -71,6 +83,9 @@ var GoodsReturnNoteItemTableColumns = struct {
 	ReturnQuantity:     "goods_return_note_item.return_quantity",
 	ReturnCondition:    "goods_return_note_item.return_condition",
 	ReturnReason:       "goods_return_note_item.return_reason",
+	CreatedAt:          "goods_return_note_item.created_at",
+	UpdatedAt:          "goods_return_note_item.updated_at",
+	DeletedAt:          "goods_return_note_item.deleted_at",
 }
 
 // Generated where
@@ -109,6 +124,9 @@ var GoodsReturnNoteItemWhere = struct {
 	ReturnQuantity     whereHelpertypes_NullDecimal
 	ReturnCondition    whereHelpernull_String
 	ReturnReason       whereHelpernull_String
+	CreatedAt          whereHelpertime_Time
+	UpdatedAt          whereHelpertime_Time
+	DeletedAt          whereHelpernull_Time
 }{
 	ID:                 whereHelperint{field: "\"sale\".\"goods_return_note_item\".\"id\""},
 	BaseDocumentItemID: whereHelperint{field: "\"sale\".\"goods_return_note_item\".\"base_document_item_id\""},
@@ -117,6 +135,9 @@ var GoodsReturnNoteItemWhere = struct {
 	ReturnQuantity:     whereHelpertypes_NullDecimal{field: "\"sale\".\"goods_return_note_item\".\"return_quantity\""},
 	ReturnCondition:    whereHelpernull_String{field: "\"sale\".\"goods_return_note_item\".\"return_condition\""},
 	ReturnReason:       whereHelpernull_String{field: "\"sale\".\"goods_return_note_item\".\"return_reason\""},
+	CreatedAt:          whereHelpertime_Time{field: "\"sale\".\"goods_return_note_item\".\"created_at\""},
+	UpdatedAt:          whereHelpertime_Time{field: "\"sale\".\"goods_return_note_item\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item\".\"deleted_at\""},
 }
 
 // GoodsReturnNoteItemRels is where relationship names are stored.
@@ -147,9 +168,9 @@ func (r *goodsReturnNoteItemR) GetGoodsReturnNote() *GoodsReturnNote {
 type goodsReturnNoteItemL struct{}
 
 var (
-	goodsReturnNoteItemAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason"}
-	goodsReturnNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "goods_return_note_id"}
-	goodsReturnNoteItemColumnsWithDefault    = []string{"rma_item_id", "return_quantity", "return_condition", "return_reason"}
+	goodsReturnNoteItemAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at"}
+	goodsReturnNoteItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "goods_return_note_id", "created_at", "updated_at"}
+	goodsReturnNoteItemColumnsWithDefault    = []string{"rma_item_id", "return_quantity", "return_condition", "return_reason", "deleted_at"}
 	goodsReturnNoteItemPrimaryKeyColumns     = []string{"id"}
 	goodsReturnNoteItemGeneratedColumns      = []string{}
 )
@@ -686,6 +707,16 @@ func (o *GoodsReturnNoteItem) Insert(ctx context.Context, exec boil.ContextExecu
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -761,6 +792,12 @@ func (o *GoodsReturnNoteItem) Insert(ctx context.Context, exec boil.ContextExecu
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *GoodsReturnNoteItem) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -890,6 +927,14 @@ func (o GoodsReturnNoteItemSlice) UpdateAll(ctx context.Context, exec boil.Conte
 func (o *GoodsReturnNoteItem) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no goods_return_note_item provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

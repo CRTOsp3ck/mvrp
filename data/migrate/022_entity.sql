@@ -2,6 +2,7 @@
 CREATE SCHEMA IF NOT EXISTS entity;
 
 CREATE TYPE entity.entity_type AS ENUM (
+    'proprietor',
     'customer', 
     'supplier',
     'manufacturer', 

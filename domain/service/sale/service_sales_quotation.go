@@ -7,6 +7,7 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
+	"time"
 )
 
 // LIST SALES QUOTATION
@@ -223,18 +224,24 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 	}
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
 	}
 
 	// create sales quotation
+	nextID, err = s.Repo.Sale.GetNextEntrySalesQuotationID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.SalesQuotation.ID = nextID
 	req.Payload.SalesQuotation.BaseDocumentID = req.Payload.BaseDocument.ID
 	if req.Payload.SalesQuotation.SalesQuotationNumber == "" {
-		nextID, err := s.Repo.Sale.GetNextEntrySalesQuotationID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.SalesQuotation.SalesQuotationNumber = util.Util.Str.ToString(nextID)
 	}
 	err = s.Repo.Sale.CreateSalesQuotation(req.Ctx, tx, &req.Payload.SalesQuotation)
@@ -244,6 +251,11 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 
 	for _, item := range req.Payload.Items {
 		// create base document items
+		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.BaseDocumentItem.ID = nextID
 		item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 		err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 		if err != nil {
@@ -251,12 +263,19 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 		}
 
 		// create sales quotation items
+		nextID, err = s.Repo.Sale.GetNextEntrySalesQuotationItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.SalesQuotationItem.ID = nextID
 		item.SalesQuotationItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		item.SalesQuotationItem.SalesQuotationID = req.Payload.SalesQuotation.ID
 		err = s.Repo.Sale.CreateSalesQuotationItem(req.Ctx, tx, &item.SalesQuotationItem)
 		if err != nil {
 			return nil, err
 		}
+
+		time.Sleep(1 * time.Millisecond)
 	}
 
 	// get created sales quotation
@@ -310,11 +329,6 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 	}
 	defer tx.Rollback()
 
-	currSq, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
-	if err != nil {
-		return nil, err
-	}
-
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
 	for _, item := range req.Payload.Items {
@@ -338,7 +352,11 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 	}
 
 	// delete the ones that are in the current list but not in the new list
-	for _, currItem := range currSq.R.SalesQuotationItems {
+	currItems, err := s.Repo.Sale.GetSalesQuotationItemsBySalesQuotationID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currItem := range currItems {
 		found := false
 		for _, item := range req.Payload.Items {
 			if currItem.ID == item.SalesQuotationItem.ID {
@@ -389,18 +407,31 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 			}
 		} else {
 			// create base document items
+			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create sales quotation items
+			nextID, err = s.Repo.Sale.GetNextEntrySalesQuotationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.SalesQuotationItem.ID = nextID
 			item.SalesQuotationItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.SalesQuotationItem.SalesQuotationID = req.Payload.SalesQuotation.ID
 			err = s.Repo.Sale.CreateSalesQuotationItem(req.Ctx, tx, &item.SalesQuotationItem)
 			if err != nil {
 				return nil, err
 			}
+
+			time.Sleep(1 * time.Millisecond)
 		}
 	}
 
@@ -482,7 +513,11 @@ func (s *SaleService) DeleteSalesQuotation(req *DeleteSalesQuotationRequest) (*D
 		return nil, err
 	}
 
-	for _, item := range SalesQuotation.R.SalesQuotationItems {
+	currItems, err := s.Repo.Sale.GetSalesQuotationItemsBySalesQuotationID(req.Ctx, tx, req.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range currItems {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {

@@ -28,6 +28,9 @@ type DeliveryNoteItemView struct {
 	BaseDocumentItemID null.Int    `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
 	DeliveryNoteID     null.Int    `boil:"delivery_note_id" json:"delivery_note_id,omitempty" toml:"delivery_note_id" yaml:"delivery_note_id,omitempty"`
 	GoodsCondition     null.String `boil:"goods_condition" json:"goods_condition,omitempty" toml:"goods_condition" yaml:"goods_condition,omitempty"`
+	CreatedAt          null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt          null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt          null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON   `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
@@ -36,12 +39,18 @@ var DeliveryNoteItemViewColumns = struct {
 	BaseDocumentItemID string
 	DeliveryNoteID     string
 	GoodsCondition     string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	DeliveryNoteID:     "delivery_note_id",
 	GoodsCondition:     "goods_condition",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
 }
 
@@ -50,12 +59,18 @@ var DeliveryNoteItemViewTableColumns = struct {
 	BaseDocumentItemID string
 	DeliveryNoteID     string
 	GoodsCondition     string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "delivery_note_item_view.id",
 	BaseDocumentItemID: "delivery_note_item_view.base_document_item_id",
 	DeliveryNoteID:     "delivery_note_item_view.delivery_note_id",
 	GoodsCondition:     "delivery_note_item_view.goods_condition",
+	CreatedAt:          "delivery_note_item_view.created_at",
+	UpdatedAt:          "delivery_note_item_view.updated_at",
+	DeletedAt:          "delivery_note_item_view.deleted_at",
 	BaseDocumentItem:   "delivery_note_item_view.base_document_item",
 }
 
@@ -66,19 +81,25 @@ var DeliveryNoteItemViewWhere = struct {
 	BaseDocumentItemID whereHelpernull_Int
 	DeliveryNoteID     whereHelpernull_Int
 	GoodsCondition     whereHelpernull_String
+	CreatedAt          whereHelpernull_Time
+	UpdatedAt          whereHelpernull_Time
+	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item_id\""},
 	DeliveryNoteID:     whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"delivery_note_id\""},
 	GoodsCondition:     whereHelpernull_String{field: "\"sale\".\"delivery_note_item_view\".\"goods_condition\""},
+	CreatedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item_view\".\"created_at\""},
+	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item_view\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item\""},
 }
 
 var (
-	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "base_document_item"}
+	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	deliveryNoteItemViewColumnsWithoutDefault = []string{}
-	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "base_document_item"}
+	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	deliveryNoteItemViewPrimaryKeyColumns     = []string{}
 	deliveryNoteItemViewGeneratedColumns      = []string{}
 )
@@ -327,6 +348,16 @@ func (o *DeliveryNoteItemView) Insert(ctx context.Context, exec boil.ContextExec
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -403,6 +434,14 @@ func (o *DeliveryNoteItemView) Insert(ctx context.Context, exec boil.ContextExec
 func (o *DeliveryNoteItemView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no delivery_note_item_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

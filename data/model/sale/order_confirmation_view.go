@@ -30,6 +30,9 @@ type OrderConfirmationView struct {
 	SalesOrderID            null.Int    `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
 	CustomerID              null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
 	ShipToInformation       null.JSON   `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	CreatedAt               null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt               null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt               null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument            null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	OrderConfirmationItems  null.JSON   `boil:"order_confirmation_items" json:"order_confirmation_items,omitempty" toml:"order_confirmation_items" yaml:"order_confirmation_items,omitempty"`
 }
@@ -41,6 +44,9 @@ var OrderConfirmationViewColumns = struct {
 	SalesOrderID            string
 	CustomerID              string
 	ShipToInformation       string
+	CreatedAt               string
+	UpdatedAt               string
+	DeletedAt               string
 	BaseDocument            string
 	OrderConfirmationItems  string
 }{
@@ -50,6 +56,9 @@ var OrderConfirmationViewColumns = struct {
 	SalesOrderID:            "sales_order_id",
 	CustomerID:              "customer_id",
 	ShipToInformation:       "ship_to_information",
+	CreatedAt:               "created_at",
+	UpdatedAt:               "updated_at",
+	DeletedAt:               "deleted_at",
 	BaseDocument:            "base_document",
 	OrderConfirmationItems:  "order_confirmation_items",
 }
@@ -61,6 +70,9 @@ var OrderConfirmationViewTableColumns = struct {
 	SalesOrderID            string
 	CustomerID              string
 	ShipToInformation       string
+	CreatedAt               string
+	UpdatedAt               string
+	DeletedAt               string
 	BaseDocument            string
 	OrderConfirmationItems  string
 }{
@@ -70,6 +82,9 @@ var OrderConfirmationViewTableColumns = struct {
 	SalesOrderID:            "order_confirmation_view.sales_order_id",
 	CustomerID:              "order_confirmation_view.customer_id",
 	ShipToInformation:       "order_confirmation_view.ship_to_information",
+	CreatedAt:               "order_confirmation_view.created_at",
+	UpdatedAt:               "order_confirmation_view.updated_at",
+	DeletedAt:               "order_confirmation_view.deleted_at",
 	BaseDocument:            "order_confirmation_view.base_document",
 	OrderConfirmationItems:  "order_confirmation_view.order_confirmation_items",
 }
@@ -83,6 +98,9 @@ var OrderConfirmationViewWhere = struct {
 	SalesOrderID            whereHelpernull_Int
 	CustomerID              whereHelpernull_Int
 	ShipToInformation       whereHelpernull_JSON
+	CreatedAt               whereHelpernull_Time
+	UpdatedAt               whereHelpernull_Time
+	DeletedAt               whereHelpernull_Time
 	BaseDocument            whereHelpernull_JSON
 	OrderConfirmationItems  whereHelpernull_JSON
 }{
@@ -92,14 +110,17 @@ var OrderConfirmationViewWhere = struct {
 	SalesOrderID:            whereHelpernull_Int{field: "\"sale\".\"order_confirmation_view\".\"sales_order_id\""},
 	CustomerID:              whereHelpernull_Int{field: "\"sale\".\"order_confirmation_view\".\"customer_id\""},
 	ShipToInformation:       whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"ship_to_information\""},
+	CreatedAt:               whereHelpernull_Time{field: "\"sale\".\"order_confirmation_view\".\"created_at\""},
+	UpdatedAt:               whereHelpernull_Time{field: "\"sale\".\"order_confirmation_view\".\"updated_at\""},
+	DeletedAt:               whereHelpernull_Time{field: "\"sale\".\"order_confirmation_view\".\"deleted_at\""},
 	BaseDocument:            whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"base_document\""},
 	OrderConfirmationItems:  whereHelpernull_JSON{field: "\"sale\".\"order_confirmation_view\".\"order_confirmation_items\""},
 }
 
 var (
-	orderConfirmationViewAllColumns            = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information", "base_document", "order_confirmation_items"}
+	orderConfirmationViewAllColumns            = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information", "created_at", "updated_at", "deleted_at", "base_document", "order_confirmation_items"}
 	orderConfirmationViewColumnsWithoutDefault = []string{}
-	orderConfirmationViewColumnsWithDefault    = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information", "base_document", "order_confirmation_items"}
+	orderConfirmationViewColumnsWithDefault    = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information", "created_at", "updated_at", "deleted_at", "base_document", "order_confirmation_items"}
 	orderConfirmationViewPrimaryKeyColumns     = []string{}
 	orderConfirmationViewGeneratedColumns      = []string{}
 )
@@ -348,6 +369,16 @@ func (o *OrderConfirmationView) Insert(ctx context.Context, exec boil.ContextExe
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -424,6 +455,14 @@ func (o *OrderConfirmationView) Insert(ctx context.Context, exec boil.ContextExe
 func (o *OrderConfirmationView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no order_confirmation_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

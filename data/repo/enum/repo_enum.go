@@ -21,6 +21,14 @@ func (r *EnumRepository) GetPaymentStatusEnums() []base.PaymentStatus {
 	return base.AllPaymentStatus()
 }
 
+func (r *EnumRepository) GetShippingTermsEnums() []base.ShippingTerms {
+	return base.AllShippingTerms()
+}
+
+func (r *EnumRepository) GetShippingMethodEnums() []base.ShippingMethod {
+	return base.AllShippingMethod()
+}
+
 // -------------------------------------------------------
 // ITEM
 // -------------------------------------------------------

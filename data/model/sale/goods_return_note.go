@@ -36,6 +36,9 @@ type GoodsReturnNote struct {
 	ReceivingLocationInformation null.JSON   `boil:"receiving_location_information" json:"receiving_location_information,omitempty" toml:"receiving_location_information" yaml:"receiving_location_information,omitempty"`
 	ReceivedByEmployeeID         null.Int    `boil:"received_by_employee_id" json:"received_by_employee_id,omitempty" toml:"received_by_employee_id" yaml:"received_by_employee_id,omitempty"`
 	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
+	CreatedAt                    time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt                    time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt                    null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *goodsReturnNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L goodsReturnNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -54,6 +57,9 @@ var GoodsReturnNoteColumns = struct {
 	ReceivingLocationInformation string
 	ReceivedByEmployeeID         string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 }{
 	ID:                           "id",
 	BaseDocumentID:               "base_document_id",
@@ -67,6 +73,9 @@ var GoodsReturnNoteColumns = struct {
 	ReceivingLocationInformation: "receiving_location_information",
 	ReceivedByEmployeeID:         "received_by_employee_id",
 	OverallGoodsCondition:        "overall_goods_condition",
+	CreatedAt:                    "created_at",
+	UpdatedAt:                    "updated_at",
+	DeletedAt:                    "deleted_at",
 }
 
 var GoodsReturnNoteTableColumns = struct {
@@ -82,6 +91,9 @@ var GoodsReturnNoteTableColumns = struct {
 	ReceivingLocationInformation string
 	ReceivedByEmployeeID         string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 }{
 	ID:                           "goods_return_note.id",
 	BaseDocumentID:               "goods_return_note.base_document_id",
@@ -95,6 +107,9 @@ var GoodsReturnNoteTableColumns = struct {
 	ReceivingLocationInformation: "goods_return_note.receiving_location_information",
 	ReceivedByEmployeeID:         "goods_return_note.received_by_employee_id",
 	OverallGoodsCondition:        "goods_return_note.overall_goods_condition",
+	CreatedAt:                    "goods_return_note.created_at",
+	UpdatedAt:                    "goods_return_note.updated_at",
+	DeletedAt:                    "goods_return_note.deleted_at",
 }
 
 // Generated where
@@ -112,6 +127,9 @@ var GoodsReturnNoteWhere = struct {
 	ReceivingLocationInformation whereHelpernull_JSON
 	ReceivedByEmployeeID         whereHelpernull_Int
 	OverallGoodsCondition        whereHelpernull_String
+	CreatedAt                    whereHelpertime_Time
+	UpdatedAt                    whereHelpertime_Time
+	DeletedAt                    whereHelpernull_Time
 }{
 	ID:                           whereHelperint{field: "\"sale\".\"goods_return_note\".\"id\""},
 	BaseDocumentID:               whereHelperint{field: "\"sale\".\"goods_return_note\".\"base_document_id\""},
@@ -125,6 +143,9 @@ var GoodsReturnNoteWhere = struct {
 	ReceivingLocationInformation: whereHelpernull_JSON{field: "\"sale\".\"goods_return_note\".\"receiving_location_information\""},
 	ReceivedByEmployeeID:         whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"received_by_employee_id\""},
 	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"goods_return_note\".\"overall_goods_condition\""},
+	CreatedAt:                    whereHelpertime_Time{field: "\"sale\".\"goods_return_note\".\"created_at\""},
+	UpdatedAt:                    whereHelpertime_Time{field: "\"sale\".\"goods_return_note\".\"updated_at\""},
+	DeletedAt:                    whereHelpernull_Time{field: "\"sale\".\"goods_return_note\".\"deleted_at\""},
 }
 
 // GoodsReturnNoteRels is where relationship names are stored.
@@ -165,9 +186,9 @@ func (r *goodsReturnNoteR) GetGoodsReturnNoteItems() GoodsReturnNoteItemSlice {
 type goodsReturnNoteL struct{}
 
 var (
-	goodsReturnNoteAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition"}
-	goodsReturnNoteColumnsWithoutDefault = []string{"id", "base_document_id", "goods_return_note_number", "return_date"}
-	goodsReturnNoteColumnsWithDefault    = []string{"sales_order_id", "invoice_id", "credit_note_id", "rma_id", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition"}
+	goodsReturnNoteAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "created_at", "updated_at", "deleted_at"}
+	goodsReturnNoteColumnsWithoutDefault = []string{"id", "base_document_id", "goods_return_note_number", "return_date", "created_at", "updated_at"}
+	goodsReturnNoteColumnsWithDefault    = []string{"sales_order_id", "invoice_id", "credit_note_id", "rma_id", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "deleted_at"}
 	goodsReturnNotePrimaryKeyColumns     = []string{"id"}
 	goodsReturnNoteGeneratedColumns      = []string{}
 )
@@ -921,6 +942,16 @@ func (o *GoodsReturnNote) Insert(ctx context.Context, exec boil.ContextExecutor,
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -996,6 +1027,12 @@ func (o *GoodsReturnNote) Insert(ctx context.Context, exec boil.ContextExecutor,
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *GoodsReturnNote) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -1125,6 +1162,14 @@ func (o GoodsReturnNoteSlice) UpdateAll(ctx context.Context, exec boil.ContextEx
 func (o *GoodsReturnNote) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no goods_return_note provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

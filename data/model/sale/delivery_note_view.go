@@ -37,6 +37,9 @@ type DeliveryNoteView struct {
 	ShippingPersonnelInformation null.JSON   `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
 	ReceivedBy                   null.JSON   `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
 	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
+	CreatedAt                    null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt                    null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt                    null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument                 null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	DeliveryNoteItems            null.JSON   `boil:"delivery_note_items" json:"delivery_note_items,omitempty" toml:"delivery_note_items" yaml:"delivery_note_items,omitempty"`
 }
@@ -55,6 +58,9 @@ var DeliveryNoteViewColumns = struct {
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 	BaseDocument                 string
 	DeliveryNoteItems            string
 }{
@@ -71,6 +77,9 @@ var DeliveryNoteViewColumns = struct {
 	ShippingPersonnelInformation: "shipping_personnel_information",
 	ReceivedBy:                   "received_by",
 	OverallGoodsCondition:        "overall_goods_condition",
+	CreatedAt:                    "created_at",
+	UpdatedAt:                    "updated_at",
+	DeletedAt:                    "deleted_at",
 	BaseDocument:                 "base_document",
 	DeliveryNoteItems:            "delivery_note_items",
 }
@@ -89,6 +98,9 @@ var DeliveryNoteViewTableColumns = struct {
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 	BaseDocument                 string
 	DeliveryNoteItems            string
 }{
@@ -105,6 +117,9 @@ var DeliveryNoteViewTableColumns = struct {
 	ShippingPersonnelInformation: "delivery_note_view.shipping_personnel_information",
 	ReceivedBy:                   "delivery_note_view.received_by",
 	OverallGoodsCondition:        "delivery_note_view.overall_goods_condition",
+	CreatedAt:                    "delivery_note_view.created_at",
+	UpdatedAt:                    "delivery_note_view.updated_at",
+	DeletedAt:                    "delivery_note_view.deleted_at",
 	BaseDocument:                 "delivery_note_view.base_document",
 	DeliveryNoteItems:            "delivery_note_view.delivery_note_items",
 }
@@ -125,6 +140,9 @@ var DeliveryNoteViewWhere = struct {
 	ShippingPersonnelInformation whereHelpernull_JSON
 	ReceivedBy                   whereHelpernull_JSON
 	OverallGoodsCondition        whereHelpernull_String
+	CreatedAt                    whereHelpernull_Time
+	UpdatedAt                    whereHelpernull_Time
+	DeletedAt                    whereHelpernull_Time
 	BaseDocument                 whereHelpernull_JSON
 	DeliveryNoteItems            whereHelpernull_JSON
 }{
@@ -141,14 +159,17 @@ var DeliveryNoteViewWhere = struct {
 	ShippingPersonnelInformation: whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"shipping_personnel_information\""},
 	ReceivedBy:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"received_by\""},
 	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"overall_goods_condition\""},
+	CreatedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"created_at\""},
+	UpdatedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"updated_at\""},
+	DeletedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"deleted_at\""},
 	BaseDocument:                 whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"base_document\""},
 	DeliveryNoteItems:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"delivery_note_items\""},
 }
 
 var (
-	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "base_document", "delivery_note_items"}
+	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "delivery_note_items"}
 	deliveryNoteViewColumnsWithoutDefault = []string{}
-	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "base_document", "delivery_note_items"}
+	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "delivery_note_items"}
 	deliveryNoteViewPrimaryKeyColumns     = []string{}
 	deliveryNoteViewGeneratedColumns      = []string{}
 )
@@ -397,6 +418,16 @@ func (o *DeliveryNoteView) Insert(ctx context.Context, exec boil.ContextExecutor
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -473,6 +504,14 @@ func (o *DeliveryNoteView) Insert(ctx context.Context, exec boil.ContextExecutor
 func (o *DeliveryNoteView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no delivery_note_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

@@ -23,13 +23,19 @@ CREATE TABLE sale.sales_order (
     ship_to_information JSONB,
     ship_from_information JSONB,
     payment_due_date DATE,
-    order_status sale.sales_order_status NOT NULL
+    order_status sale.sales_order_status NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.sales_order_item (
     id INT PRIMARY KEY,
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
-    sales_order_id INT NOT NULL REFERENCES sale.sales_order(id) ON DELETE CASCADE
+    sales_order_id INT NOT NULL REFERENCES sale.sales_order(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.delivery_note (
@@ -45,14 +51,20 @@ CREATE TABLE sale.delivery_note (
     delivery_date DATE NOT NULL,
     shipping_personnel_information JSONB,
     received_by JSONB,
-    overall_goods_condition TEXT
+    overall_goods_condition TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.delivery_note_item (
     id INT PRIMARY KEY,
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
     delivery_note_id INT NOT NULL REFERENCES sale.delivery_note(id) ON DELETE CASCADE,
-    goods_condition TEXT NOT NULL
+    goods_condition TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.goods_return_note (
@@ -67,7 +79,10 @@ CREATE TABLE sale.goods_return_note (
     returned_by_customer_id INT REFERENCES entity.entity(id),
     receiving_location_information JSONB,
     received_by_employee_id INT REFERENCES entity.entity(id),
-    overall_goods_condition TEXT
+    overall_goods_condition TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.goods_return_note_item (
@@ -77,7 +92,10 @@ CREATE TABLE sale.goods_return_note_item (
     rma_item_id INT REFERENCES inventory.return_merchandise_authorization_item(id),
     return_quantity NUMERIC(12, 2) DEFAULT 0,
     return_condition TEXT,
-    return_reason TEXT
+    return_reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.order_confirmation (
@@ -86,13 +104,19 @@ CREATE TABLE sale.order_confirmation (
     order_confirmation_number VARCHAR(50) UNIQUE NOT NULL,
     sales_order_id INT NOT NULL REFERENCES sale.sales_order(id) ON DELETE CASCADE,
     customer_id INT REFERENCES entity.entity(id),
-    ship_to_information JSONB
+    ship_to_information JSONB,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.order_confirmation_item (
     id INT PRIMARY KEY,
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
-    order_confirmation_id INT NOT NULL REFERENCES sale.order_confirmation(id) ON DELETE CASCADE
+    order_confirmation_id INT NOT NULL REFERENCES sale.order_confirmation(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.sales_quotation (
@@ -105,13 +129,19 @@ CREATE TABLE sale.sales_quotation (
     ship_to_information JSONB,
     requested_by JSONB,
     prepared_by_employee_id INT REFERENCES entity.entity(id),
-    quotation_status sale.sales_quotation_status NOT NULL
+    quotation_status sale.sales_quotation_status NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE sale.sales_quotation_item (
     id INT PRIMARY KEY,
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
-    sales_quotation_id INT NOT NULL REFERENCES sale.sales_quotation(id) ON DELETE CASCADE
+    sales_quotation_id INT NOT NULL REFERENCES sale.sales_quotation(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    deleted_at TIMESTAMPTZ
 );
 
 CREATE VIEW sale.sales_order_item_view AS

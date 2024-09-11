@@ -4,7 +4,9 @@
             "package": "base",
             "enums": [
                 { "name": "PaymentTerms", "type": "string" },
-                { "name": "PaymentStatus", "type": "string"}
+                { "name": "PaymentStatus", "type": "string"},
+                { "name": "ShippingTerms", "type": "string"},
+                { "name": "ShippingMethods", "type": "string"}
             ]
         },
         {

@@ -34,6 +34,9 @@ type SalesQuotation struct {
 	RequestedBy          null.JSON            `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
 	PreparedByEmployeeID null.Int             `boil:"prepared_by_employee_id" json:"prepared_by_employee_id,omitempty" toml:"prepared_by_employee_id" yaml:"prepared_by_employee_id,omitempty"`
 	QuotationStatus      SalesQuotationStatus `boil:"quotation_status" json:"quotation_status" toml:"quotation_status" yaml:"quotation_status"`
+	CreatedAt            time.Time            `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt            time.Time            `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt            null.Time            `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *salesQuotationR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L salesQuotationL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -50,6 +53,9 @@ var SalesQuotationColumns = struct {
 	RequestedBy          string
 	PreparedByEmployeeID string
 	QuotationStatus      string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 }{
 	ID:                   "id",
 	BaseDocumentID:       "base_document_id",
@@ -61,6 +67,9 @@ var SalesQuotationColumns = struct {
 	RequestedBy:          "requested_by",
 	PreparedByEmployeeID: "prepared_by_employee_id",
 	QuotationStatus:      "quotation_status",
+	CreatedAt:            "created_at",
+	UpdatedAt:            "updated_at",
+	DeletedAt:            "deleted_at",
 }
 
 var SalesQuotationTableColumns = struct {
@@ -74,6 +83,9 @@ var SalesQuotationTableColumns = struct {
 	RequestedBy          string
 	PreparedByEmployeeID string
 	QuotationStatus      string
+	CreatedAt            string
+	UpdatedAt            string
+	DeletedAt            string
 }{
 	ID:                   "sales_quotation.id",
 	BaseDocumentID:       "sales_quotation.base_document_id",
@@ -85,6 +97,9 @@ var SalesQuotationTableColumns = struct {
 	RequestedBy:          "sales_quotation.requested_by",
 	PreparedByEmployeeID: "sales_quotation.prepared_by_employee_id",
 	QuotationStatus:      "sales_quotation.quotation_status",
+	CreatedAt:            "sales_quotation.created_at",
+	UpdatedAt:            "sales_quotation.updated_at",
+	DeletedAt:            "sales_quotation.deleted_at",
 }
 
 // Generated where
@@ -135,6 +150,9 @@ var SalesQuotationWhere = struct {
 	RequestedBy          whereHelpernull_JSON
 	PreparedByEmployeeID whereHelpernull_Int
 	QuotationStatus      whereHelperSalesQuotationStatus
+	CreatedAt            whereHelpertime_Time
+	UpdatedAt            whereHelpertime_Time
+	DeletedAt            whereHelpernull_Time
 }{
 	ID:                   whereHelperint{field: "\"sale\".\"sales_quotation\".\"id\""},
 	BaseDocumentID:       whereHelperint{field: "\"sale\".\"sales_quotation\".\"base_document_id\""},
@@ -146,6 +164,9 @@ var SalesQuotationWhere = struct {
 	RequestedBy:          whereHelpernull_JSON{field: "\"sale\".\"sales_quotation\".\"requested_by\""},
 	PreparedByEmployeeID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation\".\"prepared_by_employee_id\""},
 	QuotationStatus:      whereHelperSalesQuotationStatus{field: "\"sale\".\"sales_quotation\".\"quotation_status\""},
+	CreatedAt:            whereHelpertime_Time{field: "\"sale\".\"sales_quotation\".\"created_at\""},
+	UpdatedAt:            whereHelpertime_Time{field: "\"sale\".\"sales_quotation\".\"updated_at\""},
+	DeletedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation\".\"deleted_at\""},
 }
 
 // SalesQuotationRels is where relationship names are stored.
@@ -176,9 +197,9 @@ func (r *salesQuotationR) GetSalesQuotationItems() SalesQuotationItemSlice {
 type salesQuotationL struct{}
 
 var (
-	salesQuotationAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status"}
-	salesQuotationColumnsWithoutDefault = []string{"id", "base_document_id", "sales_quotation_number", "quotation_status"}
-	salesQuotationColumnsWithDefault    = []string{"valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id"}
+	salesQuotationAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at"}
+	salesQuotationColumnsWithoutDefault = []string{"id", "base_document_id", "sales_quotation_number", "quotation_status", "created_at", "updated_at"}
+	salesQuotationColumnsWithDefault    = []string{"valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "deleted_at"}
 	salesQuotationPrimaryKeyColumns     = []string{"id"}
 	salesQuotationGeneratedColumns      = []string{}
 )
@@ -717,6 +738,16 @@ func (o *SalesQuotation) Insert(ctx context.Context, exec boil.ContextExecutor, 
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -792,6 +823,12 @@ func (o *SalesQuotation) Insert(ctx context.Context, exec boil.ContextExecutor, 
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *SalesQuotation) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -921,6 +958,14 @@ func (o SalesQuotationSlice) UpdateAll(ctx context.Context, exec boil.ContextExe
 func (o *SalesQuotation) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_quotation provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

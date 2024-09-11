@@ -38,6 +38,9 @@ type DeliveryNote struct {
 	ShippingPersonnelInformation null.JSON   `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
 	ReceivedBy                   null.JSON   `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
 	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
+	CreatedAt                    time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt                    time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt                    null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *deliveryNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L deliveryNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -57,6 +60,9 @@ var DeliveryNoteColumns = struct {
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 }{
 	ID:                           "id",
 	BaseDocumentID:               "base_document_id",
@@ -71,6 +77,9 @@ var DeliveryNoteColumns = struct {
 	ShippingPersonnelInformation: "shipping_personnel_information",
 	ReceivedBy:                   "received_by",
 	OverallGoodsCondition:        "overall_goods_condition",
+	CreatedAt:                    "created_at",
+	UpdatedAt:                    "updated_at",
+	DeletedAt:                    "deleted_at",
 }
 
 var DeliveryNoteTableColumns = struct {
@@ -87,6 +96,9 @@ var DeliveryNoteTableColumns = struct {
 	ShippingPersonnelInformation string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
+	CreatedAt                    string
+	UpdatedAt                    string
+	DeletedAt                    string
 }{
 	ID:                           "delivery_note.id",
 	BaseDocumentID:               "delivery_note.base_document_id",
@@ -101,6 +113,9 @@ var DeliveryNoteTableColumns = struct {
 	ShippingPersonnelInformation: "delivery_note.shipping_personnel_information",
 	ReceivedBy:                   "delivery_note.received_by",
 	OverallGoodsCondition:        "delivery_note.overall_goods_condition",
+	CreatedAt:                    "delivery_note.created_at",
+	UpdatedAt:                    "delivery_note.updated_at",
+	DeletedAt:                    "delivery_note.deleted_at",
 }
 
 // Generated where
@@ -309,6 +324,30 @@ func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
 func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
+type whereHelpernull_Time struct{ field string }
+
+func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpernull_Time) NEQ(x null.Time) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpernull_Time) LT(x null.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpernull_Time) LTE(x null.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpernull_Time) GT(x null.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpernull_Time) GTE(x null.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+
 var DeliveryNoteWhere = struct {
 	ID                           whereHelperint
 	BaseDocumentID               whereHelperint
@@ -323,6 +362,9 @@ var DeliveryNoteWhere = struct {
 	ShippingPersonnelInformation whereHelpernull_JSON
 	ReceivedBy                   whereHelpernull_JSON
 	OverallGoodsCondition        whereHelpernull_String
+	CreatedAt                    whereHelpertime_Time
+	UpdatedAt                    whereHelpertime_Time
+	DeletedAt                    whereHelpernull_Time
 }{
 	ID:                           whereHelperint{field: "\"sale\".\"delivery_note\".\"id\""},
 	BaseDocumentID:               whereHelperint{field: "\"sale\".\"delivery_note\".\"base_document_id\""},
@@ -337,6 +379,9 @@ var DeliveryNoteWhere = struct {
 	ShippingPersonnelInformation: whereHelpernull_JSON{field: "\"sale\".\"delivery_note\".\"shipping_personnel_information\""},
 	ReceivedBy:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note\".\"received_by\""},
 	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"delivery_note\".\"overall_goods_condition\""},
+	CreatedAt:                    whereHelpertime_Time{field: "\"sale\".\"delivery_note\".\"created_at\""},
+	UpdatedAt:                    whereHelpertime_Time{field: "\"sale\".\"delivery_note\".\"updated_at\""},
+	DeletedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note\".\"deleted_at\""},
 }
 
 // DeliveryNoteRels is where relationship names are stored.
@@ -377,9 +422,9 @@ func (r *deliveryNoteR) GetDeliveryNoteItems() DeliveryNoteItemSlice {
 type deliveryNoteL struct{}
 
 var (
-	deliveryNoteAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition"}
-	deliveryNoteColumnsWithoutDefault = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date"}
-	deliveryNoteColumnsWithDefault    = []string{"vendor_id", "customer_id", "shipping_personnel_information", "received_by", "overall_goods_condition"}
+	deliveryNoteAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at"}
+	deliveryNoteColumnsWithoutDefault = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "created_at", "updated_at"}
+	deliveryNoteColumnsWithDefault    = []string{"vendor_id", "customer_id", "shipping_personnel_information", "received_by", "overall_goods_condition", "deleted_at"}
 	deliveryNotePrimaryKeyColumns     = []string{"id"}
 	deliveryNoteGeneratedColumns      = []string{}
 )
@@ -1096,6 +1141,16 @@ func (o *DeliveryNote) Insert(ctx context.Context, exec boil.ContextExecutor, co
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -1171,6 +1226,12 @@ func (o *DeliveryNote) Insert(ctx context.Context, exec boil.ContextExecutor, co
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *DeliveryNote) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -1300,6 +1361,14 @@ func (o DeliveryNoteSlice) UpdateAll(ctx context.Context, exec boil.ContextExecu
 func (o *DeliveryNote) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no delivery_note provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

@@ -32,6 +32,9 @@ type GoodsReturnNoteItemView struct {
 	ReturnQuantity     types.NullDecimal `boil:"return_quantity" json:"return_quantity,omitempty" toml:"return_quantity" yaml:"return_quantity,omitempty"`
 	ReturnCondition    null.String       `boil:"return_condition" json:"return_condition,omitempty" toml:"return_condition" yaml:"return_condition,omitempty"`
 	ReturnReason       null.String       `boil:"return_reason" json:"return_reason,omitempty" toml:"return_reason" yaml:"return_reason,omitempty"`
+	CreatedAt          null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt          null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON         `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
@@ -43,6 +46,9 @@ var GoodsReturnNoteItemViewColumns = struct {
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "id",
@@ -52,6 +58,9 @@ var GoodsReturnNoteItemViewColumns = struct {
 	ReturnQuantity:     "return_quantity",
 	ReturnCondition:    "return_condition",
 	ReturnReason:       "return_reason",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
 }
 
@@ -63,6 +72,9 @@ var GoodsReturnNoteItemViewTableColumns = struct {
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "goods_return_note_item_view.id",
@@ -72,6 +84,9 @@ var GoodsReturnNoteItemViewTableColumns = struct {
 	ReturnQuantity:     "goods_return_note_item_view.return_quantity",
 	ReturnCondition:    "goods_return_note_item_view.return_condition",
 	ReturnReason:       "goods_return_note_item_view.return_reason",
+	CreatedAt:          "goods_return_note_item_view.created_at",
+	UpdatedAt:          "goods_return_note_item_view.updated_at",
+	DeletedAt:          "goods_return_note_item_view.deleted_at",
 	BaseDocumentItem:   "goods_return_note_item_view.base_document_item",
 }
 
@@ -85,6 +100,9 @@ var GoodsReturnNoteItemViewWhere = struct {
 	ReturnQuantity     whereHelpertypes_NullDecimal
 	ReturnCondition    whereHelpernull_String
 	ReturnReason       whereHelpernull_String
+	CreatedAt          whereHelpernull_Time
+	UpdatedAt          whereHelpernull_Time
+	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"id\""},
@@ -94,13 +112,16 @@ var GoodsReturnNoteItemViewWhere = struct {
 	ReturnQuantity:     whereHelpertypes_NullDecimal{field: "\"sale\".\"goods_return_note_item_view\".\"return_quantity\""},
 	ReturnCondition:    whereHelpernull_String{field: "\"sale\".\"goods_return_note_item_view\".\"return_condition\""},
 	ReturnReason:       whereHelpernull_String{field: "\"sale\".\"goods_return_note_item_view\".\"return_reason\""},
+	CreatedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item_view\".\"created_at\""},
+	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item_view\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_item_view\".\"base_document_item\""},
 }
 
 var (
-	goodsReturnNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "base_document_item"}
+	goodsReturnNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	goodsReturnNoteItemViewColumnsWithoutDefault = []string{}
-	goodsReturnNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "base_document_item"}
+	goodsReturnNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	goodsReturnNoteItemViewPrimaryKeyColumns     = []string{}
 	goodsReturnNoteItemViewGeneratedColumns      = []string{}
 )
@@ -349,6 +370,16 @@ func (o *GoodsReturnNoteItemView) Insert(ctx context.Context, exec boil.ContextE
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -425,6 +456,14 @@ func (o *GoodsReturnNoteItemView) Insert(ctx context.Context, exec boil.ContextE
 func (o *GoodsReturnNoteItemView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no goods_return_note_item_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

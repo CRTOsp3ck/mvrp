@@ -27,6 +27,9 @@ type SalesQuotationItemView struct {
 	ID                 null.Int  `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
 	BaseDocumentItemID null.Int  `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
 	SalesQuotationID   null.Int  `boil:"sales_quotation_id" json:"sales_quotation_id,omitempty" toml:"sales_quotation_id" yaml:"sales_quotation_id,omitempty"`
+	CreatedAt          null.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt          null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
@@ -34,11 +37,17 @@ var SalesQuotationItemViewColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesQuotationID   string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	SalesQuotationID:   "sales_quotation_id",
+	CreatedAt:          "created_at",
+	UpdatedAt:          "updated_at",
+	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
 }
 
@@ -46,11 +55,17 @@ var SalesQuotationItemViewTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	SalesQuotationID   string
+	CreatedAt          string
+	UpdatedAt          string
+	DeletedAt          string
 	BaseDocumentItem   string
 }{
 	ID:                 "sales_quotation_item_view.id",
 	BaseDocumentItemID: "sales_quotation_item_view.base_document_item_id",
 	SalesQuotationID:   "sales_quotation_item_view.sales_quotation_id",
+	CreatedAt:          "sales_quotation_item_view.created_at",
+	UpdatedAt:          "sales_quotation_item_view.updated_at",
+	DeletedAt:          "sales_quotation_item_view.deleted_at",
 	BaseDocumentItem:   "sales_quotation_item_view.base_document_item",
 }
 
@@ -60,18 +75,24 @@ var SalesQuotationItemViewWhere = struct {
 	ID                 whereHelpernull_Int
 	BaseDocumentItemID whereHelpernull_Int
 	SalesQuotationID   whereHelpernull_Int
+	CreatedAt          whereHelpernull_Time
+	UpdatedAt          whereHelpernull_Time
+	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"sales_quotation_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation_item_view\".\"base_document_item_id\""},
 	SalesQuotationID:   whereHelpernull_Int{field: "\"sale\".\"sales_quotation_item_view\".\"sales_quotation_id\""},
+	CreatedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_quotation_item_view\".\"created_at\""},
+	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_quotation_item_view\".\"updated_at\""},
+	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_quotation_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_item_view\".\"base_document_item\""},
 }
 
 var (
-	salesQuotationItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_quotation_id", "base_document_item"}
+	salesQuotationItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	salesQuotationItemViewColumnsWithoutDefault = []string{}
-	salesQuotationItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_quotation_id", "base_document_item"}
+	salesQuotationItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	salesQuotationItemViewPrimaryKeyColumns     = []string{}
 	salesQuotationItemViewGeneratedColumns      = []string{}
 )
@@ -320,6 +341,16 @@ func (o *SalesQuotationItemView) Insert(ctx context.Context, exec boil.ContextEx
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -396,6 +427,14 @@ func (o *SalesQuotationItemView) Insert(ctx context.Context, exec boil.ContextEx
 func (o *SalesQuotationItemView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_quotation_item_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

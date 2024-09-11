@@ -34,6 +34,9 @@ type SalesOrderView struct {
 	ShipFromInformation           null.JSON            `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
 	PaymentDueDate                null.Time            `boil:"payment_due_date" json:"payment_due_date,omitempty" toml:"payment_due_date" yaml:"payment_due_date,omitempty"`
 	OrderStatus                   NullSalesOrderStatus `boil:"order_status" json:"order_status,omitempty" toml:"order_status" yaml:"order_status,omitempty"`
+	CreatedAt                     null.Time            `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt                     null.Time            `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt                     null.Time            `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument                  null.JSON            `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	SalesOrderItems               null.JSON            `boil:"sales_order_items" json:"sales_order_items,omitempty" toml:"sales_order_items" yaml:"sales_order_items,omitempty"`
 }
@@ -49,6 +52,9 @@ var SalesOrderViewColumns = struct {
 	ShipFromInformation           string
 	PaymentDueDate                string
 	OrderStatus                   string
+	CreatedAt                     string
+	UpdatedAt                     string
+	DeletedAt                     string
 	BaseDocument                  string
 	SalesOrderItems               string
 }{
@@ -62,6 +68,9 @@ var SalesOrderViewColumns = struct {
 	ShipFromInformation:           "ship_from_information",
 	PaymentDueDate:                "payment_due_date",
 	OrderStatus:                   "order_status",
+	CreatedAt:                     "created_at",
+	UpdatedAt:                     "updated_at",
+	DeletedAt:                     "deleted_at",
 	BaseDocument:                  "base_document",
 	SalesOrderItems:               "sales_order_items",
 }
@@ -77,6 +86,9 @@ var SalesOrderViewTableColumns = struct {
 	ShipFromInformation           string
 	PaymentDueDate                string
 	OrderStatus                   string
+	CreatedAt                     string
+	UpdatedAt                     string
+	DeletedAt                     string
 	BaseDocument                  string
 	SalesOrderItems               string
 }{
@@ -90,6 +102,9 @@ var SalesOrderViewTableColumns = struct {
 	ShipFromInformation:           "sales_order_view.ship_from_information",
 	PaymentDueDate:                "sales_order_view.payment_due_date",
 	OrderStatus:                   "sales_order_view.order_status",
+	CreatedAt:                     "sales_order_view.created_at",
+	UpdatedAt:                     "sales_order_view.updated_at",
+	DeletedAt:                     "sales_order_view.deleted_at",
 	BaseDocument:                  "sales_order_view.base_document",
 	SalesOrderItems:               "sales_order_view.sales_order_items",
 }
@@ -147,6 +162,9 @@ var SalesOrderViewWhere = struct {
 	ShipFromInformation           whereHelpernull_JSON
 	PaymentDueDate                whereHelpernull_Time
 	OrderStatus                   whereHelperNullSalesOrderStatus
+	CreatedAt                     whereHelpernull_Time
+	UpdatedAt                     whereHelpernull_Time
+	DeletedAt                     whereHelpernull_Time
 	BaseDocument                  whereHelpernull_JSON
 	SalesOrderItems               whereHelpernull_JSON
 }{
@@ -160,14 +178,17 @@ var SalesOrderViewWhere = struct {
 	ShipFromInformation:           whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"ship_from_information\""},
 	PaymentDueDate:                whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"payment_due_date\""},
 	OrderStatus:                   whereHelperNullSalesOrderStatus{field: "\"sale\".\"sales_order_view\".\"order_status\""},
+	CreatedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"created_at\""},
+	UpdatedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"updated_at\""},
+	DeletedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"deleted_at\""},
 	BaseDocument:                  whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"base_document\""},
 	SalesOrderItems:               whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"sales_order_items\""},
 }
 
 var (
-	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
+	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_order_items"}
 	salesOrderViewColumnsWithoutDefault = []string{}
-	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "base_document", "sales_order_items"}
+	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_order_items"}
 	salesOrderViewPrimaryKeyColumns     = []string{}
 	salesOrderViewGeneratedColumns      = []string{}
 )
@@ -416,6 +437,16 @@ func (o *SalesOrderView) Insert(ctx context.Context, exec boil.ContextExecutor, 
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		if queries.MustTime(o.UpdatedAt).IsZero() {
+			queries.SetScanner(&o.UpdatedAt, currTime)
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -492,6 +523,14 @@ func (o *SalesOrderView) Insert(ctx context.Context, exec boil.ContextExecutor, 
 func (o *SalesOrderView) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no sales_order_view provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if queries.MustTime(o.CreatedAt).IsZero() {
+			queries.SetScanner(&o.CreatedAt, currTime)
+		}
+		queries.SetScanner(&o.UpdatedAt, currTime)
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {

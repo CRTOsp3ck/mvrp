@@ -28,6 +28,7 @@ func (s *EnumService) NewListEnumResponse(payload dto.EnumsDTO) *ListEnumRespons
 }
 
 func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) {
+	// Base - Payment Terms
 	var paymentTerms []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetPaymentTermsEnums() {
 		enum := dto.Enum{
@@ -36,6 +37,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		paymentTerms = append(paymentTerms, enum)
 	}
+
+	// Base - Payment Status
 	var paymentStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetPaymentStatusEnums() {
 		enum := dto.Enum{
@@ -44,6 +47,28 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		paymentStatus = append(paymentStatus, enum)
 	}
+
+	// Base - Shipping Terms
+	var shippingTerms []dto.Enum
+	for _, enumStr := range s.Repo.Enum.GetShippingTermsEnums() {
+		enum := dto.Enum{
+			Name:  parseEnumForName(enumStr.String()),
+			Value: enumStr.String(),
+		}
+		shippingTerms = append(shippingTerms, enum)
+	}
+
+	// Base - Shipping Method
+	var shippingMethod []dto.Enum
+	for _, enumStr := range s.Repo.Enum.GetShippingMethodEnums() {
+		enum := dto.Enum{
+			Name:  parseEnumForName(enumStr.String()),
+			Value: enumStr.String(),
+		}
+		shippingMethod = append(shippingMethod, enum)
+	}
+
+	// Item - Item Type
 	var itemType []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetItemTypeEnums() {
 		enum := dto.Enum{
@@ -52,6 +77,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		itemType = append(itemType, enum)
 	}
+
+	// Item - Item Status
 	var itemStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetItemStatusEnums() {
 		enum := dto.Enum{
@@ -60,6 +87,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		itemStatus = append(itemStatus, enum)
 	}
+
+	// Entity - Entity Type
 	var entityType []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetEntityTypeEnums() {
 		enum := dto.Enum{
@@ -68,6 +97,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		entityType = append(entityType, enum)
 	}
+
+	// Entity - Entity Status
 	var entityStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetEntityStatusEnums() {
 		enum := dto.Enum{
@@ -76,6 +107,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		entityStatus = append(entityStatus, enum)
 	}
+
+	// Inventory - Inventory Transaction Type
 	var inventoryTransactionType []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetInventoryTransactionTypeEnums() {
 		enum := dto.Enum{
@@ -84,6 +117,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		inventoryTransactionType = append(inventoryTransactionType, enum)
 	}
+
+	// Purchase - Purchase Order Status
 	var purchaseOrderStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetPurchaseOrderStatusEnums() {
 		enum := dto.Enum{
@@ -92,6 +127,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		purchaseOrderStatus = append(purchaseOrderStatus, enum)
 	}
+
+	// Sale - Sales Order Status
 	var salesOrderStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetSalesOrderStatusEnums() {
 		enum := dto.Enum{
@@ -100,6 +137,8 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		salesOrderStatus = append(salesOrderStatus, enum)
 	}
+
+	// Sale - Sales Quotation Status
 	var salesQuotationStatus []dto.Enum
 	for _, enumStr := range s.Repo.Enum.GetSalesQuotationStatusEnums() {
 		enum := dto.Enum{
@@ -108,10 +147,13 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		}
 		salesQuotationStatus = append(salesQuotationStatus, enum)
 	}
+
 	data := &dto.EnumsDTO{
 		BaseEnums: dto.BaseEnumDTO{
-			PaymentTerms:  paymentTerms,
-			PaymentStatus: paymentStatus,
+			PaymentTerms:    paymentTerms,
+			PaymentStatus:   paymentStatus,
+			ShippingTerms:   shippingTerms,
+			ShippingMethods: shippingMethod,
 		},
 		ItemEnums: dto.ItemEnumDTO{
 			ItemType:   itemType,

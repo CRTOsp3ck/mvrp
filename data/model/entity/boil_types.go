@@ -55,6 +55,7 @@ type EntityType string
 
 // Enum values for EntityType
 const (
+	EntityTypeProprietor   EntityType = "proprietor"
 	EntityTypeCustomer     EntityType = "customer"
 	EntityTypeSupplier     EntityType = "supplier"
 	EntityTypeManufacturer EntityType = "manufacturer"
@@ -64,6 +65,7 @@ const (
 
 func AllEntityType() []EntityType {
 	return []EntityType{
+		EntityTypeProprietor,
 		EntityTypeCustomer,
 		EntityTypeSupplier,
 		EntityTypeManufacturer,
@@ -74,7 +76,7 @@ func AllEntityType() []EntityType {
 
 func (e EntityType) IsValid() error {
 	switch e {
-	case EntityTypeCustomer, EntityTypeSupplier, EntityTypeManufacturer, EntityTypeEmployee, EntityTypeOther:
+	case EntityTypeProprietor, EntityTypeCustomer, EntityTypeSupplier, EntityTypeManufacturer, EntityTypeEmployee, EntityTypeOther:
 		return nil
 	default:
 		return errors.New("enum is not valid")
@@ -87,16 +89,18 @@ func (e EntityType) String() string {
 
 func (e EntityType) Ordinal() int {
 	switch e {
-	case EntityTypeCustomer:
+	case EntityTypeProprietor:
 		return 0
-	case EntityTypeSupplier:
+	case EntityTypeCustomer:
 		return 1
-	case EntityTypeManufacturer:
+	case EntityTypeSupplier:
 		return 2
-	case EntityTypeEmployee:
+	case EntityTypeManufacturer:
 		return 3
-	case EntityTypeOther:
+	case EntityTypeEmployee:
 		return 4
+	case EntityTypeOther:
+		return 5
 
 	default:
 		panic(errors.New("enum is not valid"))

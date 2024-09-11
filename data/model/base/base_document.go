@@ -30,20 +30,20 @@ type BaseDocument struct {
 	UpdatedAt                   time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt                   null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	IssueDate                   null.Time         `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
-	GrossAmount                 types.NullDecimal `boil:"gross_amount" json:"gross_amount,omitempty" toml:"gross_amount" yaml:"gross_amount,omitempty"`
-	DiscountAmount              types.NullDecimal `boil:"discount_amount" json:"discount_amount,omitempty" toml:"discount_amount" yaml:"discount_amount,omitempty"`
+	GrossAmountGen              types.NullDecimal `boil:"gross_amount_gen" json:"gross_amount_gen,omitempty" toml:"gross_amount_gen" yaml:"gross_amount_gen,omitempty"`
+	DiscountAmountGen           types.NullDecimal `boil:"discount_amount_gen" json:"discount_amount_gen,omitempty" toml:"discount_amount_gen" yaml:"discount_amount_gen,omitempty"`
 	DiscountRateGen             types.NullDecimal `boil:"discount_rate_gen" json:"discount_rate_gen,omitempty" toml:"discount_rate_gen" yaml:"discount_rate_gen,omitempty"`
 	AdditionalDiscountAmount    types.NullDecimal `boil:"additional_discount_amount" json:"additional_discount_amount,omitempty" toml:"additional_discount_amount" yaml:"additional_discount_amount,omitempty"`
 	AdditionalDiscountRateGen   types.NullDecimal `boil:"additional_discount_rate_gen" json:"additional_discount_rate_gen,omitempty" toml:"additional_discount_rate_gen" yaml:"additional_discount_rate_gen,omitempty"`
 	GrossAmountAfterDiscountGen types.NullDecimal `boil:"gross_amount_after_discount_gen" json:"gross_amount_after_discount_gen,omitempty" toml:"gross_amount_after_discount_gen" yaml:"gross_amount_after_discount_gen,omitempty"`
-	TaxAmount                   types.NullDecimal `boil:"tax_amount" json:"tax_amount,omitempty" toml:"tax_amount" yaml:"tax_amount,omitempty"`
+	TaxAmountGen                types.NullDecimal `boil:"tax_amount_gen" json:"tax_amount_gen,omitempty" toml:"tax_amount_gen" yaml:"tax_amount_gen,omitempty"`
 	TaxRateGen                  types.NullDecimal `boil:"tax_rate_gen" json:"tax_rate_gen,omitempty" toml:"tax_rate_gen" yaml:"tax_rate_gen,omitempty"`
-	ShippingFees                types.NullDecimal `boil:"shipping_fees" json:"shipping_fees,omitempty" toml:"shipping_fees" yaml:"shipping_fees,omitempty"`
+	ShippingFeesGen             types.NullDecimal `boil:"shipping_fees_gen" json:"shipping_fees_gen,omitempty" toml:"shipping_fees_gen" yaml:"shipping_fees_gen,omitempty"`
 	OtherFees                   types.NullDecimal `boil:"other_fees" json:"other_fees,omitempty" toml:"other_fees" yaml:"other_fees,omitempty"`
 	CustomAdjustmentAmount      types.NullDecimal `boil:"custom_adjustment_amount" json:"custom_adjustment_amount,omitempty" toml:"custom_adjustment_amount" yaml:"custom_adjustment_amount,omitempty"`
 	NetAmountGen                types.NullDecimal `boil:"net_amount_gen" json:"net_amount_gen,omitempty" toml:"net_amount_gen" yaml:"net_amount_gen,omitempty"`
-	ShippingTerms               null.String       `boil:"shipping_terms" json:"shipping_terms,omitempty" toml:"shipping_terms" yaml:"shipping_terms,omitempty"`
-	ShippingMethod              null.String       `boil:"shipping_method" json:"shipping_method,omitempty" toml:"shipping_method" yaml:"shipping_method,omitempty"`
+	ShippingTerms               ShippingTerms     `boil:"shipping_terms" json:"shipping_terms" toml:"shipping_terms" yaml:"shipping_terms"`
+	ShippingMethod              ShippingMethod    `boil:"shipping_method" json:"shipping_method" toml:"shipping_method" yaml:"shipping_method"`
 	ShippingDate                null.Time         `boil:"shipping_date" json:"shipping_date,omitempty" toml:"shipping_date" yaml:"shipping_date,omitempty"`
 	PaymentTerms                PaymentTerms      `boil:"payment_terms" json:"payment_terms" toml:"payment_terms" yaml:"payment_terms"`
 	PaymentInstructions         null.String       `boil:"payment_instructions" json:"payment_instructions,omitempty" toml:"payment_instructions" yaml:"payment_instructions,omitempty"`
@@ -61,15 +61,15 @@ var BaseDocumentColumns = struct {
 	UpdatedAt                   string
 	DeletedAt                   string
 	IssueDate                   string
-	GrossAmount                 string
-	DiscountAmount              string
+	GrossAmountGen              string
+	DiscountAmountGen           string
 	DiscountRateGen             string
 	AdditionalDiscountAmount    string
 	AdditionalDiscountRateGen   string
 	GrossAmountAfterDiscountGen string
-	TaxAmount                   string
+	TaxAmountGen                string
 	TaxRateGen                  string
-	ShippingFees                string
+	ShippingFeesGen             string
 	OtherFees                   string
 	CustomAdjustmentAmount      string
 	NetAmountGen                string
@@ -87,15 +87,15 @@ var BaseDocumentColumns = struct {
 	UpdatedAt:                   "updated_at",
 	DeletedAt:                   "deleted_at",
 	IssueDate:                   "issue_date",
-	GrossAmount:                 "gross_amount",
-	DiscountAmount:              "discount_amount",
+	GrossAmountGen:              "gross_amount_gen",
+	DiscountAmountGen:           "discount_amount_gen",
 	DiscountRateGen:             "discount_rate_gen",
 	AdditionalDiscountAmount:    "additional_discount_amount",
 	AdditionalDiscountRateGen:   "additional_discount_rate_gen",
 	GrossAmountAfterDiscountGen: "gross_amount_after_discount_gen",
-	TaxAmount:                   "tax_amount",
+	TaxAmountGen:                "tax_amount_gen",
 	TaxRateGen:                  "tax_rate_gen",
-	ShippingFees:                "shipping_fees",
+	ShippingFeesGen:             "shipping_fees_gen",
 	OtherFees:                   "other_fees",
 	CustomAdjustmentAmount:      "custom_adjustment_amount",
 	NetAmountGen:                "net_amount_gen",
@@ -115,15 +115,15 @@ var BaseDocumentTableColumns = struct {
 	UpdatedAt                   string
 	DeletedAt                   string
 	IssueDate                   string
-	GrossAmount                 string
-	DiscountAmount              string
+	GrossAmountGen              string
+	DiscountAmountGen           string
 	DiscountRateGen             string
 	AdditionalDiscountAmount    string
 	AdditionalDiscountRateGen   string
 	GrossAmountAfterDiscountGen string
-	TaxAmount                   string
+	TaxAmountGen                string
 	TaxRateGen                  string
-	ShippingFees                string
+	ShippingFeesGen             string
 	OtherFees                   string
 	CustomAdjustmentAmount      string
 	NetAmountGen                string
@@ -141,15 +141,15 @@ var BaseDocumentTableColumns = struct {
 	UpdatedAt:                   "base_document.updated_at",
 	DeletedAt:                   "base_document.deleted_at",
 	IssueDate:                   "base_document.issue_date",
-	GrossAmount:                 "base_document.gross_amount",
-	DiscountAmount:              "base_document.discount_amount",
+	GrossAmountGen:              "base_document.gross_amount_gen",
+	DiscountAmountGen:           "base_document.discount_amount_gen",
 	DiscountRateGen:             "base_document.discount_rate_gen",
 	AdditionalDiscountAmount:    "base_document.additional_discount_amount",
 	AdditionalDiscountRateGen:   "base_document.additional_discount_rate_gen",
 	GrossAmountAfterDiscountGen: "base_document.gross_amount_after_discount_gen",
-	TaxAmount:                   "base_document.tax_amount",
+	TaxAmountGen:                "base_document.tax_amount_gen",
 	TaxRateGen:                  "base_document.tax_rate_gen",
-	ShippingFees:                "base_document.shipping_fees",
+	ShippingFeesGen:             "base_document.shipping_fees_gen",
 	OtherFees:                   "base_document.other_fees",
 	CustomAdjustmentAmount:      "base_document.custom_adjustment_amount",
 	NetAmountGen:                "base_document.net_amount_gen",
@@ -259,6 +259,111 @@ func (w whereHelpertypes_NullDecimal) IsNotNull() qm.QueryMod {
 	return qmhelper.WhereIsNotNull(w.field)
 }
 
+type whereHelperShippingTerms struct{ field string }
+
+func (w whereHelperShippingTerms) EQ(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperShippingTerms) NEQ(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperShippingTerms) LT(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperShippingTerms) LTE(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperShippingTerms) GT(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperShippingTerms) GTE(x ShippingTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperShippingTerms) IN(slice []ShippingTerms) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperShippingTerms) NIN(slice []ShippingTerms) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
+type whereHelperShippingMethod struct{ field string }
+
+func (w whereHelperShippingMethod) EQ(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperShippingMethod) NEQ(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperShippingMethod) LT(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperShippingMethod) LTE(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperShippingMethod) GT(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperShippingMethod) GTE(x ShippingMethod) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperShippingMethod) IN(slice []ShippingMethod) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperShippingMethod) NIN(slice []ShippingMethod) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
+type whereHelperPaymentTerms struct{ field string }
+
+func (w whereHelperPaymentTerms) EQ(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelperPaymentTerms) NEQ(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelperPaymentTerms) LT(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperPaymentTerms) LTE(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperPaymentTerms) GT(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperPaymentTerms) GTE(x PaymentTerms) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperPaymentTerms) IN(slice []PaymentTerms) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperPaymentTerms) NIN(slice []PaymentTerms) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
 type whereHelpernull_String struct{ field string }
 
 func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
@@ -309,41 +414,6 @@ func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
 func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
-type whereHelperPaymentTerms struct{ field string }
-
-func (w whereHelperPaymentTerms) EQ(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelperPaymentTerms) NEQ(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelperPaymentTerms) LT(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelperPaymentTerms) LTE(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelperPaymentTerms) GT(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelperPaymentTerms) GTE(x PaymentTerms) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-func (w whereHelperPaymentTerms) IN(slice []PaymentTerms) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelperPaymentTerms) NIN(slice []PaymentTerms) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
 type whereHelperPaymentStatus struct{ field string }
 
 func (w whereHelperPaymentStatus) EQ(x PaymentStatus) qm.QueryMod {
@@ -385,20 +455,20 @@ var BaseDocumentWhere = struct {
 	UpdatedAt                   whereHelpertime_Time
 	DeletedAt                   whereHelpernull_Time
 	IssueDate                   whereHelpernull_Time
-	GrossAmount                 whereHelpertypes_NullDecimal
-	DiscountAmount              whereHelpertypes_NullDecimal
+	GrossAmountGen              whereHelpertypes_NullDecimal
+	DiscountAmountGen           whereHelpertypes_NullDecimal
 	DiscountRateGen             whereHelpertypes_NullDecimal
 	AdditionalDiscountAmount    whereHelpertypes_NullDecimal
 	AdditionalDiscountRateGen   whereHelpertypes_NullDecimal
 	GrossAmountAfterDiscountGen whereHelpertypes_NullDecimal
-	TaxAmount                   whereHelpertypes_NullDecimal
+	TaxAmountGen                whereHelpertypes_NullDecimal
 	TaxRateGen                  whereHelpertypes_NullDecimal
-	ShippingFees                whereHelpertypes_NullDecimal
+	ShippingFeesGen             whereHelpertypes_NullDecimal
 	OtherFees                   whereHelpertypes_NullDecimal
 	CustomAdjustmentAmount      whereHelpertypes_NullDecimal
 	NetAmountGen                whereHelpertypes_NullDecimal
-	ShippingTerms               whereHelpernull_String
-	ShippingMethod              whereHelpernull_String
+	ShippingTerms               whereHelperShippingTerms
+	ShippingMethod              whereHelperShippingMethod
 	ShippingDate                whereHelpernull_Time
 	PaymentTerms                whereHelperPaymentTerms
 	PaymentInstructions         whereHelpernull_String
@@ -411,20 +481,20 @@ var BaseDocumentWhere = struct {
 	UpdatedAt:                   whereHelpertime_Time{field: "\"base\".\"base_document\".\"updated_at\""},
 	DeletedAt:                   whereHelpernull_Time{field: "\"base\".\"base_document\".\"deleted_at\""},
 	IssueDate:                   whereHelpernull_Time{field: "\"base\".\"base_document\".\"issue_date\""},
-	GrossAmount:                 whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"gross_amount\""},
-	DiscountAmount:              whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"discount_amount\""},
+	GrossAmountGen:              whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"gross_amount_gen\""},
+	DiscountAmountGen:           whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"discount_amount_gen\""},
 	DiscountRateGen:             whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"discount_rate_gen\""},
 	AdditionalDiscountAmount:    whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"additional_discount_amount\""},
 	AdditionalDiscountRateGen:   whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"additional_discount_rate_gen\""},
 	GrossAmountAfterDiscountGen: whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"gross_amount_after_discount_gen\""},
-	TaxAmount:                   whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"tax_amount\""},
+	TaxAmountGen:                whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"tax_amount_gen\""},
 	TaxRateGen:                  whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"tax_rate_gen\""},
-	ShippingFees:                whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"shipping_fees\""},
+	ShippingFeesGen:             whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"shipping_fees_gen\""},
 	OtherFees:                   whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"other_fees\""},
 	CustomAdjustmentAmount:      whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"custom_adjustment_amount\""},
 	NetAmountGen:                whereHelpertypes_NullDecimal{field: "\"base\".\"base_document\".\"net_amount_gen\""},
-	ShippingTerms:               whereHelpernull_String{field: "\"base\".\"base_document\".\"shipping_terms\""},
-	ShippingMethod:              whereHelpernull_String{field: "\"base\".\"base_document\".\"shipping_method\""},
+	ShippingTerms:               whereHelperShippingTerms{field: "\"base\".\"base_document\".\"shipping_terms\""},
+	ShippingMethod:              whereHelperShippingMethod{field: "\"base\".\"base_document\".\"shipping_method\""},
 	ShippingDate:                whereHelpernull_Time{field: "\"base\".\"base_document\".\"shipping_date\""},
 	PaymentTerms:                whereHelperPaymentTerms{field: "\"base\".\"base_document\".\"payment_terms\""},
 	PaymentInstructions:         whereHelpernull_String{field: "\"base\".\"base_document\".\"payment_instructions\""},
@@ -461,9 +531,9 @@ func (r *baseDocumentR) GetBaseDocumentItems() BaseDocumentItemSlice {
 type baseDocumentL struct{}
 
 var (
-	baseDocumentAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount", "discount_amount", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount", "tax_rate_gen", "shipping_fees", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions"}
-	baseDocumentColumnsWithoutDefault = []string{"id", "created_at", "updated_at", "payment_terms", "payment_status"}
-	baseDocumentColumnsWithDefault    = []string{"deleted_at", "issue_date", "gross_amount", "discount_amount", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount", "tax_rate_gen", "shipping_fees", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_instructions", "remarks", "terms_and_conditions"}
+	baseDocumentAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions"}
+	baseDocumentColumnsWithoutDefault = []string{"id", "created_at", "updated_at", "shipping_terms", "shipping_method", "payment_terms", "payment_status"}
+	baseDocumentColumnsWithDefault    = []string{"deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_date", "payment_instructions", "remarks", "terms_and_conditions"}
 	baseDocumentPrimaryKeyColumns     = []string{"id"}
 	baseDocumentGeneratedColumns      = []string{"discount_rate_gen", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_rate_gen", "net_amount_gen"}
 )

@@ -30,6 +30,9 @@ type OrderConfirmation struct {
 	SalesOrderID            int       `boil:"sales_order_id" json:"sales_order_id" toml:"sales_order_id" yaml:"sales_order_id"`
 	CustomerID              null.Int  `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
 	ShipToInformation       null.JSON `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	CreatedAt               time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt               time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt               null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *orderConfirmationR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L orderConfirmationL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -42,6 +45,9 @@ var OrderConfirmationColumns = struct {
 	SalesOrderID            string
 	CustomerID              string
 	ShipToInformation       string
+	CreatedAt               string
+	UpdatedAt               string
+	DeletedAt               string
 }{
 	ID:                      "id",
 	BaseDocumentID:          "base_document_id",
@@ -49,6 +55,9 @@ var OrderConfirmationColumns = struct {
 	SalesOrderID:            "sales_order_id",
 	CustomerID:              "customer_id",
 	ShipToInformation:       "ship_to_information",
+	CreatedAt:               "created_at",
+	UpdatedAt:               "updated_at",
+	DeletedAt:               "deleted_at",
 }
 
 var OrderConfirmationTableColumns = struct {
@@ -58,6 +67,9 @@ var OrderConfirmationTableColumns = struct {
 	SalesOrderID            string
 	CustomerID              string
 	ShipToInformation       string
+	CreatedAt               string
+	UpdatedAt               string
+	DeletedAt               string
 }{
 	ID:                      "order_confirmation.id",
 	BaseDocumentID:          "order_confirmation.base_document_id",
@@ -65,6 +77,9 @@ var OrderConfirmationTableColumns = struct {
 	SalesOrderID:            "order_confirmation.sales_order_id",
 	CustomerID:              "order_confirmation.customer_id",
 	ShipToInformation:       "order_confirmation.ship_to_information",
+	CreatedAt:               "order_confirmation.created_at",
+	UpdatedAt:               "order_confirmation.updated_at",
+	DeletedAt:               "order_confirmation.deleted_at",
 }
 
 // Generated where
@@ -76,6 +91,9 @@ var OrderConfirmationWhere = struct {
 	SalesOrderID            whereHelperint
 	CustomerID              whereHelpernull_Int
 	ShipToInformation       whereHelpernull_JSON
+	CreatedAt               whereHelpertime_Time
+	UpdatedAt               whereHelpertime_Time
+	DeletedAt               whereHelpernull_Time
 }{
 	ID:                      whereHelperint{field: "\"sale\".\"order_confirmation\".\"id\""},
 	BaseDocumentID:          whereHelperint{field: "\"sale\".\"order_confirmation\".\"base_document_id\""},
@@ -83,6 +101,9 @@ var OrderConfirmationWhere = struct {
 	SalesOrderID:            whereHelperint{field: "\"sale\".\"order_confirmation\".\"sales_order_id\""},
 	CustomerID:              whereHelpernull_Int{field: "\"sale\".\"order_confirmation\".\"customer_id\""},
 	ShipToInformation:       whereHelpernull_JSON{field: "\"sale\".\"order_confirmation\".\"ship_to_information\""},
+	CreatedAt:               whereHelpertime_Time{field: "\"sale\".\"order_confirmation\".\"created_at\""},
+	UpdatedAt:               whereHelpertime_Time{field: "\"sale\".\"order_confirmation\".\"updated_at\""},
+	DeletedAt:               whereHelpernull_Time{field: "\"sale\".\"order_confirmation\".\"deleted_at\""},
 }
 
 // OrderConfirmationRels is where relationship names are stored.
@@ -123,9 +144,9 @@ func (r *orderConfirmationR) GetOrderConfirmationItems() OrderConfirmationItemSl
 type orderConfirmationL struct{}
 
 var (
-	orderConfirmationAllColumns            = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information"}
-	orderConfirmationColumnsWithoutDefault = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id"}
-	orderConfirmationColumnsWithDefault    = []string{"customer_id", "ship_to_information"}
+	orderConfirmationAllColumns            = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "customer_id", "ship_to_information", "created_at", "updated_at", "deleted_at"}
+	orderConfirmationColumnsWithoutDefault = []string{"id", "base_document_id", "order_confirmation_number", "sales_order_id", "created_at", "updated_at"}
+	orderConfirmationColumnsWithDefault    = []string{"customer_id", "ship_to_information", "deleted_at"}
 	orderConfirmationPrimaryKeyColumns     = []string{"id"}
 	orderConfirmationGeneratedColumns      = []string{}
 )
@@ -842,6 +863,16 @@ func (o *OrderConfirmation) Insert(ctx context.Context, exec boil.ContextExecuto
 	}
 
 	var err error
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		if o.UpdatedAt.IsZero() {
+			o.UpdatedAt = currTime
+		}
+	}
 
 	if err := o.doBeforeInsertHooks(ctx, exec); err != nil {
 		return err
@@ -917,6 +948,12 @@ func (o *OrderConfirmation) Insert(ctx context.Context, exec boil.ContextExecuto
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
 func (o *OrderConfirmation) Update(ctx context.Context, exec boil.ContextExecutor, columns boil.Columns) (int64, error) {
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		o.UpdatedAt = currTime
+	}
+
 	var err error
 	if err = o.doBeforeUpdateHooks(ctx, exec); err != nil {
 		return 0, err
@@ -1046,6 +1083,14 @@ func (o OrderConfirmationSlice) UpdateAll(ctx context.Context, exec boil.Context
 func (o *OrderConfirmation) Upsert(ctx context.Context, exec boil.ContextExecutor, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns, opts ...UpsertOptionFunc) error {
 	if o == nil {
 		return errors.New("sale: no order_confirmation provided for upsert")
+	}
+	if !boil.TimestampsAreSkipped(ctx) {
+		currTime := time.Now().In(boil.GetLocation())
+
+		if o.CreatedAt.IsZero() {
+			o.CreatedAt = currTime
+		}
+		o.UpdatedAt = currTime
 	}
 
 	if err := o.doBeforeUpsertHooks(ctx, exec); err != nil {
