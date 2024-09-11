@@ -6,6 +6,7 @@ import (
 	"mvrp/cmd/seed/item"
 	"mvrp/data"
 	"mvrp/domain"
+	"mvrp/env"
 )
 
 func main() {
@@ -14,6 +15,12 @@ func main() {
 }
 
 func Init() {
+	env.Init()
+
+	entity.Init()
+	item.Init()
+	inventory.Init()
+
 	data.Init()
 	domain.Init()
 }
@@ -47,6 +54,11 @@ func seedInventory() error {
 	}
 
 	err = inventory.SeedReturnMerchandiseAuthorization()
+	if err != nil {
+		return err
+	}
+
+	err = inventory.SeedStockCountSheet()
 	if err != nil {
 		return err
 	}

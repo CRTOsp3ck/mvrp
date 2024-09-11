@@ -41,7 +41,7 @@ func SeedSuppliers(count int) error {
 		}
 
 		fmt.Println("Supplier created ID: ", resp.Payload.ID)
-		time.Sleep(1 * time.Millisecond)
+		time.Sleep(time.Duration(interval) * time.Millisecond)
 	}
 	return nil
 }

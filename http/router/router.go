@@ -174,6 +174,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/stock_count_sheet_view", func(r chi.Router) {
+				r.Get("/", inventory.ListStockCountSheetView)
+				r.Post("/search", inventory.SearchStockCountSheetView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(inventory.StockCountSheetViewContext)
+					r.Get("/", inventory.GetStockCountSheetView)
+				})
+			})
+			
 		})
 		
 		r.Route("/invoice", func(r chi.Router) {
