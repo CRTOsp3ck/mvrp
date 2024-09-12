@@ -200,6 +200,11 @@ func (s *ItemService) CreateItem(req *CreateItemRequest) (*CreateItemResponse, e
 	defer tx.Rollback()
 
 	// create item
+	nextID, err := s.Repo.Item.GetNextEntryItemID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.Item.ID = nextID
 	err = s.Repo.Item.CreateItem(req.Ctx, tx, &req.Payload.Item)
 	if err != nil {
 		return nil, err

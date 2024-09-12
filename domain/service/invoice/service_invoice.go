@@ -221,6 +221,11 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 	}
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
@@ -228,11 +233,12 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 
 	// create invoice
 	req.Payload.Invoice.BaseDocumentID = req.Payload.BaseDocument.ID
+	nextID, err = s.Repo.Invoice.GetNextEntryInvoiceID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.Invoice.ID = nextID
 	if req.Payload.Invoice.InvoiceNumber == "" {
-		nextID, err := s.Repo.Invoice.GetNextEntryInvoiceID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.Invoice.InvoiceNumber = util.Util.Str.ToString(nextID)
 	}
 	err = s.Repo.Invoice.CreateInvoice(req.Ctx, tx, &req.Payload.Invoice)
@@ -242,6 +248,11 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 
 	for _, item := range req.Payload.Items {
 		// create base document item
+		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.BaseDocumentItem.ID = nextID
 		item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 		err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 		if err != nil {
@@ -249,6 +260,11 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 		}
 
 		// create invoice item
+		nextID, err = s.Repo.Invoice.GetNextEntryInvoiceItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.InvoiceItem.ID = nextID
 		item.InvoiceItem.InvoiceID = req.Payload.Invoice.ID
 		item.InvoiceItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		err = s.Repo.Invoice.CreateInvoiceItem(req.Ctx, tx, &item.InvoiceItem)
@@ -304,11 +320,6 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 	}
 	defer tx.Rollback()
 
-	currInv, err := s.Repo.Invoice.GetInvoiceByID(req.Ctx, tx, req.Payload.Invoice.ID)
-	if err != nil {
-		return nil, err
-	}
-
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
 	for _, item := range req.Payload.Items {
@@ -332,7 +343,11 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	for _, item := range currInv.R.InvoiceItems {
+	currItems, err := s.Repo.Invoice.GetInvoiceItemsByInvoiceID(req.Ctx, tx, req.Payload.Invoice.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range currItems {
 		found := false
 		for _, newItem := range req.Payload.Items {
 			if item.ID == newItem.InvoiceItem.ID {
@@ -390,12 +405,23 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 			}
 		} else {
 			// create base document items
+			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create invoice items
+			nextID, err = s.Repo.Invoice.GetNextEntryInvoiceItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.InvoiceItem.ID = nextID
 			item.InvoiceItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.InvoiceItem.InvoiceID = req.Payload.Invoice.ID
 			err = s.Repo.Invoice.CreateInvoiceItem(req.Ctx, tx, &item.InvoiceItem)
@@ -476,7 +502,11 @@ func (s *InvoiceService) DeleteInvoice(req *DeleteInvoiceRequest) (*DeleteInvoic
 		return nil, err
 	}
 
-	for _, item := range inv.R.InvoiceItems {
+	items, err := s.Repo.Invoice.GetInvoiceItemsByInvoiceID(req.Ctx, tx, inv.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range items {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {

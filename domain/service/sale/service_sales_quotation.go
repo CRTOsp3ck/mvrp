@@ -7,7 +7,6 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
-	"time"
 )
 
 // LIST SALES QUOTATION
@@ -274,12 +273,10 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 		if err != nil {
 			return nil, err
 		}
-
-		time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 	}
 
 	// get created sales quotation
-	SalesQuotation, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
+	sq, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +287,7 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 	}
 
 	resp := CreateSalesQuotationResponse{
-		Payload: *SalesQuotation,
+		Payload: *sq,
 	}
 
 	return &resp, nil
@@ -430,13 +427,11 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 			if err != nil {
 				return nil, err
 			}
-
-			time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 		}
 	}
 
 	// get updated sales quotation
-	SalesQuotation, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
+	sq, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.Payload.SalesQuotation.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -447,7 +442,7 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 	}
 
 	resp := UpdateSalesQuotationResponse{
-		Payload: *SalesQuotation,
+		Payload: *sq,
 	}
 
 	return &resp, nil

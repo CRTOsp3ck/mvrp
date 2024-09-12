@@ -243,7 +243,11 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 		// copy & create base document
 		var deliveryNoteBaseDocument base.BaseDocument
 		copier.Copy(&deliveryNoteBaseDocument, &salesOrderBaseDocument)
-		deliveryNoteBaseDocument.ID = -1
+		nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		deliveryNoteBaseDocument.ID = nextID
 		err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &deliveryNoteBaseDocument)
 		if err != nil {
 			return nil, err
@@ -253,6 +257,11 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 		var deliveryNote sale.DeliveryNote
 		copier.Copy(&deliveryNote, &req.Payload.DeliveryNote)
 		deliveryNote.BaseDocumentID = deliveryNoteBaseDocument.ID
+		nextID, err = s.Repo.Sale.GetNextEntryDeliveryNoteID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		deliveryNote.ID = nextID
 		// additional required fields
 		/*
 			    bill_to_information TEXT,
@@ -262,10 +271,6 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 				goods_condition TEXT
 		*/
 		if deliveryNote.DeliveryNoteNumber == "" {
-			nextID, err := s.Repo.Sale.GetNextEntryDeliveryNoteID(req.Ctx, tx)
-			if err != nil {
-				return nil, err
-			}
 			deliveryNote.DeliveryNoteNumber = util.Util.Str.ToString(nextID)
 		}
 		err = s.Repo.Sale.CreateDeliveryNote(req.Ctx, tx, &deliveryNote)
@@ -277,7 +282,11 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 		for _, item := range salesOrderBaseDocumentItems {
 			var deliveryNoteBaseDocumentItem base.BaseDocumentItem
 			copier.Copy(&deliveryNoteBaseDocumentItem, &item)
-			deliveryNoteBaseDocumentItem.ID = -1
+			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			deliveryNoteBaseDocumentItem.ID = nextID
 			deliveryNoteBaseDocumentItem.BaseDocumentID = deliveryNoteBaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &deliveryNoteBaseDocumentItem)
 			if err != nil {
@@ -289,7 +298,12 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 		for _, item := range salesOrderItems {
 			var deliveryNoteItem sale.DeliveryNoteItem
 			copier.Copy(&deliveryNoteItem, &item)
-			deliveryNoteItem.ID = -1
+			nextID, err = s.Repo.Sale.GetNextEntryDeliveryNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			deliveryNoteItem.ID = nextID
+			deliveryNoteItem.BaseDocumentItemID = item.BaseDocumentItemID
 			deliveryNoteItem.DeliveryNoteID = deliveryNote.ID
 			err = s.Repo.Sale.CreateDeliveryNoteItem(req.Ctx, tx, &deliveryNoteItem)
 			if err != nil {
@@ -308,18 +322,24 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 		}
 
 		// create base document
+		nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		req.Payload.BaseDocument.ID = nextID
 		err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 		if err != nil {
 			return nil, err
 		}
 
 		// create delivery note
+		nextID, err = s.Repo.Sale.GetNextEntryDeliveryNoteID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		req.Payload.DeliveryNote.ID = nextID
 		req.Payload.DeliveryNote.BaseDocumentID = req.Payload.BaseDocument.ID
 		if req.Payload.DeliveryNote.DeliveryNoteNumber == "" {
-			nextID, err := s.Repo.Sale.GetNextEntryDeliveryNoteID(req.Ctx, tx)
-			if err != nil {
-				return nil, err
-			}
 			req.Payload.DeliveryNote.DeliveryNoteNumber = util.Util.Str.ToString(nextID)
 		}
 		err = s.Repo.Sale.CreateDeliveryNote(req.Ctx, tx, &req.Payload.DeliveryNote)
@@ -329,6 +349,11 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 
 		for _, item := range req.Payload.Items {
 			// create base document items
+			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
 			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
@@ -336,6 +361,11 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 			}
 
 			// create delivery note items
+			nextID, err = s.Repo.Sale.GetNextEntryDeliveryNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.DeliveryNoteItem.ID = nextID
 			item.DeliveryNoteItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.DeliveryNoteItem.DeliveryNoteID = req.Payload.DeliveryNote.ID
 			err = s.Repo.Sale.CreateDeliveryNoteItem(req.Ctx, tx, &item.DeliveryNoteItem)
@@ -355,10 +385,16 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 			}
 
 			// create inventory transaction
+			nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeShipping,
 				Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Delivery Note Creation"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -368,7 +404,7 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 	}
 
 	// get created delivery note
-	DeliveryNote, err := s.Repo.Sale.GetDeliveryNoteByID(req.Ctx, tx, req.Payload.DeliveryNote.ID)
+	dn, err := s.Repo.Sale.GetDeliveryNoteByID(req.Ctx, tx, req.Payload.DeliveryNote.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -379,7 +415,7 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 	}
 
 	resp := CreateDeliveryNoteResponse{
-		Payload: *DeliveryNote,
+		Payload: *dn,
 	}
 
 	return &resp, nil
@@ -477,10 +513,16 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 				return nil, err
 			}
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeShippingCancellation,
 				Quantity:        types.NewDecimal(currBaseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Delivery Note Item Cancellation"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -541,10 +583,16 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 				}
 
 				// create inventory transaction
+				nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+				if err != nil {
+					return nil, err
+				}
 				invTx := &inventory.InventoryTransaction{
+					ID:              nextID,
 					InventoryID:     null.IntFrom(inv.ID),
 					TransactionType: inventory.InventoryTransactionTypeShippingAdjustment,
 					Quantity:        types.NewDecimal(amountOffset.Big),
+					Reason:          null.StringFrom("Delivery Note Item Adjustment"),
 				}
 				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 				if err != nil {
@@ -553,12 +601,23 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 			}
 		} else {
 			// create base document items
+			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create delivery note items
+			nextID, err = s.Repo.Sale.GetNextEntryDeliveryNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.DeliveryNoteItem.ID = nextID
 			item.DeliveryNoteItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.DeliveryNoteItem.DeliveryNoteID = req.Payload.DeliveryNote.ID
 			err = s.Repo.Sale.CreateDeliveryNoteItem(req.Ctx, tx, &item.DeliveryNoteItem)
@@ -578,10 +637,16 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 			}
 
 			// create inventory transaction
+			nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeShipping,
 				Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Delivery Note Item Creation"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -591,7 +656,7 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 	}
 
 	// get updated delivery note
-	DeliveryNote, err := s.Repo.Sale.GetDeliveryNoteByID(req.Ctx, tx, req.Payload.DeliveryNote.ID)
+	dn, err := s.Repo.Sale.GetDeliveryNoteByID(req.Ctx, tx, req.Payload.DeliveryNote.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -602,7 +667,7 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 	}
 
 	resp := UpdateDeliveryNoteResponse{
-		Payload: *DeliveryNote,
+		Payload: *dn,
 	}
 
 	return &resp, nil
@@ -668,7 +733,11 @@ func (s *SaleService) DeleteDeliveryNote(req *DeleteDeliveryNoteRequest) (*Delet
 		return nil, err
 	}
 
-	for _, item := range DeliveryNote.R.DeliveryNoteItems {
+	dnItems, err := s.Repo.Sale.GetDeliveryNoteItemsByDeliveryNoteID(req.Ctx, tx, DeliveryNote.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range dnItems {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {
@@ -687,10 +756,16 @@ func (s *SaleService) DeleteDeliveryNote(req *DeleteDeliveryNoteRequest) (*Delet
 		}
 
 		// create inventory transaction
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeShippingCancellation,
 			Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
+			Reason:          null.StringFrom("Delivery Note Item Cancellation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {

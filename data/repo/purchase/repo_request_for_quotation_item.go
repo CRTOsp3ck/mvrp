@@ -28,11 +28,13 @@ func (r *PurchaseRepository) GetRequestForQuotationItemByID(ctx context.Context,
 }
 
 func (r *PurchaseRepository) CreateRequestForQuotationItem(ctx context.Context, exec boil.ContextExecutor, m *purchase.RequestForQuotationItem) error {
-	id, err := r.GetNextEntryRequestForQuotationItemID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryRequestForQuotationItemID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *PurchaseRepository) GetMostRecentRequestForQuotationItem(ctx context.Co
 }
 
 func (r *PurchaseRepository) GetNextEntryRequestForQuotationItemID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentRequestForQuotationItem(ctx, exec)
+	var maxID sql.NullInt64
+	err := purchase.RequestForQuotationItems(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentRequestForQuotationItem(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *PurchaseRepository) GetRequestForQuotationItemTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

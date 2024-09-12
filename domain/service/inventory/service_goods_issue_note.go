@@ -5,7 +5,6 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
-	"mvrp/merge"
 	"mvrp/util"
 
 	"github.com/ericlagergren/decimal"
@@ -215,11 +214,12 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 	defer tx.Rollback()
 
 	// create goods issue note
+	nextID, err := s.Repo.Inventory.GetNextEntryGoodsIssueNoteID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.GoodsIssueNote.ID = nextID
 	if req.Payload.GoodsIssueNote.GinNumber == "" {
-		nextID, err := s.Repo.Inventory.GetNextEntryGoodsIssueNoteID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.GoodsIssueNote.GinNumber = util.Util.Str.ToString(nextID)
 	}
 	var ginItems []*inventory.GoodsIssueNoteItem
@@ -237,6 +237,11 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 
 	// create goods issue note items
 	for _, item := range req.Payload.Items {
+		nextID, err := s.Repo.Inventory.GetNextEntryGoodsIssueNoteItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.GoodsIssueNoteItem.ID = nextID
 		item.GoodsIssueNoteItem.GinID = null.IntFrom(req.Payload.GoodsIssueNote.ID)
 		err = proc.ProcessGoodsIssueNoteItemAmounts(&item.GoodsIssueNoteItem)
 		if err != nil {
@@ -267,7 +272,12 @@ func (s *InventoryService) CreateGoodsIssueNote(req *CreateGoodsIssueNoteRequest
 		if !ok {
 			return nil, err
 		}
+		nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeIssuance,
 			Quantity:        types.NewDecimal(decimal.New(int64(-qtyFloat*100), 2)),
@@ -340,12 +350,6 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 		return nil, err
 	}
 
-	// merge values
-	err = merge.MergeNilOrEmptyValueFields(currGin, &req.Payload.GoodsIssueNote, true)
-	if err != nil {
-		return nil, err
-	}
-
 	// update goods issue note
 	var ginItems []*inventory.GoodsIssueNoteItem
 	for _, item := range req.Payload.Items {
@@ -390,7 +394,12 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			}
 
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     currGinItem.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeIssuanceCancellation,
 				Quantity:        currGinItem.Quantity,
@@ -453,7 +462,12 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 				}
 
 				// create inventory transaction
+				nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+				if err != nil {
+					return nil, err
+				}
 				invTx := &inventory.InventoryTransaction{
+					ID:              nextID,
 					InventoryID:     item.InventoryID,
 					TransactionType: inventory.InventoryTransactionTypeIssuanceAdjustment,
 					Quantity:        types.Decimal(amountOffset),
@@ -470,6 +484,11 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			if err != nil {
 				return nil, err
 			}
+			nextID, err := s.Repo.Inventory.GetNextEntryGoodsIssueNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.GoodsIssueNoteItem.ID = nextID
 			err = s.Repo.Inventory.CreateGoodsIssueNoteItem(req.Ctx, tx, &item.GoodsIssueNoteItem)
 			if err != nil {
 				return nil, err
@@ -491,7 +510,12 @@ func (s *InventoryService) UpdateGoodsIssueNote(req *UpdateGoodsIssueNoteRequest
 			}
 
 			// create inventory transaction
+			nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     item.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeIssuance,
 				Quantity:        item.Quantity,

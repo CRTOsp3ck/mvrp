@@ -188,6 +188,11 @@ func (s *EntityService) CreateEntity(req *CreateEntityRequest) (*CreateEntityRes
 	defer tx.Rollback()
 
 	// create entity
+	nextID, err := s.Repo.Entity.GetNextEntryEntityID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.Entity.ID = nextID
 	err = s.Repo.Entity.CreateEntity(req.Ctx, tx, &req.Payload.Entity)
 	if err != nil {
 		return nil, err

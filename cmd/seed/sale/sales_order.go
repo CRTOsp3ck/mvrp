@@ -150,8 +150,18 @@ func SeedSalesOrder(count int) error {
 			return err
 		}
 
+		getSovReq := saleSvc.NewGetSalesOrderViewRequest(context.Background(), crSoResp.Payload.ID)
+		getSovResp, err := saleSvc.GetSalesOrderView(getSovReq)
+		if err != nil {
+			return err
+		}
+
+		var sois []sale.SalesOrderItemView
+		err = getSovResp.Payload.SalesOrderItems.Unmarshal(&sois)
+		if err != nil {
+			return err
+		}
 		fmt.Println("Sales Order created ID: ", crSoResp.Payload.ID)
-		time.Sleep(time.Duration(interval) * time.Millisecond)
 	}
 
 	return nil

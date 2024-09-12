@@ -5,7 +5,6 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
-	"mvrp/merge"
 	"mvrp/util"
 
 	"github.com/ericlagergren/decimal"
@@ -215,11 +214,12 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 	defer tx.Rollback()
 
 	// create return merchandise authorization
+	nextID, err := s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.ReturnMerchandiseAuthorization.ID = nextID
 	if req.Payload.ReturnMerchandiseAuthorization.RmaNumber == "" {
-		nextID, err := s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.ReturnMerchandiseAuthorization.RmaNumber = util.Util.Str.ToString(nextID)
 	}
 	var ginItems []*inventory.ReturnMerchandiseAuthorizationItem
@@ -237,6 +237,11 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 
 	// create return merchandise authorization items
 	for _, item := range req.Payload.Items {
+		nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.ReturnMerchandiseAuthorizationItem.ID = nextID
 		item.ReturnMerchandiseAuthorizationItem.RmaID = null.IntFrom(req.Payload.ReturnMerchandiseAuthorization.ID)
 		err = proc.ProcessReturnMerchandiseAuthorizationItemAmounts(&item.ReturnMerchandiseAuthorizationItem)
 		if err != nil {
@@ -264,7 +269,12 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		}
 
 		// create inventory transaction
+		nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeReturn,
 			Quantity:        item.Quantity,
@@ -337,12 +347,6 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 		return nil, err
 	}
 
-	// merge empty values
-	err = merge.MergeNilOrEmptyValueFields(currRma, &req.Payload.ReturnMerchandiseAuthorization, true)
-	if err != nil {
-		return nil, err
-	}
-
 	// update return merchandise authorization
 	var ginItems []*inventory.ReturnMerchandiseAuthorizationItem
 	for _, item := range req.Payload.Items {
@@ -387,7 +391,12 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			}
 
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     currRmaItem.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
 				Quantity:        currRmaItem.Quantity,
@@ -451,7 +460,12 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 				}
 
 				// create inventory transaction
+				nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+				if err != nil {
+					return nil, err
+				}
 				invTx := &inventory.InventoryTransaction{
+					ID:              nextID,
 					InventoryID:     item.InventoryID,
 					TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
 					Quantity:        types.Decimal(amountOffset),
@@ -468,6 +482,11 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			if err != nil {
 				return nil, err
 			}
+			nextID, err := s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.ReturnMerchandiseAuthorizationItem.ID = nextID
 			err = s.Repo.Inventory.CreateReturnMerchandiseAuthorizationItem(req.Ctx, tx, &item.ReturnMerchandiseAuthorizationItem)
 			if err != nil {
 				return nil, err
@@ -490,7 +509,12 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 			}
 
 			// create inventory transaction
+			nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     item.InventoryID,
 				TransactionType: inventory.InventoryTransactionTypeReturn,
 				Quantity:        item.Quantity,
@@ -592,7 +616,12 @@ func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteRetur
 		}
 
 		// create inventory transaction
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     item.InventoryID,
 			TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
 			Quantity:        item.Quantity,

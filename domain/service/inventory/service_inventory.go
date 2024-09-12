@@ -6,7 +6,6 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/errors"
-	"mvrp/merge"
 	"mvrp/util"
 	"time"
 
@@ -238,11 +237,12 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 	}
 
 	// create inventory
+	nextID, err := s.Repo.Inventory.GetNextEntryInventoryID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.Inventory.ID = nextID
 	if req.Payload.Inventory.InventoryNumber == "" {
-		nextID, err := s.Repo.Inventory.GetNextEntryInventoryID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.Inventory.InventoryNumber = util.Util.Str.ToString(nextID)
 	}
 	// process generated amounts
@@ -257,7 +257,12 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 
 	// create inventory transaction if quantity is not zero
 	if req.Payload.Inventory.QuantityAvailable.Big.Cmp(decimal.New(0, 2)) != 0 {
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(req.Payload.Inventory.ID),
 			TransactionType: inventory.InventoryTransactionTypeInitialStock,
 			Quantity:        types.NewDecimal(req.Payload.Inventory.QuantityAvailable.Big),
@@ -331,12 +336,6 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	amountOffset := types.NewNullDecimal(decimal.New(0, 2))
 	amountOffset.Sub(req.Payload.Inventory.QuantityAvailable.Big, currInventory.QuantityAvailable.Big)
 
-	// merge empty fields
-	err = merge.MergeNilOrEmptyValueFields(currInventory, &req.Payload.Inventory, true)
-	if err != nil {
-		return nil, err
-	}
-
 	// process generated amounts
 	err = proc.ProcessInventoryAmounts(&req.Payload.Inventory)
 	if err != nil {
@@ -351,7 +350,12 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 	// create inventory transaction
 	quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
 	if quantityChanged {
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(req.Payload.Inventory.ID),
 			TransactionType: inventory.InventoryTransactionTypeGeneralAdjustment,
 			Quantity:        types.NewDecimal(amountOffset.Big),

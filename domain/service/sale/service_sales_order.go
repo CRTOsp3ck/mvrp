@@ -9,7 +9,6 @@ import (
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
-	"time"
 
 	"github.com/ericlagergren/decimal"
 	"github.com/volatiletech/null/v8"
@@ -296,7 +295,12 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		}
 
 		// create inventory transaction
+		nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeSale,
 			Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
@@ -306,8 +310,6 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		if err != nil {
 			return nil, err
 		}
-
-		time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 	}
 
 	// get created sales order
@@ -436,7 +438,12 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeSaleCancellation,
 				Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
@@ -492,7 +499,12 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				}
 
 				// create inventory transaction
+				nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+				if err != nil {
+					return nil, err
+				}
 				invTx := &inventory.InventoryTransaction{
+					ID:              nextID,
 					InventoryID:     null.IntFrom(inv.ID),
 					TransactionType: inventory.InventoryTransactionTypeSaleAdjustment,
 					Quantity:        types.NewDecimal(amountOffset.Big),
@@ -542,7 +554,12 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 
 			// create inventory transaction
+			nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeSale,
 				Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
@@ -552,8 +569,6 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			if err != nil {
 				return nil, err
 			}
-
-			time.Sleep(time.Duration(loopInterval) * time.Millisecond)
 		}
 	}
 
@@ -673,7 +688,12 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		}
 
 		// create inventory transaction
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeSaleCancellation,
 			Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),

@@ -28,11 +28,13 @@ func (r *InventoryRepository) GetStockCountSheetByID(ctx context.Context, exec b
 }
 
 func (r *InventoryRepository) CreateStockCountSheet(ctx context.Context, exec boil.ContextExecutor, m *inventory.StockCountSheet) error {
-	id, err := r.GetNextEntryStockCountSheetID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryStockCountSheetID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *InventoryRepository) GetMostRecentStockCountSheet(ctx context.Context, 
 }
 
 func (r *InventoryRepository) GetNextEntryStockCountSheetID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentStockCountSheet(ctx, exec)
+	var maxID sql.NullInt64
+	err := inventory.StockCountSheets(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentStockCountSheet(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *InventoryRepository) GetStockCountSheetTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

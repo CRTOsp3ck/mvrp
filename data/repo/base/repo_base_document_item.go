@@ -19,11 +19,13 @@ func (r *BaseRepository) GetBaseDocumentItemByID(ctx context.Context, exec boil.
 }
 
 func (r *BaseRepository) CreateBaseDocumentItem(ctx context.Context, exec boil.ContextExecutor, m *base.BaseDocumentItem) error {
-	id, err := r.GetNextEntryBaseDocumentItemID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryBaseDocumentItemID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -55,14 +57,28 @@ func (r *BaseRepository) GetMostRecentBaseDocumentItem(ctx context.Context, exec
 }
 
 func (r *BaseRepository) GetNextEntryBaseDocumentItemID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentBaseDocumentItem(ctx, exec)
+	var maxID sql.NullInt64
+	err := base.BaseDocumentItems(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentBaseDocumentItem(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *BaseRepository) GetBaseDocumentItemTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

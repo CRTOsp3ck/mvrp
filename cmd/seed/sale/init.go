@@ -14,4 +14,5 @@ func Init() {
 		panic(err)
 	}
 	interval = cv
+	_ = interval
 }

@@ -27,6 +27,7 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	_ = loopInterval
 }
 
 func loadServiceLoopInterval() error {

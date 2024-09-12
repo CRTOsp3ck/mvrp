@@ -173,17 +173,23 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 	defer tx.Rollback()
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
 	}
 
 	// create debit note
+	nextID, err = s.Repo.Invoice.GetNextEntryDebitNoteID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.DebitNote.ID = nextID
 	if req.Payload.DebitNote.DebitNoteNumber == "" {
-		nextID, err := s.Repo.Invoice.GetNextEntryDebitNoteID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.DebitNote.DebitNoteNumber = util.Util.Str.ToString(nextID)
 	}
 	req.Payload.DebitNote.BaseDocumentID = req.Payload.BaseDocument.ID
@@ -193,7 +199,7 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 	}
 
 	// get created debit note
-	DebitNote, err := s.Repo.Invoice.GetDebitNoteByID(req.Ctx, tx, req.Payload.DebitNote.ID)
+	dn, err := s.Repo.Invoice.GetDebitNoteByID(req.Ctx, tx, req.Payload.DebitNote.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +210,7 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 	}
 
 	resp := CreateDebitNoteResponse{
-		Payload: *DebitNote,
+		Payload: *dn,
 	}
 
 	return &resp, nil

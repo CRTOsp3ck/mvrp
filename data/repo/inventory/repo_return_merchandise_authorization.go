@@ -28,11 +28,13 @@ func (r *InventoryRepository) GetReturnMerchandiseAuthorizationByID(ctx context.
 }
 
 func (r *InventoryRepository) CreateReturnMerchandiseAuthorization(ctx context.Context, exec boil.ContextExecutor, m *inventory.ReturnMerchandiseAuthorization) error {
-	id, err := r.GetNextEntryReturnMerchandiseAuthorizationID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryReturnMerchandiseAuthorizationID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *InventoryRepository) GetMostRecentReturnMerchandiseAuthorization(ctx co
 }
 
 func (r *InventoryRepository) GetNextEntryReturnMerchandiseAuthorizationID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentReturnMerchandiseAuthorization(ctx, exec)
+	var maxID sql.NullInt64
+	err := inventory.ReturnMerchandiseAuthorizations(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentReturnMerchandiseAuthorization(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *InventoryRepository) GetReturnMerchandiseAuthorizationTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

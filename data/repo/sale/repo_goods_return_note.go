@@ -28,11 +28,13 @@ func (r *SaleRepository) GetGoodsReturnNoteByID(ctx context.Context, exec boil.C
 }
 
 func (r *SaleRepository) CreateGoodsReturnNote(ctx context.Context, exec boil.ContextExecutor, m *sale.GoodsReturnNote) error {
-	id, err := r.GetNextEntryGoodsReturnNoteID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryGoodsReturnNoteID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *SaleRepository) GetMostRecentGoodsReturnNote(ctx context.Context, exec 
 }
 
 func (r *SaleRepository) GetNextEntryGoodsReturnNoteID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentGoodsReturnNote(ctx, exec)
+	var maxID sql.NullInt64
+	err := sale.GoodsReturnNotes(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentGoodsReturnNote(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *SaleRepository) GetGoodsReturnNoteTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

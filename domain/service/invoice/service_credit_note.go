@@ -173,17 +173,23 @@ func (s *InvoiceService) CreateCreditNote(req *CreateCreditNoteRequest) (*Create
 	defer tx.Rollback()
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
 	}
 
 	// create delivery note
+	nextID, err = s.Repo.Invoice.GetNextEntryCreditNoteID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.CreditNote.ID = nextID
 	if req.Payload.CreditNote.CreditNoteNumber == "" {
-		nextID, err := s.Repo.Invoice.GetNextEntryCreditNoteID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.CreditNote.CreditNoteNumber = util.Util.Str.ToString(nextID)
 	}
 	req.Payload.CreditNote.BaseDocumentID = req.Payload.BaseDocument.ID

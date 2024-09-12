@@ -236,7 +236,11 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		// copy & create base document
 		var orderConfirmationBaseDocument base.BaseDocument
 		copier.Copy(&orderConfirmationBaseDocument, &salesOrderBaseDocument)
-		orderConfirmationBaseDocument.ID = -1
+		nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		orderConfirmationBaseDocument.ID = nextID
 		err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &orderConfirmationBaseDocument)
 		if err != nil {
 			return nil, err
@@ -245,12 +249,13 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		// copy & create order confirmation
 		var orderConfirmation sale.OrderConfirmation
 		copier.Copy(&orderConfirmation, &req.Payload.OrderConfirmation)
+		nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		orderConfirmation.ID = nextID
 		orderConfirmation.BaseDocumentID = orderConfirmationBaseDocument.ID
 		if orderConfirmation.OrderConfirmationNumber == "" {
-			nextID, err := s.Repo.Sale.GetNextEntryOrderConfirmationID(req.Ctx, tx)
-			if err != nil {
-				return nil, err
-			}
 			orderConfirmation.OrderConfirmationNumber = util.Util.Str.ToString(nextID)
 		}
 		err = s.Repo.Sale.CreateOrderConfirmation(req.Ctx, tx, &orderConfirmation)
@@ -259,23 +264,34 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		}
 
 		// copy & create base document items
+		var bdItemMap = make(map[int]int)
 		for _, item := range salesOrderBaseDocumentItems {
 			var orderConfirmationBaseDocumentItem base.BaseDocumentItem
 			copier.Copy(&orderConfirmationBaseDocumentItem, &item)
-			orderConfirmationBaseDocumentItem.ID = -1
+			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			orderConfirmationBaseDocumentItem.ID = nextID
 			orderConfirmationBaseDocumentItem.BaseDocumentID = orderConfirmationBaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &orderConfirmationBaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
+			bdItemMap[item.ID] = orderConfirmationBaseDocumentItem.ID
 		}
 
 		// copy & create order confirmation items
 		for _, item := range salesOrderItems {
 			var orderConfirmationItem sale.OrderConfirmationItem
 			copier.Copy(&orderConfirmationItem, &item)
-			orderConfirmationItem.ID = -1
+			nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			orderConfirmationItem.ID = nextID
 			orderConfirmationItem.OrderConfirmationID = orderConfirmation.ID
+			orderConfirmationItem.BaseDocumentItemID = bdItemMap[item.BaseDocumentItemID]
 			err = s.Repo.Sale.CreateOrderConfirmationItem(req.Ctx, tx, &orderConfirmationItem)
 			if err != nil {
 				return nil, err
@@ -293,18 +309,24 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		}
 
 		// create base document
+		nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		req.Payload.BaseDocument.ID = nextID
 		err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 		if err != nil {
 			return nil, err
 		}
 
 		// create order confirmation
+		nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		req.Payload.OrderConfirmation.ID = nextID
 		req.Payload.OrderConfirmation.BaseDocumentID = req.Payload.BaseDocument.ID
 		if req.Payload.OrderConfirmation.OrderConfirmationNumber == "" {
-			nextID, err := s.Repo.Sale.GetNextEntryOrderConfirmationID(req.Ctx, tx)
-			if err != nil {
-				return nil, err
-			}
 			req.Payload.OrderConfirmation.OrderConfirmationNumber = util.Util.Str.ToString(nextID)
 		}
 		err = s.Repo.Sale.CreateOrderConfirmation(req.Ctx, tx, &req.Payload.OrderConfirmation)
@@ -314,6 +336,11 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 
 		for _, item := range req.Payload.Items {
 			// create base document items
+			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
 			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
@@ -321,6 +348,11 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 			}
 
 			// create order confirmation items
+			nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.OrderConfirmationItem.ID = nextID
 			item.OrderConfirmationItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.OrderConfirmationItem.OrderConfirmationID = req.Payload.OrderConfirmation.ID
 			err = s.Repo.Sale.CreateOrderConfirmationItem(req.Ctx, tx, &item.OrderConfirmationItem)
@@ -331,7 +363,7 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 	}
 
 	// get created order confirmation
-	OrderConfirmation, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.Payload.OrderConfirmation.ID)
+	oc, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.Payload.OrderConfirmation.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -342,7 +374,7 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 	}
 
 	resp := CreateOrderConfirmationResponse{
-		Payload: *OrderConfirmation,
+		Payload: *oc,
 	}
 
 	return &resp, nil
@@ -406,7 +438,11 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 	}
 
 	// delete the ones that are in the current list but not in the new list
-	for _, currItem := range currOc.R.OrderConfirmationItems {
+	currItems, err := s.Repo.Sale.GetOrderConfirmationItemsByOrderConfirmationID(req.Ctx, tx, currOc.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currItem := range currItems {
 		found := false
 		for _, item := range req.Payload.Items {
 			if currItem.ID == item.OrderConfirmationItem.ID {
@@ -457,12 +493,23 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 			}
 		} else {
 			// create base document items
+			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create order confirmation items
+			nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.OrderConfirmationItem.ID = nextID
 			item.OrderConfirmationItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.OrderConfirmationItem.OrderConfirmationID = req.Payload.OrderConfirmation.ID
 			err = s.Repo.Sale.CreateOrderConfirmationItem(req.Ctx, tx, &item.OrderConfirmationItem)
@@ -473,7 +520,7 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 	}
 
 	// get updated order confirmation
-	OrderConfirmation, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.Payload.OrderConfirmation.ID)
+	oc, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.Payload.OrderConfirmation.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -484,7 +531,7 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 	}
 
 	resp := UpdateOrderConfirmationResponse{
-		Payload: *OrderConfirmation,
+		Payload: *oc,
 	}
 
 	return &resp, nil
@@ -544,7 +591,11 @@ func (s *SaleService) DeleteOrderConfirmation(req *DeleteOrderConfirmationReques
 		return nil, err
 	}
 
-	for _, item := range OrderConfirmation.R.OrderConfirmationItems {
+	items, err := s.Repo.Sale.GetOrderConfirmationItemsByOrderConfirmationID(req.Ctx, tx, OrderConfirmation.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range items {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {

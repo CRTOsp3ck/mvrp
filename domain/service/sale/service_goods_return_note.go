@@ -233,18 +233,24 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 	}
 
 	// create base document
+	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.BaseDocument.ID = nextID
 	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
 	if err != nil {
 		return nil, err
 	}
 
 	// create goods return note
+	nextID, err = s.Repo.Sale.GetNextEntryGoodsReturnNoteID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	req.Payload.GoodsReturnNote.ID = nextID
 	req.Payload.GoodsReturnNote.BaseDocumentID = req.Payload.BaseDocument.ID
 	if req.Payload.GoodsReturnNote.GoodsReturnNoteNumber == "" {
-		nextID, err := s.Repo.Sale.GetNextEntryGoodsReturnNoteID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
 		req.Payload.GoodsReturnNote.GoodsReturnNoteNumber = util.Util.Str.ToString(nextID)
 	}
 	err = s.Repo.Sale.CreateGoodsReturnNote(req.Ctx, tx, &req.Payload.GoodsReturnNote)
@@ -253,11 +259,12 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 	}
 
 	// create return merchandise authorization
-	nextID, err := s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationID(req.Ctx, tx)
+	nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationID(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
 	rma := &inventory.ReturnMerchandiseAuthorization{
+		ID:        nextID,
 		RmaNumber: util.Util.Str.ToString(nextID),
 	}
 	err = s.Repo.Inventory.CreateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
@@ -279,10 +286,16 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		}
 
 		// create inventory transaction
+		nextID, err = s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeReturn,
 			Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+			Reason:          null.StringFrom("Goods Return Note Creation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {
@@ -290,7 +303,12 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		}
 
 		// create return merchandise authorization items
+		nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		rmaItem := &inventory.ReturnMerchandiseAuthorizationItem{
+			ID:          nextID,
 			RmaID:       null.IntFrom(rma.ID),
 			InventoryID: null.IntFrom(inv.ID),
 			Quantity:    types.Decimal(item.BaseDocumentItem.Quantity),
@@ -303,6 +321,11 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		rmaItems = append(rmaItems, rmaItem)
 
 		// create base document items
+		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		item.BaseDocumentItem.ID = nextID
 		item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 		err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 		if err != nil {
@@ -468,10 +491,16 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			}
 
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
 				Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Goods Return Note Update"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -534,10 +563,16 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 				}
 
 				// create inventory transaction
+				nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+				if err != nil {
+					return nil, err
+				}
 				invTx := &inventory.InventoryTransaction{
+					ID:              nextID,
 					InventoryID:     null.IntFrom(inv.ID),
 					TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
 					Quantity:        types.NewDecimal(amountOffset.Big),
+					Reason:          null.StringFrom("Goods Return Note Update"),
 				}
 				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 				if err != nil {
@@ -557,10 +592,16 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			}
 
 			// create inventory transaction
+			nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			invTx := &inventory.InventoryTransaction{
+				ID:              nextID,
 				InventoryID:     null.IntFrom(inv.ID),
 				TransactionType: inventory.InventoryTransactionTypeReturn,
 				Quantity:        types.NewDecimal(item.BaseDocumentItem.Quantity.Big),
+				Reason:          null.StringFrom("Goods Return Note Update"),
 			}
 			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 			if err != nil {
@@ -568,7 +609,12 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			}
 
 			// create return merchandise authorization item
+			nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
 			rmaItem := &inventory.ReturnMerchandiseAuthorizationItem{
+				ID:          nextID,
 				RmaID:       req.Payload.GoodsReturnNote.RmaID,
 				InventoryID: null.IntFrom(inv.ID),
 				Quantity:    types.Decimal(item.BaseDocumentItem.Quantity),
@@ -580,12 +626,23 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			}
 
 			// create base document items
+			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.BaseDocumentItem.ID = nextID
+			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
 			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
 			if err != nil {
 				return nil, err
 			}
 
 			// create goods return note items
+			nextID, err = s.Repo.Sale.GetNextEntryGoodsReturnNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			item.GoodsReturnNoteItem.ID = nextID
 			item.GoodsReturnNoteItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.GoodsReturnNoteItem.GoodsReturnNoteID = req.Payload.GoodsReturnNote.ID
 			err = s.Repo.Sale.CreateGoodsReturnNoteItem(req.Ctx, tx, &item.GoodsReturnNoteItem)
@@ -705,7 +762,12 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
-	for _, item := range goodsReturnNote.R.GoodsReturnNoteItems {
+	// delete goods return note items
+	currItems, err := s.Repo.Sale.GetGoodsReturnNoteItemsByGoodsReturnNoteID(req.Ctx, tx, goodsReturnNote.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range currItems {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 		if err != nil {
@@ -748,10 +810,16 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		}
 
 		// create inventory transaction
+		nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
 		invTx := &inventory.InventoryTransaction{
+			ID:              nextID,
 			InventoryID:     null.IntFrom(inv.ID),
 			TransactionType: inventory.InventoryTransactionTypeReturnCancellation,
 			Quantity:        types.NewDecimal(baseDocumentItem.Quantity.Big),
+			Reason:          null.StringFrom("Goods Return Note Cancellation"),
 		}
 		err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
 		if err != nil {

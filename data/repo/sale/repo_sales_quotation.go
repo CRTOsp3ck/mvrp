@@ -28,11 +28,13 @@ func (r *SaleRepository) GetSalesQuotationByID(ctx context.Context, exec boil.Co
 }
 
 func (r *SaleRepository) CreateSalesQuotation(ctx context.Context, exec boil.ContextExecutor, m *sale.SalesQuotation) error {
-	id, err := r.GetNextEntrySalesQuotationID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntrySalesQuotationID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *SaleRepository) GetMostRecentSalesQuotation(ctx context.Context, exec b
 }
 
 func (r *SaleRepository) GetNextEntrySalesQuotationID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentSalesQuotation(ctx, exec)
+	var maxID sql.NullInt64
+	err := sale.SalesQuotations(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentSalesQuotation(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *SaleRepository) GetSalesQuotationTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

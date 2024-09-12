@@ -28,11 +28,13 @@ func (r *SaleRepository) GetOrderConfirmationItemByID(ctx context.Context, exec 
 }
 
 func (r *SaleRepository) CreateOrderConfirmationItem(ctx context.Context, exec boil.ContextExecutor, m *sale.OrderConfirmationItem) error {
-	id, err := r.GetNextEntryOrderConfirmationItemID(ctx, exec)
-	if err != nil {
-		return err
-	}
-	m.ID = id
+	/*
+		id, err := r.GetNextEntryOrderConfirmationItemID(ctx, exec)
+		if err != nil {
+			return err
+		}
+		m.ID = id
+	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -64,14 +66,28 @@ func (r *SaleRepository) GetMostRecentOrderConfirmationItem(ctx context.Context,
 }
 
 func (r *SaleRepository) GetNextEntryOrderConfirmationItemID(ctx context.Context, exec boil.ContextExecutor) (int, error) {
-	currID, err := r.GetMostRecentOrderConfirmationItem(ctx, exec)
+	var maxID sql.NullInt64
+	err := sale.OrderConfirmationItems(qm.Select("MAX(id)")).QueryRow(exec).Scan(&maxID)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return 1, nil
-		}
 		return 0, err
 	}
-	return currID.ID + 1, nil
+
+	// Check if maxID is valid (non-NULL), otherwise return 1
+	if !maxID.Valid {
+		return 1, nil
+	}
+	return int(maxID.Int64) + 1, nil
+
+	/*
+		currID, err := r.GetMostRecentOrderConfirmationItem(ctx, exec)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				return 1, nil
+			}
+			return 0, err
+		}
+		return currID.ID + 1, nil
+	*/
 }
 
 func (r *SaleRepository) GetOrderConfirmationItemTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

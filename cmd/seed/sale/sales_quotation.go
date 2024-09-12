@@ -145,7 +145,6 @@ func SeedSalesQuotation(count int) error {
 		}
 
 		fmt.Println("Sales Quotation created ID: ", crSqResp.Payload.ID)
-		time.Sleep(time.Duration(interval) * time.Millisecond)
 	}
 
 	return nil
