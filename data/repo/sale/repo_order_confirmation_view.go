@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllOrderConfirmationViews(ctx context.Context, exec boil.ContextExecutor) (sale.OrderConfirmationViewSlice, error) {
 	return sale.OrderConfirmationViews().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchOrderConfirmationViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchOrderConfirmationDTO) (sale.OrderConfirmationViewSlice, error) {
 	return sale.OrderConfirmationViews(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchOrderConfirmationViews(ctx context.Context, exec 
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchOrderConfirmationViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchOrderConfirmationDTO) (sale.OrderConfirmationViewSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.OrderConfirmationViews(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetOrderConfirmationViewByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.OrderConfirmationView, error) {

@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor) (sale.GoodsReturnNoteSlice, error) {
 	return sale.GoodsReturnNotes().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsReturnNoteDTO) (sale.GoodsReturnNoteSlice, error) {
 	return sale.GoodsReturnNotes(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchGoodsReturnNotes(ctx context.Context, exec boil.C
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsReturnNoteDTO) (sale.GoodsReturnNoteSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.GoodsReturnNotes(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetGoodsReturnNoteByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.GoodsReturnNote, error) {

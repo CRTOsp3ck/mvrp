@@ -14,6 +14,8 @@ import (
 func (r *InventoryRepository) ListAllReturnMerchandiseAuthorizations(ctx context.Context, exec boil.ContextExecutor) (inventory.ReturnMerchandiseAuthorizationSlice, error) {
 	return inventory.ReturnMerchandiseAuthorizations().All(ctx, exec)
 }
+
+/*
 func (r *InventoryRepository) SearchReturnMerchandiseAuthorizations(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchReturnMerchandiseAuthorizationDTO) (inventory.ReturnMerchandiseAuthorizationSlice, error) {
 	return inventory.ReturnMerchandiseAuthorizations(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InventoryRepository) SearchReturnMerchandiseAuthorizations(ctx context.
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InventoryRepository) SearchReturnMerchandiseAuthorizations(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchReturnMerchandiseAuthorizationDTO) (inventory.ReturnMerchandiseAuthorizationSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return inventory.ReturnMerchandiseAuthorizations(queryMods...).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetReturnMerchandiseAuthorizationByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.ReturnMerchandiseAuthorization, error) {

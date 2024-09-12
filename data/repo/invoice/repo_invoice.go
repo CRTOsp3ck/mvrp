@@ -14,6 +14,8 @@ import (
 func (r *InvoiceRepository) ListAllInvoices(ctx context.Context, exec boil.ContextExecutor) (invoice.InvoiceSlice, error) {
 	return invoice.Invoices().All(ctx, exec)
 }
+
+/*
 func (r *InvoiceRepository) SearchInvoices(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInvoiceDTO) (invoice.InvoiceSlice, error) {
 	return invoice.Invoices(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InvoiceRepository) SearchInvoices(ctx context.Context, exec boil.Contex
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InvoiceRepository) SearchInvoices(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInvoiceDTO) (invoice.InvoiceSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return invoice.Invoices(queryMods...).All(ctx, exec)
 }
 
 func (r *InvoiceRepository) GetInvoiceByID(ctx context.Context, exec boil.ContextExecutor, id int) (*invoice.Invoice, error) {

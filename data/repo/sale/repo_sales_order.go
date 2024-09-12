@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllSalesOrders(ctx context.Context, exec boil.ContextExecutor) (sale.SalesOrderSlice, error) {
 	return sale.SalesOrders().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchSalesOrders(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchSalesOrderDTO) (sale.SalesOrderSlice, error) {
 	return sale.SalesOrders(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchSalesOrders(ctx context.Context, exec boil.Contex
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchSalesOrders(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchSalesOrderDTO) (sale.SalesOrderSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.SalesOrders(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetSalesOrderByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.SalesOrder, error) {

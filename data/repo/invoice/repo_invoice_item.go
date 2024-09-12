@@ -14,6 +14,8 @@ import (
 func (r *InvoiceRepository) ListAllInvoiceItems(ctx context.Context, exec boil.ContextExecutor) (invoice.InvoiceItemSlice, error) {
 	return invoice.InvoiceItems().All(ctx, exec)
 }
+
+/*
 func (r *InvoiceRepository) SearchInvoiceItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInvoiceItemDTO) (invoice.InvoiceItemSlice, error) {
 	return invoice.InvoiceItems(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InvoiceRepository) SearchInvoiceItems(ctx context.Context, exec boil.Co
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InvoiceRepository) SearchInvoiceItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInvoiceItemDTO) (invoice.InvoiceItemSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return invoice.InvoiceItems(queryMods...).All(ctx, exec)
 }
 
 func (r *InvoiceRepository) GetInvoiceItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*invoice.InvoiceItem, error) {

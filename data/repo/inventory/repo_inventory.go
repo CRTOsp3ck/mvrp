@@ -14,6 +14,8 @@ import (
 func (r *InventoryRepository) ListAllInventories(ctx context.Context, exec boil.ContextExecutor) (inventory.InventorySlice, error) {
 	return inventory.Inventories().All(ctx, exec)
 }
+
+/*
 func (r *InventoryRepository) SearchInventories(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryDTO) (inventory.InventorySlice, error) {
 	return inventory.Inventories(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InventoryRepository) SearchInventories(ctx context.Context, exec boil.C
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InventoryRepository) SearchInventories(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryDTO) (inventory.InventorySlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return inventory.Inventories(queryMods...).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetInventoryByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.Inventory, error) {

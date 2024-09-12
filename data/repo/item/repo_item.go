@@ -14,6 +14,8 @@ import (
 func (r *ItemRepository) ListAllItems(ctx context.Context, exec boil.ContextExecutor) (item.ItemSlice, error) {
 	return item.Items().All(ctx, exec)
 }
+
+/*
 func (r *ItemRepository) SearchItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchItemDTO) (item.ItemSlice, error) {
 	return item.Items(
 		qm.Where("type = ?", dto.Type),
@@ -31,6 +33,31 @@ func (r *ItemRepository) SearchItems(ctx context.Context, exec boil.ContextExecu
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *ItemRepository) SearchItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchItemDTO) (item.ItemSlice, error) {
+	var queryMods []qm.QueryMod
+	if dto.Type != "" {
+		queryMods = append(queryMods, qm.Where("type = ?", dto.Type))
+	}
+	queryMods = append(queryMods, qm.And(
+			"code ILIKE ? or name ILIKE ? or brand ILIKE ? or description ILIKE ? or category ILIKE ? or origin ILIKE ?",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+		))
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return item.Items(queryMods...).All(ctx, exec)
 }
 
 func (r *ItemRepository) GetItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*item.Item, error) {

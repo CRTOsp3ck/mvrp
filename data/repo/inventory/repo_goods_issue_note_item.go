@@ -14,6 +14,8 @@ import (
 func (r *InventoryRepository) ListAllGoodsIssueNoteItems(ctx context.Context, exec boil.ContextExecutor) (inventory.GoodsIssueNoteItemSlice, error) {
 	return inventory.GoodsIssueNoteItems().All(ctx, exec)
 }
+
+/*
 func (r *InventoryRepository) SearchGoodsIssueNoteItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsIssueNoteItemDTO) (inventory.GoodsIssueNoteItemSlice, error) {
 	return inventory.GoodsIssueNoteItems(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InventoryRepository) SearchGoodsIssueNoteItems(ctx context.Context, exe
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InventoryRepository) SearchGoodsIssueNoteItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsIssueNoteItemDTO) (inventory.GoodsIssueNoteItemSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return inventory.GoodsIssueNoteItems(queryMods...).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetGoodsIssueNoteItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.GoodsIssueNoteItem, error) {

@@ -14,6 +14,8 @@ import (
 func (r *PurchaseRepository) ListAllGoodsReceiptNotes(ctx context.Context, exec boil.ContextExecutor) (purchase.GoodsReceiptNoteSlice, error) {
 	return purchase.GoodsReceiptNotes().All(ctx, exec)
 }
+
+/*
 func (r *PurchaseRepository) SearchGoodsReceiptNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsReceiptNoteDTO) (purchase.GoodsReceiptNoteSlice, error) {
 	return purchase.GoodsReceiptNotes(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *PurchaseRepository) SearchGoodsReceiptNotes(ctx context.Context, exec b
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *PurchaseRepository) SearchGoodsReceiptNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchGoodsReceiptNoteDTO) (purchase.GoodsReceiptNoteSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return purchase.GoodsReceiptNotes(queryMods...).All(ctx, exec)
 }
 
 func (r *PurchaseRepository) GetGoodsReceiptNoteByID(ctx context.Context, exec boil.ContextExecutor, id int) (*purchase.GoodsReceiptNote, error) {

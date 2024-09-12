@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllOrderConfirmationItems(ctx context.Context, exec boil.ContextExecutor) (sale.OrderConfirmationItemSlice, error) {
 	return sale.OrderConfirmationItems().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchOrderConfirmationItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchOrderConfirmationItemDTO) (sale.OrderConfirmationItemSlice, error) {
 	return sale.OrderConfirmationItems(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchOrderConfirmationItems(ctx context.Context, exec 
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchOrderConfirmationItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchOrderConfirmationItemDTO) (sale.OrderConfirmationItemSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.OrderConfirmationItems(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetOrderConfirmationItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.OrderConfirmationItem, error) {

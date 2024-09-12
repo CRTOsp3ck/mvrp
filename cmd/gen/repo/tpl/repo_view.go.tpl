@@ -17,6 +17,7 @@ func (r *{{ .Package | ToPascalCase }}Repository) ListAll{{ .PluralModelName }}(
 	return {{ .Package }}.{{ .PluralModelName }}().All(ctx, exec)
 }
 
+/*
 {{- if .HasSearchDTO }}
 func (r *{{ .Package | ToPascalCase }}Repository) Search{{ .PluralModelName }}(ctx context.Context, exec boil.ContextExecutor, dto dto.{{ .SearchDTOName }}) ({{ .Package }}.{{ .ModelName }}Slice, error) {
 	return {{ .Package }}.{{ .PluralModelName }}(
@@ -31,6 +32,32 @@ func (r *{{ .Package | ToPascalCase }}Repository) Search{{ .PluralModelName }}(c
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+{{- end }}
+*/
+
+{{- if .HasSearchDTO }}
+func (r *{{ .Package | ToPascalCase }}Repository) Search{{ .PluralModelName }}(ctx context.Context, exec boil.ContextExecutor, dto dto.{{ .SearchDTOName }}) ({{ .Package }}.{{ .ModelName }}Slice, error) {
+	var queryMods []qm.QueryMod
+	
+	{{- range .GroupQueryFields }}
+	if dto.{{ .Name | ToPascalCase }} != "" {
+		queryMods = append(queryMods, qm.Where("{{ .Name }} = ?", dto.{{ .Name | ToPascalCase }}))
+	}
+	{{- end }}
+
+	{{- if .SearchQueryStatement }}
+	queryMods = append(queryMods, qm.{{.SearchQueryStatement}})
+	{{- end }}
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return {{ .Package }}.{{ .PluralModelName }}(queryMods...).All(ctx, exec)
 }
 {{- end }}
 

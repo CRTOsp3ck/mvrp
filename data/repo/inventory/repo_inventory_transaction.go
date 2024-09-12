@@ -14,6 +14,8 @@ import (
 func (r *InventoryRepository) ListAllInventoryTransactions(ctx context.Context, exec boil.ContextExecutor) (inventory.InventoryTransactionSlice, error) {
 	return inventory.InventoryTransactions().All(ctx, exec)
 }
+
+/*
 func (r *InventoryRepository) SearchInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, error) {
 	return inventory.InventoryTransactions(
 		qm.Where("inventory_id = ?", dto.InventoryId),
@@ -22,6 +24,22 @@ func (r *InventoryRepository) SearchInventoryTransactions(ctx context.Context, e
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InventoryRepository) SearchInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, error) {
+	var queryMods []qm.QueryMod
+	if dto.InventoryId != "" {
+		queryMods = append(queryMods, qm.Where("inventory_id = ?", dto.InventoryId))
+	}
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return inventory.InventoryTransactions(queryMods...).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetInventoryTransactionByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.InventoryTransaction, error) {

@@ -14,6 +14,9 @@ func (r *BaseRepository) ListAllBaseDocumentItems(ctx context.Context, exec boil
 	return base.BaseDocumentItems().All(ctx, exec)
 }
 
+/*
+*/
+
 func (r *BaseRepository) GetBaseDocumentItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*base.BaseDocumentItem, error) {
 	return base.FindBaseDocumentItem(ctx, exec, id)
 }

@@ -14,6 +14,8 @@ import (
 func (r *InventoryRepository) ListAllStockCountSheetViews(ctx context.Context, exec boil.ContextExecutor) (inventory.StockCountSheetViewSlice, error) {
 	return inventory.StockCountSheetViews().All(ctx, exec)
 }
+
+/*
 func (r *InventoryRepository) SearchStockCountSheetViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchStockCountSheetDTO) (inventory.StockCountSheetViewSlice, error) {
 	return inventory.StockCountSheetViews(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InventoryRepository) SearchStockCountSheetViews(ctx context.Context, ex
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InventoryRepository) SearchStockCountSheetViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchStockCountSheetDTO) (inventory.StockCountSheetViewSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return inventory.StockCountSheetViews(queryMods...).All(ctx, exec)
 }
 
 func (r *InventoryRepository) GetStockCountSheetViewByID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.StockCountSheetView, error) {

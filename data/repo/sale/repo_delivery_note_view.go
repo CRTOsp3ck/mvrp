@@ -14,13 +14,32 @@ import (
 func (r *SaleRepository) ListAllDeliveryNoteViews(ctx context.Context, exec boil.ContextExecutor) (sale.DeliveryNoteViewSlice, error) {
 	return sale.DeliveryNoteViews().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchDeliveryNoteViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDeliveryNoteDTO) (sale.DeliveryNoteViewSlice, error) {
 	return sale.DeliveryNoteViews(
+		qm.Where("shipping_status = ?", dto.ShippingStatus),
 		qm.Limit(dto.ItemsPerPage),
 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchDeliveryNoteViews(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDeliveryNoteDTO) (sale.DeliveryNoteViewSlice, error) {
+	var queryMods []qm.QueryMod
+	if dto.ShippingStatus != "" {
+		queryMods = append(queryMods, qm.Where("shipping_status = ?", dto.ShippingStatus))
+	}
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.DeliveryNoteViews(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetDeliveryNoteViewByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.DeliveryNoteView, error) {

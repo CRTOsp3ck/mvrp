@@ -2183,6 +2183,8 @@ components:
           type: string
         page:
           type: integer
+        shipping_status:
+          type: string
         sort_by:
           type: string
       type: object

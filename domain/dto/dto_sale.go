@@ -58,6 +58,7 @@ type UpdateSalesOrderItemDTO struct {
 
 type SearchDeliveryNoteDTO struct {
     Keyword      string                             `json:"keyword"`
+    ShippingStatus string          `json:"shipping_status"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`

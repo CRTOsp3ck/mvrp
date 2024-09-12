@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllDeliveryNoteItems(ctx context.Context, exec boil.ContextExecutor) (sale.DeliveryNoteItemSlice, error) {
 	return sale.DeliveryNoteItems().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchDeliveryNoteItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDeliveryNoteItemDTO) (sale.DeliveryNoteItemSlice, error) {
 	return sale.DeliveryNoteItems(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchDeliveryNoteItems(ctx context.Context, exec boil.
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchDeliveryNoteItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDeliveryNoteItemDTO) (sale.DeliveryNoteItemSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.DeliveryNoteItems(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetDeliveryNoteItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.DeliveryNoteItem, error) {

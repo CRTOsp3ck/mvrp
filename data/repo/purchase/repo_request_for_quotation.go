@@ -14,6 +14,8 @@ import (
 func (r *PurchaseRepository) ListAllRequestForQuotations(ctx context.Context, exec boil.ContextExecutor) (purchase.RequestForQuotationSlice, error) {
 	return purchase.RequestForQuotations().All(ctx, exec)
 }
+
+/*
 func (r *PurchaseRepository) SearchRequestForQuotations(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchRequestForQuotationDTO) (purchase.RequestForQuotationSlice, error) {
 	return purchase.RequestForQuotations(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *PurchaseRepository) SearchRequestForQuotations(ctx context.Context, exe
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *PurchaseRepository) SearchRequestForQuotations(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchRequestForQuotationDTO) (purchase.RequestForQuotationSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return purchase.RequestForQuotations(queryMods...).All(ctx, exec)
 }
 
 func (r *PurchaseRepository) GetRequestForQuotationByID(ctx context.Context, exec boil.ContextExecutor, id int) (*purchase.RequestForQuotation, error) {

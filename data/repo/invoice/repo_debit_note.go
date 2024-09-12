@@ -14,6 +14,8 @@ import (
 func (r *InvoiceRepository) ListAllDebitNotes(ctx context.Context, exec boil.ContextExecutor) (invoice.DebitNoteSlice, error) {
 	return invoice.DebitNotes().All(ctx, exec)
 }
+
+/*
 func (r *InvoiceRepository) SearchDebitNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDebitNoteDTO) (invoice.DebitNoteSlice, error) {
 	return invoice.DebitNotes(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *InvoiceRepository) SearchDebitNotes(ctx context.Context, exec boil.Cont
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *InvoiceRepository) SearchDebitNotes(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchDebitNoteDTO) (invoice.DebitNoteSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return invoice.DebitNotes(queryMods...).All(ctx, exec)
 }
 
 func (r *InvoiceRepository) GetDebitNoteByID(ctx context.Context, exec boil.ContextExecutor, id int) (*invoice.DebitNote, error) {

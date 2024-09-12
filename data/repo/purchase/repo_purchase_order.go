@@ -14,6 +14,8 @@ import (
 func (r *PurchaseRepository) ListAllPurchaseOrders(ctx context.Context, exec boil.ContextExecutor) (purchase.PurchaseOrderSlice, error) {
 	return purchase.PurchaseOrders().All(ctx, exec)
 }
+
+/*
 func (r *PurchaseRepository) SearchPurchaseOrders(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchPurchaseOrderDTO) (purchase.PurchaseOrderSlice, error) {
 	return purchase.PurchaseOrders(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *PurchaseRepository) SearchPurchaseOrders(ctx context.Context, exec boil
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *PurchaseRepository) SearchPurchaseOrders(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchPurchaseOrderDTO) (purchase.PurchaseOrderSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return purchase.PurchaseOrders(queryMods...).All(ctx, exec)
 }
 
 func (r *PurchaseRepository) GetPurchaseOrderByID(ctx context.Context, exec boil.ContextExecutor, id int) (*purchase.PurchaseOrder, error) {

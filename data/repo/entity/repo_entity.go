@@ -14,6 +14,8 @@ import (
 func (r *EntityRepository) ListAllEntities(ctx context.Context, exec boil.ContextExecutor) (entity.EntitySlice, error) {
 	return entity.Entities().All(ctx, exec)
 }
+
+/*
 func (r *EntityRepository) SearchEntities(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchEntityDTO) (entity.EntitySlice, error) {
 	return entity.Entities(
 		qm.Where("type = ?", dto.Type),
@@ -28,6 +30,28 @@ func (r *EntityRepository) SearchEntities(ctx context.Context, exec boil.Context
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *EntityRepository) SearchEntities(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchEntityDTO) (entity.EntitySlice, error) {
+	var queryMods []qm.QueryMod
+	if dto.Type != "" {
+		queryMods = append(queryMods, qm.Where("type = ?", dto.Type))
+	}
+	queryMods = append(queryMods, qm.And(
+			"name ILIKE ? or address ILIKE ? or email ILIKE ?",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+			"%" + dto.Keyword + "%",
+		))
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return entity.Entities(queryMods...).All(ctx, exec)
 }
 
 func (r *EntityRepository) GetEntityByID(ctx context.Context, exec boil.ContextExecutor, id int) (*entity.Entity, error) {

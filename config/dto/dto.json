@@ -633,7 +633,9 @@
                     "inherits": [],
                     "additional_fields": [],
                     "exclude_fields_from_inherit": [],
-                    "group_query_fields": [],
+                    "group_query_fields": [
+                        {"name": "shipping_status", "type": "string"}
+                    ],
                     "search_query_fields": [] 
                 },
                 { 

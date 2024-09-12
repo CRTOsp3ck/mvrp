@@ -14,6 +14,8 @@ import (
 func (r *SaleRepository) ListAllSalesQuotationItems(ctx context.Context, exec boil.ContextExecutor) (sale.SalesQuotationItemSlice, error) {
 	return sale.SalesQuotationItems().All(ctx, exec)
 }
+
+/*
 func (r *SaleRepository) SearchSalesQuotationItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchSalesQuotationItemDTO) (sale.SalesQuotationItemSlice, error) {
 	return sale.SalesQuotationItems(
 		qm.Limit(dto.ItemsPerPage),
@@ -21,6 +23,19 @@ func (r *SaleRepository) SearchSalesQuotationItems(ctx context.Context, exec boi
 		// qm.GroupBy("id"),
 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
 	).All(ctx, exec)
+}
+*/
+func (r *SaleRepository) SearchSalesQuotationItems(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchSalesQuotationItemDTO) (sale.SalesQuotationItemSlice, error) {
+	var queryMods []qm.QueryMod
+
+	queryMods = append(queryMods,
+		qm.Limit(dto.ItemsPerPage),
+		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
+		// qm.GroupBy("id"),
+		qm.OrderBy(dto.OrderBy+" "+"ASC"),
+	)
+
+	return sale.SalesQuotationItems(queryMods...).All(ctx, exec)
 }
 
 func (r *SaleRepository) GetSalesQuotationItemByID(ctx context.Context, exec boil.ContextExecutor, id int) (*sale.SalesQuotationItem, error) {
