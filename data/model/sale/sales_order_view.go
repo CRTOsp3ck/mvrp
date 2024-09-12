@@ -38,6 +38,9 @@ type SalesOrderView struct {
 	UpdatedAt                     null.Time            `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	DeletedAt                     null.Time            `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument                  null.JSON            `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	VendorInfo                    null.JSON            `boil:"vendor_info" json:"vendor_info,omitempty" toml:"vendor_info" yaml:"vendor_info,omitempty"`
+	CustomerInfo                  null.JSON            `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
+	SalesRepresentativeInfo       null.JSON            `boil:"sales_representative_info" json:"sales_representative_info,omitempty" toml:"sales_representative_info" yaml:"sales_representative_info,omitempty"`
 	SalesOrderItems               null.JSON            `boil:"sales_order_items" json:"sales_order_items,omitempty" toml:"sales_order_items" yaml:"sales_order_items,omitempty"`
 }
 
@@ -56,6 +59,9 @@ var SalesOrderViewColumns = struct {
 	UpdatedAt                     string
 	DeletedAt                     string
 	BaseDocument                  string
+	VendorInfo                    string
+	CustomerInfo                  string
+	SalesRepresentativeInfo       string
 	SalesOrderItems               string
 }{
 	ID:                            "id",
@@ -72,6 +78,9 @@ var SalesOrderViewColumns = struct {
 	UpdatedAt:                     "updated_at",
 	DeletedAt:                     "deleted_at",
 	BaseDocument:                  "base_document",
+	VendorInfo:                    "vendor_info",
+	CustomerInfo:                  "customer_info",
+	SalesRepresentativeInfo:       "sales_representative_info",
 	SalesOrderItems:               "sales_order_items",
 }
 
@@ -90,6 +99,9 @@ var SalesOrderViewTableColumns = struct {
 	UpdatedAt                     string
 	DeletedAt                     string
 	BaseDocument                  string
+	VendorInfo                    string
+	CustomerInfo                  string
+	SalesRepresentativeInfo       string
 	SalesOrderItems               string
 }{
 	ID:                            "sales_order_view.id",
@@ -106,6 +118,9 @@ var SalesOrderViewTableColumns = struct {
 	UpdatedAt:                     "sales_order_view.updated_at",
 	DeletedAt:                     "sales_order_view.deleted_at",
 	BaseDocument:                  "sales_order_view.base_document",
+	VendorInfo:                    "sales_order_view.vendor_info",
+	CustomerInfo:                  "sales_order_view.customer_info",
+	SalesRepresentativeInfo:       "sales_order_view.sales_representative_info",
 	SalesOrderItems:               "sales_order_view.sales_order_items",
 }
 
@@ -166,6 +181,9 @@ var SalesOrderViewWhere = struct {
 	UpdatedAt                     whereHelpernull_Time
 	DeletedAt                     whereHelpernull_Time
 	BaseDocument                  whereHelpernull_JSON
+	VendorInfo                    whereHelpernull_JSON
+	CustomerInfo                  whereHelpernull_JSON
+	SalesRepresentativeInfo       whereHelpernull_JSON
 	SalesOrderItems               whereHelpernull_JSON
 }{
 	ID:                            whereHelpernull_Int{field: "\"sale\".\"sales_order_view\".\"id\""},
@@ -182,13 +200,16 @@ var SalesOrderViewWhere = struct {
 	UpdatedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"updated_at\""},
 	DeletedAt:                     whereHelpernull_Time{field: "\"sale\".\"sales_order_view\".\"deleted_at\""},
 	BaseDocument:                  whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"base_document\""},
+	VendorInfo:                    whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"vendor_info\""},
+	CustomerInfo:                  whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"customer_info\""},
+	SalesRepresentativeInfo:       whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"sales_representative_info\""},
 	SalesOrderItems:               whereHelpernull_JSON{field: "\"sale\".\"sales_order_view\".\"sales_order_items\""},
 }
 
 var (
-	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_order_items"}
+	salesOrderViewAllColumns            = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "sales_representative_info", "sales_order_items"}
 	salesOrderViewColumnsWithoutDefault = []string{}
-	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_order_items"}
+	salesOrderViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_order_number", "vendor_id", "customer_id", "sales_representative_employee_id", "ship_to_information", "ship_from_information", "payment_due_date", "order_status", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "sales_representative_info", "sales_order_items"}
 	salesOrderViewPrimaryKeyColumns     = []string{}
 	salesOrderViewGeneratedColumns      = []string{}
 )

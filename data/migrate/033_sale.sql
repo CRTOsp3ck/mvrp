@@ -151,7 +151,16 @@ SELECT
         SELECT row_to_json(bdi)
         FROM base.base_document_item bdi
         WHERE bdi.id = soi.base_document_item_id
-    ) AS base_document_item
+    ) AS base_document_item,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = (
+            SELECT bdi.item_id
+            FROM base.base_document_item bdi
+            WHERE bdi.id = soi.base_document_item_id
+        )
+    ) AS inventory_info
 FROM
     sale.sales_order_item soi;
 
@@ -163,6 +172,21 @@ SELECT
         FROM base.base_document bd
         WHERE bd.id = so.base_document_id
     ) AS base_document,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = so.vendor_id
+    ) AS vendor_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = so.customer_id
+    ) AS customer_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = so.sales_representative_employee_id
+    ) AS sales_representative_info,
     (
         SELECT json_agg(row_to_json(soiv))
         FROM sale.sales_order_item_view soiv
