@@ -13,6 +13,12 @@ CREATE TYPE sale.sales_quotation_status AS ENUM (
     'declined'
 );
 
+CREATE TYPE sale.shipping_status AS ENUM (
+    'ready_for_pickup',
+    'in_transit',
+    'shipped'
+);
+
 CREATE TABLE sale.sales_order (
     id INT PRIMARY KEY,
     base_document_id INT NOT NULL REFERENCES base.base_document(id) ON DELETE CASCADE,
@@ -48,8 +54,9 @@ CREATE TABLE sale.delivery_note (
     ship_to_information JSONB NOT NULL,
     ship_from_information JSONB NOT NULL,
     bill_to_information JSONB NOT NULL,
-    delivery_date DATE NOT NULL,
+    shipping_date DATE NOT NULL,
     shipping_personnel_information JSONB,
+    shipping_status sale.shipping_status NOT NULL,
     received_by JSONB,
     overall_goods_condition TEXT,
     created_at TIMESTAMPTZ NOT NULL,
@@ -202,7 +209,16 @@ SELECT
         SELECT row_to_json(bdi)
         FROM base.base_document_item bdi
         WHERE bdi.id = dni.base_document_item_id
-    ) AS base_document_item
+    ) AS base_document_item,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = (
+            SELECT bdi.inventory_id
+            FROM base.base_document_item bdi
+            WHERE bdi.id = dni.base_document_item_id
+        )
+    ) AS inventory_info
 FROM
     sale.delivery_note_item dni;
 
@@ -214,6 +230,16 @@ SELECT
         FROM base.base_document bd
         WHERE bd.id = dn.base_document_id
     ) AS base_document,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = dn.vendor_id
+    ) AS vendor_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = dn.customer_id
+    ) AS customer_info,
     (
         SELECT json_agg(row_to_json(dniv))
         FROM sale.delivery_note_item_view dniv
@@ -283,7 +309,16 @@ SELECT
         SELECT row_to_json(bdi)
         FROM base.base_document_item bdi
         WHERE bdi.id = sqi.base_document_item_id
-    ) AS base_document_item
+    ) AS base_document_item,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = (
+            SELECT bdi.inventory_id
+            FROM base.base_document_item bdi
+            WHERE bdi.id = sqi.base_document_item_id
+        )
+    ) AS inventory_info
 FROM
     sale.sales_quotation_item sqi;
 
@@ -295,6 +330,21 @@ SELECT
         FROM base.base_document bd
         WHERE bd.id = sq.base_document_id
     ) AS base_document,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = sq.vendor_id
+    ) AS vendor_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = sq.customer_id
+    ) AS customer_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = sq.prepared_by_employee_id
+    ) AS prepared_by_employee_info,
     (
         SELECT json_agg(row_to_json(sqiv))
         FROM sale.sales_quotation_item_view sqiv
@@ -335,6 +385,6 @@ DROP TABLE IF EXISTS sale.delivery_note;
 DROP TABLE IF EXISTS sale.sales_order_item;
 DROP TABLE IF EXISTS sale.sales_order;
 
+DROP TYPE IF EXISTS sale.shipping_status;
 DROP TYPE IF EXISTS sale.sales_quotation_status;
-
 DROP TYPE IF EXISTS sale.sales_order_status;

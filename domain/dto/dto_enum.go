@@ -40,6 +40,7 @@ type PurchaseEnumDTO struct {
 type SaleEnumDTO struct {
 	SalesOrderStatus     []Enum    `json:"sales_order_status"`
 	SalesQuotationStatus     []Enum    `json:"sales_quotation_status"`
+	SalesShippingStatus     []Enum    `json:"sales_shipping_status"`
 }
 
 
@@ -99,6 +100,7 @@ type PurchaseEnumDTO struct {
 type SaleEnumDTO struct {
 	SalesOrderStatus     []sale.SalesOrderStatus    `json:"sales_order_status"`
 	SalesQuotationStatus     []sale.SalesQuotationStatus    `json:"sales_quotation_status"`
+	SalesShippingStatus     []sale.SalesShippingStatus    `json:"sales_shipping_status"`
 }
 
 

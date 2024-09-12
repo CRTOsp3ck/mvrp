@@ -56,6 +56,50 @@ func makeCacheKey(cols boil.Columns, nzDefaults []string) string {
 	return str
 }
 
+type ShippingStatus string
+
+// Enum values for ShippingStatus
+const (
+	ShippingStatusReadyForPickup ShippingStatus = "ready_for_pickup"
+	ShippingStatusInTransit      ShippingStatus = "in_transit"
+	ShippingStatusShipped        ShippingStatus = "shipped"
+)
+
+func AllShippingStatus() []ShippingStatus {
+	return []ShippingStatus{
+		ShippingStatusReadyForPickup,
+		ShippingStatusInTransit,
+		ShippingStatusShipped,
+	}
+}
+
+func (e ShippingStatus) IsValid() error {
+	switch e {
+	case ShippingStatusReadyForPickup, ShippingStatusInTransit, ShippingStatusShipped:
+		return nil
+	default:
+		return errors.New("enum is not valid")
+	}
+}
+
+func (e ShippingStatus) String() string {
+	return string(e)
+}
+
+func (e ShippingStatus) Ordinal() int {
+	switch e {
+	case ShippingStatusReadyForPickup:
+		return 0
+	case ShippingStatusInTransit:
+		return 1
+	case ShippingStatusShipped:
+		return 2
+
+	default:
+		panic(errors.New("enum is not valid"))
+	}
+}
+
 type SalesOrderStatus string
 
 // Enum values for SalesOrderStatus
@@ -142,6 +186,114 @@ func (e SalesQuotationStatus) Ordinal() int {
 	default:
 		panic(errors.New("enum is not valid"))
 	}
+}
+
+// NullShippingStatus is a nullable ShippingStatus enum type. It supports SQL and JSON serialization.
+type NullShippingStatus struct {
+	Val   ShippingStatus
+	Valid bool
+}
+
+// NullShippingStatusFrom creates a new ShippingStatus that will never be blank.
+func NullShippingStatusFrom(v ShippingStatus) NullShippingStatus {
+	return NewNullShippingStatus(v, true)
+}
+
+// NullShippingStatusFromPtr creates a new NullShippingStatus that be null if s is nil.
+func NullShippingStatusFromPtr(v *ShippingStatus) NullShippingStatus {
+	if v == nil {
+		return NewNullShippingStatus("", false)
+	}
+	return NewNullShippingStatus(*v, true)
+}
+
+// NewNullShippingStatus creates a new NullShippingStatus
+func NewNullShippingStatus(v ShippingStatus, valid bool) NullShippingStatus {
+	return NullShippingStatus{
+		Val:   v,
+		Valid: valid,
+	}
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (e *NullShippingStatus) UnmarshalJSON(data []byte) error {
+	if bytes.Equal(data, null.NullBytes) {
+		e.Val = ""
+		e.Valid = false
+		return nil
+	}
+
+	if err := json.Unmarshal(data, &e.Val); err != nil {
+		return err
+	}
+
+	e.Valid = true
+	return nil
+}
+
+// MarshalJSON implements json.Marshaler.
+func (e NullShippingStatus) MarshalJSON() ([]byte, error) {
+	if !e.Valid {
+		return null.NullBytes, nil
+	}
+	return json.Marshal(e.Val)
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (e NullShippingStatus) MarshalText() ([]byte, error) {
+	if !e.Valid {
+		return []byte{}, nil
+	}
+	return []byte(e.Val), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (e *NullShippingStatus) UnmarshalText(text []byte) error {
+	if text == nil || len(text) == 0 {
+		e.Valid = false
+		return nil
+	}
+
+	e.Val = ShippingStatus(text)
+	e.Valid = true
+	return nil
+}
+
+// SetValid changes this NullShippingStatus value and also sets it to be non-null.
+func (e *NullShippingStatus) SetValid(v ShippingStatus) {
+	e.Val = v
+	e.Valid = true
+}
+
+// Ptr returns a pointer to this NullShippingStatus value, or a nil pointer if this NullShippingStatus is null.
+func (e NullShippingStatus) Ptr() *ShippingStatus {
+	if !e.Valid {
+		return nil
+	}
+	return &e.Val
+}
+
+// IsZero returns true for null types.
+func (e NullShippingStatus) IsZero() bool {
+	return !e.Valid
+}
+
+// Scan implements the Scanner interface.
+func (e *NullShippingStatus) Scan(value interface{}) error {
+	if value == nil {
+		e.Val, e.Valid = "", false
+		return nil
+	}
+	e.Valid = true
+	return convert.ConvertAssign((*string)(&e.Val), value)
+}
+
+// Value implements the driver Valuer interface.
+func (e NullShippingStatus) Value() (driver.Value, error) {
+	if !e.Valid {
+		return nil, nil
+	}
+	return string(e.Val), nil
 }
 
 // NullSalesOrderStatus is a nullable SalesOrderStatus enum type. It supports SQL and JSON serialization.

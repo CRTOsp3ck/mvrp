@@ -32,6 +32,7 @@ type DeliveryNoteItemView struct {
 	UpdatedAt          null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	DeletedAt          null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON   `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
+	InventoryInfo      null.JSON   `boil:"inventory_info" json:"inventory_info,omitempty" toml:"inventory_info" yaml:"inventory_info,omitempty"`
 }
 
 var DeliveryNoteItemViewColumns = struct {
@@ -43,6 +44,7 @@ var DeliveryNoteItemViewColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
@@ -52,6 +54,7 @@ var DeliveryNoteItemViewColumns = struct {
 	UpdatedAt:          "updated_at",
 	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
+	InventoryInfo:      "inventory_info",
 }
 
 var DeliveryNoteItemViewTableColumns = struct {
@@ -63,6 +66,7 @@ var DeliveryNoteItemViewTableColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "delivery_note_item_view.id",
 	BaseDocumentItemID: "delivery_note_item_view.base_document_item_id",
@@ -72,6 +76,7 @@ var DeliveryNoteItemViewTableColumns = struct {
 	UpdatedAt:          "delivery_note_item_view.updated_at",
 	DeletedAt:          "delivery_note_item_view.deleted_at",
 	BaseDocumentItem:   "delivery_note_item_view.base_document_item",
+	InventoryInfo:      "delivery_note_item_view.inventory_info",
 }
 
 // Generated where
@@ -85,6 +90,7 @@ var DeliveryNoteItemViewWhere = struct {
 	UpdatedAt          whereHelpernull_Time
 	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
+	InventoryInfo      whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item_id\""},
@@ -94,12 +100,13 @@ var DeliveryNoteItemViewWhere = struct {
 	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item_view\".\"updated_at\""},
 	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"delivery_note_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_item_view\".\"base_document_item\""},
+	InventoryInfo:      whereHelpernull_JSON{field: "\"sale\".\"delivery_note_item_view\".\"inventory_info\""},
 }
 
 var (
-	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	deliveryNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	deliveryNoteItemViewColumnsWithoutDefault = []string{}
-	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	deliveryNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "delivery_note_id", "goods_condition", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	deliveryNoteItemViewPrimaryKeyColumns     = []string{}
 	deliveryNoteItemViewGeneratedColumns      = []string{}
 )

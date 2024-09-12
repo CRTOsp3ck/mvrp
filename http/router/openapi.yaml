@@ -2141,6 +2141,11 @@ components:
             $ref: '#/components/schemas/DtoEnum'
           nullable: true
           type: array
+        sales_shipping_status:
+          items:
+            $ref: '#/components/schemas/DtoEnum'
+          nullable: true
+          type: array
       type: object
     DtoSearchCreditNoteDTO:
       properties:
@@ -2980,9 +2985,6 @@ components:
         deleted_at:
           format: date-time
           type: string
-        delivery_date:
-          format: date-time
-          type: string
         delivery_note_number:
           type: string
         id:
@@ -2998,9 +3000,14 @@ components:
           $ref: '#/components/schemas/TypesJSON'
         ship_to_information:
           $ref: '#/components/schemas/TypesJSON'
+        shipping_date:
+          format: date-time
+          type: string
         shipping_personnel_information:
           additionalProperties: {}
           type: object
+        shipping_status:
+          type: string
         updated_at:
           format: date-time
           type: string

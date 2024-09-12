@@ -80,3 +80,7 @@ func (r *EnumRepository) GetSalesOrderStatusEnums() []sale.SalesOrderStatus {
 func (r *EnumRepository) GetSalesQuotationStatusEnums() []sale.SalesQuotationStatus {
 	return sale.AllSalesQuotationStatus()
 }
+
+func (r *EnumRepository) GetSalesShippingStatusEnums() []sale.ShippingStatus {
+	return sale.AllShippingStatus()
+}

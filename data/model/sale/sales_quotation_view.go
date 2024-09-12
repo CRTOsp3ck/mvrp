@@ -24,89 +24,104 @@ import (
 
 // SalesQuotationView is an object representing the database table.
 type SalesQuotationView struct {
-	ID                   null.Int                 `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentID       null.Int                 `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
-	SalesQuotationNumber null.String              `boil:"sales_quotation_number" json:"sales_quotation_number,omitempty" toml:"sales_quotation_number" yaml:"sales_quotation_number,omitempty"`
-	ValidUntilDate       null.Time                `boil:"valid_until_date" json:"valid_until_date,omitempty" toml:"valid_until_date" yaml:"valid_until_date,omitempty"`
-	VendorID             null.Int                 `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
-	CustomerID           null.Int                 `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation    null.JSON                `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	RequestedBy          null.JSON                `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
-	PreparedByEmployeeID null.Int                 `boil:"prepared_by_employee_id" json:"prepared_by_employee_id,omitempty" toml:"prepared_by_employee_id" yaml:"prepared_by_employee_id,omitempty"`
-	QuotationStatus      NullSalesQuotationStatus `boil:"quotation_status" json:"quotation_status,omitempty" toml:"quotation_status" yaml:"quotation_status,omitempty"`
-	CreatedAt            null.Time                `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt            null.Time                `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt            null.Time                `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	BaseDocument         null.JSON                `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
-	SalesQuotationItems  null.JSON                `boil:"sales_quotation_items" json:"sales_quotation_items,omitempty" toml:"sales_quotation_items" yaml:"sales_quotation_items,omitempty"`
+	ID                     null.Int                 `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentID         null.Int                 `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
+	SalesQuotationNumber   null.String              `boil:"sales_quotation_number" json:"sales_quotation_number,omitempty" toml:"sales_quotation_number" yaml:"sales_quotation_number,omitempty"`
+	ValidUntilDate         null.Time                `boil:"valid_until_date" json:"valid_until_date,omitempty" toml:"valid_until_date" yaml:"valid_until_date,omitempty"`
+	VendorID               null.Int                 `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
+	CustomerID             null.Int                 `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	ShipToInformation      null.JSON                `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	RequestedBy            null.JSON                `boil:"requested_by" json:"requested_by,omitempty" toml:"requested_by" yaml:"requested_by,omitempty"`
+	PreparedByEmployeeID   null.Int                 `boil:"prepared_by_employee_id" json:"prepared_by_employee_id,omitempty" toml:"prepared_by_employee_id" yaml:"prepared_by_employee_id,omitempty"`
+	QuotationStatus        NullSalesQuotationStatus `boil:"quotation_status" json:"quotation_status,omitempty" toml:"quotation_status" yaml:"quotation_status,omitempty"`
+	CreatedAt              null.Time                `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt              null.Time                `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt              null.Time                `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	BaseDocument           null.JSON                `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	VendorInfo             null.JSON                `boil:"vendor_info" json:"vendor_info,omitempty" toml:"vendor_info" yaml:"vendor_info,omitempty"`
+	CustomerInfo           null.JSON                `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
+	PreparedByEmployeeInfo null.JSON                `boil:"prepared_by_employee_info" json:"prepared_by_employee_info,omitempty" toml:"prepared_by_employee_info" yaml:"prepared_by_employee_info,omitempty"`
+	SalesQuotationItems    null.JSON                `boil:"sales_quotation_items" json:"sales_quotation_items,omitempty" toml:"sales_quotation_items" yaml:"sales_quotation_items,omitempty"`
 }
 
 var SalesQuotationViewColumns = struct {
-	ID                   string
-	BaseDocumentID       string
-	SalesQuotationNumber string
-	ValidUntilDate       string
-	VendorID             string
-	CustomerID           string
-	ShipToInformation    string
-	RequestedBy          string
-	PreparedByEmployeeID string
-	QuotationStatus      string
-	CreatedAt            string
-	UpdatedAt            string
-	DeletedAt            string
-	BaseDocument         string
-	SalesQuotationItems  string
+	ID                     string
+	BaseDocumentID         string
+	SalesQuotationNumber   string
+	ValidUntilDate         string
+	VendorID               string
+	CustomerID             string
+	ShipToInformation      string
+	RequestedBy            string
+	PreparedByEmployeeID   string
+	QuotationStatus        string
+	CreatedAt              string
+	UpdatedAt              string
+	DeletedAt              string
+	BaseDocument           string
+	VendorInfo             string
+	CustomerInfo           string
+	PreparedByEmployeeInfo string
+	SalesQuotationItems    string
 }{
-	ID:                   "id",
-	BaseDocumentID:       "base_document_id",
-	SalesQuotationNumber: "sales_quotation_number",
-	ValidUntilDate:       "valid_until_date",
-	VendorID:             "vendor_id",
-	CustomerID:           "customer_id",
-	ShipToInformation:    "ship_to_information",
-	RequestedBy:          "requested_by",
-	PreparedByEmployeeID: "prepared_by_employee_id",
-	QuotationStatus:      "quotation_status",
-	CreatedAt:            "created_at",
-	UpdatedAt:            "updated_at",
-	DeletedAt:            "deleted_at",
-	BaseDocument:         "base_document",
-	SalesQuotationItems:  "sales_quotation_items",
+	ID:                     "id",
+	BaseDocumentID:         "base_document_id",
+	SalesQuotationNumber:   "sales_quotation_number",
+	ValidUntilDate:         "valid_until_date",
+	VendorID:               "vendor_id",
+	CustomerID:             "customer_id",
+	ShipToInformation:      "ship_to_information",
+	RequestedBy:            "requested_by",
+	PreparedByEmployeeID:   "prepared_by_employee_id",
+	QuotationStatus:        "quotation_status",
+	CreatedAt:              "created_at",
+	UpdatedAt:              "updated_at",
+	DeletedAt:              "deleted_at",
+	BaseDocument:           "base_document",
+	VendorInfo:             "vendor_info",
+	CustomerInfo:           "customer_info",
+	PreparedByEmployeeInfo: "prepared_by_employee_info",
+	SalesQuotationItems:    "sales_quotation_items",
 }
 
 var SalesQuotationViewTableColumns = struct {
-	ID                   string
-	BaseDocumentID       string
-	SalesQuotationNumber string
-	ValidUntilDate       string
-	VendorID             string
-	CustomerID           string
-	ShipToInformation    string
-	RequestedBy          string
-	PreparedByEmployeeID string
-	QuotationStatus      string
-	CreatedAt            string
-	UpdatedAt            string
-	DeletedAt            string
-	BaseDocument         string
-	SalesQuotationItems  string
+	ID                     string
+	BaseDocumentID         string
+	SalesQuotationNumber   string
+	ValidUntilDate         string
+	VendorID               string
+	CustomerID             string
+	ShipToInformation      string
+	RequestedBy            string
+	PreparedByEmployeeID   string
+	QuotationStatus        string
+	CreatedAt              string
+	UpdatedAt              string
+	DeletedAt              string
+	BaseDocument           string
+	VendorInfo             string
+	CustomerInfo           string
+	PreparedByEmployeeInfo string
+	SalesQuotationItems    string
 }{
-	ID:                   "sales_quotation_view.id",
-	BaseDocumentID:       "sales_quotation_view.base_document_id",
-	SalesQuotationNumber: "sales_quotation_view.sales_quotation_number",
-	ValidUntilDate:       "sales_quotation_view.valid_until_date",
-	VendorID:             "sales_quotation_view.vendor_id",
-	CustomerID:           "sales_quotation_view.customer_id",
-	ShipToInformation:    "sales_quotation_view.ship_to_information",
-	RequestedBy:          "sales_quotation_view.requested_by",
-	PreparedByEmployeeID: "sales_quotation_view.prepared_by_employee_id",
-	QuotationStatus:      "sales_quotation_view.quotation_status",
-	CreatedAt:            "sales_quotation_view.created_at",
-	UpdatedAt:            "sales_quotation_view.updated_at",
-	DeletedAt:            "sales_quotation_view.deleted_at",
-	BaseDocument:         "sales_quotation_view.base_document",
-	SalesQuotationItems:  "sales_quotation_view.sales_quotation_items",
+	ID:                     "sales_quotation_view.id",
+	BaseDocumentID:         "sales_quotation_view.base_document_id",
+	SalesQuotationNumber:   "sales_quotation_view.sales_quotation_number",
+	ValidUntilDate:         "sales_quotation_view.valid_until_date",
+	VendorID:               "sales_quotation_view.vendor_id",
+	CustomerID:             "sales_quotation_view.customer_id",
+	ShipToInformation:      "sales_quotation_view.ship_to_information",
+	RequestedBy:            "sales_quotation_view.requested_by",
+	PreparedByEmployeeID:   "sales_quotation_view.prepared_by_employee_id",
+	QuotationStatus:        "sales_quotation_view.quotation_status",
+	CreatedAt:              "sales_quotation_view.created_at",
+	UpdatedAt:              "sales_quotation_view.updated_at",
+	DeletedAt:              "sales_quotation_view.deleted_at",
+	BaseDocument:           "sales_quotation_view.base_document",
+	VendorInfo:             "sales_quotation_view.vendor_info",
+	CustomerInfo:           "sales_quotation_view.customer_info",
+	PreparedByEmployeeInfo: "sales_quotation_view.prepared_by_employee_info",
+	SalesQuotationItems:    "sales_quotation_view.sales_quotation_items",
 }
 
 // Generated where
@@ -154,43 +169,49 @@ func (w whereHelperNullSalesQuotationStatus) IsNotNull() qm.QueryMod {
 }
 
 var SalesQuotationViewWhere = struct {
-	ID                   whereHelpernull_Int
-	BaseDocumentID       whereHelpernull_Int
-	SalesQuotationNumber whereHelpernull_String
-	ValidUntilDate       whereHelpernull_Time
-	VendorID             whereHelpernull_Int
-	CustomerID           whereHelpernull_Int
-	ShipToInformation    whereHelpernull_JSON
-	RequestedBy          whereHelpernull_JSON
-	PreparedByEmployeeID whereHelpernull_Int
-	QuotationStatus      whereHelperNullSalesQuotationStatus
-	CreatedAt            whereHelpernull_Time
-	UpdatedAt            whereHelpernull_Time
-	DeletedAt            whereHelpernull_Time
-	BaseDocument         whereHelpernull_JSON
-	SalesQuotationItems  whereHelpernull_JSON
+	ID                     whereHelpernull_Int
+	BaseDocumentID         whereHelpernull_Int
+	SalesQuotationNumber   whereHelpernull_String
+	ValidUntilDate         whereHelpernull_Time
+	VendorID               whereHelpernull_Int
+	CustomerID             whereHelpernull_Int
+	ShipToInformation      whereHelpernull_JSON
+	RequestedBy            whereHelpernull_JSON
+	PreparedByEmployeeID   whereHelpernull_Int
+	QuotationStatus        whereHelperNullSalesQuotationStatus
+	CreatedAt              whereHelpernull_Time
+	UpdatedAt              whereHelpernull_Time
+	DeletedAt              whereHelpernull_Time
+	BaseDocument           whereHelpernull_JSON
+	VendorInfo             whereHelpernull_JSON
+	CustomerInfo           whereHelpernull_JSON
+	PreparedByEmployeeInfo whereHelpernull_JSON
+	SalesQuotationItems    whereHelpernull_JSON
 }{
-	ID:                   whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"id\""},
-	BaseDocumentID:       whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"base_document_id\""},
-	SalesQuotationNumber: whereHelpernull_String{field: "\"sale\".\"sales_quotation_view\".\"sales_quotation_number\""},
-	ValidUntilDate:       whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"valid_until_date\""},
-	VendorID:             whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"vendor_id\""},
-	CustomerID:           whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"customer_id\""},
-	ShipToInformation:    whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"ship_to_information\""},
-	RequestedBy:          whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"requested_by\""},
-	PreparedByEmployeeID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"prepared_by_employee_id\""},
-	QuotationStatus:      whereHelperNullSalesQuotationStatus{field: "\"sale\".\"sales_quotation_view\".\"quotation_status\""},
-	CreatedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"created_at\""},
-	UpdatedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"updated_at\""},
-	DeletedAt:            whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"deleted_at\""},
-	BaseDocument:         whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"base_document\""},
-	SalesQuotationItems:  whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"sales_quotation_items\""},
+	ID:                     whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"id\""},
+	BaseDocumentID:         whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"base_document_id\""},
+	SalesQuotationNumber:   whereHelpernull_String{field: "\"sale\".\"sales_quotation_view\".\"sales_quotation_number\""},
+	ValidUntilDate:         whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"valid_until_date\""},
+	VendorID:               whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"vendor_id\""},
+	CustomerID:             whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"customer_id\""},
+	ShipToInformation:      whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"ship_to_information\""},
+	RequestedBy:            whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"requested_by\""},
+	PreparedByEmployeeID:   whereHelpernull_Int{field: "\"sale\".\"sales_quotation_view\".\"prepared_by_employee_id\""},
+	QuotationStatus:        whereHelperNullSalesQuotationStatus{field: "\"sale\".\"sales_quotation_view\".\"quotation_status\""},
+	CreatedAt:              whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"created_at\""},
+	UpdatedAt:              whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"updated_at\""},
+	DeletedAt:              whereHelpernull_Time{field: "\"sale\".\"sales_quotation_view\".\"deleted_at\""},
+	BaseDocument:           whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"base_document\""},
+	VendorInfo:             whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"vendor_info\""},
+	CustomerInfo:           whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"customer_info\""},
+	PreparedByEmployeeInfo: whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"prepared_by_employee_info\""},
+	SalesQuotationItems:    whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_view\".\"sales_quotation_items\""},
 }
 
 var (
-	salesQuotationViewAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_quotation_items"}
+	salesQuotationViewAllColumns            = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "prepared_by_employee_info", "sales_quotation_items"}
 	salesQuotationViewColumnsWithoutDefault = []string{}
-	salesQuotationViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "sales_quotation_items"}
+	salesQuotationViewColumnsWithDefault    = []string{"id", "base_document_id", "sales_quotation_number", "valid_until_date", "vendor_id", "customer_id", "ship_to_information", "requested_by", "prepared_by_employee_id", "quotation_status", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "prepared_by_employee_info", "sales_quotation_items"}
 	salesQuotationViewPrimaryKeyColumns     = []string{}
 	salesQuotationViewGeneratedColumns      = []string{}
 )

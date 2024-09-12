@@ -39,7 +39,8 @@
             "package": "sale",
             "enums": [
                 { "name": "SalesOrderStatus", "type": "string" },
-                { "name": "SalesQuotationStatus", "type": "string" }
+                { "name": "SalesQuotationStatus", "type": "string" },
+                { "name": "SalesShippingStatus", "type": "string" }
             ]
         }
     ]

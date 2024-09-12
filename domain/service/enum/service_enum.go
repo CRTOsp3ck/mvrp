@@ -148,6 +148,16 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		salesQuotationStatus = append(salesQuotationStatus, enum)
 	}
 
+	// Sale - Sales Shipping Status
+	var salesShippingStatus []dto.Enum
+	for _, enumStr := range s.Repo.Enum.GetSalesShippingStatusEnums() {
+		enum := dto.Enum{
+			Name:  parseEnumForName(enumStr.String()),
+			Value: enumStr.String(),
+		}
+		salesShippingStatus = append(salesShippingStatus, enum)
+	}
+
 	data := &dto.EnumsDTO{
 		BaseEnums: dto.BaseEnumDTO{
 			PaymentTerms:    paymentTerms,
@@ -172,6 +182,7 @@ func (s *EnumService) ListEnum(req *ListEnumRequest) (*ListEnumResponse, error) 
 		SaleEnums: dto.SaleEnumDTO{
 			SalesOrderStatus:     salesOrderStatus,
 			SalesQuotationStatus: salesQuotationStatus,
+			SalesShippingStatus:  salesShippingStatus,
 		},
 	}
 	resp := s.NewListEnumResponse(*data)

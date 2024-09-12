@@ -24,24 +24,27 @@ import (
 
 // DeliveryNoteView is an object representing the database table.
 type DeliveryNoteView struct {
-	ID                           null.Int    `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentID               null.Int    `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
-	DeliveryNoteNumber           null.String `boil:"delivery_note_number" json:"delivery_note_number,omitempty" toml:"delivery_note_number" yaml:"delivery_note_number,omitempty"`
-	SalesOrderID                 null.Int    `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
-	VendorID                     null.Int    `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
-	CustomerID                   null.Int    `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
-	ShipToInformation            null.JSON   `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
-	ShipFromInformation          null.JSON   `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
-	BillToInformation            null.JSON   `boil:"bill_to_information" json:"bill_to_information,omitempty" toml:"bill_to_information" yaml:"bill_to_information,omitempty"`
-	DeliveryDate                 null.Time   `boil:"delivery_date" json:"delivery_date,omitempty" toml:"delivery_date" yaml:"delivery_date,omitempty"`
-	ShippingPersonnelInformation null.JSON   `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
-	ReceivedBy                   null.JSON   `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
-	OverallGoodsCondition        null.String `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
-	CreatedAt                    null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt                    null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt                    null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	BaseDocument                 null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
-	DeliveryNoteItems            null.JSON   `boil:"delivery_note_items" json:"delivery_note_items,omitempty" toml:"delivery_note_items" yaml:"delivery_note_items,omitempty"`
+	ID                           null.Int           `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentID               null.Int           `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
+	DeliveryNoteNumber           null.String        `boil:"delivery_note_number" json:"delivery_note_number,omitempty" toml:"delivery_note_number" yaml:"delivery_note_number,omitempty"`
+	SalesOrderID                 null.Int           `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
+	VendorID                     null.Int           `boil:"vendor_id" json:"vendor_id,omitempty" toml:"vendor_id" yaml:"vendor_id,omitempty"`
+	CustomerID                   null.Int           `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	ShipToInformation            null.JSON          `boil:"ship_to_information" json:"ship_to_information,omitempty" toml:"ship_to_information" yaml:"ship_to_information,omitempty"`
+	ShipFromInformation          null.JSON          `boil:"ship_from_information" json:"ship_from_information,omitempty" toml:"ship_from_information" yaml:"ship_from_information,omitempty"`
+	BillToInformation            null.JSON          `boil:"bill_to_information" json:"bill_to_information,omitempty" toml:"bill_to_information" yaml:"bill_to_information,omitempty"`
+	ShippingDate                 null.Time          `boil:"shipping_date" json:"shipping_date,omitempty" toml:"shipping_date" yaml:"shipping_date,omitempty"`
+	ShippingPersonnelInformation null.JSON          `boil:"shipping_personnel_information" json:"shipping_personnel_information,omitempty" toml:"shipping_personnel_information" yaml:"shipping_personnel_information,omitempty"`
+	ShippingStatus               NullShippingStatus `boil:"shipping_status" json:"shipping_status,omitempty" toml:"shipping_status" yaml:"shipping_status,omitempty"`
+	ReceivedBy                   null.JSON          `boil:"received_by" json:"received_by,omitempty" toml:"received_by" yaml:"received_by,omitempty"`
+	OverallGoodsCondition        null.String        `boil:"overall_goods_condition" json:"overall_goods_condition,omitempty" toml:"overall_goods_condition" yaml:"overall_goods_condition,omitempty"`
+	CreatedAt                    null.Time          `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt                    null.Time          `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt                    null.Time          `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	BaseDocument                 null.JSON          `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	VendorInfo                   null.JSON          `boil:"vendor_info" json:"vendor_info,omitempty" toml:"vendor_info" yaml:"vendor_info,omitempty"`
+	CustomerInfo                 null.JSON          `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
+	DeliveryNoteItems            null.JSON          `boil:"delivery_note_items" json:"delivery_note_items,omitempty" toml:"delivery_note_items" yaml:"delivery_note_items,omitempty"`
 }
 
 var DeliveryNoteViewColumns = struct {
@@ -54,14 +57,17 @@ var DeliveryNoteViewColumns = struct {
 	ShipToInformation            string
 	ShipFromInformation          string
 	BillToInformation            string
-	DeliveryDate                 string
+	ShippingDate                 string
 	ShippingPersonnelInformation string
+	ShippingStatus               string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
 	CreatedAt                    string
 	UpdatedAt                    string
 	DeletedAt                    string
 	BaseDocument                 string
+	VendorInfo                   string
+	CustomerInfo                 string
 	DeliveryNoteItems            string
 }{
 	ID:                           "id",
@@ -73,14 +79,17 @@ var DeliveryNoteViewColumns = struct {
 	ShipToInformation:            "ship_to_information",
 	ShipFromInformation:          "ship_from_information",
 	BillToInformation:            "bill_to_information",
-	DeliveryDate:                 "delivery_date",
+	ShippingDate:                 "shipping_date",
 	ShippingPersonnelInformation: "shipping_personnel_information",
+	ShippingStatus:               "shipping_status",
 	ReceivedBy:                   "received_by",
 	OverallGoodsCondition:        "overall_goods_condition",
 	CreatedAt:                    "created_at",
 	UpdatedAt:                    "updated_at",
 	DeletedAt:                    "deleted_at",
 	BaseDocument:                 "base_document",
+	VendorInfo:                   "vendor_info",
+	CustomerInfo:                 "customer_info",
 	DeliveryNoteItems:            "delivery_note_items",
 }
 
@@ -94,14 +103,17 @@ var DeliveryNoteViewTableColumns = struct {
 	ShipToInformation            string
 	ShipFromInformation          string
 	BillToInformation            string
-	DeliveryDate                 string
+	ShippingDate                 string
 	ShippingPersonnelInformation string
+	ShippingStatus               string
 	ReceivedBy                   string
 	OverallGoodsCondition        string
 	CreatedAt                    string
 	UpdatedAt                    string
 	DeletedAt                    string
 	BaseDocument                 string
+	VendorInfo                   string
+	CustomerInfo                 string
 	DeliveryNoteItems            string
 }{
 	ID:                           "delivery_note_view.id",
@@ -113,18 +125,61 @@ var DeliveryNoteViewTableColumns = struct {
 	ShipToInformation:            "delivery_note_view.ship_to_information",
 	ShipFromInformation:          "delivery_note_view.ship_from_information",
 	BillToInformation:            "delivery_note_view.bill_to_information",
-	DeliveryDate:                 "delivery_note_view.delivery_date",
+	ShippingDate:                 "delivery_note_view.shipping_date",
 	ShippingPersonnelInformation: "delivery_note_view.shipping_personnel_information",
+	ShippingStatus:               "delivery_note_view.shipping_status",
 	ReceivedBy:                   "delivery_note_view.received_by",
 	OverallGoodsCondition:        "delivery_note_view.overall_goods_condition",
 	CreatedAt:                    "delivery_note_view.created_at",
 	UpdatedAt:                    "delivery_note_view.updated_at",
 	DeletedAt:                    "delivery_note_view.deleted_at",
 	BaseDocument:                 "delivery_note_view.base_document",
+	VendorInfo:                   "delivery_note_view.vendor_info",
+	CustomerInfo:                 "delivery_note_view.customer_info",
 	DeliveryNoteItems:            "delivery_note_view.delivery_note_items",
 }
 
 // Generated where
+
+type whereHelperNullShippingStatus struct{ field string }
+
+func (w whereHelperNullShippingStatus) EQ(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelperNullShippingStatus) NEQ(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelperNullShippingStatus) LT(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelperNullShippingStatus) LTE(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelperNullShippingStatus) GT(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelperNullShippingStatus) GTE(x NullShippingStatus) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+func (w whereHelperNullShippingStatus) IN(slice []NullShippingStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
+}
+func (w whereHelperNullShippingStatus) NIN(slice []NullShippingStatus) qm.QueryMod {
+	values := make([]interface{}, 0, len(slice))
+	for _, value := range slice {
+		values = append(values, value)
+	}
+	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
+}
+
+func (w whereHelperNullShippingStatus) IsNull() qm.QueryMod { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelperNullShippingStatus) IsNotNull() qm.QueryMod {
+	return qmhelper.WhereIsNotNull(w.field)
+}
 
 var DeliveryNoteViewWhere = struct {
 	ID                           whereHelpernull_Int
@@ -136,14 +191,17 @@ var DeliveryNoteViewWhere = struct {
 	ShipToInformation            whereHelpernull_JSON
 	ShipFromInformation          whereHelpernull_JSON
 	BillToInformation            whereHelpernull_JSON
-	DeliveryDate                 whereHelpernull_Time
+	ShippingDate                 whereHelpernull_Time
 	ShippingPersonnelInformation whereHelpernull_JSON
+	ShippingStatus               whereHelperNullShippingStatus
 	ReceivedBy                   whereHelpernull_JSON
 	OverallGoodsCondition        whereHelpernull_String
 	CreatedAt                    whereHelpernull_Time
 	UpdatedAt                    whereHelpernull_Time
 	DeletedAt                    whereHelpernull_Time
 	BaseDocument                 whereHelpernull_JSON
+	VendorInfo                   whereHelpernull_JSON
+	CustomerInfo                 whereHelpernull_JSON
 	DeliveryNoteItems            whereHelpernull_JSON
 }{
 	ID:                           whereHelpernull_Int{field: "\"sale\".\"delivery_note_view\".\"id\""},
@@ -155,21 +213,24 @@ var DeliveryNoteViewWhere = struct {
 	ShipToInformation:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"ship_to_information\""},
 	ShipFromInformation:          whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"ship_from_information\""},
 	BillToInformation:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"bill_to_information\""},
-	DeliveryDate:                 whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"delivery_date\""},
+	ShippingDate:                 whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"shipping_date\""},
 	ShippingPersonnelInformation: whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"shipping_personnel_information\""},
+	ShippingStatus:               whereHelperNullShippingStatus{field: "\"sale\".\"delivery_note_view\".\"shipping_status\""},
 	ReceivedBy:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"received_by\""},
 	OverallGoodsCondition:        whereHelpernull_String{field: "\"sale\".\"delivery_note_view\".\"overall_goods_condition\""},
 	CreatedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"created_at\""},
 	UpdatedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"updated_at\""},
 	DeletedAt:                    whereHelpernull_Time{field: "\"sale\".\"delivery_note_view\".\"deleted_at\""},
 	BaseDocument:                 whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"base_document\""},
+	VendorInfo:                   whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"vendor_info\""},
+	CustomerInfo:                 whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"customer_info\""},
 	DeliveryNoteItems:            whereHelpernull_JSON{field: "\"sale\".\"delivery_note_view\".\"delivery_note_items\""},
 }
 
 var (
-	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "delivery_note_items"}
+	deliveryNoteViewAllColumns            = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "shipping_date", "shipping_personnel_information", "shipping_status", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "delivery_note_items"}
 	deliveryNoteViewColumnsWithoutDefault = []string{}
-	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "delivery_date", "shipping_personnel_information", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "delivery_note_items"}
+	deliveryNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "delivery_note_number", "sales_order_id", "vendor_id", "customer_id", "ship_to_information", "ship_from_information", "bill_to_information", "shipping_date", "shipping_personnel_information", "shipping_status", "received_by", "overall_goods_condition", "created_at", "updated_at", "deleted_at", "base_document", "vendor_info", "customer_info", "delivery_note_items"}
 	deliveryNoteViewPrimaryKeyColumns     = []string{}
 	deliveryNoteViewGeneratedColumns      = []string{}
 )

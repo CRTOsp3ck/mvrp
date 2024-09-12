@@ -6,6 +6,7 @@ import (
 	"mvrp/data/model/base"
 	"mvrp/data/model/sale"
 	"mvrp/domain/dto"
+	enumService "mvrp/domain/service/enum"
 	saleService "mvrp/domain/service/sale"
 
 	"github.com/brianvoe/gofakeit/v7"
@@ -17,6 +18,15 @@ import (
 func SeedDeliveryNote() error {
 	// define services
 	saleSvc := saleService.NewSaleService()
+	enumSvc := enumService.NewEnumService()
+
+	// all shipping status enums
+	lsShpStReq := enumSvc.NewListEnumRequest(context.Background())
+	lsShpStResp, err := enumSvc.ListEnum(lsShpStReq)
+	if err != nil {
+		return err
+	}
+	AllShippingStatusEnums := lsShpStResp.Payload.SaleEnums.SalesShippingStatus
 
 	// get all sales orders with even number id to create delivery note
 	lsAllSovReq := saleSvc.NewListSalesOrderViewRequest(context.Background())
@@ -103,8 +113,9 @@ func SeedDeliveryNote() error {
 			ShipToInformation:            shipToInfoJRM,
 			ShipFromInformation:          shipFromInfoJRM,
 			BillToInformation:            shipToInfoJRM,
-			DeliveryDate:                 dnBd.ShippingDate.Time,
+			ShippingDate:                 dnBd.ShippingDate.Time,
 			ShippingPersonnelInformation: null.JSONFrom([]byte(shipPrsInfo)),
+			ShippingStatus:               sale.ShippingStatus(AllShippingStatusEnums[gofakeit.Number(0, len(AllShippingStatusEnums)-1)].Value),
 			ReceivedBy:                   null.JSONFrom([]byte(recvByInfo)),
 			OverallGoodsCondition:        null.StringFrom("Good condition as received"),
 		}

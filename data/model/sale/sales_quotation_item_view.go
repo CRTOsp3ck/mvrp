@@ -31,6 +31,7 @@ type SalesQuotationItemView struct {
 	UpdatedAt          null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
+	InventoryInfo      null.JSON `boil:"inventory_info" json:"inventory_info,omitempty" toml:"inventory_info" yaml:"inventory_info,omitempty"`
 }
 
 var SalesQuotationItemViewColumns = struct {
@@ -41,6 +42,7 @@ var SalesQuotationItemViewColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
@@ -49,6 +51,7 @@ var SalesQuotationItemViewColumns = struct {
 	UpdatedAt:          "updated_at",
 	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
+	InventoryInfo:      "inventory_info",
 }
 
 var SalesQuotationItemViewTableColumns = struct {
@@ -59,6 +62,7 @@ var SalesQuotationItemViewTableColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "sales_quotation_item_view.id",
 	BaseDocumentItemID: "sales_quotation_item_view.base_document_item_id",
@@ -67,6 +71,7 @@ var SalesQuotationItemViewTableColumns = struct {
 	UpdatedAt:          "sales_quotation_item_view.updated_at",
 	DeletedAt:          "sales_quotation_item_view.deleted_at",
 	BaseDocumentItem:   "sales_quotation_item_view.base_document_item",
+	InventoryInfo:      "sales_quotation_item_view.inventory_info",
 }
 
 // Generated where
@@ -79,6 +84,7 @@ var SalesQuotationItemViewWhere = struct {
 	UpdatedAt          whereHelpernull_Time
 	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
+	InventoryInfo      whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"sales_quotation_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"sales_quotation_item_view\".\"base_document_item_id\""},
@@ -87,12 +93,13 @@ var SalesQuotationItemViewWhere = struct {
 	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_quotation_item_view\".\"updated_at\""},
 	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"sales_quotation_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_item_view\".\"base_document_item\""},
+	InventoryInfo:      whereHelpernull_JSON{field: "\"sale\".\"sales_quotation_item_view\".\"inventory_info\""},
 }
 
 var (
-	salesQuotationItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	salesQuotationItemViewAllColumns            = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	salesQuotationItemViewColumnsWithoutDefault = []string{}
-	salesQuotationItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	salesQuotationItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "sales_quotation_id", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	salesQuotationItemViewPrimaryKeyColumns     = []string{}
 	salesQuotationItemViewGeneratedColumns      = []string{}
 )
