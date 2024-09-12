@@ -446,7 +446,11 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 	}
 
 	// delete the ones that are in the current list but not in the new list
-	for _, currDni := range currDn.R.DeliveryNoteItems {
+	currDnItems, err := s.Repo.Sale.GetDeliveryNoteItemsByDeliveryNoteID(req.Ctx, tx, currDn.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currDni := range currDnItems {
 		found := false
 		for _, newDni := range req.Payload.Items {
 			if currDni.ID == newDni.DeliveryNoteItem.ID {
@@ -523,26 +527,29 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 				return nil, err
 			}
 
-			// update inventory (add back to reserved)
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
-			if err != nil {
-				return nil, err
-			}
-			inv.QuantityReserved.Add(inv.QuantityReserved.Big, amountOffset.Big)
-			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-			if err != nil {
-				return nil, err
-			}
+			quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+			if quantityChanged {
+				// update inventory (add back to reserved)
+				inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
+				if err != nil {
+					return nil, err
+				}
+				inv.QuantityReserved.Add(inv.QuantityReserved.Big, amountOffset.Big)
+				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+				if err != nil {
+					return nil, err
+				}
 
-			// create inventory transaction
-			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
-				TransactionType: inventory.InventoryTransactionTypeShippingAdjustment,
-				Quantity:        types.NewDecimal(amountOffset.Big),
-			}
-			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-			if err != nil {
-				return nil, err
+				// create inventory transaction
+				invTx := &inventory.InventoryTransaction{
+					InventoryID:     null.IntFrom(inv.ID),
+					TransactionType: inventory.InventoryTransactionTypeShippingAdjustment,
+					Quantity:        types.NewDecimal(amountOffset.Big),
+				}
+				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+				if err != nil {
+					return nil, err
+				}
 			}
 		} else {
 			// create base document items

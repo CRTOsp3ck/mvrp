@@ -415,7 +415,11 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 	}
 
 	// delete the ones that are in the current list and not in the new list
-	for _, currItem := range currGrn.R.GoodsReturnNoteItems {
+	currItems, err := s.Repo.Sale.GetGoodsReturnNoteItemsByGoodsReturnNoteID(req.Ctx, tx, currGrn.ID)
+	if err != nil {
+		return nil, err
+	}
+	for _, currItem := range currItems {
 		found := false
 		for _, item := range req.Payload.Items {
 			if currItem.ID == item.GoodsReturnNoteItem.ID {
@@ -516,26 +520,29 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 				return nil, err
 			}
 
-			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
-			if err != nil {
-				return nil, err
-			}
-			inv.QuantityReturned.Add(inv.QuantityReturned.Big, amountOffset.Big)
-			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-			if err != nil {
-				return nil, err
-			}
+			quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+			if quantityChanged {
+				// update inventory
+				inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
+				if err != nil {
+					return nil, err
+				}
+				inv.QuantityReturned.Add(inv.QuantityReturned.Big, amountOffset.Big)
+				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+				if err != nil {
+					return nil, err
+				}
 
-			// create inventory transaction
-			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
-				TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
-				Quantity:        types.NewDecimal(amountOffset.Big),
-			}
-			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-			if err != nil {
-				return nil, err
+				// create inventory transaction
+				invTx := &inventory.InventoryTransaction{
+					InventoryID:     null.IntFrom(inv.ID),
+					TransactionType: inventory.InventoryTransactionTypeReturnAdjustment,
+					Quantity:        types.NewDecimal(amountOffset.Big),
+				}
+				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+				if err != nil {
+					return nil, err
+				}
 			}
 		} else {
 			// update inventory

@@ -2,6 +2,7 @@ package sale
 
 import (
 	"context"
+	"fmt"
 	"mvrp/data/model/base"
 	"mvrp/data/model/inventory"
 	"mvrp/data/model/sale"
@@ -403,6 +404,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 		}
 		if !found {
+			fmt.Println("ID not found: ", item.ID)
 			// get base document item
 			baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
 			if err != nil {
@@ -475,28 +477,31 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				return nil, err
 			}
 
-			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
-			if err != nil {
-				return nil, err
-			}
-			inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, amountOffset.Big)
-			inv.QuantityReserved.Sub(inv.QuantityReserved.Big, amountOffset.Big)
-			err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
-			if err != nil {
-				return nil, err
-			}
+			quantityChanged := amountOffset.Big.Cmp(decimal.New(0, 2)) != 0
+			if quantityChanged {
+				// update inventory
+				inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
+				if err != nil {
+					return nil, err
+				}
+				inv.QuantityAvailable.Add(inv.QuantityAvailable.Big, amountOffset.Big)
+				inv.QuantityReserved.Sub(inv.QuantityReserved.Big, amountOffset.Big)
+				err = s.Repo.Inventory.UpdateInventory(req.Ctx, tx, inv)
+				if err != nil {
+					return nil, err
+				}
 
-			// create inventory transaction
-			invTx := &inventory.InventoryTransaction{
-				InventoryID:     null.IntFrom(inv.ID),
-				TransactionType: inventory.InventoryTransactionTypeSaleAdjustment,
-				Quantity:        types.NewDecimal(amountOffset.Big),
-				Reason:          null.StringFrom("Sales Order Item Adjustment"),
-			}
-			err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
-			if err != nil {
-				return nil, err
+				// create inventory transaction
+				invTx := &inventory.InventoryTransaction{
+					InventoryID:     null.IntFrom(inv.ID),
+					TransactionType: inventory.InventoryTransactionTypeSaleAdjustment,
+					Quantity:        types.NewDecimal(amountOffset.Big),
+					Reason:          null.StringFrom("Sales Order Item Adjustment"),
+				}
+				err = s.Repo.Inventory.CreateInventoryTransaction(req.Ctx, tx, invTx)
+				if err != nil {
+					return nil, err
+				}
 			}
 		} else {
 			// create base document items
