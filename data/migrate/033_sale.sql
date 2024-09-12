@@ -156,7 +156,7 @@ SELECT
         SELECT row_to_json(iv)
         FROM inventory.inventory_view iv
         WHERE iv.id = (
-            SELECT bdi.item_id
+            SELECT bdi.inventory_id
             FROM base.base_document_item bdi
             WHERE bdi.id = soi.base_document_item_id
         )

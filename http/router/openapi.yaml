@@ -1810,14 +1810,8 @@ components:
           type: number
         id:
           type: integer
-        item_code:
-          type: string
-        item_description:
-          type: string
-        item_id:
+        inventory_id:
           type: integer
-        item_name:
-          type: string
         quantity:
           type: number
         tax_rate_gen:
@@ -2996,7 +2990,8 @@ components:
         overall_goods_condition:
           type: string
         received_by:
-          type: string
+          additionalProperties: {}
+          type: object
         sales_order_id:
           type: integer
         ship_from_information:
@@ -3004,7 +2999,8 @@ components:
         ship_to_information:
           $ref: '#/components/schemas/TypesJSON'
         shipping_personnel_information:
-          type: string
+          additionalProperties: {}
+          type: object
         updated_at:
           format: date-time
           type: string
@@ -3054,7 +3050,8 @@ components:
         received_by_employee_id:
           type: integer
         receiving_location_information:
-          type: string
+          additionalProperties: {}
+          type: object
         return_date:
           format: date-time
           type: string
@@ -3113,7 +3110,8 @@ components:
         sales_order_id:
           type: integer
         ship_to_information:
-          type: string
+          additionalProperties: {}
+          type: object
         updated_at:
           format: date-time
           type: string
@@ -3160,9 +3158,11 @@ components:
         sales_representative_employee_id:
           type: integer
         ship_from_information:
-          type: string
+          additionalProperties: {}
+          type: object
         ship_to_information:
-          type: string
+          additionalProperties: {}
+          type: object
         updated_at:
           format: date-time
           type: string
@@ -3206,11 +3206,13 @@ components:
         quotation_status:
           type: string
         requested_by:
-          type: string
+          additionalProperties: {}
+          type: object
         sales_quotation_number:
           type: string
         ship_to_information:
-          type: string
+          additionalProperties: {}
+          type: object
         updated_at:
           format: date-time
           type: string

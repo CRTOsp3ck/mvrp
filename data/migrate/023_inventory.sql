@@ -151,12 +151,12 @@ SELECT
         SELECT row_to_json(it)
         FROM item.item it
         WHERE it.id = i.item_id
-    ) AS item,
-    (
-        SELECT json_agg(row_to_json(it))
-        FROM inventory.inventory_transaction it
-        WHERE it.inventory_id = i.id
-    ) AS transactions
+    ) AS item
+    -- (
+    --     SELECT json_agg(row_to_json(it))
+    --     FROM inventory.inventory_transaction it
+    --     WHERE it.inventory_id = i.id
+    -- ) AS transactions
 FROM
     inventory.inventory i;
 

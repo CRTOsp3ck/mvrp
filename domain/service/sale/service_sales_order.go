@@ -283,7 +283,7 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		}
 
 		// update inventory
-		inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 		if err != nil {
 			return nil, err
 		}
@@ -422,7 +422,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 
 			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, baseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, baseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -476,7 +476,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 
 			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -525,7 +525,7 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 			}
 
 			// update inventory
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -656,7 +656,7 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		}
 
 		// update inventory
-		inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, baseDocumentItem.ItemID.Int)
+		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, baseDocumentItem.InventoryID.Int)
 		if err != nil {
 			return nil, err
 		}

@@ -344,7 +344,7 @@ func (s *SaleService) CreateDeliveryNote(req *CreateDeliveryNoteRequest) (*Creat
 			}
 
 			// update inventory (remove from reserved)
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -463,7 +463,7 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 			// get delivery note item
 			currDeliveryNoteItem := currDni
 			// update inventory (add back to reserved)
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, currBaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, currBaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -524,7 +524,7 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 			}
 
 			// update inventory (add back to reserved)
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -560,7 +560,7 @@ func (s *SaleService) UpdateDeliveryNote(req *UpdateDeliveryNoteRequest) (*Updat
 			}
 
 			// update inventory (remove from reserved)
-			inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, item.BaseDocumentItem.ItemID.Int)
+			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
 				return nil, err
 			}
@@ -669,7 +669,7 @@ func (s *SaleService) DeleteDeliveryNote(req *DeleteDeliveryNoteRequest) (*Delet
 		}
 
 		// update inventory (add back to reserved)
-		inv, err := s.Repo.Inventory.GetInventoryByItemID(req.Ctx, tx, baseDocumentItem.ItemID.Int)
+		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, baseDocumentItem.InventoryID.Int)
 		if err != nil {
 			return nil, err
 		}

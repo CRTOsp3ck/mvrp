@@ -208,6 +208,7 @@ func addTypeMappings(reflector *openapi3.Reflector) {
 	reflector.AddTypeMapping(null.Bool{}, true)
 	reflector.AddTypeMapping(null.Float32{}, float32(1.0))
 	reflector.AddTypeMapping(null.Float64{}, float64(1.0))
+	reflector.AddTypeMapping(null.JSON{}, map[string]interface{}{})
 
 	reflector.AddTypeMapping(types.Decimal{}, float64(1.0))
 	reflector.AddTypeMapping(types.NullDecimal{}, float64(1.0))

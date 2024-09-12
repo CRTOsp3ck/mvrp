@@ -4,9 +4,14 @@
 package base
 
 import (
+	"bytes"
+	"database/sql/driver"
+	"encoding/json"
 	"strconv"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/null/v8/convert"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/strmangle"
 )
@@ -111,6 +116,114 @@ func (e ShippingTerms) Ordinal() int {
 	}
 }
 
+// NullShippingTerms is a nullable ShippingTerms enum type. It supports SQL and JSON serialization.
+type NullShippingTerms struct {
+	Val   ShippingTerms
+	Valid bool
+}
+
+// NullShippingTermsFrom creates a new ShippingTerms that will never be blank.
+func NullShippingTermsFrom(v ShippingTerms) NullShippingTerms {
+	return NewNullShippingTerms(v, true)
+}
+
+// NullShippingTermsFromPtr creates a new NullShippingTerms that be null if s is nil.
+func NullShippingTermsFromPtr(v *ShippingTerms) NullShippingTerms {
+	if v == nil {
+		return NewNullShippingTerms("", false)
+	}
+	return NewNullShippingTerms(*v, true)
+}
+
+// NewNullShippingTerms creates a new NullShippingTerms
+func NewNullShippingTerms(v ShippingTerms, valid bool) NullShippingTerms {
+	return NullShippingTerms{
+		Val:   v,
+		Valid: valid,
+	}
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (e *NullShippingTerms) UnmarshalJSON(data []byte) error {
+	if bytes.Equal(data, null.NullBytes) {
+		e.Val = ""
+		e.Valid = false
+		return nil
+	}
+
+	if err := json.Unmarshal(data, &e.Val); err != nil {
+		return err
+	}
+
+	e.Valid = true
+	return nil
+}
+
+// MarshalJSON implements json.Marshaler.
+func (e NullShippingTerms) MarshalJSON() ([]byte, error) {
+	if !e.Valid {
+		return null.NullBytes, nil
+	}
+	return json.Marshal(e.Val)
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (e NullShippingTerms) MarshalText() ([]byte, error) {
+	if !e.Valid {
+		return []byte{}, nil
+	}
+	return []byte(e.Val), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (e *NullShippingTerms) UnmarshalText(text []byte) error {
+	if text == nil || len(text) == 0 {
+		e.Valid = false
+		return nil
+	}
+
+	e.Val = ShippingTerms(text)
+	e.Valid = true
+	return nil
+}
+
+// SetValid changes this NullShippingTerms value and also sets it to be non-null.
+func (e *NullShippingTerms) SetValid(v ShippingTerms) {
+	e.Val = v
+	e.Valid = true
+}
+
+// Ptr returns a pointer to this NullShippingTerms value, or a nil pointer if this NullShippingTerms is null.
+func (e NullShippingTerms) Ptr() *ShippingTerms {
+	if !e.Valid {
+		return nil
+	}
+	return &e.Val
+}
+
+// IsZero returns true for null types.
+func (e NullShippingTerms) IsZero() bool {
+	return !e.Valid
+}
+
+// Scan implements the Scanner interface.
+func (e *NullShippingTerms) Scan(value interface{}) error {
+	if value == nil {
+		e.Val, e.Valid = "", false
+		return nil
+	}
+	e.Valid = true
+	return convert.ConvertAssign((*string)(&e.Val), value)
+}
+
+// Value implements the driver Valuer interface.
+func (e NullShippingTerms) Value() (driver.Value, error) {
+	if !e.Valid {
+		return nil, nil
+	}
+	return string(e.Val), nil
+}
+
 type ShippingMethod string
 
 // Enum values for ShippingMethod
@@ -195,6 +308,114 @@ func (e ShippingMethod) Ordinal() int {
 	}
 }
 
+// NullShippingMethod is a nullable ShippingMethod enum type. It supports SQL and JSON serialization.
+type NullShippingMethod struct {
+	Val   ShippingMethod
+	Valid bool
+}
+
+// NullShippingMethodFrom creates a new ShippingMethod that will never be blank.
+func NullShippingMethodFrom(v ShippingMethod) NullShippingMethod {
+	return NewNullShippingMethod(v, true)
+}
+
+// NullShippingMethodFromPtr creates a new NullShippingMethod that be null if s is nil.
+func NullShippingMethodFromPtr(v *ShippingMethod) NullShippingMethod {
+	if v == nil {
+		return NewNullShippingMethod("", false)
+	}
+	return NewNullShippingMethod(*v, true)
+}
+
+// NewNullShippingMethod creates a new NullShippingMethod
+func NewNullShippingMethod(v ShippingMethod, valid bool) NullShippingMethod {
+	return NullShippingMethod{
+		Val:   v,
+		Valid: valid,
+	}
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (e *NullShippingMethod) UnmarshalJSON(data []byte) error {
+	if bytes.Equal(data, null.NullBytes) {
+		e.Val = ""
+		e.Valid = false
+		return nil
+	}
+
+	if err := json.Unmarshal(data, &e.Val); err != nil {
+		return err
+	}
+
+	e.Valid = true
+	return nil
+}
+
+// MarshalJSON implements json.Marshaler.
+func (e NullShippingMethod) MarshalJSON() ([]byte, error) {
+	if !e.Valid {
+		return null.NullBytes, nil
+	}
+	return json.Marshal(e.Val)
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (e NullShippingMethod) MarshalText() ([]byte, error) {
+	if !e.Valid {
+		return []byte{}, nil
+	}
+	return []byte(e.Val), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (e *NullShippingMethod) UnmarshalText(text []byte) error {
+	if text == nil || len(text) == 0 {
+		e.Valid = false
+		return nil
+	}
+
+	e.Val = ShippingMethod(text)
+	e.Valid = true
+	return nil
+}
+
+// SetValid changes this NullShippingMethod value and also sets it to be non-null.
+func (e *NullShippingMethod) SetValid(v ShippingMethod) {
+	e.Val = v
+	e.Valid = true
+}
+
+// Ptr returns a pointer to this NullShippingMethod value, or a nil pointer if this NullShippingMethod is null.
+func (e NullShippingMethod) Ptr() *ShippingMethod {
+	if !e.Valid {
+		return nil
+	}
+	return &e.Val
+}
+
+// IsZero returns true for null types.
+func (e NullShippingMethod) IsZero() bool {
+	return !e.Valid
+}
+
+// Scan implements the Scanner interface.
+func (e *NullShippingMethod) Scan(value interface{}) error {
+	if value == nil {
+		e.Val, e.Valid = "", false
+		return nil
+	}
+	e.Valid = true
+	return convert.ConvertAssign((*string)(&e.Val), value)
+}
+
+// Value implements the driver Valuer interface.
+func (e NullShippingMethod) Value() (driver.Value, error) {
+	if !e.Valid {
+		return nil, nil
+	}
+	return string(e.Val), nil
+}
+
 type PaymentTerms string
 
 // Enum values for PaymentTerms
@@ -247,6 +468,114 @@ func (e PaymentTerms) Ordinal() int {
 	}
 }
 
+// NullPaymentTerms is a nullable PaymentTerms enum type. It supports SQL and JSON serialization.
+type NullPaymentTerms struct {
+	Val   PaymentTerms
+	Valid bool
+}
+
+// NullPaymentTermsFrom creates a new PaymentTerms that will never be blank.
+func NullPaymentTermsFrom(v PaymentTerms) NullPaymentTerms {
+	return NewNullPaymentTerms(v, true)
+}
+
+// NullPaymentTermsFromPtr creates a new NullPaymentTerms that be null if s is nil.
+func NullPaymentTermsFromPtr(v *PaymentTerms) NullPaymentTerms {
+	if v == nil {
+		return NewNullPaymentTerms("", false)
+	}
+	return NewNullPaymentTerms(*v, true)
+}
+
+// NewNullPaymentTerms creates a new NullPaymentTerms
+func NewNullPaymentTerms(v PaymentTerms, valid bool) NullPaymentTerms {
+	return NullPaymentTerms{
+		Val:   v,
+		Valid: valid,
+	}
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (e *NullPaymentTerms) UnmarshalJSON(data []byte) error {
+	if bytes.Equal(data, null.NullBytes) {
+		e.Val = ""
+		e.Valid = false
+		return nil
+	}
+
+	if err := json.Unmarshal(data, &e.Val); err != nil {
+		return err
+	}
+
+	e.Valid = true
+	return nil
+}
+
+// MarshalJSON implements json.Marshaler.
+func (e NullPaymentTerms) MarshalJSON() ([]byte, error) {
+	if !e.Valid {
+		return null.NullBytes, nil
+	}
+	return json.Marshal(e.Val)
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (e NullPaymentTerms) MarshalText() ([]byte, error) {
+	if !e.Valid {
+		return []byte{}, nil
+	}
+	return []byte(e.Val), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (e *NullPaymentTerms) UnmarshalText(text []byte) error {
+	if text == nil || len(text) == 0 {
+		e.Valid = false
+		return nil
+	}
+
+	e.Val = PaymentTerms(text)
+	e.Valid = true
+	return nil
+}
+
+// SetValid changes this NullPaymentTerms value and also sets it to be non-null.
+func (e *NullPaymentTerms) SetValid(v PaymentTerms) {
+	e.Val = v
+	e.Valid = true
+}
+
+// Ptr returns a pointer to this NullPaymentTerms value, or a nil pointer if this NullPaymentTerms is null.
+func (e NullPaymentTerms) Ptr() *PaymentTerms {
+	if !e.Valid {
+		return nil
+	}
+	return &e.Val
+}
+
+// IsZero returns true for null types.
+func (e NullPaymentTerms) IsZero() bool {
+	return !e.Valid
+}
+
+// Scan implements the Scanner interface.
+func (e *NullPaymentTerms) Scan(value interface{}) error {
+	if value == nil {
+		e.Val, e.Valid = "", false
+		return nil
+	}
+	e.Valid = true
+	return convert.ConvertAssign((*string)(&e.Val), value)
+}
+
+// Value implements the driver Valuer interface.
+func (e NullPaymentTerms) Value() (driver.Value, error) {
+	if !e.Valid {
+		return nil, nil
+	}
+	return string(e.Val), nil
+}
+
 type PaymentStatus string
 
 // Enum values for PaymentStatus
@@ -289,4 +618,112 @@ func (e PaymentStatus) Ordinal() int {
 	default:
 		panic(errors.New("enum is not valid"))
 	}
+}
+
+// NullPaymentStatus is a nullable PaymentStatus enum type. It supports SQL and JSON serialization.
+type NullPaymentStatus struct {
+	Val   PaymentStatus
+	Valid bool
+}
+
+// NullPaymentStatusFrom creates a new PaymentStatus that will never be blank.
+func NullPaymentStatusFrom(v PaymentStatus) NullPaymentStatus {
+	return NewNullPaymentStatus(v, true)
+}
+
+// NullPaymentStatusFromPtr creates a new NullPaymentStatus that be null if s is nil.
+func NullPaymentStatusFromPtr(v *PaymentStatus) NullPaymentStatus {
+	if v == nil {
+		return NewNullPaymentStatus("", false)
+	}
+	return NewNullPaymentStatus(*v, true)
+}
+
+// NewNullPaymentStatus creates a new NullPaymentStatus
+func NewNullPaymentStatus(v PaymentStatus, valid bool) NullPaymentStatus {
+	return NullPaymentStatus{
+		Val:   v,
+		Valid: valid,
+	}
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+func (e *NullPaymentStatus) UnmarshalJSON(data []byte) error {
+	if bytes.Equal(data, null.NullBytes) {
+		e.Val = ""
+		e.Valid = false
+		return nil
+	}
+
+	if err := json.Unmarshal(data, &e.Val); err != nil {
+		return err
+	}
+
+	e.Valid = true
+	return nil
+}
+
+// MarshalJSON implements json.Marshaler.
+func (e NullPaymentStatus) MarshalJSON() ([]byte, error) {
+	if !e.Valid {
+		return null.NullBytes, nil
+	}
+	return json.Marshal(e.Val)
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (e NullPaymentStatus) MarshalText() ([]byte, error) {
+	if !e.Valid {
+		return []byte{}, nil
+	}
+	return []byte(e.Val), nil
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (e *NullPaymentStatus) UnmarshalText(text []byte) error {
+	if text == nil || len(text) == 0 {
+		e.Valid = false
+		return nil
+	}
+
+	e.Val = PaymentStatus(text)
+	e.Valid = true
+	return nil
+}
+
+// SetValid changes this NullPaymentStatus value and also sets it to be non-null.
+func (e *NullPaymentStatus) SetValid(v PaymentStatus) {
+	e.Val = v
+	e.Valid = true
+}
+
+// Ptr returns a pointer to this NullPaymentStatus value, or a nil pointer if this NullPaymentStatus is null.
+func (e NullPaymentStatus) Ptr() *PaymentStatus {
+	if !e.Valid {
+		return nil
+	}
+	return &e.Val
+}
+
+// IsZero returns true for null types.
+func (e NullPaymentStatus) IsZero() bool {
+	return !e.Valid
+}
+
+// Scan implements the Scanner interface.
+func (e *NullPaymentStatus) Scan(value interface{}) error {
+	if value == nil {
+		e.Val, e.Valid = "", false
+		return nil
+	}
+	e.Valid = true
+	return convert.ConvertAssign((*string)(&e.Val), value)
+}
+
+// Value implements the driver Valuer interface.
+func (e NullPaymentStatus) Value() (driver.Value, error) {
+	if !e.Valid {
+		return nil, nil
+	}
+	return string(e.Val), nil
 }

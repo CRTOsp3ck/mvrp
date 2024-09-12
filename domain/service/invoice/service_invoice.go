@@ -335,7 +335,7 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 	for _, item := range currInv.R.InvoiceItems {
 		found := false
 		for _, newItem := range req.Payload.Items {
-			if item.ID == newItem.ItemID.Int {
+			if item.ID == newItem.InvoiceItem.ID {
 				found = true
 				break
 			}

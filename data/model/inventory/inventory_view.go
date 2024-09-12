@@ -43,7 +43,6 @@ type InventoryView struct {
 	UpdatedAt           null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	DeletedAt           null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	Item                null.JSON         `boil:"item" json:"item,omitempty" toml:"item" yaml:"item,omitempty"`
-	Transactions        null.JSON         `boil:"transactions" json:"transactions,omitempty" toml:"transactions" yaml:"transactions,omitempty"`
 }
 
 var InventoryViewColumns = struct {
@@ -65,7 +64,6 @@ var InventoryViewColumns = struct {
 	UpdatedAt           string
 	DeletedAt           string
 	Item                string
-	Transactions        string
 }{
 	ID:                  "id",
 	InventoryNumber:     "inventory_number",
@@ -85,7 +83,6 @@ var InventoryViewColumns = struct {
 	UpdatedAt:           "updated_at",
 	DeletedAt:           "deleted_at",
 	Item:                "item",
-	Transactions:        "transactions",
 }
 
 var InventoryViewTableColumns = struct {
@@ -107,7 +104,6 @@ var InventoryViewTableColumns = struct {
 	UpdatedAt           string
 	DeletedAt           string
 	Item                string
-	Transactions        string
 }{
 	ID:                  "inventory_view.id",
 	InventoryNumber:     "inventory_view.inventory_number",
@@ -127,7 +123,6 @@ var InventoryViewTableColumns = struct {
 	UpdatedAt:           "inventory_view.updated_at",
 	DeletedAt:           "inventory_view.deleted_at",
 	Item:                "inventory_view.item",
-	Transactions:        "inventory_view.transactions",
 }
 
 // Generated where
@@ -151,7 +146,6 @@ var InventoryViewWhere = struct {
 	UpdatedAt           whereHelpernull_Time
 	DeletedAt           whereHelpernull_Time
 	Item                whereHelpernull_JSON
-	Transactions        whereHelpernull_JSON
 }{
 	ID:                  whereHelpernull_Int{field: "\"inventory\".\"inventory_view\".\"id\""},
 	InventoryNumber:     whereHelpernull_String{field: "\"inventory\".\"inventory_view\".\"inventory_number\""},
@@ -171,13 +165,12 @@ var InventoryViewWhere = struct {
 	UpdatedAt:           whereHelpernull_Time{field: "\"inventory\".\"inventory_view\".\"updated_at\""},
 	DeletedAt:           whereHelpernull_Time{field: "\"inventory\".\"inventory_view\".\"deleted_at\""},
 	Item:                whereHelpernull_JSON{field: "\"inventory\".\"inventory_view\".\"item\""},
-	Transactions:        whereHelpernull_JSON{field: "\"inventory\".\"inventory_view\".\"transactions\""},
 }
 
 var (
-	inventoryViewAllColumns            = []string{"id", "inventory_number", "item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at", "item", "transactions"}
+	inventoryViewAllColumns            = []string{"id", "inventory_number", "item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at", "item"}
 	inventoryViewColumnsWithoutDefault = []string{}
-	inventoryViewColumnsWithDefault    = []string{"id", "inventory_number", "item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at", "item", "transactions"}
+	inventoryViewColumnsWithDefault    = []string{"id", "inventory_number", "item_id", "quantity_reserved", "quantity_available", "quantity_returned", "quantity_total_gen", "cost_per_unit", "price_per_unit", "total_value_on_hand_gen", "reorder_level", "reorder_quantity", "is_discontinued", "remarks", "created_at", "updated_at", "deleted_at", "item"}
 	inventoryViewPrimaryKeyColumns     = []string{}
 	inventoryViewGeneratedColumns      = []string{}
 )

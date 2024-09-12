@@ -79,7 +79,7 @@ func SeedSalesQuotation(count int) error {
 			unitSfAmt := decimal.New(int64(unitPriceF64*(gofakeit.Float64Range(5, 15)/100)*100), 2)
 			crSqItDto[j] = dto.CreateSalesQuotationItemDTO{
 				BaseDocumentItem: base.BaseDocumentItem{
-					ItemID:             inv.ItemID,
+					InventoryID:        null.IntFrom(inv.ID),
 					Quantity:           types.NewNullDecimal(qty),
 					UnitPrice:          types.NewNullDecimal(inv.PricePerUnit.Big),
 					UnitDiscountAmount: types.NewNullDecimal(unitDiscAmt),
@@ -118,11 +118,11 @@ func SeedSalesQuotation(count int) error {
 				AdditionalDiscountAmount: types.NewNullDecimal(additionalDiscAmt),
 				OtherFees:                types.NewNullDecimal(otherFees),
 				CustomAdjustmentAmount:   types.NewNullDecimal(customAdjAmt),
-				ShippingTerms:            base.ShippingTerms(shipTerm.Value),
-				ShippingMethod:           base.ShippingMethod(shipMethod.Value),
+				ShippingTerms:            base.NewNullShippingTerms(base.ShippingTerms(shipTerm.Value), true),
+				ShippingMethod:           base.NewNullShippingMethod(base.ShippingMethod(shipMethod.Value), true),
 				ShippingDate:             null.TimeFrom(shipDate),
-				PaymentTerms:             base.PaymentTerms(payTerm.Value),
-				PaymentStatus:            base.PaymentStatus(payStatus.Value),
+				PaymentTerms:             base.NewNullPaymentTerms(base.PaymentTerms(payTerm.Value), true),
+				PaymentStatus:            base.NewNullPaymentStatus(base.PaymentStatus(payStatus.Value), true),
 				PaymentInstructions:      null.StringFrom(gofakeit.Sentence(5)),
 				Remarks:                  null.StringFrom(gofakeit.Sentence(10)),
 				TermsAndConditions:       null.StringFrom(gofakeit.Sentence(20)),

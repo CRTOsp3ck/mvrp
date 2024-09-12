@@ -30,10 +30,7 @@ type BaseDocumentItem struct {
 	UpdatedAt              time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt              null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentID         int               `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
-	ItemID                 null.Int          `boil:"item_id" json:"item_id,omitempty" toml:"item_id" yaml:"item_id,omitempty"`
-	ItemCode               null.String       `boil:"item_code" json:"item_code,omitempty" toml:"item_code" yaml:"item_code,omitempty"`
-	ItemName               null.String       `boil:"item_name" json:"item_name,omitempty" toml:"item_name" yaml:"item_name,omitempty"`
-	ItemDescription        null.String       `boil:"item_description" json:"item_description,omitempty" toml:"item_description" yaml:"item_description,omitempty"`
+	InventoryID            null.Int          `boil:"inventory_id" json:"inventory_id,omitempty" toml:"inventory_id" yaml:"inventory_id,omitempty"`
 	Quantity               types.NullDecimal `boil:"quantity" json:"quantity,omitempty" toml:"quantity" yaml:"quantity,omitempty"`
 	UnitPrice              types.NullDecimal `boil:"unit_price" json:"unit_price,omitempty" toml:"unit_price" yaml:"unit_price,omitempty"`
 	UnitDiscountAmount     types.NullDecimal `boil:"unit_discount_amount" json:"unit_discount_amount,omitempty" toml:"unit_discount_amount" yaml:"unit_discount_amount,omitempty"`
@@ -57,10 +54,7 @@ var BaseDocumentItemColumns = struct {
 	UpdatedAt              string
 	DeletedAt              string
 	BaseDocumentID         string
-	ItemID                 string
-	ItemCode               string
-	ItemName               string
-	ItemDescription        string
+	InventoryID            string
 	Quantity               string
 	UnitPrice              string
 	UnitDiscountAmount     string
@@ -79,10 +73,7 @@ var BaseDocumentItemColumns = struct {
 	UpdatedAt:              "updated_at",
 	DeletedAt:              "deleted_at",
 	BaseDocumentID:         "base_document_id",
-	ItemID:                 "item_id",
-	ItemCode:               "item_code",
-	ItemName:               "item_name",
-	ItemDescription:        "item_description",
+	InventoryID:            "inventory_id",
 	Quantity:               "quantity",
 	UnitPrice:              "unit_price",
 	UnitDiscountAmount:     "unit_discount_amount",
@@ -103,10 +94,7 @@ var BaseDocumentItemTableColumns = struct {
 	UpdatedAt              string
 	DeletedAt              string
 	BaseDocumentID         string
-	ItemID                 string
-	ItemCode               string
-	ItemName               string
-	ItemDescription        string
+	InventoryID            string
 	Quantity               string
 	UnitPrice              string
 	UnitDiscountAmount     string
@@ -125,10 +113,7 @@ var BaseDocumentItemTableColumns = struct {
 	UpdatedAt:              "base_document_item.updated_at",
 	DeletedAt:              "base_document_item.deleted_at",
 	BaseDocumentID:         "base_document_item.base_document_id",
-	ItemID:                 "base_document_item.item_id",
-	ItemCode:               "base_document_item.item_code",
-	ItemName:               "base_document_item.item_name",
-	ItemDescription:        "base_document_item.item_description",
+	InventoryID:            "base_document_item.inventory_id",
 	Quantity:               "base_document_item.quantity",
 	UnitPrice:              "base_document_item.unit_price",
 	UnitDiscountAmount:     "base_document_item.unit_discount_amount",
@@ -189,10 +174,7 @@ var BaseDocumentItemWhere = struct {
 	UpdatedAt              whereHelpertime_Time
 	DeletedAt              whereHelpernull_Time
 	BaseDocumentID         whereHelperint
-	ItemID                 whereHelpernull_Int
-	ItemCode               whereHelpernull_String
-	ItemName               whereHelpernull_String
-	ItemDescription        whereHelpernull_String
+	InventoryID            whereHelpernull_Int
 	Quantity               whereHelpertypes_NullDecimal
 	UnitPrice              whereHelpertypes_NullDecimal
 	UnitDiscountAmount     whereHelpertypes_NullDecimal
@@ -211,10 +193,7 @@ var BaseDocumentItemWhere = struct {
 	UpdatedAt:              whereHelpertime_Time{field: "\"base\".\"base_document_item\".\"updated_at\""},
 	DeletedAt:              whereHelpernull_Time{field: "\"base\".\"base_document_item\".\"deleted_at\""},
 	BaseDocumentID:         whereHelperint{field: "\"base\".\"base_document_item\".\"base_document_id\""},
-	ItemID:                 whereHelpernull_Int{field: "\"base\".\"base_document_item\".\"item_id\""},
-	ItemCode:               whereHelpernull_String{field: "\"base\".\"base_document_item\".\"item_code\""},
-	ItemName:               whereHelpernull_String{field: "\"base\".\"base_document_item\".\"item_name\""},
-	ItemDescription:        whereHelpernull_String{field: "\"base\".\"base_document_item\".\"item_description\""},
+	InventoryID:            whereHelpernull_Int{field: "\"base\".\"base_document_item\".\"inventory_id\""},
 	Quantity:               whereHelpertypes_NullDecimal{field: "\"base\".\"base_document_item\".\"quantity\""},
 	UnitPrice:              whereHelpertypes_NullDecimal{field: "\"base\".\"base_document_item\".\"unit_price\""},
 	UnitDiscountAmount:     whereHelpertypes_NullDecimal{field: "\"base\".\"base_document_item\".\"unit_discount_amount\""},
@@ -257,9 +236,9 @@ func (r *baseDocumentItemR) GetBaseDocument() *BaseDocument {
 type baseDocumentItemL struct{}
 
 var (
-	baseDocumentItemAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "base_document_id", "item_id", "item_code", "item_name", "item_description", "quantity", "unit_price", "unit_discount_amount", "total_discount_amount_gen", "discount_rate_gen", "unit_tax_amount", "total_tax_amount_gen", "tax_rate_gen", "unit_shipping_fees", "total_shipping_fees_gen", "final_unit_price_gen", "total_sale_price_gen"}
+	baseDocumentItemAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "base_document_id", "inventory_id", "quantity", "unit_price", "unit_discount_amount", "total_discount_amount_gen", "discount_rate_gen", "unit_tax_amount", "total_tax_amount_gen", "tax_rate_gen", "unit_shipping_fees", "total_shipping_fees_gen", "final_unit_price_gen", "total_sale_price_gen"}
 	baseDocumentItemColumnsWithoutDefault = []string{"id", "created_at", "updated_at", "base_document_id"}
-	baseDocumentItemColumnsWithDefault    = []string{"deleted_at", "item_id", "item_code", "item_name", "item_description", "quantity", "unit_price", "unit_discount_amount", "total_discount_amount_gen", "discount_rate_gen", "unit_tax_amount", "total_tax_amount_gen", "tax_rate_gen", "unit_shipping_fees", "total_shipping_fees_gen", "final_unit_price_gen", "total_sale_price_gen"}
+	baseDocumentItemColumnsWithDefault    = []string{"deleted_at", "inventory_id", "quantity", "unit_price", "unit_discount_amount", "total_discount_amount_gen", "discount_rate_gen", "unit_tax_amount", "total_tax_amount_gen", "tax_rate_gen", "unit_shipping_fees", "total_shipping_fees_gen", "final_unit_price_gen", "total_sale_price_gen"}
 	baseDocumentItemPrimaryKeyColumns     = []string{"id"}
 	baseDocumentItemGeneratedColumns      = []string{"total_discount_amount_gen", "discount_rate_gen", "total_tax_amount_gen", "tax_rate_gen", "total_shipping_fees_gen", "final_unit_price_gen", "total_sale_price_gen"}
 )
