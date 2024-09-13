@@ -3043,16 +3043,12 @@ components:
         created_at:
           format: date-time
           type: string
-        credit_note_id:
-          type: integer
         deleted_at:
           format: date-time
           type: string
         goods_return_note_number:
           type: string
         id:
-          type: integer
-        invoice_id:
           type: integer
         overall_goods_condition:
           type: string
@@ -3066,10 +3062,6 @@ components:
           type: string
         returned_by_customer_id:
           type: integer
-        rma_id:
-          type: integer
-        sales_order_id:
-          type: integer
         updated_at:
           format: date-time
           type: string
@@ -3081,12 +3073,16 @@ components:
         created_at:
           format: date-time
           type: string
+        credit_note_id:
+          type: integer
         deleted_at:
           format: date-time
           type: string
         goods_return_note_id:
           type: integer
         id:
+          type: integer
+        invoice_id:
           type: integer
         return_condition:
           type: string
@@ -3095,6 +3091,8 @@ components:
         return_reason:
           type: string
         rma_item_id:
+          type: integer
+        sales_order_item_id:
           type: integer
         updated_at:
           format: date-time

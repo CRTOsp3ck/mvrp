@@ -27,10 +27,6 @@ type GoodsReturnNote struct {
 	ID                           int         `boil:"id" json:"id" toml:"id" yaml:"id"`
 	BaseDocumentID               int         `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
 	GoodsReturnNoteNumber        string      `boil:"goods_return_note_number" json:"goods_return_note_number" toml:"goods_return_note_number" yaml:"goods_return_note_number"`
-	SalesOrderID                 null.Int    `boil:"sales_order_id" json:"sales_order_id,omitempty" toml:"sales_order_id" yaml:"sales_order_id,omitempty"`
-	InvoiceID                    null.Int    `boil:"invoice_id" json:"invoice_id,omitempty" toml:"invoice_id" yaml:"invoice_id,omitempty"`
-	CreditNoteID                 null.Int    `boil:"credit_note_id" json:"credit_note_id,omitempty" toml:"credit_note_id" yaml:"credit_note_id,omitempty"`
-	RmaID                        null.Int    `boil:"rma_id" json:"rma_id,omitempty" toml:"rma_id" yaml:"rma_id,omitempty"`
 	ReturnDate                   time.Time   `boil:"return_date" json:"return_date" toml:"return_date" yaml:"return_date"`
 	ReturnedByCustomerID         null.Int    `boil:"returned_by_customer_id" json:"returned_by_customer_id,omitempty" toml:"returned_by_customer_id" yaml:"returned_by_customer_id,omitempty"`
 	ReceivingLocationInformation null.JSON   `boil:"receiving_location_information" json:"receiving_location_information,omitempty" toml:"receiving_location_information" yaml:"receiving_location_information,omitempty"`
@@ -48,10 +44,6 @@ var GoodsReturnNoteColumns = struct {
 	ID                           string
 	BaseDocumentID               string
 	GoodsReturnNoteNumber        string
-	SalesOrderID                 string
-	InvoiceID                    string
-	CreditNoteID                 string
-	RmaID                        string
 	ReturnDate                   string
 	ReturnedByCustomerID         string
 	ReceivingLocationInformation string
@@ -64,10 +56,6 @@ var GoodsReturnNoteColumns = struct {
 	ID:                           "id",
 	BaseDocumentID:               "base_document_id",
 	GoodsReturnNoteNumber:        "goods_return_note_number",
-	SalesOrderID:                 "sales_order_id",
-	InvoiceID:                    "invoice_id",
-	CreditNoteID:                 "credit_note_id",
-	RmaID:                        "rma_id",
 	ReturnDate:                   "return_date",
 	ReturnedByCustomerID:         "returned_by_customer_id",
 	ReceivingLocationInformation: "receiving_location_information",
@@ -82,10 +70,6 @@ var GoodsReturnNoteTableColumns = struct {
 	ID                           string
 	BaseDocumentID               string
 	GoodsReturnNoteNumber        string
-	SalesOrderID                 string
-	InvoiceID                    string
-	CreditNoteID                 string
-	RmaID                        string
 	ReturnDate                   string
 	ReturnedByCustomerID         string
 	ReceivingLocationInformation string
@@ -98,10 +82,6 @@ var GoodsReturnNoteTableColumns = struct {
 	ID:                           "goods_return_note.id",
 	BaseDocumentID:               "goods_return_note.base_document_id",
 	GoodsReturnNoteNumber:        "goods_return_note.goods_return_note_number",
-	SalesOrderID:                 "goods_return_note.sales_order_id",
-	InvoiceID:                    "goods_return_note.invoice_id",
-	CreditNoteID:                 "goods_return_note.credit_note_id",
-	RmaID:                        "goods_return_note.rma_id",
 	ReturnDate:                   "goods_return_note.return_date",
 	ReturnedByCustomerID:         "goods_return_note.returned_by_customer_id",
 	ReceivingLocationInformation: "goods_return_note.receiving_location_information",
@@ -118,10 +98,6 @@ var GoodsReturnNoteWhere = struct {
 	ID                           whereHelperint
 	BaseDocumentID               whereHelperint
 	GoodsReturnNoteNumber        whereHelperstring
-	SalesOrderID                 whereHelpernull_Int
-	InvoiceID                    whereHelpernull_Int
-	CreditNoteID                 whereHelpernull_Int
-	RmaID                        whereHelpernull_Int
 	ReturnDate                   whereHelpertime_Time
 	ReturnedByCustomerID         whereHelpernull_Int
 	ReceivingLocationInformation whereHelpernull_JSON
@@ -134,10 +110,6 @@ var GoodsReturnNoteWhere = struct {
 	ID:                           whereHelperint{field: "\"sale\".\"goods_return_note\".\"id\""},
 	BaseDocumentID:               whereHelperint{field: "\"sale\".\"goods_return_note\".\"base_document_id\""},
 	GoodsReturnNoteNumber:        whereHelperstring{field: "\"sale\".\"goods_return_note\".\"goods_return_note_number\""},
-	SalesOrderID:                 whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"sales_order_id\""},
-	InvoiceID:                    whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"invoice_id\""},
-	CreditNoteID:                 whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"credit_note_id\""},
-	RmaID:                        whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"rma_id\""},
 	ReturnDate:                   whereHelpertime_Time{field: "\"sale\".\"goods_return_note\".\"return_date\""},
 	ReturnedByCustomerID:         whereHelpernull_Int{field: "\"sale\".\"goods_return_note\".\"returned_by_customer_id\""},
 	ReceivingLocationInformation: whereHelpernull_JSON{field: "\"sale\".\"goods_return_note\".\"receiving_location_information\""},
@@ -150,29 +122,19 @@ var GoodsReturnNoteWhere = struct {
 
 // GoodsReturnNoteRels is where relationship names are stored.
 var GoodsReturnNoteRels = struct {
-	SalesOrder           string
 	GoodsReturnNoteItems string
 }{
-	SalesOrder:           "SalesOrder",
 	GoodsReturnNoteItems: "GoodsReturnNoteItems",
 }
 
 // goodsReturnNoteR is where relationships are stored.
 type goodsReturnNoteR struct {
-	SalesOrder           *SalesOrder              `boil:"SalesOrder" json:"SalesOrder" toml:"SalesOrder" yaml:"SalesOrder"`
 	GoodsReturnNoteItems GoodsReturnNoteItemSlice `boil:"GoodsReturnNoteItems" json:"GoodsReturnNoteItems" toml:"GoodsReturnNoteItems" yaml:"GoodsReturnNoteItems"`
 }
 
 // NewStruct creates a new relationship struct
 func (*goodsReturnNoteR) NewStruct() *goodsReturnNoteR {
 	return &goodsReturnNoteR{}
-}
-
-func (r *goodsReturnNoteR) GetSalesOrder() *SalesOrder {
-	if r == nil {
-		return nil
-	}
-	return r.SalesOrder
 }
 
 func (r *goodsReturnNoteR) GetGoodsReturnNoteItems() GoodsReturnNoteItemSlice {
@@ -186,9 +148,9 @@ func (r *goodsReturnNoteR) GetGoodsReturnNoteItems() GoodsReturnNoteItemSlice {
 type goodsReturnNoteL struct{}
 
 var (
-	goodsReturnNoteAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "sales_order_id", "invoice_id", "credit_note_id", "rma_id", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "created_at", "updated_at", "deleted_at"}
+	goodsReturnNoteAllColumns            = []string{"id", "base_document_id", "goods_return_note_number", "return_date", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "created_at", "updated_at", "deleted_at"}
 	goodsReturnNoteColumnsWithoutDefault = []string{"id", "base_document_id", "goods_return_note_number", "return_date", "created_at", "updated_at"}
-	goodsReturnNoteColumnsWithDefault    = []string{"sales_order_id", "invoice_id", "credit_note_id", "rma_id", "returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "deleted_at"}
+	goodsReturnNoteColumnsWithDefault    = []string{"returned_by_customer_id", "receiving_location_information", "received_by_employee_id", "overall_goods_condition", "deleted_at"}
 	goodsReturnNotePrimaryKeyColumns     = []string{"id"}
 	goodsReturnNoteGeneratedColumns      = []string{}
 )
@@ -498,17 +460,6 @@ func (q goodsReturnNoteQuery) Exists(ctx context.Context, exec boil.ContextExecu
 	return count > 0, nil
 }
 
-// SalesOrder pointed to by the foreign key.
-func (o *GoodsReturnNote) SalesOrder(mods ...qm.QueryMod) salesOrderQuery {
-	queryMods := []qm.QueryMod{
-		qm.Where("\"id\" = ?", o.SalesOrderID),
-	}
-
-	queryMods = append(queryMods, mods...)
-
-	return SalesOrders(queryMods...)
-}
-
 // GoodsReturnNoteItems retrieves all the goods_return_note_item's GoodsReturnNoteItems with an executor.
 func (o *GoodsReturnNote) GoodsReturnNoteItems(mods ...qm.QueryMod) goodsReturnNoteItemQuery {
 	var queryMods []qm.QueryMod
@@ -521,130 +472,6 @@ func (o *GoodsReturnNote) GoodsReturnNoteItems(mods ...qm.QueryMod) goodsReturnN
 	)
 
 	return GoodsReturnNoteItems(queryMods...)
-}
-
-// LoadSalesOrder allows an eager lookup of values, cached into the
-// loaded structs of the objects. This is for an N-1 relationship.
-func (goodsReturnNoteL) LoadSalesOrder(ctx context.Context, e boil.ContextExecutor, singular bool, maybeGoodsReturnNote interface{}, mods queries.Applicator) error {
-	var slice []*GoodsReturnNote
-	var object *GoodsReturnNote
-
-	if singular {
-		var ok bool
-		object, ok = maybeGoodsReturnNote.(*GoodsReturnNote)
-		if !ok {
-			object = new(GoodsReturnNote)
-			ok = queries.SetFromEmbeddedStruct(&object, &maybeGoodsReturnNote)
-			if !ok {
-				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeGoodsReturnNote))
-			}
-		}
-	} else {
-		s, ok := maybeGoodsReturnNote.(*[]*GoodsReturnNote)
-		if ok {
-			slice = *s
-		} else {
-			ok = queries.SetFromEmbeddedStruct(&slice, maybeGoodsReturnNote)
-			if !ok {
-				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeGoodsReturnNote))
-			}
-		}
-	}
-
-	args := make(map[interface{}]struct{})
-	if singular {
-		if object.R == nil {
-			object.R = &goodsReturnNoteR{}
-		}
-		if !queries.IsNil(object.SalesOrderID) {
-			args[object.SalesOrderID] = struct{}{}
-		}
-
-	} else {
-		for _, obj := range slice {
-			if obj.R == nil {
-				obj.R = &goodsReturnNoteR{}
-			}
-
-			if !queries.IsNil(obj.SalesOrderID) {
-				args[obj.SalesOrderID] = struct{}{}
-			}
-
-		}
-	}
-
-	if len(args) == 0 {
-		return nil
-	}
-
-	argsSlice := make([]interface{}, len(args))
-	i := 0
-	for arg := range args {
-		argsSlice[i] = arg
-		i++
-	}
-
-	query := NewQuery(
-		qm.From(`sale.sales_order`),
-		qm.WhereIn(`sale.sales_order.id in ?`, argsSlice...),
-	)
-	if mods != nil {
-		mods.Apply(query)
-	}
-
-	results, err := query.QueryContext(ctx, e)
-	if err != nil {
-		return errors.Wrap(err, "failed to eager load SalesOrder")
-	}
-
-	var resultSlice []*SalesOrder
-	if err = queries.Bind(results, &resultSlice); err != nil {
-		return errors.Wrap(err, "failed to bind eager loaded slice SalesOrder")
-	}
-
-	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results of eager load for sales_order")
-	}
-	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for sales_order")
-	}
-
-	if len(salesOrderAfterSelectHooks) != 0 {
-		for _, obj := range resultSlice {
-			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
-				return err
-			}
-		}
-	}
-
-	if len(resultSlice) == 0 {
-		return nil
-	}
-
-	if singular {
-		foreign := resultSlice[0]
-		object.R.SalesOrder = foreign
-		if foreign.R == nil {
-			foreign.R = &salesOrderR{}
-		}
-		foreign.R.GoodsReturnNotes = append(foreign.R.GoodsReturnNotes, object)
-		return nil
-	}
-
-	for _, local := range slice {
-		for _, foreign := range resultSlice {
-			if queries.Equal(local.SalesOrderID, foreign.ID) {
-				local.R.SalesOrder = foreign
-				if foreign.R == nil {
-					foreign.R = &salesOrderR{}
-				}
-				foreign.R.GoodsReturnNotes = append(foreign.R.GoodsReturnNotes, local)
-				break
-			}
-		}
-	}
-
-	return nil
 }
 
 // LoadGoodsReturnNoteItems allows an eager lookup of values, cached into the
@@ -757,86 +584,6 @@ func (goodsReturnNoteL) LoadGoodsReturnNoteItems(ctx context.Context, e boil.Con
 		}
 	}
 
-	return nil
-}
-
-// SetSalesOrder of the goodsReturnNote to the related item.
-// Sets o.R.SalesOrder to related.
-// Adds o to related.R.GoodsReturnNotes.
-func (o *GoodsReturnNote) SetSalesOrder(ctx context.Context, exec boil.ContextExecutor, insert bool, related *SalesOrder) error {
-	var err error
-	if insert {
-		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
-			return errors.Wrap(err, "failed to insert into foreign table")
-		}
-	}
-
-	updateQuery := fmt.Sprintf(
-		"UPDATE \"sale\".\"goods_return_note\" SET %s WHERE %s",
-		strmangle.SetParamNames("\"", "\"", 1, []string{"sales_order_id"}),
-		strmangle.WhereClause("\"", "\"", 2, goodsReturnNotePrimaryKeyColumns),
-	)
-	values := []interface{}{related.ID, o.ID}
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, updateQuery)
-		fmt.Fprintln(writer, values)
-	}
-	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
-		return errors.Wrap(err, "failed to update local table")
-	}
-
-	queries.Assign(&o.SalesOrderID, related.ID)
-	if o.R == nil {
-		o.R = &goodsReturnNoteR{
-			SalesOrder: related,
-		}
-	} else {
-		o.R.SalesOrder = related
-	}
-
-	if related.R == nil {
-		related.R = &salesOrderR{
-			GoodsReturnNotes: GoodsReturnNoteSlice{o},
-		}
-	} else {
-		related.R.GoodsReturnNotes = append(related.R.GoodsReturnNotes, o)
-	}
-
-	return nil
-}
-
-// RemoveSalesOrder relationship.
-// Sets o.R.SalesOrder to nil.
-// Removes o from all passed in related items' relationships struct.
-func (o *GoodsReturnNote) RemoveSalesOrder(ctx context.Context, exec boil.ContextExecutor, related *SalesOrder) error {
-	var err error
-
-	queries.SetScanner(&o.SalesOrderID, nil)
-	if _, err = o.Update(ctx, exec, boil.Whitelist("sales_order_id")); err != nil {
-		return errors.Wrap(err, "failed to update local table")
-	}
-
-	if o.R != nil {
-		o.R.SalesOrder = nil
-	}
-	if related == nil || related.R == nil {
-		return nil
-	}
-
-	for i, ri := range related.R.GoodsReturnNotes {
-		if queries.Equal(o.SalesOrderID, ri.SalesOrderID) {
-			continue
-		}
-
-		ln := len(related.R.GoodsReturnNotes)
-		if ln > 1 && i < ln-1 {
-			related.R.GoodsReturnNotes[i] = related.R.GoodsReturnNotes[ln-1]
-		}
-		related.R.GoodsReturnNotes = related.R.GoodsReturnNotes[:ln-1]
-		break
-	}
 	return nil
 }
 

@@ -172,12 +172,10 @@ var SalesOrderWhere = struct {
 // SalesOrderRels is where relationship names are stored.
 var SalesOrderRels = struct {
 	DeliveryNotes      string
-	GoodsReturnNotes   string
 	OrderConfirmations string
 	SalesOrderItems    string
 }{
 	DeliveryNotes:      "DeliveryNotes",
-	GoodsReturnNotes:   "GoodsReturnNotes",
 	OrderConfirmations: "OrderConfirmations",
 	SalesOrderItems:    "SalesOrderItems",
 }
@@ -185,7 +183,6 @@ var SalesOrderRels = struct {
 // salesOrderR is where relationships are stored.
 type salesOrderR struct {
 	DeliveryNotes      DeliveryNoteSlice      `boil:"DeliveryNotes" json:"DeliveryNotes" toml:"DeliveryNotes" yaml:"DeliveryNotes"`
-	GoodsReturnNotes   GoodsReturnNoteSlice   `boil:"GoodsReturnNotes" json:"GoodsReturnNotes" toml:"GoodsReturnNotes" yaml:"GoodsReturnNotes"`
 	OrderConfirmations OrderConfirmationSlice `boil:"OrderConfirmations" json:"OrderConfirmations" toml:"OrderConfirmations" yaml:"OrderConfirmations"`
 	SalesOrderItems    SalesOrderItemSlice    `boil:"SalesOrderItems" json:"SalesOrderItems" toml:"SalesOrderItems" yaml:"SalesOrderItems"`
 }
@@ -200,13 +197,6 @@ func (r *salesOrderR) GetDeliveryNotes() DeliveryNoteSlice {
 		return nil
 	}
 	return r.DeliveryNotes
-}
-
-func (r *salesOrderR) GetGoodsReturnNotes() GoodsReturnNoteSlice {
-	if r == nil {
-		return nil
-	}
-	return r.GoodsReturnNotes
 }
 
 func (r *salesOrderR) GetOrderConfirmations() OrderConfirmationSlice {
@@ -553,20 +543,6 @@ func (o *SalesOrder) DeliveryNotes(mods ...qm.QueryMod) deliveryNoteQuery {
 	return DeliveryNotes(queryMods...)
 }
 
-// GoodsReturnNotes retrieves all the goods_return_note's GoodsReturnNotes with an executor.
-func (o *SalesOrder) GoodsReturnNotes(mods ...qm.QueryMod) goodsReturnNoteQuery {
-	var queryMods []qm.QueryMod
-	if len(mods) != 0 {
-		queryMods = append(queryMods, mods...)
-	}
-
-	queryMods = append(queryMods,
-		qm.Where("\"sale\".\"goods_return_note\".\"sales_order_id\"=?", o.ID),
-	)
-
-	return GoodsReturnNotes(queryMods...)
-}
-
 // OrderConfirmations retrieves all the order_confirmation's OrderConfirmations with an executor.
 func (o *SalesOrder) OrderConfirmations(mods ...qm.QueryMod) orderConfirmationQuery {
 	var queryMods []qm.QueryMod
@@ -698,119 +674,6 @@ func (salesOrderL) LoadDeliveryNotes(ctx context.Context, e boil.ContextExecutor
 				local.R.DeliveryNotes = append(local.R.DeliveryNotes, foreign)
 				if foreign.R == nil {
 					foreign.R = &deliveryNoteR{}
-				}
-				foreign.R.SalesOrder = local
-				break
-			}
-		}
-	}
-
-	return nil
-}
-
-// LoadGoodsReturnNotes allows an eager lookup of values, cached into the
-// loaded structs of the objects. This is for a 1-M or N-M relationship.
-func (salesOrderL) LoadGoodsReturnNotes(ctx context.Context, e boil.ContextExecutor, singular bool, maybeSalesOrder interface{}, mods queries.Applicator) error {
-	var slice []*SalesOrder
-	var object *SalesOrder
-
-	if singular {
-		var ok bool
-		object, ok = maybeSalesOrder.(*SalesOrder)
-		if !ok {
-			object = new(SalesOrder)
-			ok = queries.SetFromEmbeddedStruct(&object, &maybeSalesOrder)
-			if !ok {
-				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeSalesOrder))
-			}
-		}
-	} else {
-		s, ok := maybeSalesOrder.(*[]*SalesOrder)
-		if ok {
-			slice = *s
-		} else {
-			ok = queries.SetFromEmbeddedStruct(&slice, maybeSalesOrder)
-			if !ok {
-				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeSalesOrder))
-			}
-		}
-	}
-
-	args := make(map[interface{}]struct{})
-	if singular {
-		if object.R == nil {
-			object.R = &salesOrderR{}
-		}
-		args[object.ID] = struct{}{}
-	} else {
-		for _, obj := range slice {
-			if obj.R == nil {
-				obj.R = &salesOrderR{}
-			}
-			args[obj.ID] = struct{}{}
-		}
-	}
-
-	if len(args) == 0 {
-		return nil
-	}
-
-	argsSlice := make([]interface{}, len(args))
-	i := 0
-	for arg := range args {
-		argsSlice[i] = arg
-		i++
-	}
-
-	query := NewQuery(
-		qm.From(`sale.goods_return_note`),
-		qm.WhereIn(`sale.goods_return_note.sales_order_id in ?`, argsSlice...),
-	)
-	if mods != nil {
-		mods.Apply(query)
-	}
-
-	results, err := query.QueryContext(ctx, e)
-	if err != nil {
-		return errors.Wrap(err, "failed to eager load goods_return_note")
-	}
-
-	var resultSlice []*GoodsReturnNote
-	if err = queries.Bind(results, &resultSlice); err != nil {
-		return errors.Wrap(err, "failed to bind eager loaded slice goods_return_note")
-	}
-
-	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results in eager load on goods_return_note")
-	}
-	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for goods_return_note")
-	}
-
-	if len(goodsReturnNoteAfterSelectHooks) != 0 {
-		for _, obj := range resultSlice {
-			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
-				return err
-			}
-		}
-	}
-	if singular {
-		object.R.GoodsReturnNotes = resultSlice
-		for _, foreign := range resultSlice {
-			if foreign.R == nil {
-				foreign.R = &goodsReturnNoteR{}
-			}
-			foreign.R.SalesOrder = object
-		}
-		return nil
-	}
-
-	for _, foreign := range resultSlice {
-		for _, local := range slice {
-			if queries.Equal(local.ID, foreign.SalesOrderID) {
-				local.R.GoodsReturnNotes = append(local.R.GoodsReturnNotes, foreign)
-				if foreign.R == nil {
-					foreign.R = &goodsReturnNoteR{}
 				}
 				foreign.R.SalesOrder = local
 				break
@@ -1097,133 +960,6 @@ func (o *SalesOrder) AddDeliveryNotes(ctx context.Context, exec boil.ContextExec
 			rel.R.SalesOrder = o
 		}
 	}
-	return nil
-}
-
-// AddGoodsReturnNotes adds the given related objects to the existing relationships
-// of the sales_order, optionally inserting them as new records.
-// Appends related to o.R.GoodsReturnNotes.
-// Sets related.R.SalesOrder appropriately.
-func (o *SalesOrder) AddGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*GoodsReturnNote) error {
-	var err error
-	for _, rel := range related {
-		if insert {
-			queries.Assign(&rel.SalesOrderID, o.ID)
-			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
-				return errors.Wrap(err, "failed to insert into foreign table")
-			}
-		} else {
-			updateQuery := fmt.Sprintf(
-				"UPDATE \"sale\".\"goods_return_note\" SET %s WHERE %s",
-				strmangle.SetParamNames("\"", "\"", 1, []string{"sales_order_id"}),
-				strmangle.WhereClause("\"", "\"", 2, goodsReturnNotePrimaryKeyColumns),
-			)
-			values := []interface{}{o.ID, rel.ID}
-
-			if boil.IsDebug(ctx) {
-				writer := boil.DebugWriterFrom(ctx)
-				fmt.Fprintln(writer, updateQuery)
-				fmt.Fprintln(writer, values)
-			}
-			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
-				return errors.Wrap(err, "failed to update foreign table")
-			}
-
-			queries.Assign(&rel.SalesOrderID, o.ID)
-		}
-	}
-
-	if o.R == nil {
-		o.R = &salesOrderR{
-			GoodsReturnNotes: related,
-		}
-	} else {
-		o.R.GoodsReturnNotes = append(o.R.GoodsReturnNotes, related...)
-	}
-
-	for _, rel := range related {
-		if rel.R == nil {
-			rel.R = &goodsReturnNoteR{
-				SalesOrder: o,
-			}
-		} else {
-			rel.R.SalesOrder = o
-		}
-	}
-	return nil
-}
-
-// SetGoodsReturnNotes removes all previously related items of the
-// sales_order replacing them completely with the passed
-// in related items, optionally inserting them as new records.
-// Sets o.R.SalesOrder's GoodsReturnNotes accordingly.
-// Replaces o.R.GoodsReturnNotes with related.
-// Sets related.R.SalesOrder's GoodsReturnNotes accordingly.
-func (o *SalesOrder) SetGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*GoodsReturnNote) error {
-	query := "update \"sale\".\"goods_return_note\" set \"sales_order_id\" = null where \"sales_order_id\" = $1"
-	values := []interface{}{o.ID}
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, query)
-		fmt.Fprintln(writer, values)
-	}
-	_, err := exec.ExecContext(ctx, query, values...)
-	if err != nil {
-		return errors.Wrap(err, "failed to remove relationships before set")
-	}
-
-	if o.R != nil {
-		for _, rel := range o.R.GoodsReturnNotes {
-			queries.SetScanner(&rel.SalesOrderID, nil)
-			if rel.R == nil {
-				continue
-			}
-
-			rel.R.SalesOrder = nil
-		}
-		o.R.GoodsReturnNotes = nil
-	}
-
-	return o.AddGoodsReturnNotes(ctx, exec, insert, related...)
-}
-
-// RemoveGoodsReturnNotes relationships from objects passed in.
-// Removes related items from R.GoodsReturnNotes (uses pointer comparison, removal does not keep order)
-// Sets related.R.SalesOrder.
-func (o *SalesOrder) RemoveGoodsReturnNotes(ctx context.Context, exec boil.ContextExecutor, related ...*GoodsReturnNote) error {
-	if len(related) == 0 {
-		return nil
-	}
-
-	var err error
-	for _, rel := range related {
-		queries.SetScanner(&rel.SalesOrderID, nil)
-		if rel.R != nil {
-			rel.R.SalesOrder = nil
-		}
-		if _, err = rel.Update(ctx, exec, boil.Whitelist("sales_order_id")); err != nil {
-			return err
-		}
-	}
-	if o.R == nil {
-		return nil
-	}
-
-	for _, rel := range related {
-		for i, ri := range o.R.GoodsReturnNotes {
-			if rel != ri {
-				continue
-			}
-
-			ln := len(o.R.GoodsReturnNotes)
-			if ln > 1 && i < ln-1 {
-				o.R.GoodsReturnNotes[i] = o.R.GoodsReturnNotes[ln-1]
-			}
-			o.R.GoodsReturnNotes = o.R.GoodsReturnNotes[:ln-1]
-			break
-		}
-	}
-
 	return nil
 }
 

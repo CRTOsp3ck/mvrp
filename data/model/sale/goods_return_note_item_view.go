@@ -29,6 +29,9 @@ type GoodsReturnNoteItemView struct {
 	BaseDocumentItemID null.Int          `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
 	GoodsReturnNoteID  null.Int          `boil:"goods_return_note_id" json:"goods_return_note_id,omitempty" toml:"goods_return_note_id" yaml:"goods_return_note_id,omitempty"`
 	RmaItemID          null.Int          `boil:"rma_item_id" json:"rma_item_id,omitempty" toml:"rma_item_id" yaml:"rma_item_id,omitempty"`
+	SalesOrderItemID   null.Int          `boil:"sales_order_item_id" json:"sales_order_item_id,omitempty" toml:"sales_order_item_id" yaml:"sales_order_item_id,omitempty"`
+	InvoiceID          null.Int          `boil:"invoice_id" json:"invoice_id,omitempty" toml:"invoice_id" yaml:"invoice_id,omitempty"`
+	CreditNoteID       null.Int          `boil:"credit_note_id" json:"credit_note_id,omitempty" toml:"credit_note_id" yaml:"credit_note_id,omitempty"`
 	ReturnQuantity     types.NullDecimal `boil:"return_quantity" json:"return_quantity,omitempty" toml:"return_quantity" yaml:"return_quantity,omitempty"`
 	ReturnCondition    null.String       `boil:"return_condition" json:"return_condition,omitempty" toml:"return_condition" yaml:"return_condition,omitempty"`
 	ReturnReason       null.String       `boil:"return_reason" json:"return_reason,omitempty" toml:"return_reason" yaml:"return_reason,omitempty"`
@@ -36,6 +39,7 @@ type GoodsReturnNoteItemView struct {
 	UpdatedAt          null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
 	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocumentItem   null.JSON         `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
+	InventoryInfo      null.JSON         `boil:"inventory_info" json:"inventory_info,omitempty" toml:"inventory_info" yaml:"inventory_info,omitempty"`
 }
 
 var GoodsReturnNoteItemViewColumns = struct {
@@ -43,6 +47,9 @@ var GoodsReturnNoteItemViewColumns = struct {
 	BaseDocumentItemID string
 	GoodsReturnNoteID  string
 	RmaItemID          string
+	SalesOrderItemID   string
+	InvoiceID          string
+	CreditNoteID       string
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
@@ -50,11 +57,15 @@ var GoodsReturnNoteItemViewColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	GoodsReturnNoteID:  "goods_return_note_id",
 	RmaItemID:          "rma_item_id",
+	SalesOrderItemID:   "sales_order_item_id",
+	InvoiceID:          "invoice_id",
+	CreditNoteID:       "credit_note_id",
 	ReturnQuantity:     "return_quantity",
 	ReturnCondition:    "return_condition",
 	ReturnReason:       "return_reason",
@@ -62,6 +73,7 @@ var GoodsReturnNoteItemViewColumns = struct {
 	UpdatedAt:          "updated_at",
 	DeletedAt:          "deleted_at",
 	BaseDocumentItem:   "base_document_item",
+	InventoryInfo:      "inventory_info",
 }
 
 var GoodsReturnNoteItemViewTableColumns = struct {
@@ -69,6 +81,9 @@ var GoodsReturnNoteItemViewTableColumns = struct {
 	BaseDocumentItemID string
 	GoodsReturnNoteID  string
 	RmaItemID          string
+	SalesOrderItemID   string
+	InvoiceID          string
+	CreditNoteID       string
 	ReturnQuantity     string
 	ReturnCondition    string
 	ReturnReason       string
@@ -76,11 +91,15 @@ var GoodsReturnNoteItemViewTableColumns = struct {
 	UpdatedAt          string
 	DeletedAt          string
 	BaseDocumentItem   string
+	InventoryInfo      string
 }{
 	ID:                 "goods_return_note_item_view.id",
 	BaseDocumentItemID: "goods_return_note_item_view.base_document_item_id",
 	GoodsReturnNoteID:  "goods_return_note_item_view.goods_return_note_id",
 	RmaItemID:          "goods_return_note_item_view.rma_item_id",
+	SalesOrderItemID:   "goods_return_note_item_view.sales_order_item_id",
+	InvoiceID:          "goods_return_note_item_view.invoice_id",
+	CreditNoteID:       "goods_return_note_item_view.credit_note_id",
 	ReturnQuantity:     "goods_return_note_item_view.return_quantity",
 	ReturnCondition:    "goods_return_note_item_view.return_condition",
 	ReturnReason:       "goods_return_note_item_view.return_reason",
@@ -88,6 +107,7 @@ var GoodsReturnNoteItemViewTableColumns = struct {
 	UpdatedAt:          "goods_return_note_item_view.updated_at",
 	DeletedAt:          "goods_return_note_item_view.deleted_at",
 	BaseDocumentItem:   "goods_return_note_item_view.base_document_item",
+	InventoryInfo:      "goods_return_note_item_view.inventory_info",
 }
 
 // Generated where
@@ -97,6 +117,9 @@ var GoodsReturnNoteItemViewWhere = struct {
 	BaseDocumentItemID whereHelpernull_Int
 	GoodsReturnNoteID  whereHelpernull_Int
 	RmaItemID          whereHelpernull_Int
+	SalesOrderItemID   whereHelpernull_Int
+	InvoiceID          whereHelpernull_Int
+	CreditNoteID       whereHelpernull_Int
 	ReturnQuantity     whereHelpertypes_NullDecimal
 	ReturnCondition    whereHelpernull_String
 	ReturnReason       whereHelpernull_String
@@ -104,11 +127,15 @@ var GoodsReturnNoteItemViewWhere = struct {
 	UpdatedAt          whereHelpernull_Time
 	DeletedAt          whereHelpernull_Time
 	BaseDocumentItem   whereHelpernull_JSON
+	InventoryInfo      whereHelpernull_JSON
 }{
 	ID:                 whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"base_document_item_id\""},
 	GoodsReturnNoteID:  whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"goods_return_note_id\""},
 	RmaItemID:          whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"rma_item_id\""},
+	SalesOrderItemID:   whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"sales_order_item_id\""},
+	InvoiceID:          whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"invoice_id\""},
+	CreditNoteID:       whereHelpernull_Int{field: "\"sale\".\"goods_return_note_item_view\".\"credit_note_id\""},
 	ReturnQuantity:     whereHelpertypes_NullDecimal{field: "\"sale\".\"goods_return_note_item_view\".\"return_quantity\""},
 	ReturnCondition:    whereHelpernull_String{field: "\"sale\".\"goods_return_note_item_view\".\"return_condition\""},
 	ReturnReason:       whereHelpernull_String{field: "\"sale\".\"goods_return_note_item_view\".\"return_reason\""},
@@ -116,12 +143,13 @@ var GoodsReturnNoteItemViewWhere = struct {
 	UpdatedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item_view\".\"updated_at\""},
 	DeletedAt:          whereHelpernull_Time{field: "\"sale\".\"goods_return_note_item_view\".\"deleted_at\""},
 	BaseDocumentItem:   whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_item_view\".\"base_document_item\""},
+	InventoryInfo:      whereHelpernull_JSON{field: "\"sale\".\"goods_return_note_item_view\".\"inventory_info\""},
 }
 
 var (
-	goodsReturnNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	goodsReturnNoteItemViewAllColumns            = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "sales_order_item_id", "invoice_id", "credit_note_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	goodsReturnNoteItemViewColumnsWithoutDefault = []string{}
-	goodsReturnNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	goodsReturnNoteItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "goods_return_note_id", "rma_item_id", "sales_order_item_id", "invoice_id", "credit_note_id", "return_quantity", "return_condition", "return_reason", "created_at", "updated_at", "deleted_at", "base_document_item", "inventory_info"}
 	goodsReturnNoteItemViewPrimaryKeyColumns     = []string{}
 	goodsReturnNoteItemViewGeneratedColumns      = []string{}
 )

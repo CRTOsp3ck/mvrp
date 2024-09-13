@@ -78,10 +78,6 @@ CREATE TABLE sale.goods_return_note (
     id INT PRIMARY KEY,
     base_document_id INT NOT NULL REFERENCES base.base_document(id) ON DELETE CASCADE,
     goods_return_note_number VARCHAR(50) UNIQUE NOT NULL,
-    sales_order_id INT REFERENCES sale.sales_order(id) ON DELETE CASCADE,
-    invoice_id INT REFERENCES invoice.invoice(id),
-    credit_note_id INT REFERENCES invoice.credit_note(id),
-    rma_id INT REFERENCES inventory.return_merchandise_authorization(id),
     return_date DATE NOT NULL,
     returned_by_customer_id INT REFERENCES entity.entity(id),
     receiving_location_information JSONB,
@@ -97,6 +93,9 @@ CREATE TABLE sale.goods_return_note_item (
     base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
     goods_return_note_id INT NOT NULL REFERENCES sale.goods_return_note(id) ON DELETE CASCADE,
     rma_item_id INT REFERENCES inventory.return_merchandise_authorization_item(id),
+    sales_order_item_id INT REFERENCES sale.sales_order_item(id) ON DELETE CASCADE,
+    invoice_id INT REFERENCES invoice.invoice(id),
+    credit_note_id INT REFERENCES invoice.credit_note(id),
     return_quantity NUMERIC(12, 2) DEFAULT 0,
     return_condition TEXT,
     return_reason TEXT,
@@ -255,7 +254,16 @@ SELECT
         SELECT row_to_json(bdi)
         FROM base.base_document_item bdi
         WHERE bdi.id = grni.base_document_item_id
-    ) AS base_document_item
+    ) AS base_document_item,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = (
+            SELECT bdi.inventory_id
+            FROM base.base_document_item bdi
+            WHERE bdi.id = grni.base_document_item_id
+        )
+    ) AS inventory_info
 FROM
     sale.goods_return_note_item grni;
 
@@ -267,6 +275,11 @@ SELECT
         FROM base.base_document bd
         WHERE bd.id = grn.base_document_id
     ) AS base_document,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = grn.returned_by_customer_id
+    ) AS customer_info,
     (
         SELECT json_agg(row_to_json(grniv))
         FROM sale.goods_return_note_item_view grniv

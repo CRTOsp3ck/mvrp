@@ -127,5 +127,10 @@ func seedSale() error {
 		return err
 	}
 
+	err = sale.SeedGoodsReturnNote()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
