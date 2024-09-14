@@ -3,11 +3,13 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
     "mvrp/data/model/base"
     "mvrp/data/model/sale"
 )
 
 type SearchSalesOrderDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -34,6 +36,7 @@ type UpdateSalesOrderDTO struct {
 }
 
 type SearchSalesOrderItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -57,6 +60,7 @@ type UpdateSalesOrderItemDTO struct {
 }
 
 type SearchDeliveryNoteDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ShippingStatus string          `json:"shipping_status"`
     ItemsPerPage int                                `json:"items_per_page"`
@@ -85,6 +89,7 @@ type UpdateDeliveryNoteDTO struct {
 }
 
 type SearchDeliveryNoteItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -108,6 +113,7 @@ type UpdateDeliveryNoteItemDTO struct {
 }
 
 type SearchGoodsReturnNoteDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -134,6 +140,7 @@ type UpdateGoodsReturnNoteDTO struct {
 }
 
 type SearchGoodsReturnNoteItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -157,6 +164,7 @@ type UpdateGoodsReturnNoteItemDTO struct {
 }
 
 type SearchOrderConfirmationDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -184,6 +192,7 @@ type UpdateOrderConfirmationDTO struct {
 }
 
 type SearchOrderConfirmationItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -207,6 +216,7 @@ type UpdateOrderConfirmationItemDTO struct {
 }
 
 type SearchSalesQuotationDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -233,6 +243,7 @@ type UpdateSalesQuotationDTO struct {
 }
 
 type SearchSalesQuotationItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`

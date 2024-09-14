@@ -120,13 +120,7 @@ func (s *InventoryService) SearchInventory(req *SearchInventoryRequest) (*Search
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.SearchInventories(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Inventory.GetInventoryTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Inventory.SearchInventories(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

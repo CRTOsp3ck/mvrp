@@ -3,11 +3,13 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
     "mvrp/data/model/base"
     "mvrp/data/model/purchase"
 )
 
 type SearchPurchaseOrderDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -34,6 +36,7 @@ type UpdatePurchaseOrderDTO struct {
 }
 
 type SearchPurchaseOrderItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -57,6 +60,7 @@ type UpdatePurchaseOrderItemDTO struct {
 }
 
 type SearchGoodsReceiptNoteDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -83,6 +87,7 @@ type UpdateGoodsReceiptNoteDTO struct {
 }
 
 type SearchGoodsReceiptNoteItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -106,6 +111,7 @@ type UpdateGoodsReceiptNoteItemDTO struct {
 }
 
 type SearchRequestForQuotationDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -132,6 +138,7 @@ type UpdateRequestForQuotationDTO struct {
 }
 
 type SearchRequestForQuotationItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`

@@ -26,7 +26,7 @@ func SeedProprietor() error {
 			Phone:       null.StringFrom(gofakeit.Phone()),
 			Email:       null.StringFrom(gofakeit.Email()),
 			Website:     null.StringFrom(gofakeit.URL()),
-			Type:        model.EntityTypeProprietor,
+			EntityType:  model.EntityTypeProprietor,
 			Status:      model.EntityStatusActive,
 		},
 	}
@@ -59,7 +59,7 @@ func SeedSuppliers(count int) error {
 				Phone:       null.StringFrom(gofakeit.Phone()),
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
-				Type:        model.EntityTypeSupplier,
+				EntityType:  model.EntityTypeSupplier,
 				Status:      model.EntityStatusActive,
 			},
 		}

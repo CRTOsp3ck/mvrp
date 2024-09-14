@@ -14,21 +14,11 @@ func (r *BaseRepository) ListAllBaseDocuments(ctx context.Context, exec boil.Con
 	return base.BaseDocuments().All(ctx, exec)
 }
 
-/*
-*/
-
 func (r *BaseRepository) GetBaseDocumentByID(ctx context.Context, exec boil.ContextExecutor, id int) (*base.BaseDocument, error) {
 	return base.FindBaseDocument(ctx, exec, id)
 }
 
 func (r *BaseRepository) CreateBaseDocument(ctx context.Context, exec boil.ContextExecutor, m *base.BaseDocument) error {
-	/*
-		id, err := r.GetNextEntryBaseDocumentID(ctx, exec)
-		if err != nil {
-			return err
-		}
-		m.ID = id
-	*/
 	return m.Insert(ctx, exec, boil.Infer())
 }
 
@@ -71,17 +61,6 @@ func (r *BaseRepository) GetNextEntryBaseDocumentID(ctx context.Context, exec bo
 		return 1, nil
 	}
 	return int(maxID.Int64) + 1, nil
-
-	/*
-		currID, err := r.GetMostRecentBaseDocument(ctx, exec)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				return 1, nil
-			}
-			return 0, err
-		}
-		return currID.ID + 1, nil
-	*/
 }
 
 func (r *BaseRepository) GetBaseDocumentTotalCount(ctx context.Context, exec boil.ContextExecutor) (int, error) {

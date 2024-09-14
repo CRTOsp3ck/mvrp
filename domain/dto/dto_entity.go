@@ -3,12 +3,14 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
     "mvrp/data/model/entity"
 )
 
 type SearchEntityDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
-    Type string          `json:"type"`
+    EntityType string          `json:"entity_type"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`

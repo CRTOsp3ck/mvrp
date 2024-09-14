@@ -85,13 +85,7 @@ func (s *InventoryService) SearchReturnMerchandiseAuthorization(req *SearchRetur
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.SearchReturnMerchandiseAuthorizations(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Inventory.SearchReturnMerchandiseAuthorizations(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

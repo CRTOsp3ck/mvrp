@@ -3,10 +3,12 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
     "mvrp/data/model/item"
 )
 
 type SearchItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     Type string          `json:"type"`
     ItemsPerPage int                                `json:"items_per_page"`

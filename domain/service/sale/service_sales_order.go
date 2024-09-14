@@ -114,13 +114,7 @@ func (s *SaleService) SearchSalesOrder(req *SearchSalesOrderRequest) (*SearchSal
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Sale.SearchSalesOrders(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Sale.GetSalesOrderTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Sale.SearchSalesOrders(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

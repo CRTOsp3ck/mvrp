@@ -114,13 +114,7 @@ func (s *SaleService) SearchDeliveryNote(req *SearchDeliveryNoteRequest) (*Searc
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Sale.SearchDeliveryNotes(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Sale.GetDeliveryNoteTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Sale.SearchDeliveryNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

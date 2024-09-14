@@ -110,13 +110,7 @@ func (s *InvoiceService) SearchInvoice(req *SearchInvoiceRequest) (*SearchInvoic
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Invoice.SearchInvoices(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Invoice.GetInvoiceTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Invoice.SearchInvoices(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

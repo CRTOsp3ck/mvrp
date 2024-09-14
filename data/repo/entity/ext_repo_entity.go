@@ -9,6 +9,6 @@ import (
 )
 
 func (r *EntityRepository) GetEntityTotalCountByType(ctx context.Context, exec boil.ContextExecutor, entityType string) (int, error) {
-	count, err := entity.Entities(qm.Where("type = ?", entityType)).Count(ctx, exec)
+	count, err := entity.Entities(qm.Where("entity_type = ?", entityType)).Count(ctx, exec)
 	return int(count), err
 }

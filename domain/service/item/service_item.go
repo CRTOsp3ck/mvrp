@@ -100,13 +100,7 @@ func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, e
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Item.SearchItems(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Item.GetItemTotalCountByType(req.Ctx, tx, req.Payload.Type)
+	res, totalCount, err := s.Repo.Item.SearchItems(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

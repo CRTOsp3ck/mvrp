@@ -4,6 +4,7 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
 {{- range .Imports }}
     "{{ . }}"
 {{- end }}
@@ -13,6 +14,7 @@ import (
 
 type {{ .Name }} struct {
 {{- if .Name | IsSearchDto }}
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     {{- range .GroupQueryFields }}
     {{ .Name | ToPascalCase }} {{ .Type }}          `json:"{{ .Name }}"`

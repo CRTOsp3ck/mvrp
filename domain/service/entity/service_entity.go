@@ -78,13 +78,7 @@ func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityRes
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Entity.SearchEntities(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Entity.GetEntityTotalCountByType(req.Ctx, tx, req.Payload.Type)
+	res, count, err := s.Repo.Entity.SearchEntities(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
@@ -94,8 +88,9 @@ func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityRes
 		return nil, err
 	}
 
+	// Pagination
 	pd := dto.PaginationDTO{
-		TotalItems:   totalCount,
+		TotalItems:   count,
 		ItemsPerPage: req.Payload.ItemsPerPage,
 		Page:         req.Payload.Page,
 		SortBy:       req.Payload.SortBy,

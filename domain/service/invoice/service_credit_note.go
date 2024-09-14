@@ -71,13 +71,7 @@ func (s *InvoiceService) SearchCreditNote(req *SearchCreditNoteRequest) (*Search
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Invoice.SearchCreditNotes(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Invoice.GetCreditNoteTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Invoice.SearchCreditNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

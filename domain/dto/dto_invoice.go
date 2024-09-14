@@ -3,11 +3,13 @@
 package dto
 
 import (
+    "mvrp/data/model/query"
     "mvrp/data/model/base"
     "mvrp/data/model/invoice"
 )
 
 type SearchInvoiceDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -34,6 +36,7 @@ type UpdateInvoiceDTO struct {
 }
 
 type SearchInvoiceItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -57,6 +60,7 @@ type UpdateInvoiceItemDTO struct {
 }
 
 type SearchPaymentReceiptDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -83,6 +87,7 @@ type UpdatePaymentReceiptDTO struct {
 }
 
 type SearchPaymentReceiptItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -106,6 +111,7 @@ type UpdatePaymentReceiptItemDTO struct {
 }
 
 type SearchCreditNoteDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
@@ -129,6 +135,7 @@ type UpdateCreditNoteDTO struct {
 }
 
 type SearchDebitNoteDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`

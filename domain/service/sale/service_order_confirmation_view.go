@@ -79,13 +79,7 @@ func (s *SaleService) SearchOrderConfirmationView(req *SearchOrderConfirmationVi
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Sale.SearchOrderConfirmationViews(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Sale.GetOrderConfirmationTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Sale.SearchOrderConfirmationViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

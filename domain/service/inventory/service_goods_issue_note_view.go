@@ -79,13 +79,7 @@ func (s *InventoryService) SearchGoodsIssueNoteView(req *SearchGoodsIssueNoteVie
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.SearchGoodsIssueNoteViews(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Inventory.GetGoodsIssueNoteTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Inventory.SearchGoodsIssueNoteViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

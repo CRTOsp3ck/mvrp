@@ -27,7 +27,7 @@ func SeedCustomers(count int) error {
 				Phone:       null.StringFrom(gofakeit.Phone()),
 				Email:       null.StringFrom(gofakeit.Email()),
 				Website:     null.StringFrom(gofakeit.URL()),
-				Type:        model.EntityTypeCustomer,
+				EntityType:  model.EntityTypeCustomer,
 				Status:      model.EntityStatusActive,
 			},
 		}

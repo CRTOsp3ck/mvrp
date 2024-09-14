@@ -86,13 +86,7 @@ func (s *InventoryService) SearchStockCountSheet(req *SearchStockCountSheetReque
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Inventory.SearchStockCountSheets(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Inventory.GetStockCountSheetTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Inventory.SearchStockCountSheets(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

@@ -71,13 +71,7 @@ func (s *InvoiceService) SearchDebitNote(req *SearchDebitNoteRequest) (*SearchDe
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Invoice.SearchDebitNotes(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Invoice.GetDebitNoteTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Invoice.SearchDebitNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

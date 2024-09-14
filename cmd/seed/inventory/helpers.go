@@ -9,7 +9,7 @@ import (
 func getRandomCustomerData(es entity.EntitySlice) *entity.Entity {
 	cusData := es[gofakeit.Number(0, len(es)-1)]
 	// if its not a customer, get another one
-	if cusData.Type != "customer" {
+	if cusData.EntityType != "customer" {
 		return getRandomCustomerData(es)
 	}
 	return cusData
@@ -18,7 +18,7 @@ func getRandomCustomerData(es entity.EntitySlice) *entity.Entity {
 func getRandomEmployeeData(es entity.EntitySlice) *entity.Entity {
 	empData := es[gofakeit.Number(0, len(es)-1)]
 	// if its not an employee, get another one
-	if empData.Type != "employee" {
+	if empData.EntityType != "employee" {
 		return getRandomEmployeeData(es)
 	}
 	return empData

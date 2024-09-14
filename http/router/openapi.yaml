@@ -2157,6 +2157,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2170,6 +2172,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2183,6 +2187,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         shipping_status:
           type: string
         sort_by:
@@ -2190,6 +2196,8 @@ components:
       type: object
     DtoSearchEntityDTO:
       properties:
+        entity_type:
+          type: string
         items_per_page:
           type: integer
         keyword:
@@ -2198,9 +2206,9 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
-          type: string
-        type:
           type: string
       type: object
     DtoSearchGoodsIssueNoteDTO:
@@ -2213,6 +2221,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2226,6 +2236,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2239,6 +2251,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2254,6 +2268,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2267,6 +2283,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2280,6 +2298,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
         type:
@@ -2295,6 +2315,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2308,6 +2330,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2321,6 +2345,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2334,6 +2360,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2347,6 +2375,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2360,6 +2390,8 @@ components:
           type: string
         page:
           type: integer
+        server_side_get_rows_request:
+          $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
           type: string
       type: object
@@ -2581,6 +2613,8 @@ components:
           type: string
         email:
           type: string
+        entity_type:
+          type: string
         id:
           type: integer
         name:
@@ -2588,8 +2622,6 @@ components:
         phone:
           type: string
         status:
-          type: string
-        type:
           type: string
         updated_at:
           format: date-time
@@ -2971,6 +3003,71 @@ components:
           type: string
         updated_at:
           format: date-time
+          type: string
+      type: object
+    QueryFilterItem:
+      properties:
+        filter:
+          type: string
+        filterTo:
+          type: string
+        filterType:
+          type: string
+        type:
+          type: string
+      type: object
+    QueryFilterModel:
+      additionalProperties:
+        $ref: '#/components/schemas/QueryFilterItem'
+      type: object
+    QueryIServerSideGetRowsRequest:
+      properties:
+        endRow:
+          type: integer
+        filterModel:
+          $ref: '#/components/schemas/QueryFilterModel'
+        groupKeys:
+          items:
+            type: string
+          nullable: true
+          type: array
+        rowGroupCols:
+          items:
+            $ref: '#/components/schemas/QueryRowGroupCol'
+          nullable: true
+          type: array
+        sortModel:
+          items:
+            $ref: '#/components/schemas/QuerySortModel'
+          nullable: true
+          type: array
+        startRow:
+          type: integer
+        valueCols:
+          items:
+            $ref: '#/components/schemas/QueryValueCol'
+          nullable: true
+          type: array
+      type: object
+    QueryRowGroupCol:
+      properties:
+        field:
+          type: string
+        id:
+          type: string
+      type: object
+    QuerySortModel:
+      properties:
+        colId:
+          type: string
+        sort:
+          type: string
+      type: object
+    QueryValueCol:
+      properties:
+        aggFunc:
+          type: string
+        field:
           type: string
       type: object
     SaleDeliveryNote:

@@ -113,13 +113,7 @@ func (s *SaleService) SearchGoodsReturnNote(req *SearchGoodsReturnNoteRequest) (
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Sale.SearchGoodsReturnNotes(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Sale.GetGoodsReturnNoteTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Sale.SearchGoodsReturnNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

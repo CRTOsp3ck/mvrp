@@ -79,13 +79,7 @@ func (s *SaleService) SearchSalesQuotationView(req *SearchSalesQuotationViewRequ
 	}
 	defer tx.Rollback()
 
-	res, err := s.Repo.Sale.SearchSalesQuotationViews(req.Ctx, tx, req.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	// Pagination
-	totalCount, err := s.Repo.Sale.GetSalesQuotationTotalCount(req.Ctx, tx)
+	res, totalCount, err := s.Repo.Sale.SearchSalesQuotationViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}

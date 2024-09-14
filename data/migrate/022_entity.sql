@@ -24,7 +24,7 @@ CREATE TABLE entity.entity (
     phone VARCHAR(32),
     email VARCHAR(128),
     website VARCHAR(128),
-    type entity.entity_type NOT NULL,
+    entity_type entity.entity_type NOT NULL,
     status entity.entity_status NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,

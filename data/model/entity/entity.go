@@ -32,7 +32,7 @@ type Entity struct {
 	Phone       null.String  `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 	Email       null.String  `boil:"email" json:"email,omitempty" toml:"email" yaml:"email,omitempty"`
 	Website     null.String  `boil:"website" json:"website,omitempty" toml:"website" yaml:"website,omitempty"`
-	Type        EntityType   `boil:"type" json:"type" toml:"type" yaml:"type"`
+	EntityType  EntityType   `boil:"entity_type" json:"entity_type" toml:"entity_type" yaml:"entity_type"`
 	Status      EntityStatus `boil:"status" json:"status" toml:"status" yaml:"status"`
 	CreatedAt   time.Time    `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt   time.Time    `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
@@ -51,7 +51,7 @@ var EntityColumns = struct {
 	Phone       string
 	Email       string
 	Website     string
-	Type        string
+	EntityType  string
 	Status      string
 	CreatedAt   string
 	UpdatedAt   string
@@ -65,7 +65,7 @@ var EntityColumns = struct {
 	Phone:       "phone",
 	Email:       "email",
 	Website:     "website",
-	Type:        "type",
+	EntityType:  "entity_type",
 	Status:      "status",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
@@ -81,7 +81,7 @@ var EntityTableColumns = struct {
 	Phone       string
 	Email       string
 	Website     string
-	Type        string
+	EntityType  string
 	Status      string
 	CreatedAt   string
 	UpdatedAt   string
@@ -95,7 +95,7 @@ var EntityTableColumns = struct {
 	Phone:       "entity.phone",
 	Email:       "entity.email",
 	Website:     "entity.website",
-	Type:        "entity.type",
+	EntityType:  "entity.entity_type",
 	Status:      "entity.status",
 	CreatedAt:   "entity.created_at",
 	UpdatedAt:   "entity.updated_at",
@@ -328,7 +328,7 @@ var EntityWhere = struct {
 	Phone       whereHelpernull_String
 	Email       whereHelpernull_String
 	Website     whereHelpernull_String
-	Type        whereHelperEntityType
+	EntityType  whereHelperEntityType
 	Status      whereHelperEntityStatus
 	CreatedAt   whereHelpertime_Time
 	UpdatedAt   whereHelpertime_Time
@@ -342,7 +342,7 @@ var EntityWhere = struct {
 	Phone:       whereHelpernull_String{field: "\"entity\".\"entity\".\"phone\""},
 	Email:       whereHelpernull_String{field: "\"entity\".\"entity\".\"email\""},
 	Website:     whereHelpernull_String{field: "\"entity\".\"entity\".\"website\""},
-	Type:        whereHelperEntityType{field: "\"entity\".\"entity\".\"type\""},
+	EntityType:  whereHelperEntityType{field: "\"entity\".\"entity\".\"entity_type\""},
 	Status:      whereHelperEntityStatus{field: "\"entity\".\"entity\".\"status\""},
 	CreatedAt:   whereHelpertime_Time{field: "\"entity\".\"entity\".\"created_at\""},
 	UpdatedAt:   whereHelpertime_Time{field: "\"entity\".\"entity\".\"updated_at\""},
@@ -366,8 +366,8 @@ func (*entityR) NewStruct() *entityR {
 type entityL struct{}
 
 var (
-	entityAllColumns            = []string{"id", "code", "name", "description", "address", "phone", "email", "website", "type", "status", "created_at", "updated_at", "deleted_at"}
-	entityColumnsWithoutDefault = []string{"id", "code", "name", "description", "type", "status", "created_at", "updated_at"}
+	entityAllColumns            = []string{"id", "code", "name", "description", "address", "phone", "email", "website", "entity_type", "status", "created_at", "updated_at", "deleted_at"}
+	entityColumnsWithoutDefault = []string{"id", "code", "name", "description", "entity_type", "status", "created_at", "updated_at"}
 	entityColumnsWithDefault    = []string{"address", "phone", "email", "website", "deleted_at"}
 	entityPrimaryKeyColumns     = []string{"id"}
 	entityGeneratedColumns      = []string{}
