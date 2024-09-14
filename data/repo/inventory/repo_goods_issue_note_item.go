@@ -125,7 +125,6 @@ func (r *InventoryRepository) BuildSearchQueryForGoodsIssueNoteItems(ctx context
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

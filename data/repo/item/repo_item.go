@@ -140,7 +140,7 @@ func (r *ItemRepository) BuildSearchQueryForItems(ctx context.Context, exec boil
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
+		qm.Where("type = ?", dto.Type),
 	}
 
 	if whereSQL != "" {

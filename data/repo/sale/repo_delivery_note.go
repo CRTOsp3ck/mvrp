@@ -131,7 +131,7 @@ func (r *SaleRepository) BuildSearchQueryForDeliveryNotes(ctx context.Context, e
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
+		qm.Where("shipping_status = ?", dto.ShippingStatus),
 	}
 
 	if whereSQL != "" {

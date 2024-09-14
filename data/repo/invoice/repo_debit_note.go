@@ -125,7 +125,6 @@ func (r *InvoiceRepository) BuildSearchQueryForDebitNotes(ctx context.Context, e
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

@@ -125,7 +125,6 @@ func (r *PurchaseRepository) BuildSearchQueryForRequestForQuotations(ctx context
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

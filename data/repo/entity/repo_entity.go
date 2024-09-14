@@ -137,7 +137,7 @@ func (r *EntityRepository) BuildSearchQueryForEntities(ctx context.Context, exec
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
+		qm.Where("entity_type = ?", dto.EntityType),
 	}
 
 	if whereSQL != "" {

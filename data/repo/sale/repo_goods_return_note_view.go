@@ -88,7 +88,6 @@ func (r *SaleRepository) BuildSearchQueryForGoodsReturnNoteViews(ctx context.Con
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

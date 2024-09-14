@@ -88,7 +88,6 @@ func (r *SaleRepository) BuildSearchQueryForOrderConfirmationViews(ctx context.C
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

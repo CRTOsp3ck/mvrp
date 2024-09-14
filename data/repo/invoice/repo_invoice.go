@@ -125,7 +125,6 @@ func (r *InvoiceRepository) BuildSearchQueryForInvoices(ctx context.Context, exe
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
 	}
 
 	if whereSQL != "" {

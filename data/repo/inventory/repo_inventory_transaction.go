@@ -131,7 +131,7 @@ func (r *InventoryRepository) BuildSearchQueryForInventoryTransactions(ctx conte
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
+		qm.Where("inventory_id = ?", dto.InventoryId),
 	}
 
 	if whereSQL != "" {

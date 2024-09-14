@@ -106,7 +106,9 @@ func (r *{{ .Package | ToPascalCase }}Repository) BuildSearchQueryFor{{ .PluralM
 	}
 
 	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", "customer"),
+		{{- range .GroupQueryFields }}
+		qm.Where("{{ .Name }} = ?", dto.{{ .Name | ToPascalCase }}),
+		{{- end }}
 	}
 
 	if whereSQL != "" {
