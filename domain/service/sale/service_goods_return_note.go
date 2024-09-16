@@ -258,8 +258,10 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 	rma := &inventory.ReturnMerchandiseAuthorization{
-		ID:        nextID,
-		RmaNumber: util.Util.Str.ToString(nextID),
+		ID:                   nextID,
+		RmaNumber:            util.Util.Str.ToString(nextID),
+		ReceivedByEmployeeID: req.Payload.GoodsReturnNote.ReceivedByEmployeeID,
+		ReturnedByCustomerID: req.Payload.GoodsReturnNote.ReturnedByCustomerID,
 	}
 	err = s.Repo.Inventory.CreateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
 	if err != nil {
