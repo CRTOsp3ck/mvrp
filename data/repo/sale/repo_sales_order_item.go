@@ -141,36 +141,6 @@ func (r *SaleRepository) BuildSearchQueryForSalesOrderItems(ctx context.Context,
 	return res, int(count), err
 }
 
-/*
-// 1. Create Select SQL
-func (r *SaleRepository) createSelectSQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
-	rowGroupCols := request.RowGroupCols
-	valueCols := request.ValueCols
-	groupKeys := request.GroupKeys
-
-	var colsToSelect []string
-
-	if len(rowGroupCols) > len(groupKeys) {
-		// Include group columns in SELECT
-		for i := 0; i <= len(groupKeys) && i < len(rowGroupCols); i++ {
-			colsToSelect = append(colsToSelect, rowGroupCols[i].Field)
-		}
-
-		// Include aggregated columns in SELECT
-		for _, valueCol := range valueCols {
-			colsToSelect = append(colsToSelect, fmt.Sprintf("SUM(%s) AS %s", valueCol.Field, valueCol.Field))
-		}
-	} else {
-		// If not grouping, select all columns directly
-		for _, valueCol := range valueCols {
-			colsToSelect = append(colsToSelect, valueCol.Field)
-		}
-	}
-
-	return strings.Join(colsToSelect, ", ")
-}
-*/
-
 // 1. Create Select SQL
 func (r *SaleRepository) createSelectSQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
     rowGroupCols := request.RowGroupCols
@@ -198,29 +168,6 @@ func (r *SaleRepository) createSelectSQLForSalesOrderItems(request query.IServer
 
     return strings.Join(colsToSelect, ", ")
 }
-
-/*
-// 2. Create Where SQL (handle group keys and filters)
-func (r *SaleRepository) createWhereSQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
-	var whereParts []string
-
-	// Handle group keys (if any)
-	for i, groupKey := range request.GroupKeys {
-		colName := request.RowGroupCols[i].Field
-		whereParts = append(whereParts, fmt.Sprintf("%s = '%s'", colName, groupKey))
-	}
-
-	// Handle filter model (apply filters to each column)
-	for colID, filterItem := range request.FilterModel {
-		whereParts = append(whereParts, r.createFilterSQLForSalesOrderItems(colID, filterItem))
-	}
-
-	if len(whereParts) > 0 {
-		return strings.Join(whereParts, " AND ")
-	}
-	return ""
-}
-*/
 
 // 2. Create Where SQL (handle group keys and filters)
 func (r *SaleRepository) createWhereSQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
@@ -270,29 +217,19 @@ func (r *SaleRepository) createFilterSQLForSalesOrderItems(colID string, filterI
 	case "text":
 		return r.createTextFilterSQLForSalesOrderItems(colID, filterItem)
 	case "number":
+		// Cast the JSONB text value to a number
+		if strings.Contains(colID, "->>'") {
+			colID = fmt.Sprintf("(%s)::numeric", colID)
+		}
 		return r.createNumberFilterSQLForSalesOrderItems(colID, filterItem)
+	case "date":
+		return r.createDateFilterSQLForSalesOrderItems(colID, filterItem)
 	default:
 		return "true"
 	}
 }
 
 func (r *SaleRepository) createNumberFilterSQLForSalesOrderItems(colID string, filterItem query.FilterItem) string {
-    // Handle nested JSON fields
-    // if strings.Contains(colID, ".") {
-    //     parts := strings.Split(colID, ".")
-    //     jsonField := parts[0]
-    //     nestedField := parts[1]
-    //     colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
-    // }
-
-	/*
-		// Properly format the filter value
-		filterValue := filterItem.Filter
-		if filterItem.FilterType == "string" {
-			filterValue = fmt.Sprintf("'%s'", filterItem.Filter)
-		}
-	*/
-
 	// Handle filter operator and conditions (recursive)
 	if filterItem.Operator != "" {
 		conditions := filterItem.Conditions
@@ -340,14 +277,6 @@ func (r *SaleRepository) createNumberFilterSQLForSalesOrderItems(colID string, f
 }
 
 func (r *SaleRepository) createTextFilterSQLForSalesOrderItems(colID string, filterModel query.FilterItem) string {
-	// Handle nested JSON fields
-    // if strings.Contains(colID, ".") {
-    //     parts := strings.Split(colID, ".")
-    //     jsonField := parts[0]
-    //     nestedField := parts[1]
-    //     colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
-    // }
-
 	// Handle filter operator and conditions (recursive)
 	if filterModel.Operator != "" {
 		conditions := filterModel.Conditions
@@ -392,6 +321,53 @@ func (r *SaleRepository) createTextFilterSQLForSalesOrderItems(colID string, fil
 	}
 }
 
+func (r *SaleRepository) createDateFilterSQLForSalesOrderItems(colID string, filterModel query.FilterItem) string {
+	// Handle filter operator and conditions (recursive)
+	if filterModel.Operator != "" {
+		conditions := filterModel.Conditions
+		switch filterModel.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createDateFilterSQLForSalesOrderItems(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createDateFilterSQLForSalesOrderItems(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
+	switch filterModel.Type {
+	case "equals":
+		return fmt.Sprintf("DATE(%s) = DATE('%s')", colID, filterModel.DateFrom)
+	case "notEqual":
+		return fmt.Sprintf("DATE(%s) != DATE('%s')", colID, filterModel.DateFrom)
+	case "greaterThan":
+		return fmt.Sprintf("DATE(%s) > DATE('%s')", colID, filterModel.DateFrom)
+	// case "greaterThanOrEqual":
+	// 	return fmt.Sprintf("DATE(%s) >= DATE('%s')", colID, filterModel.DateFrom)
+	case "lessThan":
+		return fmt.Sprintf("DATE(%s) < DATE('%s')", colID, filterModel.DateFrom)
+	// case "lessThanOrEqual":
+	// 	return fmt.Sprintf("DATE(%s) <= DATE('%s')", colID, filterModel.DateFrom)
+	case "inRange":
+		return fmt.Sprintf("DATE(%s) BETWEEN DATE('%s') AND DATE('%s')", colID, filterModel.DateFrom, filterModel.DateTo)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
+	default:
+		return "false"
+	}
+}
+
 // 3. Create Group By SQL
 func (r *SaleRepository) createGroupBySQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
 	rowGroupCols := request.RowGroupCols
@@ -407,53 +383,6 @@ func (r *SaleRepository) createGroupBySQLForSalesOrderItems(request query.IServe
 
 	return strings.Join(groupByCols, ", ")
 }
-
-/*
-// 4. Create Order By SQL
-func (r *SaleRepository) createOrderBySQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {
-	sortModel := request.SortModel
-	rowGroupCols := request.RowGroupCols
-	groupKeys := request.GroupKeys
-
-	var sortParts []string
-
-	// Determine if we are doing grouping
-	grouping := len(rowGroupCols) > len(groupKeys)
-	groupColIds := make(map[string]struct{})
-
-	// Create a map of grouped columns
-	for i := 0; i < len(groupKeys)+1 && i < len(rowGroupCols); i++ {
-		groupColIds[rowGroupCols[i].Field] = struct{}{}
-	}
-
-	for _, sort := range sortModel {
-		colID := sort.ColId
-		// Handle nested JSON fields
-        if strings.Contains(colID, ".") {
-            parts := strings.Split(colID, ".")
-            jsonField := parts[0]
-            nestedField := parts[1]
-            colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
-        }
-
-		if grouping {
-			// Only allow sorting on grouped columns
-			if _, exists := groupColIds[sort.ColId]; exists {
-				sortParts = append(sortParts, fmt.Sprintf("%s %s", sort.ColId, sort.Sort))
-			}
-		} else {
-			// If no grouping, allow sorting on any column
-			sortParts = append(sortParts, fmt.Sprintf("%s %s", sort.ColId, sort.Sort))
-		}
-	}
-
-	if len(sortParts) > 0 {
-		return strings.Join(sortParts, ", ")
-	}
-
-	return ""
-}
-*/
 
 // 4. Create Order By SQL
 func (r *SaleRepository) createOrderBySQLForSalesOrderItems(request query.IServerSideGetRowsRequest) string {

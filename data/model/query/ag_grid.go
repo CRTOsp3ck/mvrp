@@ -28,6 +28,9 @@ type FilterItem struct {
 	Filter     interface{} `json:"filter"`
 	FilterTo   interface{} `json:"filterTo,omitempty"`
 
+	DateFrom string `json:"dateFrom,omitempty"`
+	DateTo   string `json:"dateTo,omitempty"`
+
 	Operator   string       `json:"operator,omitempty"`
 	Conditions []FilterItem `json:"conditions,omitempty"`
 }

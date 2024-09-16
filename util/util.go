@@ -1,6 +1,7 @@
 package util
 
 import (
+	"mvrp/util/date"
 	"mvrp/util/ds"
 	"mvrp/util/fs"
 	"mvrp/util/json"
@@ -18,6 +19,7 @@ type UtilContainer struct {
 	Json json.JsonUtil
 	Ptr  ptr.PtrUtil
 	Str  str.StrUtil
+	Date date.DateUtil
 }
 
 func init() {
@@ -28,5 +30,6 @@ func init() {
 		Json: json.JsonUtil{},
 		Ptr:  ptr.PtrUtil{},
 		Str:  str.StrUtil{},
+		Date: date.DateUtil{},
 	}
 }

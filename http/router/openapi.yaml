@@ -3011,6 +3011,10 @@ components:
           items:
             $ref: '#/components/schemas/QueryFilterItem'
           type: array
+        dateFrom:
+          type: string
+        dateTo:
+          type: string
         filter: {}
         filterTo: {}
         filterType:
