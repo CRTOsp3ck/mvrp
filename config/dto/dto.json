@@ -55,7 +55,7 @@
                     "additional_fields": [],
                     "exclude_fields_from_inherit": [],
                     "group_query_fields": [
-                        {"name": "entity_type", "type": "string"}
+                        {"name": "type", "type": "string"}
                     ],
                     "search_query_fields": [
                         {"name": "name", "type": "string"}, 

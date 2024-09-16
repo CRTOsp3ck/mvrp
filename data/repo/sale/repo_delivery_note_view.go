@@ -93,9 +93,12 @@ func (r *SaleRepository) BuildSearchQueryForDeliveryNoteViews(ctx context.Contex
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-		qm.Where("shipping_status = ?", dto.ShippingStatus),
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	if dto.ShippingStatus != "" {
+		countQueryMods = append(countQueryMods, qm.Where("shipping_status = ?", dto.ShippingStatus))
 	}
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))

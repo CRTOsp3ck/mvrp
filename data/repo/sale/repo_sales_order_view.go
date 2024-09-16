@@ -87,8 +87,9 @@ func (r *SaleRepository) BuildSearchQueryForSalesOrderViews(ctx context.Context,
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-	}
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))

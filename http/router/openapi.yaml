@@ -2196,8 +2196,6 @@ components:
       type: object
     DtoSearchEntityDTO:
       properties:
-        entity_type:
-          type: string
         items_per_page:
           type: integer
         keyword:
@@ -2209,6 +2207,8 @@ components:
         server_side_get_rows_request:
           $ref: '#/components/schemas/QueryIServerSideGetRowsRequest'
         sort_by:
+          type: string
+        type:
           type: string
       type: object
     DtoSearchGoodsIssueNoteDTO:
@@ -2613,8 +2613,6 @@ components:
           type: string
         email:
           type: string
-        entity_type:
-          type: string
         id:
           type: integer
         name:
@@ -2622,6 +2620,8 @@ components:
         phone:
           type: string
         status:
+          type: string
+        type:
           type: string
         updated_at:
           format: date-time

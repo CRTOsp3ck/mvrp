@@ -10,7 +10,7 @@ import (
 type SearchEntityDTO struct {
     query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
     Keyword      string                             `json:"keyword"`
-    EntityType string          `json:"entity_type"`
+    Type string          `json:"type"`
     ItemsPerPage int                                `json:"items_per_page"`
     Page         int                                `json:"page"`
     SortBy       string                             `json:"sort_by"`

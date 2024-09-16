@@ -86,7 +86,7 @@ func SeedReturnMerchandiseAuthorization() error {
 		}
 
 		// update return merchandise authorization number
-		rmaNumber := fmt.Sprintf("GIN%03d", inv.ID)
+		rmaNumber := fmt.Sprintf("RMA%03d", inv.ID)
 		getRmaResp.Payload.ReturnMerchandiseAuthorization.RmaNumber = rmaNumber
 		upRmaDto := dto.UpdateReturnMerchandiseAuthorizationDTO{
 			ReturnMerchandiseAuthorization: getRmaResp.Payload.ReturnMerchandiseAuthorization,

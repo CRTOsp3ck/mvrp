@@ -77,8 +77,8 @@ func (r *EntityRepository) SearchEntities(ctx context.Context, exec boil.Context
 
 	/*
 		var queryMods []qm.QueryMod
-		if dto.EntityType != "" {
-			queryMods = append(queryMods, qm.Where("entity_type = ?", dto.EntityType))
+		if dto.Type != "" {
+			queryMods = append(queryMods, qm.Where("type = ?", dto.Type))
 		}
 		queryMods = append(queryMods, qm.And(
 			"name ILIKE ? or address ILIKE ? or email ILIKE ?",
@@ -102,8 +102,8 @@ func (r *EntityRepository) SearchEntities(ctx context.Context, exec boil.Context
 
 func (r *EntityRepository) BuildSearchQueryForEntities(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchEntityDTO) (entity.EntitySlice, int, error) {
 	var queryMods []qm.QueryMod
-	if dto.EntityType != "" {
-		queryMods = append(queryMods, qm.Where("entity_type = ?", dto.EntityType))
+	if dto.Type != "" {
+		queryMods = append(queryMods, qm.Where("type = ?", dto.Type))
 	}
 
 	request := dto.IServerSideGetRowsRequest
@@ -136,9 +136,12 @@ func (r *EntityRepository) BuildSearchQueryForEntities(ctx context.Context, exec
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-		qm.Where("entity_type = ?", dto.EntityType),
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	if dto.Type != "" {
+		countQueryMods = append(countQueryMods, qm.Where("type = ?", dto.Type))
 	}
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))

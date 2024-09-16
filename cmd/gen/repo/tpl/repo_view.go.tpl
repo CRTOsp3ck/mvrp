@@ -105,11 +105,14 @@ func (r *{{ .Package | ToPascalCase }}Repository) BuildSearchQueryFor{{ .PluralM
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-		{{- range .GroupQueryFields }}
-		qm.Where("{{ .Name }} = ?", dto.{{ .Name | ToPascalCase }}),
-		{{- end }}
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	{{- range .GroupQueryFields }}
+	if dto.{{ .Name | ToPascalCase }} != "" {
+		countQueryMods = append(countQueryMods, qm.Where("{{ .Name }} = ?", dto.{{ .Name | ToPascalCase }}))
 	}
+	{{- end }}
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))

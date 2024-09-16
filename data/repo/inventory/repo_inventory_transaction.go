@@ -130,9 +130,12 @@ func (r *InventoryRepository) BuildSearchQueryForInventoryTransactions(ctx conte
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-		qm.Where("inventory_id = ?", dto.InventoryId),
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	if dto.InventoryId != "" {
+		countQueryMods = append(countQueryMods, qm.Where("inventory_id = ?", dto.InventoryId))
 	}
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))

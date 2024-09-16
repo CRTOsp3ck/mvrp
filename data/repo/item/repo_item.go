@@ -139,9 +139,12 @@ func (r *ItemRepository) BuildSearchQueryForItems(ctx context.Context, exec boil
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	countQueryMods := []qm.QueryMod{
-		qm.Where("type = ?", dto.Type),
+	// ---------------- Pagination Count Query Mods ---------------- 
+	var countQueryMods []qm.QueryMod
+	if dto.Type != "" {
+		countQueryMods = append(countQueryMods, qm.Where("type = ?", dto.Type))
 	}
+	// --------------------------------------------------------------
 
 	if whereSQL != "" {
 		countQueryMods = append(countQueryMods, qm.Where(whereSQL))
