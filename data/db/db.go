@@ -30,7 +30,7 @@ func Init() {
 	Conn = db
 	boil.SetDB(db)
 	boil.SetLocation(time.UTC)
-	// boil.DebugMode = true
+	boil.DebugMode = true
 }
 
 func Close() {

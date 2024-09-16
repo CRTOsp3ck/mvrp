@@ -141,6 +141,7 @@ func (r *SaleRepository) BuildSearchQueryForGoodsReturnNotes(ctx context.Context
 	return res, int(count), err
 }
 
+/*
 // 1. Create Select SQL
 func (r *SaleRepository) createSelectSQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
 	rowGroupCols := request.RowGroupCols
@@ -168,7 +169,37 @@ func (r *SaleRepository) createSelectSQLForGoodsReturnNotes(request query.IServe
 
 	return strings.Join(colsToSelect, ", ")
 }
+*/
 
+// 1. Create Select SQL
+func (r *SaleRepository) createSelectSQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
+    rowGroupCols := request.RowGroupCols
+    valueCols := request.ValueCols
+    groupKeys := request.GroupKeys
+
+    var colsToSelect []string
+
+    if len(rowGroupCols) > len(groupKeys) {
+        // Include group columns in SELECT
+        for i := 0; i <= len(groupKeys) && i < len(rowGroupCols); i++ {
+            colsToSelect = append(colsToSelect, r.handleNestedFieldsForGoodsReturnNotes(rowGroupCols[i].Field))
+        }
+
+        // Include aggregated columns in SELECT
+        for _, valueCol := range valueCols {
+            colsToSelect = append(colsToSelect, fmt.Sprintf("SUM(%s) AS %s", r.handleNestedFieldsForGoodsReturnNotes(valueCol.Field), valueCol.Field))
+        }
+    } else {
+        // If not grouping, select all columns directly
+        for _, valueCol := range valueCols {
+            colsToSelect = append(colsToSelect, r.handleNestedFieldsForGoodsReturnNotes(valueCol.Field))
+        }
+    }
+
+    return strings.Join(colsToSelect, ", ")
+}
+
+/*
 // 2. Create Where SQL (handle group keys and filters)
 func (r *SaleRepository) createWhereSQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
 	var whereParts []string
@@ -189,8 +220,52 @@ func (r *SaleRepository) createWhereSQLForGoodsReturnNotes(request query.IServer
 	}
 	return ""
 }
+*/
+
+// 2. Create Where SQL (handle group keys and filters)
+func (r *SaleRepository) createWhereSQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
+    var whereParts []string
+
+    // Handle group keys (if any)
+    for i, groupKey := range request.GroupKeys {
+        colName := request.RowGroupCols[i].Field
+        whereParts = append(whereParts, fmt.Sprintf("%s = '%s'", r.handleNestedFieldsForGoodsReturnNotes(colName), groupKey))
+    }
+
+    // Handle filter model (apply filters to each column)
+    for colID, filterItem := range request.FilterModel {
+        whereParts = append(whereParts, r.createFilterSQLForGoodsReturnNotes(colID, filterItem))
+    }
+
+    if len(whereParts) > 0 {
+        return strings.Join(whereParts, " AND ")
+    }
+    return ""
+}
+
+// Helper function to handle nested fields (splitting JSON fields)
+func (r *SaleRepository) handleNestedFieldsForGoodsReturnNotes(field string) string {
+    parts := strings.Split(field, ".")
+    
+    if len(parts) == 1 {
+        // Not a nested field, return as is
+        return parts[0]
+    }
+    
+    // If it's a nested field, treat it as JSONB (e.g., receipient.name -> receipient->>'name')
+    return fmt.Sprintf("%s->>'%s'", parts[0], parts[1])
+}
+
 
 func (r *SaleRepository) createFilterSQLForGoodsReturnNotes(colID string, filterItem query.FilterItem) string {
+	// Handle nested JSON fields
+	if strings.Contains(colID, ".") {
+        parts := strings.Split(colID, ".")
+        jsonField := parts[0]
+        nestedField := parts[1]
+        colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+    }
+	
 	switch filterItem.FilterType {
 	case "text":
 		return r.createTextFilterSQLForGoodsReturnNotes(colID, filterItem)
@@ -202,16 +277,30 @@ func (r *SaleRepository) createFilterSQLForGoodsReturnNotes(colID string, filter
 }
 
 func (r *SaleRepository) createNumberFilterSQLForGoodsReturnNotes(colID string, filterItem query.FilterItem) string {
-	switch filterItem.Type {
-	case "equals":
-		return fmt.Sprintf("%s = %s", colID, filterItem.Filter)
-	case "greaterThan":
-		return fmt.Sprintf("%s > %s", colID, filterItem.Filter)
-	case "lessThan":
-		return fmt.Sprintf("%s < %s", colID, filterItem.Filter)
-	default:
-		return "true"
-	}
+    // Handle nested JSON fields
+    if strings.Contains(colID, ".") {
+        parts := strings.Split(colID, ".")
+        jsonField := parts[0]
+        nestedField := parts[1]
+        colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+    }
+
+    // Properly format the filter value
+    filterValue := filterItem.Filter
+    if filterItem.FilterType == "string" {
+        filterValue = fmt.Sprintf("'%s'", filterItem.Filter)
+    }
+
+    switch filterItem.Type {
+    case "equals":
+        return fmt.Sprintf("%s = %s", colID, filterValue)
+    case "greaterThan":
+        return fmt.Sprintf("%s > %s", colID, filterValue)
+    case "lessThan":
+        return fmt.Sprintf("%s < %s", colID, filterValue)
+    default:
+        return "true"
+    }
 }
 
 func (r *SaleRepository) createTextFilterSQLForGoodsReturnNotes(colID string, filterModel query.FilterItem) string {
@@ -251,6 +340,7 @@ func (r *SaleRepository) createGroupBySQLForGoodsReturnNotes(request query.IServ
 	return strings.Join(groupByCols, ", ")
 }
 
+/*
 // 4. Create Order By SQL
 func (r *SaleRepository) createOrderBySQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
 	sortModel := request.SortModel
@@ -269,6 +359,15 @@ func (r *SaleRepository) createOrderBySQLForGoodsReturnNotes(request query.IServ
 	}
 
 	for _, sort := range sortModel {
+		colID := sort.ColId
+		// Handle nested JSON fields
+        if strings.Contains(colID, ".") {
+            parts := strings.Split(colID, ".")
+            jsonField := parts[0]
+            nestedField := parts[1]
+            colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+        }
+
 		if grouping {
 			// Only allow sorting on grouped columns
 			if _, exists := groupColIds[sort.ColId]; exists {
@@ -277,6 +376,64 @@ func (r *SaleRepository) createOrderBySQLForGoodsReturnNotes(request query.IServ
 		} else {
 			// If no grouping, allow sorting on any column
 			sortParts = append(sortParts, fmt.Sprintf("%s %s", sort.ColId, sort.Sort))
+		}
+	}
+
+	if len(sortParts) > 0 {
+		return strings.Join(sortParts, ", ")
+	}
+
+	return ""
+}
+*/
+
+// 4. Create Order By SQL
+func (r *SaleRepository) createOrderBySQLForGoodsReturnNotes(request query.IServerSideGetRowsRequest) string {
+	sortModel := request.SortModel
+	rowGroupCols := request.RowGroupCols
+	groupKeys := request.GroupKeys
+
+	var sortParts []string
+
+	// Determine if we are doing grouping
+	grouping := len(rowGroupCols) > len(groupKeys)
+	groupColIds := make(map[string]string)
+
+	// Create a map of grouped columns with dynamic field handling
+	for i := 0; i < len(groupKeys)+1 && i < len(rowGroupCols); i++ {
+		colID := rowGroupCols[i].Field
+		if strings.Contains(colID, ".") {
+			// Handle nested JSON fields for grouped columns
+			parts := strings.Split(colID, ".")
+			jsonField := parts[0]
+			nestedField := parts[1]
+			groupColIds[colID] = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+		} else {
+			// Non-nested fields
+			groupColIds[colID] = colID
+		}
+	}
+
+	// Iterate over the sort model and construct the ORDER BY clause
+	for _, sort := range sortModel {
+		colID := sort.ColId
+
+		// Handle nested JSON fields for sorting
+		if strings.Contains(colID, ".") {
+			parts := strings.Split(colID, ".")
+			jsonField := parts[0]
+			nestedField := parts[1]
+			colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+		}
+
+		if grouping {
+			// Allow sorting only on grouped columns (with dynamic field handling)
+			if groupCol, exists := groupColIds[sort.ColId]; exists {
+				sortParts = append(sortParts, fmt.Sprintf("%s %s", groupCol, sort.Sort))
+			}
+		} else {
+			// If not grouping, allow sorting on any column
+			sortParts = append(sortParts, fmt.Sprintf("%s %s", colID, sort.Sort))
 		}
 	}
 
