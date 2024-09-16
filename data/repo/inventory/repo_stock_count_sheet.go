@@ -278,39 +278,103 @@ func (r *InventoryRepository) createFilterSQLForStockCountSheets(colID string, f
 
 func (r *InventoryRepository) createNumberFilterSQLForStockCountSheets(colID string, filterItem query.FilterItem) string {
     // Handle nested JSON fields
-    if strings.Contains(colID, ".") {
-        parts := strings.Split(colID, ".")
-        jsonField := parts[0]
-        nestedField := parts[1]
-        colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
-    }
+    // if strings.Contains(colID, ".") {
+    //     parts := strings.Split(colID, ".")
+    //     jsonField := parts[0]
+    //     nestedField := parts[1]
+    //     colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+    // }
 
-    // Properly format the filter value
-    filterValue := filterItem.Filter
-    if filterItem.FilterType == "string" {
-        filterValue = fmt.Sprintf("'%s'", filterItem.Filter)
-    }
+	/*
+		// Properly format the filter value
+		filterValue := filterItem.Filter
+		if filterItem.FilterType == "string" {
+			filterValue = fmt.Sprintf("'%s'", filterItem.Filter)
+		}
+	*/
 
+	// Handle filter operator and conditions (recursive)
+	if filterItem.Operator != "" {
+		conditions := filterItem.Conditions
+		switch filterItem.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createNumberFilterSQLForStockCountSheets(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createNumberFilterSQLForStockCountSheets(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
     switch filterItem.Type {
     case "equals":
-        return fmt.Sprintf("%s = %s", colID, filterValue)
+        return fmt.Sprintf("%s = %v", colID, filterItem.Filter)
+	case "notEqual":
+		return fmt.Sprintf("%s != %v", colID, filterItem.Filter)
     case "greaterThan":
-        return fmt.Sprintf("%s > %s", colID, filterValue)
+        return fmt.Sprintf("%s > %v", colID, filterItem.Filter)
+	case "greaterThanOrEqual":
+		return fmt.Sprintf("%s >= %v", colID, filterItem.Filter)
     case "lessThan":
-        return fmt.Sprintf("%s < %s", colID, filterValue)
+        return fmt.Sprintf("%s < %v", colID, filterItem.Filter)
+	case "lessThanOrEqual":
+		return fmt.Sprintf("%s <= %v", colID, filterItem.Filter)
+	case "inRange":
+		return fmt.Sprintf("%s BETWEEN %v AND %v", colID, filterItem.Filter, filterItem.FilterTo)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
     default:
-        return "true"
+        return "false"
     }
 }
 
 func (r *InventoryRepository) createTextFilterSQLForStockCountSheets(colID string, filterModel query.FilterItem) string {
+	// Handle nested JSON fields
+    // if strings.Contains(colID, ".") {
+    //     parts := strings.Split(colID, ".")
+    //     jsonField := parts[0]
+    //     nestedField := parts[1]
+    //     colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+    // }
+
+	// Handle filter operator and conditions (recursive)
+	if filterModel.Operator != "" {
+		conditions := filterModel.Conditions
+		switch filterModel.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createTextFilterSQLForStockCountSheets(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createTextFilterSQLForStockCountSheets(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
 	switch filterModel.Type {
 	case "contains":
-		// Ensure that id is filtered with '=' if it's a number
-		if colID == "id" {
-			return fmt.Sprintf("%s = %s", colID, filterModel.Filter)
-		}
 		return fmt.Sprintf("%s ILIKE '%%%s%%'", colID, filterModel.Filter)
+	case "notContains":
+		return fmt.Sprintf("%s NOT ILIKE '%%%s%%'", colID, filterModel.Filter)
 	case "equals":
 		return fmt.Sprintf("%s = '%s'", colID, filterModel.Filter)
 	case "notEqual":
@@ -319,8 +383,12 @@ func (r *InventoryRepository) createTextFilterSQLForStockCountSheets(colID strin
 		return fmt.Sprintf("%s ILIKE '%s%%'", colID, filterModel.Filter)
 	case "endsWith":
 		return fmt.Sprintf("%s ILIKE '%%%s'", colID, filterModel.Filter)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
 	default:
-		return "true"
+		return "false"
 	}
 }
 

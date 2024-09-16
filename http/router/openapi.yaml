@@ -3007,11 +3007,15 @@ components:
       type: object
     QueryFilterItem:
       properties:
-        filter:
-          type: string
-        filterTo:
-          type: string
+        conditions:
+          items:
+            $ref: '#/components/schemas/QueryFilterItem'
+          type: array
+        filter: {}
+        filterTo: {}
         filterType:
+          type: string
+        operator:
           type: string
         type:
           type: string

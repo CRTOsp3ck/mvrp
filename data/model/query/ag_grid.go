@@ -23,10 +23,13 @@ type ValueCol struct {
 type FilterModel map[string]FilterItem
 
 type FilterItem struct {
-	FilterType string `json:"filterType"`
-	Type       string `json:"type"`
-	Filter     string `json:"filter"`
-	FilterTo   string `json:"filterTo,omitempty"`
+	FilterType string      `json:"filterType"`
+	Type       string      `json:"type"`
+	Filter     interface{} `json:"filter"`
+	FilterTo   interface{} `json:"filterTo,omitempty"`
+
+	Operator   string       `json:"operator,omitempty"`
+	Conditions []FilterItem `json:"conditions,omitempty"`
 }
 
 type SortModel struct {
