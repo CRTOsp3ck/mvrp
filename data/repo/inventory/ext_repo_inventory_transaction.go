@@ -17,32 +17,8 @@ func (r *InventoryRepository) GetInventoryTransactionTotalCountByInventoryID(ctx
 	return int(count), err
 }
 
-// func (r *InventoryRepository) SearchAllAllInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, error) {
-// 	return inventory.AllInventoryTransactions(
-// 		// qm.Where("inventory_id = ?", dto.InventoryId),
-// 		qm.Limit(dto.ItemsPerPage),
-// 		qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-// 		// qm.GroupBy("id"),
-// 		qm.OrderBy(dto.OrderBy+" "+"ASC"),
-// 	).All(ctx, exec)
-// }
-
 func (r *InventoryRepository) SearchAllInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, int, error) {
-	return r.BuildSearchQueryForAllInventoryTransactions(ctx, exec, dto)
-
-	/*
-		var queryMods []qm.QueryMod
-		if dto.InventoryId != "" {
-			queryMods = append(queryMods, qm.Where("inventory_id = ?", dto.InventoryId))
-		}
-		queryMods = append(queryMods,
-			qm.Limit(dto.ItemsPerPage),
-			qm.Offset((dto.ItemsPerPage*dto.Page)-dto.ItemsPerPage),
-			// qm.GroupBy("id"),
-			qm.OrderBy(dto.OrderBy+" "+"ASC"),
-		)
-		return inventory.AllInventoryTransactions(queryMods...).All(ctx, exec)
-	*/
+	return r.BuildSearchQueryForInventoryTransactions(ctx, exec, dto)
 }
 
 /*
@@ -51,6 +27,9 @@ func (r *InventoryRepository) SearchAllInventoryTransactions(ctx context.Context
 
 func (r *InventoryRepository) BuildSearchQueryForAllInventoryTransactions(ctx context.Context, exec boil.ContextExecutor, dto dto.SearchInventoryTransactionDTO) (inventory.InventoryTransactionSlice, int, error) {
 	var queryMods []qm.QueryMod
+	if dto.InventoryId != "" {
+		queryMods = append(queryMods, qm.Where("inventory_id = ?", dto.InventoryId))
+	}
 
 	request := dto.IServerSideGetRowsRequest
 
@@ -82,15 +61,18 @@ func (r *InventoryRepository) BuildSearchQueryForAllInventoryTransactions(ctx co
 		queryMods = append(queryMods, qm.Offset(offsetSQL))
 	}
 
-	// countQueryMods := []qm.QueryMod{
-	// 	// qm.Where("inventory_id = ?", dto.InventoryId),
-	// }
+	// ---------------- Pagination Count Query Mods ----------------
+	var countQueryMods []qm.QueryMod
+	if dto.InventoryId != "" {
+		countQueryMods = append(countQueryMods, qm.Where("inventory_id = ?", dto.InventoryId))
+	}
+	// --------------------------------------------------------------
 
-	// if whereSQL != "" {
-	// 	countQueryMods = append(countQueryMods, qm.Where(whereSQL))
-	// }
+	if whereSQL != "" {
+		countQueryMods = append(countQueryMods, qm.Where(whereSQL))
+	}
 
-	count, err := inventory.InventoryTransactions().Count(ctx, exec)
+	count, err := inventory.InventoryTransactions(countQueryMods...).Count(ctx, exec)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -110,17 +92,17 @@ func (r *InventoryRepository) createSelectSQLForAllInventoryTransactions(request
 	if len(rowGroupCols) > len(groupKeys) {
 		// Include group columns in SELECT
 		for i := 0; i <= len(groupKeys) && i < len(rowGroupCols); i++ {
-			colsToSelect = append(colsToSelect, rowGroupCols[i].Field)
+			colsToSelect = append(colsToSelect, r.handleNestedFieldsForAllInventoryTransactions(rowGroupCols[i].Field))
 		}
 
 		// Include aggregated columns in SELECT
 		for _, valueCol := range valueCols {
-			colsToSelect = append(colsToSelect, fmt.Sprintf("SUM(%s) AS %s", valueCol.Field, valueCol.Field))
+			colsToSelect = append(colsToSelect, fmt.Sprintf("SUM(%s) AS %s", r.handleNestedFieldsForAllInventoryTransactions(valueCol.Field), valueCol.Field))
 		}
 	} else {
 		// If not grouping, select all columns directly
 		for _, valueCol := range valueCols {
-			colsToSelect = append(colsToSelect, valueCol.Field)
+			colsToSelect = append(colsToSelect, r.handleNestedFieldsForAllInventoryTransactions(valueCol.Field))
 		}
 	}
 
@@ -134,7 +116,7 @@ func (r *InventoryRepository) createWhereSQLForAllInventoryTransactions(request 
 	// Handle group keys (if any)
 	for i, groupKey := range request.GroupKeys {
 		colName := request.RowGroupCols[i].Field
-		whereParts = append(whereParts, fmt.Sprintf("%s = '%s'", colName, groupKey))
+		whereParts = append(whereParts, fmt.Sprintf("%s = '%s'", r.handleNestedFieldsForAllInventoryTransactions(colName), groupKey))
 	}
 
 	// Handle filter model (apply filters to each column)
@@ -148,38 +130,119 @@ func (r *InventoryRepository) createWhereSQLForAllInventoryTransactions(request 
 	return ""
 }
 
+// Helper function to handle nested fields (splitting JSON fields)
+func (r *InventoryRepository) handleNestedFieldsForAllInventoryTransactions(field string) string {
+	parts := strings.Split(field, ".")
+
+	if len(parts) == 1 {
+		// Not a nested field, return as is
+		return parts[0]
+	}
+
+	// If it's a nested field, treat it as JSONB (e.g., receipient.name -> receipient->>'name')
+	return fmt.Sprintf("%s->>'%s'", parts[0], parts[1])
+}
+
 func (r *InventoryRepository) createFilterSQLForAllInventoryTransactions(colID string, filterItem query.FilterItem) string {
+	// Handle nested JSON fields
+	if strings.Contains(colID, ".") {
+		parts := strings.Split(colID, ".")
+		jsonField := parts[0]
+		nestedField := parts[1]
+		colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+	}
+
 	switch filterItem.FilterType {
 	case "text":
 		return r.createTextFilterSQLForAllInventoryTransactions(colID, filterItem)
 	case "number":
+		// Cast the JSONB text value to a number
+		if strings.Contains(colID, "->>'") {
+			colID = fmt.Sprintf("(%s)::numeric", colID)
+		}
 		return r.createNumberFilterSQLForAllInventoryTransactions(colID, filterItem)
+	case "date":
+		return r.createDateFilterSQLForAllInventoryTransactions(colID, filterItem)
 	default:
 		return "true"
 	}
 }
 
 func (r *InventoryRepository) createNumberFilterSQLForAllInventoryTransactions(colID string, filterItem query.FilterItem) string {
+	// Handle filter operator and conditions (recursive)
+	if filterItem.Operator != "" {
+		conditions := filterItem.Conditions
+		switch filterItem.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createNumberFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createNumberFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
 	switch filterItem.Type {
 	case "equals":
-		return fmt.Sprintf("%s = %s", colID, filterItem.Filter)
+		return fmt.Sprintf("%s = %v", colID, filterItem.Filter)
+	case "notEqual":
+		return fmt.Sprintf("%s != %v", colID, filterItem.Filter)
 	case "greaterThan":
-		return fmt.Sprintf("%s > %s", colID, filterItem.Filter)
+		return fmt.Sprintf("%s > %v", colID, filterItem.Filter)
+	case "greaterThanOrEqual":
+		return fmt.Sprintf("%s >= %v", colID, filterItem.Filter)
 	case "lessThan":
-		return fmt.Sprintf("%s < %s", colID, filterItem.Filter)
+		return fmt.Sprintf("%s < %v", colID, filterItem.Filter)
+	case "lessThanOrEqual":
+		return fmt.Sprintf("%s <= %v", colID, filterItem.Filter)
+	case "inRange":
+		return fmt.Sprintf("%s BETWEEN %v AND %v", colID, filterItem.Filter, filterItem.FilterTo)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
 	default:
-		return "true"
+		return "false"
 	}
 }
 
 func (r *InventoryRepository) createTextFilterSQLForAllInventoryTransactions(colID string, filterModel query.FilterItem) string {
+	// Handle filter operator and conditions (recursive)
+	if filterModel.Operator != "" {
+		conditions := filterModel.Conditions
+		switch filterModel.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createTextFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createTextFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
 	switch filterModel.Type {
 	case "contains":
-		// Ensure that id is filtered with '=' if it's a number
-		if colID == "id" {
-			return fmt.Sprintf("%s = %s", colID, filterModel.Filter)
-		}
 		return fmt.Sprintf("%s ILIKE '%%%s%%'", colID, filterModel.Filter)
+	case "notContains":
+		return fmt.Sprintf("%s NOT ILIKE '%%%s%%'", colID, filterModel.Filter)
 	case "equals":
 		return fmt.Sprintf("%s = '%s'", colID, filterModel.Filter)
 	case "notEqual":
@@ -188,8 +251,59 @@ func (r *InventoryRepository) createTextFilterSQLForAllInventoryTransactions(col
 		return fmt.Sprintf("%s ILIKE '%s%%'", colID, filterModel.Filter)
 	case "endsWith":
 		return fmt.Sprintf("%s ILIKE '%%%s'", colID, filterModel.Filter)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
 	default:
-		return "true"
+		return "false"
+	}
+}
+
+func (r *InventoryRepository) createDateFilterSQLForAllInventoryTransactions(colID string, filterModel query.FilterItem) string {
+	// Handle filter operator and conditions (recursive)
+	if filterModel.Operator != "" {
+		conditions := filterModel.Conditions
+		switch filterModel.Operator {
+		case "AND":
+			var andParts []string
+			for _, condition := range conditions {
+				andParts = append(andParts, r.createDateFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(andParts, " AND ")
+		case "OR":
+			var orParts []string
+			for _, condition := range conditions {
+				orParts = append(orParts, r.createDateFilterSQLForAllInventoryTransactions(colID, condition))
+			}
+			return strings.Join(orParts, " OR ")
+		default:
+			return "false"
+		}
+	}
+
+	// Basic filter handling
+	switch filterModel.Type {
+	case "equals":
+		return fmt.Sprintf("DATE(%s) = DATE('%s')", colID, filterModel.DateFrom)
+	case "notEqual":
+		return fmt.Sprintf("DATE(%s) != DATE('%s')", colID, filterModel.DateFrom)
+	case "greaterThan":
+		return fmt.Sprintf("DATE(%s) > DATE('%s')", colID, filterModel.DateFrom)
+	// case "greaterThanOrEqual":
+	// 	return fmt.Sprintf("DATE(%s) >= DATE('%s')", colID, filterModel.DateFrom)
+	case "lessThan":
+		return fmt.Sprintf("DATE(%s) < DATE('%s')", colID, filterModel.DateFrom)
+	// case "lessThanOrEqual":
+	// 	return fmt.Sprintf("DATE(%s) <= DATE('%s')", colID, filterModel.DateFrom)
+	case "inRange":
+		return fmt.Sprintf("DATE(%s) BETWEEN DATE('%s') AND DATE('%s')", colID, filterModel.DateFrom, filterModel.DateTo)
+	case "blank":
+		return fmt.Sprintf("%s IS NULL", colID)
+	case "notBlank":
+		return fmt.Sprintf("%s IS NOT NULL", colID)
+	default:
+		return "false"
 	}
 }
 
@@ -219,22 +333,43 @@ func (r *InventoryRepository) createOrderBySQLForAllInventoryTransactions(reques
 
 	// Determine if we are doing grouping
 	grouping := len(rowGroupCols) > len(groupKeys)
-	groupColIds := make(map[string]struct{})
+	groupColIds := make(map[string]string)
 
-	// Create a map of grouped columns
+	// Create a map of grouped columns with dynamic field handling
 	for i := 0; i < len(groupKeys)+1 && i < len(rowGroupCols); i++ {
-		groupColIds[rowGroupCols[i].Field] = struct{}{}
+		colID := rowGroupCols[i].Field
+		if strings.Contains(colID, ".") {
+			// Handle nested JSON fields for grouped columns
+			parts := strings.Split(colID, ".")
+			jsonField := parts[0]
+			nestedField := parts[1]
+			groupColIds[colID] = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+		} else {
+			// Non-nested fields
+			groupColIds[colID] = colID
+		}
 	}
 
+	// Iterate over the sort model and construct the ORDER BY clause
 	for _, sort := range sortModel {
+		colID := sort.ColId
+
+		// Handle nested JSON fields for sorting
+		if strings.Contains(colID, ".") {
+			parts := strings.Split(colID, ".")
+			jsonField := parts[0]
+			nestedField := parts[1]
+			colID = fmt.Sprintf("%s->>'%s'", jsonField, nestedField)
+		}
+
 		if grouping {
-			// Only allow sorting on grouped columns
-			if _, exists := groupColIds[sort.ColId]; exists {
-				sortParts = append(sortParts, fmt.Sprintf("%s %s", sort.ColId, sort.Sort))
+			// Allow sorting only on grouped columns (with dynamic field handling)
+			if groupCol, exists := groupColIds[sort.ColId]; exists {
+				sortParts = append(sortParts, fmt.Sprintf("%s %s", groupCol, sort.Sort))
 			}
 		} else {
-			// If no grouping, allow sorting on any column
-			sortParts = append(sortParts, fmt.Sprintf("%s %s", sort.ColId, sort.Sort))
+			// If not grouping, allow sorting on any column
+			sortParts = append(sortParts, fmt.Sprintf("%s %s", colID, sort.Sort))
 		}
 	}
 
@@ -255,9 +390,9 @@ func (r *InventoryRepository) createLimitAndOffsetSQLForAllInventoryTransactions
 // func (r *InventoryRepository) createFilterSQLForAllInventoryTransactions(colID string, filterItem query.FilterItem) string {
 // 	// Check if the filter column is a number or text
 // 	if isNumericColumn(colID) {
-// 		return r.createNumberFilterSQLForAllInventoryTransactions(colID, filterItem)
+// 		return r.createNumberFilterSQLForInventoryTransactions(colID, filterItem)
 // 	} else {
-// 		return r.createTextFilterSQLForAllInventoryTransactions(colID, filterItem)
+// 		return r.createTextFilterSQLForInventoryTransactions(colID, filterItem)
 // 	}
 // }
 
