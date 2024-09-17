@@ -198,6 +198,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/credit_note_view", func(r chi.Router) {
+				r.Get("/", invoice.ListCreditNoteView)
+				r.Post("/search", invoice.SearchCreditNoteView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(invoice.CreditNoteViewContext)
+					r.Get("/", invoice.GetCreditNoteView)
+				})
+			})
+			
 			r.Route("/debit_note", func(r chi.Router) {
 				r.Get("/", invoice.ListDebitNote)
 				r.Post("/", invoice.CreateDebitNote)
@@ -219,6 +228,15 @@ func getMainRoutes() func(chi.Router) {
 					r.Get("/", invoice.GetInvoice)
 					r.Put("/", invoice.UpdateInvoice)
 					r.Delete("/", invoice.DeleteInvoice)
+				})
+			})
+			
+			r.Route("/invoice_view", func(r chi.Router) {
+				r.Get("/", invoice.ListInvoiceView)
+				r.Post("/search", invoice.SearchInvoiceView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(invoice.InvoiceViewContext)
+					r.Get("/", invoice.GetInvoiceView)
 				})
 			})
 			

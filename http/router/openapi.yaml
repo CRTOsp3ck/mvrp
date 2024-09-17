@@ -788,6 +788,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
+  /v1/main/invoice/credit_note_view:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/credit_note_view/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/credit_note_view/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchCreditNoteDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/invoice/debit_note:
     get:
       responses:
@@ -943,6 +981,44 @@ paths:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
   /v1/main/invoice/invoice/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchInvoiceDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/invoice_view:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/invoice_view/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/invoice_view/search:
     post:
       requestBody:
         content:

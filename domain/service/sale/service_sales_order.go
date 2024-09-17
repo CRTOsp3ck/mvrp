@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"mvrp/data/model/base"
 	"mvrp/data/model/inventory"
+	"mvrp/data/model/invoice"
 	"mvrp/data/model/sale"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
+	"time"
 
 	"github.com/ericlagergren/decimal"
 	"github.com/volatiletech/null/v8"
@@ -201,11 +203,15 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 	/*
 		1. Preprocess Amounts
 		2. Create Base Document
-		3. Create Sales Order
-		4. Create Base Document Items
+		3. Create Base Document Items
+		4. Create Sales Order
 		5. Create Sales Order Items
-		6. Update Inventory
-		7. Create Inventory Transaction
+		6. Create Order Confirmation
+		7. Create Order Confirmation Items
+		8. Create Invoice
+		9. Create Invoice Items
+		10. Update Inventory
+		11. Create Inventory Transaction
 	*/
 
 	tx, err := s.Repo.Begin(req.Ctx)
@@ -250,6 +256,42 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		return nil, err
 	}
 
+	// create order confirmation
+	nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	orderConfirmation := &sale.OrderConfirmation{
+		ID:                      nextID,
+		BaseDocumentID:          req.Payload.BaseDocument.ID,
+		OrderConfirmationNumber: util.Util.Str.ToString(nextID),
+		SalesOrderID:            req.Payload.SalesOrder.ID,
+		CustomerID:              req.Payload.SalesOrder.CustomerID,
+		ShipToInformation:       req.Payload.SalesOrder.ShipToInformation,
+	}
+	err = s.Repo.Sale.CreateOrderConfirmation(req.Ctx, tx, orderConfirmation)
+	if err != nil {
+		return nil, err
+	}
+
+	// create invoice
+	nextID, err = s.Repo.Invoice.GetNextEntryInvoiceID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	orderInvoice := &invoice.Invoice{
+		ID:             nextID,
+		BaseDocumentID: req.Payload.BaseDocument.ID,
+		InvoiceNumber:  util.Util.Str.ToString(nextID),
+		VendorID:       null.IntFrom(1),
+		CustomerID:     req.Payload.SalesOrder.CustomerID,
+		PaymentDueDate: null.TimeFrom(time.Now().AddDate(0, 0, 30)),
+	}
+	err = s.Repo.Invoice.CreateInvoice(req.Ctx, tx, orderInvoice)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, item := range req.Payload.Items {
 		// create base document items
 		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
@@ -272,6 +314,36 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		item.SalesOrderItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		item.SalesOrderItem.SalesOrderID = req.Payload.SalesOrder.ID
 		err = s.Repo.Sale.CreateSalesOrderItem(req.Ctx, tx, &item.SalesOrderItem)
+		if err != nil {
+			return nil, err
+		}
+
+		// create order confirmation items
+		nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		orderConfirmationItem := sale.OrderConfirmationItem{
+			ID:                  nextID,
+			BaseDocumentItemID:  item.BaseDocumentItem.ID,
+			OrderConfirmationID: orderConfirmation.ID,
+		}
+		err = s.Repo.Sale.CreateOrderConfirmationItem(req.Ctx, tx, &orderConfirmationItem)
+		if err != nil {
+			return nil, err
+		}
+
+		// create invoice items
+		nextID, err = s.Repo.Invoice.GetNextEntryInvoiceItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		orderInvoiceItem := invoice.InvoiceItem{
+			ID:                 nextID,
+			InvoiceID:          orderInvoice.ID,
+			BaseDocumentItemID: item.BaseDocumentItem.ID,
+		}
+		err = s.Repo.Invoice.CreateInvoiceItem(req.Ctx, tx, &orderInvoiceItem)
 		if err != nil {
 			return nil, err
 		}
@@ -349,8 +421,12 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 		3. Update Sales Order
 		4. Update Base Document Items
 		5. Update Sales Order Items
-		6. Update Inventory
-		7. Create Inventory Transaction
+		6. Update Order Confirmation
+		7. Update Order Confirmation Items
+		8. Update Invoice
+		9. Update Invoice Items
+		10. Update Inventory
+		11. Create Inventory Transaction
 	*/
 
 	tx, err := s.Repo.Begin(req.Ctx)
@@ -415,6 +491,26 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 
 			// delete sales order item
 			err = s.Repo.Sale.DeleteSalesOrderItem(req.Ctx, tx, item)
+			if err != nil {
+				return nil, err
+			}
+
+			// delete order confirmation item
+			orderConfirmationItem, err := s.Repo.Sale.GetOrderConfirmationItemByBaseDocumentItemID(req.Ctx, tx, baseDocumentItem.ID)
+			if err != nil {
+				return nil, err
+			}
+			err = s.Repo.Sale.DeleteOrderConfirmationItem(req.Ctx, tx, orderConfirmationItem)
+			if err != nil {
+				return nil, err
+			}
+
+			// delete invoice item
+			invoiceItem, err := s.Repo.Invoice.GetInvoiceItemByBaseDocumentItemID(req.Ctx, tx, baseDocumentItem.ID)
+			if err != nil {
+				return nil, err
+			}
+			err = s.Repo.Invoice.DeleteInvoiceItem(req.Ctx, tx, invoiceItem)
 			if err != nil {
 				return nil, err
 			}
@@ -535,6 +631,44 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 				return nil, err
 			}
 
+			// create order confirmation items
+			nextID, err = s.Repo.Sale.GetNextEntryOrderConfirmationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			orderConfirmation, err := s.Repo.Sale.GetOrderConfirmationByBaseDocumentID(req.Ctx, tx, req.Payload.BaseDocument.ID)
+			if err != nil {
+				return nil, err
+			}
+			orderConfirmationItem := sale.OrderConfirmationItem{
+				ID:                  nextID,
+				BaseDocumentItemID:  item.BaseDocumentItem.ID,
+				OrderConfirmationID: orderConfirmation.ID,
+			}
+			err = s.Repo.Sale.CreateOrderConfirmationItem(req.Ctx, tx, &orderConfirmationItem)
+			if err != nil {
+				return nil, err
+			}
+
+			// create invoice items
+			nextID, err = s.Repo.Invoice.GetNextEntryInvoiceItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			orderInvoice, err := s.Repo.Invoice.GetInvoiceByBaseDocumentID(req.Ctx, tx, req.Payload.BaseDocument.ID)
+			if err != nil {
+				return nil, err
+			}
+			orderInvoiceItem := invoice.InvoiceItem{
+				ID:                 nextID,
+				InvoiceID:          orderInvoice.ID,
+				BaseDocumentItemID: item.BaseDocumentItem.ID,
+			}
+			err = s.Repo.Invoice.CreateInvoiceItem(req.Ctx, tx, &orderInvoiceItem)
+			if err != nil {
+				return nil, err
+			}
+
 			// update inventory
 			inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
 			if err != nil {
@@ -634,6 +768,30 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		return nil, err
 	}
 
+	// get order confirmation
+	orderConfirmation, err := s.Repo.Sale.GetOrderConfirmationByBaseDocumentID(req.Ctx, tx, salesOrder.BaseDocumentID)
+	if err != nil {
+		return nil, err
+	}
+
+	// delete order confirmation
+	err = s.Repo.Sale.DeleteOrderConfirmation(req.Ctx, tx, orderConfirmation)
+	if err != nil {
+		return nil, err
+	}
+
+	// get invoice
+	salesInvoice, err := s.Repo.Invoice.GetInvoiceByBaseDocumentID(req.Ctx, tx, salesOrder.BaseDocumentID)
+	if err != nil {
+		return nil, err
+	}
+
+	// delete invoice
+	err = s.Repo.Invoice.DeleteInvoice(req.Ctx, tx, salesInvoice)
+	if err != nil {
+		return nil, err
+	}
+
 	// get base document
 	baseDocument, err := s.Repo.Base.GetBaseDocumentByID(req.Ctx, tx, salesOrder.BaseDocumentID)
 	if err != nil {
@@ -665,6 +823,26 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 
 		// delete sales order item
 		err = s.Repo.Sale.DeleteSalesOrderItem(req.Ctx, tx, item)
+		if err != nil {
+			return nil, err
+		}
+
+		// delete order confirmation item
+		orderConfirmationItem, err := s.Repo.Sale.GetOrderConfirmationItemByBaseDocumentItemID(req.Ctx, tx, baseDocumentItem.ID)
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Sale.DeleteOrderConfirmationItem(req.Ctx, tx, orderConfirmationItem)
+		if err != nil {
+			return nil, err
+		}
+
+		// delete invoice item
+		invoiceItem, err := s.Repo.Invoice.GetInvoiceItemByBaseDocumentItemID(req.Ctx, tx, baseDocumentItem.ID)
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Invoice.DeleteInvoiceItem(req.Ctx, tx, invoiceItem)
 		if err != nil {
 			return nil, err
 		}

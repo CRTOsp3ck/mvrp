@@ -125,6 +125,14 @@
                         { "method": "Post", "path": "/credit_note/search", "handler": "SearchCreditNote", "type": "search" }
                     ] 
                 },
+                {
+                    "name": "credit_note_view",
+                    "routes": [
+                        { "method": "Get", "path": "/credit_note_view", "handler": "ListCreditNoteView", "type": "list" },
+                        { "method": "Get", "path": "/credit_note_view/{id}", "handler": "GetCreditNoteView", "type": "get" },
+                        { "method": "Post", "path": "/credit_note_view/search", "handler": "SearchCreditNoteView", "type": "search" }
+                    ]
+                },
                 { 
                     "name": "debit_note",
                     "routes": [
@@ -146,6 +154,14 @@
                         { "method": "Delete", "path": "/invoice/{id}", "handler": "DeleteInvoice", "type": "delete" },
                         { "method": "Post", "path": "/invoice/search", "handler": "SearchInvoice", "type": "search" }
                     ] 
+                },
+                {
+                    "name": "invoice_view",
+                    "routes": [
+                        { "method": "Get", "path": "/invoice_view", "handler": "ListInvoiceView", "type": "list" },
+                        { "method": "Get", "path": "/invoice_view/{id}", "handler": "GetInvoiceView", "type": "get" },
+                        { "method": "Post", "path": "/invoice_view/search", "handler": "SearchInvoiceView", "type": "search" }
+                    ]
                 },
                 { 
                     "name": "payment_receipt",

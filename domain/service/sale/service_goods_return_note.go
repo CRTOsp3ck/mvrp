@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/base"
 	"mvrp/data/model/inventory"
+	"mvrp/data/model/invoice"
 	"mvrp/data/model/sale"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
@@ -269,6 +270,22 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 	}
 	rmaItems := make([]*inventory.ReturnMerchandiseAuthorizationItem, 0)
 
+	// create credit note
+	nextID, err = s.Repo.Invoice.GetNextEntryCreditNoteID(req.Ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	creditNote := &invoice.CreditNote{
+		ID:                nextID,
+		CreditNoteNumber:  util.Util.Str.ToString(nextID),
+		BaseDocumentID:    req.Payload.BaseDocument.ID,
+		ReasonForIssuance: null.StringFrom("Goods Return Note Creation"),
+	}
+	err = s.Repo.Invoice.CreateCreditNote(req.Ctx, tx, creditNote)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, item := range req.Payload.Items {
 		// update inventory
 		inv, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
@@ -337,6 +354,7 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		item.GoodsReturnNoteItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		item.GoodsReturnNoteItem.GoodsReturnNoteID = req.Payload.GoodsReturnNote.ID
 		item.GoodsReturnNoteItem.RmaItemID = null.IntFrom(rmaItem.ID)
+		item.GoodsReturnNoteItem.CreditNoteID = null.IntFrom(creditNote.ID)
 		err = s.Repo.Sale.CreateGoodsReturnNoteItem(req.Ctx, tx, &item.GoodsReturnNoteItem)
 		if err != nil {
 			return nil, err
@@ -438,11 +456,22 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
+	// cache the rmaID for later use
+	//-----------------------------------------------------
+	var rmaID int
+	//-----------------------------------------------------
+
 	// delete the ones that are in the current list and not in the new list
 	currItems, err := s.Repo.Sale.GetGoodsReturnNoteItemsByGoodsReturnNoteID(req.Ctx, tx, currGrn.ID)
 	if err != nil {
 		return nil, err
 	}
+
+	//-----------------------------------------------------
+	// this is not the best way to do this, but it works for now
+	rmaID = currItems[0].RmaItemID.Int
+	//-----------------------------------------------------
+
 	for _, currItem := range currItems {
 		found := false
 		for _, item := range req.Payload.Items {
@@ -609,24 +638,22 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 				return nil, err
 			}
 
-			/*
-				// create return merchandise authorization item
-				nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
-				if err != nil {
-					return nil, err
-				}
-				rmaItem := &inventory.ReturnMerchandiseAuthorizationItem{
-					ID:          nextID,
-					RmaID:       req.Payload.GoodsReturnNote.RmaID,
-					InventoryID: null.IntFrom(inv.ID),
-					Quantity:    types.Decimal(item.BaseDocumentItem.Quantity),
-					UnitValue:   types.Decimal(item.BaseDocumentItem.UnitPrice),
-				}
-				err = s.Repo.Inventory.CreateReturnMerchandiseAuthorizationItem(req.Ctx, tx, rmaItem)
-				if err != nil {
-					return nil, err
-				}
-			*/
+			// create return merchandise authorization item
+			nextID, err = s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			rmaItem := &inventory.ReturnMerchandiseAuthorizationItem{
+				ID:          nextID,
+				RmaID:       null.IntFrom(rmaID),
+				InventoryID: null.IntFrom(inv.ID),
+				Quantity:    types.Decimal(item.BaseDocumentItem.Quantity),
+				UnitValue:   types.Decimal(item.BaseDocumentItem.UnitPrice),
+			}
+			err = s.Repo.Inventory.CreateReturnMerchandiseAuthorizationItem(req.Ctx, tx, rmaItem)
+			if err != nil {
+				return nil, err
+			}
 
 			// create base document items
 			nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
@@ -648,6 +675,7 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			item.GoodsReturnNoteItem.ID = nextID
 			item.GoodsReturnNoteItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.GoodsReturnNoteItem.GoodsReturnNoteID = req.Payload.GoodsReturnNote.ID
+			item.GoodsReturnNoteItem.RmaItemID = null.IntFrom(rmaItem.ID)
 			err = s.Repo.Sale.CreateGoodsReturnNoteItem(req.Ctx, tx, &item.GoodsReturnNoteItem)
 			if err != nil {
 				return nil, err
@@ -656,25 +684,23 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		}
 	}
 
-	/*
-		// update return merchandise authorization with the total value
-		rma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.GoodsReturnNote.RmaID.Int)
-		if err != nil {
-			return nil, err
-		}
-		rmaItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, rma.ID)
-		if err != nil {
-			return nil, err
-		}
-		err = proc.ProcessReturnMerchandiseAuthorizationAmounts(rma, rmaItems)
-		if err != nil {
-			return nil, err
-		}
-		err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
-		if err != nil {
-			return nil, err
-		}
-	*/
+	// update return merchandise authorization with the total value
+	rma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, rmaID)
+	if err != nil {
+		return nil, err
+	}
+	rmaItems, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationItemsByReturnMerchandiseAuthorizationID(req.Ctx, tx, rma.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(rma, rmaItems)
+	if err != nil {
+		return nil, err
+	}
+	err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	if err != nil {
+		return nil, err
+	}
 
 	// get updated goods return note
 	goodsReturnNote, err := s.Repo.Sale.GetGoodsReturnNoteByID(req.Ctx, tx, req.Payload.GoodsReturnNote.ID)
@@ -743,6 +769,18 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
+	// get credit note
+	creditNote, err := s.Repo.Invoice.GetCreditNoteByBaseDocumentID(req.Ctx, tx, goodsReturnNote.BaseDocumentID)
+	if err != nil {
+		return nil, err
+	}
+
+	// delete credit note
+	err = s.Repo.Invoice.DeleteCreditNote(req.Ctx, tx, creditNote)
+	if err != nil {
+		return nil, err
+	}
+
 	// get base document
 	baseDocument, err := s.Repo.Base.GetBaseDocumentByID(req.Ctx, tx, goodsReturnNote.BaseDocumentID)
 	if err != nil {
@@ -755,25 +793,18 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
-	/*
-		// get return merchandise authorization
-		rma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, goodsReturnNote.RmaID.Int)
-		if err != nil {
-			return nil, err
-		}
-
-		// delete return merchandise authorization
-		err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorization(req.Ctx, tx, rma)
-		if err != nil {
-			return nil, err
-		}
-	*/
-
-	// delete goods return note items
+	// get goods return note items
 	currItems, err := s.Repo.Sale.GetGoodsReturnNoteItemsByGoodsReturnNoteID(req.Ctx, tx, goodsReturnNote.ID)
 	if err != nil {
 		return nil, err
 	}
+
+	// cache the rmaID for later use
+	//-----------------------------------------------------
+	var rmaID int
+	//-----------------------------------------------------
+
+	// delete goods return note items
 	for _, item := range currItems {
 		// get base document item
 		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
@@ -798,6 +829,9 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		if err != nil {
 			return nil, err
 		}
+		//-----------------------------------------------------
+		rmaID = rmaItem.RmaID.Int
+		//-----------------------------------------------------
 
 		// delete return merchandise authorization item
 		err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, rmaItem)
@@ -832,6 +866,18 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	// get return merchandise authorization
+	rma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, rmaID)
+	if err != nil {
+		return nil, err
+	}
+
+	// delete return merchandise authorization
+	err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	if err != nil {
+		return nil, err
 	}
 
 	err = tx.Commit()

@@ -40,6 +40,12 @@
                 { "name": "InvoiceItem", "plural_name": "InvoiceItems" },
                 { "name": "PaymentReceipt", "plural_name": "PaymentReceipts" },
                 { "name": "PaymentReceiptItem", "plural_name": "PaymentReceiptItems" }
+            ],
+            "views": [
+                { "name": "CreditNoteView", "plural_name": "CreditNoteViews" },
+                { "name": "DebitNoteView", "plural_name": "DebitNoteViews" },
+                { "name": "InvoiceView", "plural_name": "InvoiceViews" },
+                { "name": "PaymentReceiptView", "plural_name": "PaymentReceiptViews" }
             ]
         },
         {
