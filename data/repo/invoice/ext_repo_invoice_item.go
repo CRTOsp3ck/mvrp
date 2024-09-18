@@ -15,3 +15,7 @@ func (r *InvoiceRepository) GetInvoiceItemsByInvoiceID(ctx context.Context, exec
 func (r *InvoiceRepository) GetInvoiceItemByBaseDocumentItemID(ctx context.Context, exec boil.ContextExecutor, id int) (*invoice.InvoiceItem, error) {
 	return invoice.InvoiceItems(qm.Where("base_document_item_id = ?", id)).One(ctx, exec)
 }
+
+func (r *InvoiceRepository) GetInvoiceItemViewByBaseDocumentItemID(ctx context.Context, exec boil.ContextExecutor, id int) (*invoice.InvoiceItemView, error) {
+	return invoice.InvoiceItemViews(qm.Where("base_document_item_id = ?", id)).One(ctx, exec)
+}

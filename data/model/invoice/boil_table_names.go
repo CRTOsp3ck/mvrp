@@ -5,14 +5,18 @@ package invoice
 
 var TableNames = struct {
 	CreditNote         string
+	CreditNoteItem     string
 	DebitNote          string
+	DebitNoteItem      string
 	Invoice            string
 	InvoiceItem        string
 	PaymentReceipt     string
 	PaymentReceiptItem string
 }{
 	CreditNote:         "credit_note",
+	CreditNoteItem:     "credit_note_item",
 	DebitNote:          "debit_note",
+	DebitNoteItem:      "debit_note_item",
 	Invoice:            "invoice",
 	InvoiceItem:        "invoice_item",
 	PaymentReceipt:     "payment_receipt",

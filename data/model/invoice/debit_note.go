@@ -25,124 +25,115 @@ import (
 
 // DebitNote is an object representing the database table.
 type DebitNote struct {
-	ID                 int               `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentID     int               `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
-	DebitNoteNumber    string            `boil:"debit_note_number" json:"debit_note_number" toml:"debit_note_number" yaml:"debit_note_number"`
-	ReferenceInvoiceID null.Int          `boil:"reference_invoice_id" json:"reference_invoice_id,omitempty" toml:"reference_invoice_id" yaml:"reference_invoice_id,omitempty"`
-	AdditionalCharges  types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
-	ReasonForIssuance  null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
-	CreatedAt          time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt          time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                int               `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentID    int               `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
+	DebitNoteNumber   string            `boil:"debit_note_number" json:"debit_note_number" toml:"debit_note_number" yaml:"debit_note_number"`
+	CustomerID        null.Int          `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	InvoiceID         null.Int          `boil:"invoice_id" json:"invoice_id,omitempty" toml:"invoice_id" yaml:"invoice_id,omitempty"`
+	AdditionalCharges types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
+	TotalValueGen     types.Decimal     `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	ReasonForIssuance null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
+	CreatedAt         time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt         time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *debitNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L debitNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var DebitNoteColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	DebitNoteNumber    string
-	ReferenceInvoiceID string
-	AdditionalCharges  string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID                string
+	BaseDocumentID    string
+	DebitNoteNumber   string
+	CustomerID        string
+	InvoiceID         string
+	AdditionalCharges string
+	TotalValueGen     string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:                 "id",
-	BaseDocumentID:     "base_document_id",
-	DebitNoteNumber:    "debit_note_number",
-	ReferenceInvoiceID: "reference_invoice_id",
-	AdditionalCharges:  "additional_charges",
-	ReasonForIssuance:  "reason_for_issuance",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
-	DeletedAt:          "deleted_at",
+	ID:                "id",
+	BaseDocumentID:    "base_document_id",
+	DebitNoteNumber:   "debit_note_number",
+	CustomerID:        "customer_id",
+	InvoiceID:         "invoice_id",
+	AdditionalCharges: "additional_charges",
+	TotalValueGen:     "total_value_gen",
+	ReasonForIssuance: "reason_for_issuance",
+	CreatedAt:         "created_at",
+	UpdatedAt:         "updated_at",
+	DeletedAt:         "deleted_at",
 }
 
 var DebitNoteTableColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	DebitNoteNumber    string
-	ReferenceInvoiceID string
-	AdditionalCharges  string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID                string
+	BaseDocumentID    string
+	DebitNoteNumber   string
+	CustomerID        string
+	InvoiceID         string
+	AdditionalCharges string
+	TotalValueGen     string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:                 "debit_note.id",
-	BaseDocumentID:     "debit_note.base_document_id",
-	DebitNoteNumber:    "debit_note.debit_note_number",
-	ReferenceInvoiceID: "debit_note.reference_invoice_id",
-	AdditionalCharges:  "debit_note.additional_charges",
-	ReasonForIssuance:  "debit_note.reason_for_issuance",
-	CreatedAt:          "debit_note.created_at",
-	UpdatedAt:          "debit_note.updated_at",
-	DeletedAt:          "debit_note.deleted_at",
+	ID:                "debit_note.id",
+	BaseDocumentID:    "debit_note.base_document_id",
+	DebitNoteNumber:   "debit_note.debit_note_number",
+	CustomerID:        "debit_note.customer_id",
+	InvoiceID:         "debit_note.invoice_id",
+	AdditionalCharges: "debit_note.additional_charges",
+	TotalValueGen:     "debit_note.total_value_gen",
+	ReasonForIssuance: "debit_note.reason_for_issuance",
+	CreatedAt:         "debit_note.created_at",
+	UpdatedAt:         "debit_note.updated_at",
+	DeletedAt:         "debit_note.deleted_at",
 }
 
 // Generated where
 
-type whereHelpertypes_NullDecimal struct{ field string }
-
-func (w whereHelpertypes_NullDecimal) EQ(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpertypes_NullDecimal) NEQ(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpertypes_NullDecimal) LT(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertypes_NullDecimal) LTE(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertypes_NullDecimal) GT(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertypes_NullDecimal) GTE(x types.NullDecimal) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpertypes_NullDecimal) IsNull() qm.QueryMod { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpertypes_NullDecimal) IsNotNull() qm.QueryMod {
-	return qmhelper.WhereIsNotNull(w.field)
-}
-
 var DebitNoteWhere = struct {
-	ID                 whereHelperint
-	BaseDocumentID     whereHelperint
-	DebitNoteNumber    whereHelperstring
-	ReferenceInvoiceID whereHelpernull_Int
-	AdditionalCharges  whereHelpertypes_NullDecimal
-	ReasonForIssuance  whereHelpernull_String
-	CreatedAt          whereHelpertime_Time
-	UpdatedAt          whereHelpertime_Time
-	DeletedAt          whereHelpernull_Time
+	ID                whereHelperint
+	BaseDocumentID    whereHelperint
+	DebitNoteNumber   whereHelperstring
+	CustomerID        whereHelpernull_Int
+	InvoiceID         whereHelpernull_Int
+	AdditionalCharges whereHelpertypes_NullDecimal
+	TotalValueGen     whereHelpertypes_Decimal
+	ReasonForIssuance whereHelpernull_String
+	CreatedAt         whereHelpertime_Time
+	UpdatedAt         whereHelpertime_Time
+	DeletedAt         whereHelpernull_Time
 }{
-	ID:                 whereHelperint{field: "\"invoice\".\"debit_note\".\"id\""},
-	BaseDocumentID:     whereHelperint{field: "\"invoice\".\"debit_note\".\"base_document_id\""},
-	DebitNoteNumber:    whereHelperstring{field: "\"invoice\".\"debit_note\".\"debit_note_number\""},
-	ReferenceInvoiceID: whereHelpernull_Int{field: "\"invoice\".\"debit_note\".\"reference_invoice_id\""},
-	AdditionalCharges:  whereHelpertypes_NullDecimal{field: "\"invoice\".\"debit_note\".\"additional_charges\""},
-	ReasonForIssuance:  whereHelpernull_String{field: "\"invoice\".\"debit_note\".\"reason_for_issuance\""},
-	CreatedAt:          whereHelpertime_Time{field: "\"invoice\".\"debit_note\".\"created_at\""},
-	UpdatedAt:          whereHelpertime_Time{field: "\"invoice\".\"debit_note\".\"updated_at\""},
-	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"debit_note\".\"deleted_at\""},
+	ID:                whereHelperint{field: "\"invoice\".\"debit_note\".\"id\""},
+	BaseDocumentID:    whereHelperint{field: "\"invoice\".\"debit_note\".\"base_document_id\""},
+	DebitNoteNumber:   whereHelperstring{field: "\"invoice\".\"debit_note\".\"debit_note_number\""},
+	CustomerID:        whereHelpernull_Int{field: "\"invoice\".\"debit_note\".\"customer_id\""},
+	InvoiceID:         whereHelpernull_Int{field: "\"invoice\".\"debit_note\".\"invoice_id\""},
+	AdditionalCharges: whereHelpertypes_NullDecimal{field: "\"invoice\".\"debit_note\".\"additional_charges\""},
+	TotalValueGen:     whereHelpertypes_Decimal{field: "\"invoice\".\"debit_note\".\"total_value_gen\""},
+	ReasonForIssuance: whereHelpernull_String{field: "\"invoice\".\"debit_note\".\"reason_for_issuance\""},
+	CreatedAt:         whereHelpertime_Time{field: "\"invoice\".\"debit_note\".\"created_at\""},
+	UpdatedAt:         whereHelpertime_Time{field: "\"invoice\".\"debit_note\".\"updated_at\""},
+	DeletedAt:         whereHelpernull_Time{field: "\"invoice\".\"debit_note\".\"deleted_at\""},
 }
 
 // DebitNoteRels is where relationship names are stored.
 var DebitNoteRels = struct {
-	ReferenceInvoice string
+	Invoice        string
+	DebitNoteItems string
 }{
-	ReferenceInvoice: "ReferenceInvoice",
+	Invoice:        "Invoice",
+	DebitNoteItems: "DebitNoteItems",
 }
 
 // debitNoteR is where relationships are stored.
 type debitNoteR struct {
-	ReferenceInvoice *Invoice `boil:"ReferenceInvoice" json:"ReferenceInvoice" toml:"ReferenceInvoice" yaml:"ReferenceInvoice"`
+	Invoice        *Invoice           `boil:"Invoice" json:"Invoice" toml:"Invoice" yaml:"Invoice"`
+	DebitNoteItems DebitNoteItemSlice `boil:"DebitNoteItems" json:"DebitNoteItems" toml:"DebitNoteItems" yaml:"DebitNoteItems"`
 }
 
 // NewStruct creates a new relationship struct
@@ -150,20 +141,27 @@ func (*debitNoteR) NewStruct() *debitNoteR {
 	return &debitNoteR{}
 }
 
-func (r *debitNoteR) GetReferenceInvoice() *Invoice {
+func (r *debitNoteR) GetInvoice() *Invoice {
 	if r == nil {
 		return nil
 	}
-	return r.ReferenceInvoice
+	return r.Invoice
+}
+
+func (r *debitNoteR) GetDebitNoteItems() DebitNoteItemSlice {
+	if r == nil {
+		return nil
+	}
+	return r.DebitNoteItems
 }
 
 // debitNoteL is where Load methods for each relationship are stored.
 type debitNoteL struct{}
 
 var (
-	debitNoteAllColumns            = []string{"id", "base_document_id", "debit_note_number", "reference_invoice_id", "additional_charges", "reason_for_issuance", "created_at", "updated_at", "deleted_at"}
+	debitNoteAllColumns            = []string{"id", "base_document_id", "debit_note_number", "customer_id", "invoice_id", "additional_charges", "total_value_gen", "reason_for_issuance", "created_at", "updated_at", "deleted_at"}
 	debitNoteColumnsWithoutDefault = []string{"id", "base_document_id", "debit_note_number", "created_at", "updated_at"}
-	debitNoteColumnsWithDefault    = []string{"reference_invoice_id", "additional_charges", "reason_for_issuance", "deleted_at"}
+	debitNoteColumnsWithDefault    = []string{"customer_id", "invoice_id", "additional_charges", "total_value_gen", "reason_for_issuance", "deleted_at"}
 	debitNotePrimaryKeyColumns     = []string{"id"}
 	debitNoteGeneratedColumns      = []string{}
 )
@@ -473,10 +471,10 @@ func (q debitNoteQuery) Exists(ctx context.Context, exec boil.ContextExecutor) (
 	return count > 0, nil
 }
 
-// ReferenceInvoice pointed to by the foreign key.
-func (o *DebitNote) ReferenceInvoice(mods ...qm.QueryMod) invoiceQuery {
+// Invoice pointed to by the foreign key.
+func (o *DebitNote) Invoice(mods ...qm.QueryMod) invoiceQuery {
 	queryMods := []qm.QueryMod{
-		qm.Where("\"id\" = ?", o.ReferenceInvoiceID),
+		qm.Where("\"id\" = ?", o.InvoiceID),
 	}
 
 	queryMods = append(queryMods, mods...)
@@ -484,9 +482,23 @@ func (o *DebitNote) ReferenceInvoice(mods ...qm.QueryMod) invoiceQuery {
 	return Invoices(queryMods...)
 }
 
-// LoadReferenceInvoice allows an eager lookup of values, cached into the
+// DebitNoteItems retrieves all the debit_note_item's DebitNoteItems with an executor.
+func (o *DebitNote) DebitNoteItems(mods ...qm.QueryMod) debitNoteItemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"invoice\".\"debit_note_item\".\"debit_note_id\"=?", o.ID),
+	)
+
+	return DebitNoteItems(queryMods...)
+}
+
+// LoadInvoice allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for an N-1 relationship.
-func (debitNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecutor, singular bool, maybeDebitNote interface{}, mods queries.Applicator) error {
+func (debitNoteL) LoadInvoice(ctx context.Context, e boil.ContextExecutor, singular bool, maybeDebitNote interface{}, mods queries.Applicator) error {
 	var slice []*DebitNote
 	var object *DebitNote
 
@@ -517,8 +529,8 @@ func (debitNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecut
 		if object.R == nil {
 			object.R = &debitNoteR{}
 		}
-		if !queries.IsNil(object.ReferenceInvoiceID) {
-			args[object.ReferenceInvoiceID] = struct{}{}
+		if !queries.IsNil(object.InvoiceID) {
+			args[object.InvoiceID] = struct{}{}
 		}
 
 	} else {
@@ -527,8 +539,8 @@ func (debitNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecut
 				obj.R = &debitNoteR{}
 			}
 
-			if !queries.IsNil(obj.ReferenceInvoiceID) {
-				args[obj.ReferenceInvoiceID] = struct{}{}
+			if !queries.IsNil(obj.InvoiceID) {
+				args[obj.InvoiceID] = struct{}{}
 			}
 
 		}
@@ -584,22 +596,22 @@ func (debitNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecut
 
 	if singular {
 		foreign := resultSlice[0]
-		object.R.ReferenceInvoice = foreign
+		object.R.Invoice = foreign
 		if foreign.R == nil {
 			foreign.R = &invoiceR{}
 		}
-		foreign.R.ReferenceInvoiceDebitNotes = append(foreign.R.ReferenceInvoiceDebitNotes, object)
+		foreign.R.DebitNotes = append(foreign.R.DebitNotes, object)
 		return nil
 	}
 
 	for _, local := range slice {
 		for _, foreign := range resultSlice {
-			if queries.Equal(local.ReferenceInvoiceID, foreign.ID) {
-				local.R.ReferenceInvoice = foreign
+			if queries.Equal(local.InvoiceID, foreign.ID) {
+				local.R.Invoice = foreign
 				if foreign.R == nil {
 					foreign.R = &invoiceR{}
 				}
-				foreign.R.ReferenceInvoiceDebitNotes = append(foreign.R.ReferenceInvoiceDebitNotes, local)
+				foreign.R.DebitNotes = append(foreign.R.DebitNotes, local)
 				break
 			}
 		}
@@ -608,10 +620,123 @@ func (debitNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecut
 	return nil
 }
 
-// SetReferenceInvoice of the debitNote to the related item.
-// Sets o.R.ReferenceInvoice to related.
-// Adds o to related.R.ReferenceInvoiceDebitNotes.
-func (o *DebitNote) SetReferenceInvoice(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Invoice) error {
+// LoadDebitNoteItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (debitNoteL) LoadDebitNoteItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeDebitNote interface{}, mods queries.Applicator) error {
+	var slice []*DebitNote
+	var object *DebitNote
+
+	if singular {
+		var ok bool
+		object, ok = maybeDebitNote.(*DebitNote)
+		if !ok {
+			object = new(DebitNote)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeDebitNote)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeDebitNote))
+			}
+		}
+	} else {
+		s, ok := maybeDebitNote.(*[]*DebitNote)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeDebitNote)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeDebitNote))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &debitNoteR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &debitNoteR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`invoice.debit_note_item`),
+		qm.WhereIn(`invoice.debit_note_item.debit_note_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load debit_note_item")
+	}
+
+	var resultSlice []*DebitNoteItem
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice debit_note_item")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on debit_note_item")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for debit_note_item")
+	}
+
+	if len(debitNoteItemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.DebitNoteItems = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &debitNoteItemR{}
+			}
+			foreign.R.DebitNote = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.DebitNoteID {
+				local.R.DebitNoteItems = append(local.R.DebitNoteItems, foreign)
+				if foreign.R == nil {
+					foreign.R = &debitNoteItemR{}
+				}
+				foreign.R.DebitNote = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// SetInvoice of the debitNote to the related item.
+// Sets o.R.Invoice to related.
+// Adds o to related.R.DebitNotes.
+func (o *DebitNote) SetInvoice(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Invoice) error {
 	var err error
 	if insert {
 		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
@@ -621,7 +746,7 @@ func (o *DebitNote) SetReferenceInvoice(ctx context.Context, exec boil.ContextEx
 
 	updateQuery := fmt.Sprintf(
 		"UPDATE \"invoice\".\"debit_note\" SET %s WHERE %s",
-		strmangle.SetParamNames("\"", "\"", 1, []string{"reference_invoice_id"}),
+		strmangle.SetParamNames("\"", "\"", 1, []string{"invoice_id"}),
 		strmangle.WhereClause("\"", "\"", 2, debitNotePrimaryKeyColumns),
 	)
 	values := []interface{}{related.ID, o.ID}
@@ -635,55 +760,108 @@ func (o *DebitNote) SetReferenceInvoice(ctx context.Context, exec boil.ContextEx
 		return errors.Wrap(err, "failed to update local table")
 	}
 
-	queries.Assign(&o.ReferenceInvoiceID, related.ID)
+	queries.Assign(&o.InvoiceID, related.ID)
 	if o.R == nil {
 		o.R = &debitNoteR{
-			ReferenceInvoice: related,
+			Invoice: related,
 		}
 	} else {
-		o.R.ReferenceInvoice = related
+		o.R.Invoice = related
 	}
 
 	if related.R == nil {
 		related.R = &invoiceR{
-			ReferenceInvoiceDebitNotes: DebitNoteSlice{o},
+			DebitNotes: DebitNoteSlice{o},
 		}
 	} else {
-		related.R.ReferenceInvoiceDebitNotes = append(related.R.ReferenceInvoiceDebitNotes, o)
+		related.R.DebitNotes = append(related.R.DebitNotes, o)
 	}
 
 	return nil
 }
 
-// RemoveReferenceInvoice relationship.
-// Sets o.R.ReferenceInvoice to nil.
+// RemoveInvoice relationship.
+// Sets o.R.Invoice to nil.
 // Removes o from all passed in related items' relationships struct.
-func (o *DebitNote) RemoveReferenceInvoice(ctx context.Context, exec boil.ContextExecutor, related *Invoice) error {
+func (o *DebitNote) RemoveInvoice(ctx context.Context, exec boil.ContextExecutor, related *Invoice) error {
 	var err error
 
-	queries.SetScanner(&o.ReferenceInvoiceID, nil)
-	if _, err = o.Update(ctx, exec, boil.Whitelist("reference_invoice_id")); err != nil {
+	queries.SetScanner(&o.InvoiceID, nil)
+	if _, err = o.Update(ctx, exec, boil.Whitelist("invoice_id")); err != nil {
 		return errors.Wrap(err, "failed to update local table")
 	}
 
 	if o.R != nil {
-		o.R.ReferenceInvoice = nil
+		o.R.Invoice = nil
 	}
 	if related == nil || related.R == nil {
 		return nil
 	}
 
-	for i, ri := range related.R.ReferenceInvoiceDebitNotes {
-		if queries.Equal(o.ReferenceInvoiceID, ri.ReferenceInvoiceID) {
+	for i, ri := range related.R.DebitNotes {
+		if queries.Equal(o.InvoiceID, ri.InvoiceID) {
 			continue
 		}
 
-		ln := len(related.R.ReferenceInvoiceDebitNotes)
+		ln := len(related.R.DebitNotes)
 		if ln > 1 && i < ln-1 {
-			related.R.ReferenceInvoiceDebitNotes[i] = related.R.ReferenceInvoiceDebitNotes[ln-1]
+			related.R.DebitNotes[i] = related.R.DebitNotes[ln-1]
 		}
-		related.R.ReferenceInvoiceDebitNotes = related.R.ReferenceInvoiceDebitNotes[:ln-1]
+		related.R.DebitNotes = related.R.DebitNotes[:ln-1]
 		break
+	}
+	return nil
+}
+
+// AddDebitNoteItems adds the given related objects to the existing relationships
+// of the debit_note, optionally inserting them as new records.
+// Appends related to o.R.DebitNoteItems.
+// Sets related.R.DebitNote appropriately.
+func (o *DebitNote) AddDebitNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*DebitNoteItem) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.DebitNoteID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"invoice\".\"debit_note_item\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"debit_note_id"}),
+				strmangle.WhereClause("\"", "\"", 2, debitNoteItemPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.DebitNoteID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &debitNoteR{
+			DebitNoteItems: related,
+		}
+	} else {
+		o.R.DebitNoteItems = append(o.R.DebitNoteItems, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &debitNoteItemR{
+				DebitNote: o,
+			}
+		} else {
+			rel.R.DebitNote = o
+		}
 	}
 	return nil
 }

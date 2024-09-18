@@ -2,9 +2,11 @@ package sale
 
 import (
 	"context"
+	"fmt"
 	"mvrp/data/model/base"
 	"mvrp/data/model/inventory"
 	"mvrp/data/model/invoice"
+	itemModel "mvrp/data/model/item"
 	"mvrp/data/model/sale"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
@@ -277,14 +279,18 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 	}
 	creditNote := &invoice.CreditNote{
 		ID:                nextID,
-		CreditNoteNumber:  util.Util.Str.ToString(nextID),
 		BaseDocumentID:    req.Payload.BaseDocument.ID,
+		CreditNoteNumber:  util.Util.Str.ToString(nextID),
+		CustomerID:        req.Payload.GoodsReturnNote.ReturnedByCustomerID,
+		IssueDate:         req.Payload.GoodsReturnNote.ReturnDate,
 		ReasonForIssuance: null.StringFrom("Goods Return Note Creation"),
+		AdditionalCharges: types.NewNullDecimal(decimal.New(1950, 2)),
 	}
 	err = s.Repo.Invoice.CreateCreditNote(req.Ctx, tx, creditNote)
 	if err != nil {
 		return nil, err
 	}
+	crnItems := make([]*invoice.CreditNoteItem, 0)
 
 	for _, item := range req.Payload.Items {
 		// update inventory
@@ -359,9 +365,50 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		if err != nil {
 			return nil, err
 		}
+
+		// create credit note items
+		// invoiceItem, err := s.Repo.Invoice.GetInvoiceItemByBaseDocumentItemID(req.Ctx, tx, item.BaseDocumentItem.ID)
+		// if err != nil {
+		// 	return nil, err
+		// }
+		inventoryItemView, err := s.Repo.Inventory.GetInventoryViewByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
+		if err != nil {
+			return nil, err
+		}
+		var itemData itemModel.Item
+		err = inventoryItemView.Item.Unmarshal(&itemData)
+		if err != nil {
+			return nil, err
+		}
+		nextID, err = s.Repo.Invoice.GetNextEntryCreditNoteItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		qty := item.BaseDocumentItem.Quantity.Big
+		unitPrice := item.BaseDocumentItem.UnitPrice.Big
+		creditNoteItem := &invoice.CreditNoteItem{
+			ID:                 nextID,
+			BaseDocumentItemID: item.BaseDocumentItem.ID,
+			CreditNoteID:       creditNote.ID,
+			// InvoiceItemID: null.IntFrom(invoiceItem.ID),
+			Name:        fmt.Sprintf("Refund for product - %s", itemData.Name),
+			Description: "Credit note created automatically via goods return note creation",
+			Quantity:    types.NewNullDecimal(qty),
+			UnitValue:   types.NewNullDecimal(unitPrice),
+		}
+		err = proc.ProcessCreditNoteItemAmounts(creditNoteItem)
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Invoice.CreateCreditNoteItem(req.Ctx, tx, creditNoteItem)
+		if err != nil {
+			return nil, err
+		}
+		crnItems = append(crnItems, creditNoteItem)
+
 	}
 
-	// preprocess amounts (update total value)
+	// preprocess rma amounts
 	err = proc.ProcessReturnMerchandiseAuthorizationAmounts(rma, rmaItems)
 	if err != nil {
 		return nil, err
@@ -369,6 +416,18 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 
 	// update return merchandise authorization with the total value
 	err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	if err != nil {
+		return nil, err
+	}
+
+	// preprocess crn amounts
+	err = proc.ProcessCreditNoteAmounts(creditNote, crnItems)
+	if err != nil {
+		return nil, err
+	}
+
+	// update credit note with the total value
+	err = s.Repo.Invoice.UpdateCreditNote(req.Ctx, tx, creditNote)
 	if err != nil {
 		return nil, err
 	}
@@ -456,9 +515,26 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
+	//-----------------------------------------------------
 	// cache the rmaID for later use
 	//-----------------------------------------------------
 	var rmaID int
+	currRma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByBaseDocumentID(req.Ctx, tx, req.Payload.BaseDocument.ID)
+	if err != nil {
+		return nil, err
+	}
+	rmaID = currRma.ID
+	//-----------------------------------------------------
+
+	//-----------------------------------------------------
+	// cache the creditNoteID for later use
+	//-----------------------------------------------------
+	var creditNoteID int
+	currCreditNote, err := s.Repo.Invoice.GetCreditNoteByBaseDocumentID(req.Ctx, tx, req.Payload.BaseDocument.ID)
+	if err != nil {
+		return nil, err
+	}
+	creditNoteID = currCreditNote.ID
 	//-----------------------------------------------------
 
 	// delete the ones that are in the current list and not in the new list
@@ -466,11 +542,6 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 	if err != nil {
 		return nil, err
 	}
-
-	//-----------------------------------------------------
-	// this is not the best way to do this, but it works for now
-	rmaID = currItems[0].RmaItemID.Int
-	//-----------------------------------------------------
 
 	for _, currItem := range currItems {
 		found := false
@@ -505,6 +576,16 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 
 			// delete goods return note item
 			err = s.Repo.Sale.DeleteGoodsReturnNoteItem(req.Ctx, tx, currItem)
+			if err != nil {
+				return nil, err
+			}
+
+			// delete credit note item
+			creditNoteItem, err := s.Repo.Invoice.GetCreditNoteItemByBaseDocumentItemID(req.Ctx, tx, baseDocumentItem.ID)
+			if err != nil {
+				return nil, err
+			}
+			err = s.Repo.Invoice.DeleteCreditNoteItem(req.Ctx, tx, creditNoteItem)
 			if err != nil {
 				return nil, err
 			}
@@ -575,6 +656,18 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 			rmaItem.Quantity = types.Decimal(item.BaseDocumentItem.Quantity)
 			rmaItem.UnitValue = types.Decimal(item.BaseDocumentItem.UnitPrice)
 			err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorizationItem(req.Ctx, tx, rmaItem)
+			if err != nil {
+				return nil, err
+			}
+
+			// update credit note item
+			creditNoteItem, err := s.Repo.Invoice.GetCreditNoteItemByBaseDocumentItemID(req.Ctx, tx, item.BaseDocumentItem.ID)
+			if err != nil {
+				return nil, err
+			}
+			creditNoteItem.Quantity = types.NewNullDecimal(item.BaseDocumentItem.Quantity.Big)
+			creditNoteItem.UnitValue = types.NewNullDecimal(item.BaseDocumentItem.UnitPrice.Big)
+			err = proc.ProcessCreditNoteItemAmounts(creditNoteItem)
 			if err != nil {
 				return nil, err
 			}
@@ -681,6 +774,44 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 				return nil, err
 			}
 
+			// create credit note items
+			// invoiceItem, err := s.Repo.Invoice.GetInvoiceItemByBaseDocumentItemID(req.Ctx, tx, item.BaseDocumentItem.ID)
+			// if err != nil {
+			// 	return nil, err
+			// }
+			inventoryItemView, err := s.Repo.Inventory.GetInventoryViewByID(req.Ctx, tx, item.BaseDocumentItem.InventoryID.Int)
+			if err != nil {
+				return nil, err
+			}
+			var itemData itemModel.Item
+			err = inventoryItemView.Item.Unmarshal(&itemData)
+			if err != nil {
+				return nil, err
+			}
+			nextID, err = s.Repo.Invoice.GetNextEntryCreditNoteItemID(req.Ctx, tx)
+			if err != nil {
+				return nil, err
+			}
+			qty := item.BaseDocumentItem.Quantity.Big
+			unitPrice := item.BaseDocumentItem.UnitPrice.Big
+			creditNoteItem := &invoice.CreditNoteItem{
+				ID:                 nextID,
+				BaseDocumentItemID: item.BaseDocumentItem.ID,
+				CreditNoteID:       creditNoteID,
+				// InvoiceItemID: null.IntFrom(invoiceItem.ID),
+				Name:        fmt.Sprintf("Refund for product - %s", itemData.Name),
+				Description: "Credit note created automatically via goods return note creation",
+				Quantity:    types.NewNullDecimal(qty),
+				UnitValue:   types.NewNullDecimal(unitPrice),
+			}
+			err = proc.ProcessCreditNoteItemAmounts(creditNoteItem)
+			if err != nil {
+				return nil, err
+			}
+			err = s.Repo.Invoice.CreateCreditNoteItem(req.Ctx, tx, creditNoteItem)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -698,6 +829,24 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 	err = s.Repo.Inventory.UpdateReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	if err != nil {
+		return nil, err
+	}
+
+	// update credit note with the total value
+	creditNote, err := s.Repo.Invoice.GetCreditNoteByID(req.Ctx, tx, creditNoteID)
+	if err != nil {
+		return nil, err
+	}
+	crnItems, err := s.Repo.Invoice.GetCreditNoteItemsByCreditNoteID(req.Ctx, tx, creditNote.ID)
+	if err != nil {
+		return nil, err
+	}
+	err = proc.ProcessCreditNoteAmounts(creditNote, crnItems)
+	if err != nil {
+		return nil, err
+	}
+	err = s.Repo.Invoice.UpdateCreditNote(req.Ctx, tx, creditNote)
 	if err != nil {
 		return nil, err
 	}
@@ -799,9 +948,26 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
+	//-----------------------------------------------------
 	// cache the rmaID for later use
 	//-----------------------------------------------------
 	var rmaID int
+	currRma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByBaseDocumentID(req.Ctx, tx, baseDocument.ID)
+	if err != nil {
+		return nil, err
+	}
+	rmaID = currRma.ID
+	//-----------------------------------------------------
+
+	//-----------------------------------------------------
+	// cache the creditNoteID for later use
+	//-----------------------------------------------------
+	var creditNoteID int
+	currCreditNote, err := s.Repo.Invoice.GetCreditNoteByBaseDocumentID(req.Ctx, tx, baseDocument.ID)
+	if err != nil {
+		return nil, err
+	}
+	creditNoteID = currCreditNote.ID
 	//-----------------------------------------------------
 
 	// delete goods return note items
@@ -829,12 +995,21 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		if err != nil {
 			return nil, err
 		}
-		//-----------------------------------------------------
-		rmaID = rmaItem.RmaID.Int
-		//-----------------------------------------------------
 
 		// delete return merchandise authorization item
 		err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorizationItem(req.Ctx, tx, rmaItem)
+		if err != nil {
+			return nil, err
+		}
+
+		// get credit note item
+		creditNoteItem, err := s.Repo.Invoice.GetCreditNoteItemByBaseDocumentItemID(req.Ctx, tx, item.BaseDocumentItemID)
+		if err != nil {
+			return nil, err
+		}
+
+		// delete credit note item
+		err = s.Repo.Invoice.DeleteCreditNoteItem(req.Ctx, tx, creditNoteItem)
 		if err != nil {
 			return nil, err
 		}
@@ -876,6 +1051,18 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 
 	// delete return merchandise authorization
 	err = s.Repo.Inventory.DeleteReturnMerchandiseAuthorization(req.Ctx, tx, rma)
+	if err != nil {
+		return nil, err
+	}
+
+	// get credit note
+	creditNote, err = s.Repo.Invoice.GetCreditNoteByID(req.Ctx, tx, creditNoteID)
+	if err != nil {
+		return nil, err
+	}
+
+	// delete credit note
+	err = s.Repo.Invoice.DeleteCreditNote(req.Ctx, tx, creditNote)
 	if err != nil {
 		return nil, err
 	}

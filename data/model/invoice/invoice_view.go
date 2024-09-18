@@ -35,6 +35,8 @@ type InvoiceView struct {
 	DeletedAt      null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 	BaseDocument   null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
 	InvoiceItems   null.JSON   `boil:"invoice_items" json:"invoice_items,omitempty" toml:"invoice_items" yaml:"invoice_items,omitempty"`
+	VendorInfo     null.JSON   `boil:"vendor_info" json:"vendor_info,omitempty" toml:"vendor_info" yaml:"vendor_info,omitempty"`
+	CustomerInfo   null.JSON   `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
 }
 
 var InvoiceViewColumns = struct {
@@ -49,6 +51,8 @@ var InvoiceViewColumns = struct {
 	DeletedAt      string
 	BaseDocument   string
 	InvoiceItems   string
+	VendorInfo     string
+	CustomerInfo   string
 }{
 	ID:             "id",
 	BaseDocumentID: "base_document_id",
@@ -61,6 +65,8 @@ var InvoiceViewColumns = struct {
 	DeletedAt:      "deleted_at",
 	BaseDocument:   "base_document",
 	InvoiceItems:   "invoice_items",
+	VendorInfo:     "vendor_info",
+	CustomerInfo:   "customer_info",
 }
 
 var InvoiceViewTableColumns = struct {
@@ -75,6 +81,8 @@ var InvoiceViewTableColumns = struct {
 	DeletedAt      string
 	BaseDocument   string
 	InvoiceItems   string
+	VendorInfo     string
+	CustomerInfo   string
 }{
 	ID:             "invoice_view.id",
 	BaseDocumentID: "invoice_view.base_document_id",
@@ -87,6 +95,8 @@ var InvoiceViewTableColumns = struct {
 	DeletedAt:      "invoice_view.deleted_at",
 	BaseDocument:   "invoice_view.base_document",
 	InvoiceItems:   "invoice_view.invoice_items",
+	VendorInfo:     "invoice_view.vendor_info",
+	CustomerInfo:   "invoice_view.customer_info",
 }
 
 // Generated where
@@ -103,6 +113,8 @@ var InvoiceViewWhere = struct {
 	DeletedAt      whereHelpernull_Time
 	BaseDocument   whereHelpernull_JSON
 	InvoiceItems   whereHelpernull_JSON
+	VendorInfo     whereHelpernull_JSON
+	CustomerInfo   whereHelpernull_JSON
 }{
 	ID:             whereHelpernull_Int{field: "\"invoice\".\"invoice_view\".\"id\""},
 	BaseDocumentID: whereHelpernull_Int{field: "\"invoice\".\"invoice_view\".\"base_document_id\""},
@@ -115,12 +127,14 @@ var InvoiceViewWhere = struct {
 	DeletedAt:      whereHelpernull_Time{field: "\"invoice\".\"invoice_view\".\"deleted_at\""},
 	BaseDocument:   whereHelpernull_JSON{field: "\"invoice\".\"invoice_view\".\"base_document\""},
 	InvoiceItems:   whereHelpernull_JSON{field: "\"invoice\".\"invoice_view\".\"invoice_items\""},
+	VendorInfo:     whereHelpernull_JSON{field: "\"invoice\".\"invoice_view\".\"vendor_info\""},
+	CustomerInfo:   whereHelpernull_JSON{field: "\"invoice\".\"invoice_view\".\"customer_info\""},
 }
 
 var (
-	invoiceViewAllColumns            = []string{"id", "base_document_id", "invoice_number", "vendor_id", "customer_id", "payment_due_date", "created_at", "updated_at", "deleted_at", "base_document", "invoice_items"}
+	invoiceViewAllColumns            = []string{"id", "base_document_id", "invoice_number", "vendor_id", "customer_id", "payment_due_date", "created_at", "updated_at", "deleted_at", "base_document", "invoice_items", "vendor_info", "customer_info"}
 	invoiceViewColumnsWithoutDefault = []string{}
-	invoiceViewColumnsWithDefault    = []string{"id", "base_document_id", "invoice_number", "vendor_id", "customer_id", "payment_due_date", "created_at", "updated_at", "deleted_at", "base_document", "invoice_items"}
+	invoiceViewColumnsWithDefault    = []string{"id", "base_document_id", "invoice_number", "vendor_id", "customer_id", "payment_due_date", "created_at", "updated_at", "deleted_at", "base_document", "invoice_items", "vendor_info", "customer_info"}
 	invoiceViewPrimaryKeyColumns     = []string{}
 	invoiceViewGeneratedColumns      = []string{}
 )

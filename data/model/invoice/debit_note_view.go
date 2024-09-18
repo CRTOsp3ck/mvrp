@@ -25,96 +25,124 @@ import (
 
 // DebitNoteView is an object representing the database table.
 type DebitNoteView struct {
-	ID                 null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentID     null.Int          `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
-	DebitNoteNumber    null.String       `boil:"debit_note_number" json:"debit_note_number,omitempty" toml:"debit_note_number" yaml:"debit_note_number,omitempty"`
-	ReferenceInvoiceID null.Int          `boil:"reference_invoice_id" json:"reference_invoice_id,omitempty" toml:"reference_invoice_id" yaml:"reference_invoice_id,omitempty"`
-	AdditionalCharges  types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
-	ReasonForIssuance  null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
-	CreatedAt          null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt          null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	BaseDocument       null.JSON         `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	ID                null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentID    null.Int          `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
+	DebitNoteNumber   null.String       `boil:"debit_note_number" json:"debit_note_number,omitempty" toml:"debit_note_number" yaml:"debit_note_number,omitempty"`
+	CustomerID        null.Int          `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	InvoiceID         null.Int          `boil:"invoice_id" json:"invoice_id,omitempty" toml:"invoice_id" yaml:"invoice_id,omitempty"`
+	AdditionalCharges types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
+	TotalValueGen     types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
+	ReasonForIssuance null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
+	CreatedAt         null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt         null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	BaseDocument      null.JSON         `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	CustomerInfo      null.JSON         `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
+	DebitNoteItems    null.JSON         `boil:"debit_note_items" json:"debit_note_items,omitempty" toml:"debit_note_items" yaml:"debit_note_items,omitempty"`
 }
 
 var DebitNoteViewColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	DebitNoteNumber    string
-	ReferenceInvoiceID string
-	AdditionalCharges  string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
-	BaseDocument       string
+	ID                string
+	BaseDocumentID    string
+	DebitNoteNumber   string
+	CustomerID        string
+	InvoiceID         string
+	AdditionalCharges string
+	TotalValueGen     string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
+	BaseDocument      string
+	CustomerInfo      string
+	DebitNoteItems    string
 }{
-	ID:                 "id",
-	BaseDocumentID:     "base_document_id",
-	DebitNoteNumber:    "debit_note_number",
-	ReferenceInvoiceID: "reference_invoice_id",
-	AdditionalCharges:  "additional_charges",
-	ReasonForIssuance:  "reason_for_issuance",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
-	DeletedAt:          "deleted_at",
-	BaseDocument:       "base_document",
+	ID:                "id",
+	BaseDocumentID:    "base_document_id",
+	DebitNoteNumber:   "debit_note_number",
+	CustomerID:        "customer_id",
+	InvoiceID:         "invoice_id",
+	AdditionalCharges: "additional_charges",
+	TotalValueGen:     "total_value_gen",
+	ReasonForIssuance: "reason_for_issuance",
+	CreatedAt:         "created_at",
+	UpdatedAt:         "updated_at",
+	DeletedAt:         "deleted_at",
+	BaseDocument:      "base_document",
+	CustomerInfo:      "customer_info",
+	DebitNoteItems:    "debit_note_items",
 }
 
 var DebitNoteViewTableColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	DebitNoteNumber    string
-	ReferenceInvoiceID string
-	AdditionalCharges  string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
-	BaseDocument       string
+	ID                string
+	BaseDocumentID    string
+	DebitNoteNumber   string
+	CustomerID        string
+	InvoiceID         string
+	AdditionalCharges string
+	TotalValueGen     string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
+	BaseDocument      string
+	CustomerInfo      string
+	DebitNoteItems    string
 }{
-	ID:                 "debit_note_view.id",
-	BaseDocumentID:     "debit_note_view.base_document_id",
-	DebitNoteNumber:    "debit_note_view.debit_note_number",
-	ReferenceInvoiceID: "debit_note_view.reference_invoice_id",
-	AdditionalCharges:  "debit_note_view.additional_charges",
-	ReasonForIssuance:  "debit_note_view.reason_for_issuance",
-	CreatedAt:          "debit_note_view.created_at",
-	UpdatedAt:          "debit_note_view.updated_at",
-	DeletedAt:          "debit_note_view.deleted_at",
-	BaseDocument:       "debit_note_view.base_document",
+	ID:                "debit_note_view.id",
+	BaseDocumentID:    "debit_note_view.base_document_id",
+	DebitNoteNumber:   "debit_note_view.debit_note_number",
+	CustomerID:        "debit_note_view.customer_id",
+	InvoiceID:         "debit_note_view.invoice_id",
+	AdditionalCharges: "debit_note_view.additional_charges",
+	TotalValueGen:     "debit_note_view.total_value_gen",
+	ReasonForIssuance: "debit_note_view.reason_for_issuance",
+	CreatedAt:         "debit_note_view.created_at",
+	UpdatedAt:         "debit_note_view.updated_at",
+	DeletedAt:         "debit_note_view.deleted_at",
+	BaseDocument:      "debit_note_view.base_document",
+	CustomerInfo:      "debit_note_view.customer_info",
+	DebitNoteItems:    "debit_note_view.debit_note_items",
 }
 
 // Generated where
 
 var DebitNoteViewWhere = struct {
-	ID                 whereHelpernull_Int
-	BaseDocumentID     whereHelpernull_Int
-	DebitNoteNumber    whereHelpernull_String
-	ReferenceInvoiceID whereHelpernull_Int
-	AdditionalCharges  whereHelpertypes_NullDecimal
-	ReasonForIssuance  whereHelpernull_String
-	CreatedAt          whereHelpernull_Time
-	UpdatedAt          whereHelpernull_Time
-	DeletedAt          whereHelpernull_Time
-	BaseDocument       whereHelpernull_JSON
+	ID                whereHelpernull_Int
+	BaseDocumentID    whereHelpernull_Int
+	DebitNoteNumber   whereHelpernull_String
+	CustomerID        whereHelpernull_Int
+	InvoiceID         whereHelpernull_Int
+	AdditionalCharges whereHelpertypes_NullDecimal
+	TotalValueGen     whereHelpertypes_NullDecimal
+	ReasonForIssuance whereHelpernull_String
+	CreatedAt         whereHelpernull_Time
+	UpdatedAt         whereHelpernull_Time
+	DeletedAt         whereHelpernull_Time
+	BaseDocument      whereHelpernull_JSON
+	CustomerInfo      whereHelpernull_JSON
+	DebitNoteItems    whereHelpernull_JSON
 }{
-	ID:                 whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"id\""},
-	BaseDocumentID:     whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"base_document_id\""},
-	DebitNoteNumber:    whereHelpernull_String{field: "\"invoice\".\"debit_note_view\".\"debit_note_number\""},
-	ReferenceInvoiceID: whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"reference_invoice_id\""},
-	AdditionalCharges:  whereHelpertypes_NullDecimal{field: "\"invoice\".\"debit_note_view\".\"additional_charges\""},
-	ReasonForIssuance:  whereHelpernull_String{field: "\"invoice\".\"debit_note_view\".\"reason_for_issuance\""},
-	CreatedAt:          whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"created_at\""},
-	UpdatedAt:          whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"updated_at\""},
-	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"deleted_at\""},
-	BaseDocument:       whereHelpernull_JSON{field: "\"invoice\".\"debit_note_view\".\"base_document\""},
+	ID:                whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"id\""},
+	BaseDocumentID:    whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"base_document_id\""},
+	DebitNoteNumber:   whereHelpernull_String{field: "\"invoice\".\"debit_note_view\".\"debit_note_number\""},
+	CustomerID:        whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"customer_id\""},
+	InvoiceID:         whereHelpernull_Int{field: "\"invoice\".\"debit_note_view\".\"invoice_id\""},
+	AdditionalCharges: whereHelpertypes_NullDecimal{field: "\"invoice\".\"debit_note_view\".\"additional_charges\""},
+	TotalValueGen:     whereHelpertypes_NullDecimal{field: "\"invoice\".\"debit_note_view\".\"total_value_gen\""},
+	ReasonForIssuance: whereHelpernull_String{field: "\"invoice\".\"debit_note_view\".\"reason_for_issuance\""},
+	CreatedAt:         whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"created_at\""},
+	UpdatedAt:         whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"updated_at\""},
+	DeletedAt:         whereHelpernull_Time{field: "\"invoice\".\"debit_note_view\".\"deleted_at\""},
+	BaseDocument:      whereHelpernull_JSON{field: "\"invoice\".\"debit_note_view\".\"base_document\""},
+	CustomerInfo:      whereHelpernull_JSON{field: "\"invoice\".\"debit_note_view\".\"customer_info\""},
+	DebitNoteItems:    whereHelpernull_JSON{field: "\"invoice\".\"debit_note_view\".\"debit_note_items\""},
 }
 
 var (
-	debitNoteViewAllColumns            = []string{"id", "base_document_id", "debit_note_number", "reference_invoice_id", "additional_charges", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document"}
+	debitNoteViewAllColumns            = []string{"id", "base_document_id", "debit_note_number", "customer_id", "invoice_id", "additional_charges", "total_value_gen", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document", "customer_info", "debit_note_items"}
 	debitNoteViewColumnsWithoutDefault = []string{}
-	debitNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "debit_note_number", "reference_invoice_id", "additional_charges", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document"}
+	debitNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "debit_note_number", "customer_id", "invoice_id", "additional_charges", "total_value_gen", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document", "customer_info", "debit_note_items"}
 	debitNoteViewPrimaryKeyColumns     = []string{}
 	debitNoteViewGeneratedColumns      = []string{}
 )

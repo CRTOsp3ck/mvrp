@@ -1941,6 +1941,18 @@ components:
           $ref: '#/components/schemas/BaseBaseDocument'
         credit_note:
           $ref: '#/components/schemas/InvoiceCreditNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateCreditNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoCreateCreditNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        credit_note_item:
+          $ref: '#/components/schemas/InvoiceCreditNoteItem'
       type: object
     DtoCreateDebitNoteDTO:
       properties:
@@ -1948,6 +1960,18 @@ components:
           $ref: '#/components/schemas/BaseBaseDocument'
         debit_note:
           $ref: '#/components/schemas/InvoiceDebitNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoCreateDebitNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoCreateDebitNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        debit_note_item:
+          $ref: '#/components/schemas/InvoiceDebitNoteItem'
       type: object
     DtoCreateDeliveryNoteDTO:
       properties:
@@ -2477,6 +2501,18 @@ components:
           $ref: '#/components/schemas/BaseBaseDocument'
         credit_note:
           $ref: '#/components/schemas/InvoiceCreditNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateCreditNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateCreditNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        credit_note_item:
+          $ref: '#/components/schemas/InvoiceCreditNoteItem'
       type: object
     DtoUpdateDebitNoteDTO:
       properties:
@@ -2484,6 +2520,18 @@ components:
           $ref: '#/components/schemas/BaseBaseDocument'
         debit_note:
           $ref: '#/components/schemas/InvoiceDebitNote'
+        items:
+          items:
+            $ref: '#/components/schemas/DtoUpdateDebitNoteItemDTO'
+          nullable: true
+          type: array
+      type: object
+    DtoUpdateDebitNoteItemDTO:
+      properties:
+        base_document_item:
+          $ref: '#/components/schemas/BaseBaseDocumentItem'
+        debit_note_item:
+          $ref: '#/components/schemas/InvoiceDebitNoteItem'
       type: object
     DtoUpdateDeliveryNoteDTO:
       properties:
@@ -2913,6 +2961,8 @@ components:
       type: object
     InvoiceCreditNote:
       properties:
+        additional_charges:
+          type: number
         base_document_id:
           type: integer
         created_at:
@@ -2920,15 +2970,50 @@ components:
           type: string
         credit_note_number:
           type: string
+        customer_id:
+          type: integer
         deleted_at:
           format: date-time
           type: string
         id:
           type: integer
+        issue_date:
+          format: date-time
+          type: string
         reason_for_issuance:
           type: string
-        reference_invoice_id:
+        total_value_gen:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoiceCreditNoteItem:
+      properties:
+        base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        credit_note_id:
+          type: integer
+        deleted_at:
+          format: date-time
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+        invoice_item_id:
+          type: integer
+        name:
+          type: string
+        quantity:
+          type: number
+        total_value_gen:
+          type: number
+        unit_value:
+          type: number
         updated_at:
           format: date-time
           type: string
@@ -2942,6 +3027,8 @@ components:
         created_at:
           format: date-time
           type: string
+        customer_id:
+          type: integer
         debit_note_number:
           type: string
         deleted_at:
@@ -2949,10 +3036,44 @@ components:
           type: string
         id:
           type: integer
+        invoice_id:
+          type: integer
         reason_for_issuance:
           type: string
-        reference_invoice_id:
+        total_value_gen:
+          type: number
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    InvoiceDebitNoteItem:
+      properties:
+        additional_charges:
+          type: number
+        base_document_item_id:
           type: integer
+        created_at:
+          format: date-time
+          type: string
+        debit_note_id:
+          type: integer
+        deleted_at:
+          format: date-time
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+        invoice_item_id:
+          type: integer
+        name:
+          type: string
+        quantity:
+          type: number
+        total_value:
+          type: number
+        unit_value:
+          type: number
         updated_at:
           format: date-time
           type: string

@@ -127,11 +127,37 @@ type GetCreditNoteDTO struct {
 type CreateCreditNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.CreditNote                 `json:"credit_note"`
+    Items []CreateCreditNoteItemDTO                     `json:"items"`
 }
 
 type UpdateCreditNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.CreditNote                 `json:"credit_note"`
+    Items []UpdateCreditNoteItemDTO                     `json:"items"`
+}
+
+type SearchCreditNoteItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
+    Keyword      string                             `json:"keyword"`
+    ItemsPerPage int                                `json:"items_per_page"`
+    Page         int                                `json:"page"`
+    SortBy       string                             `json:"sort_by"`
+    OrderBy      string                             `json:"order_by"`
+}
+
+type GetCreditNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.CreditNoteItem                 `json:"credit_note_item"`
+}
+
+type CreateCreditNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.CreditNoteItem                 `json:"credit_note_item"`
+}
+
+type UpdateCreditNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.CreditNoteItem                 `json:"credit_note_item"`
 }
 
 type SearchDebitNoteDTO struct {
@@ -151,9 +177,35 @@ type GetDebitNoteDTO struct {
 type CreateDebitNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.DebitNote                 `json:"debit_note"`
+    Items []CreateDebitNoteItemDTO                     `json:"items"`
 }
 
 type UpdateDebitNoteDTO struct {
     base.BaseDocument                 `json:"base_document"`
     invoice.DebitNote                 `json:"debit_note"`
+    Items []UpdateDebitNoteItemDTO                     `json:"items"`
+}
+
+type SearchDebitNoteItemDTO struct {
+    query.IServerSideGetRowsRequest `json:"server_side_get_rows_request"`
+    Keyword      string                             `json:"keyword"`
+    ItemsPerPage int                                `json:"items_per_page"`
+    Page         int                                `json:"page"`
+    SortBy       string                             `json:"sort_by"`
+    OrderBy      string                             `json:"order_by"`
+}
+
+type GetDebitNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.DebitNoteItem                 `json:"debit_note_item"`
+}
+
+type CreateDebitNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.DebitNoteItem                 `json:"debit_note_item"`
+}
+
+type UpdateDebitNoteItemDTO struct {
+    base.BaseDocumentItem                 `json:"base_document_item"`
+    invoice.DebitNoteItem                 `json:"debit_note_item"`
 }

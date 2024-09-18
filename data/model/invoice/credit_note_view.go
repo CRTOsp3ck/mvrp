@@ -19,118 +19,130 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // CreditNoteView is an object representing the database table.
 type CreditNoteView struct {
-	ID                 null.Int    `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentID     null.Int    `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
-	CreditNoteNumber   null.String `boil:"credit_note_number" json:"credit_note_number,omitempty" toml:"credit_note_number" yaml:"credit_note_number,omitempty"`
-	ReferenceInvoiceID null.Int    `boil:"reference_invoice_id" json:"reference_invoice_id,omitempty" toml:"reference_invoice_id" yaml:"reference_invoice_id,omitempty"`
-	ReasonForIssuance  null.String `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
-	CreatedAt          null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt          null.Time   `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt          null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	BaseDocument       null.JSON   `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	ID                null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentID    null.Int          `boil:"base_document_id" json:"base_document_id,omitempty" toml:"base_document_id" yaml:"base_document_id,omitempty"`
+	CreditNoteNumber  null.String       `boil:"credit_note_number" json:"credit_note_number,omitempty" toml:"credit_note_number" yaml:"credit_note_number,omitempty"`
+	CustomerID        null.Int          `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	AdditionalCharges types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
+	TotalValueGen     types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
+	IssueDate         null.Time         `boil:"issue_date" json:"issue_date,omitempty" toml:"issue_date" yaml:"issue_date,omitempty"`
+	ReasonForIssuance null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
+	CreatedAt         null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt         null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	BaseDocument      null.JSON         `boil:"base_document" json:"base_document,omitempty" toml:"base_document" yaml:"base_document,omitempty"`
+	CustomerInfo      null.JSON         `boil:"customer_info" json:"customer_info,omitempty" toml:"customer_info" yaml:"customer_info,omitempty"`
+	CreditNoteItems   null.JSON         `boil:"credit_note_items" json:"credit_note_items,omitempty" toml:"credit_note_items" yaml:"credit_note_items,omitempty"`
 }
 
 var CreditNoteViewColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	CreditNoteNumber   string
-	ReferenceInvoiceID string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
-	BaseDocument       string
+	ID                string
+	BaseDocumentID    string
+	CreditNoteNumber  string
+	CustomerID        string
+	AdditionalCharges string
+	TotalValueGen     string
+	IssueDate         string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
+	BaseDocument      string
+	CustomerInfo      string
+	CreditNoteItems   string
 }{
-	ID:                 "id",
-	BaseDocumentID:     "base_document_id",
-	CreditNoteNumber:   "credit_note_number",
-	ReferenceInvoiceID: "reference_invoice_id",
-	ReasonForIssuance:  "reason_for_issuance",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
-	DeletedAt:          "deleted_at",
-	BaseDocument:       "base_document",
+	ID:                "id",
+	BaseDocumentID:    "base_document_id",
+	CreditNoteNumber:  "credit_note_number",
+	CustomerID:        "customer_id",
+	AdditionalCharges: "additional_charges",
+	TotalValueGen:     "total_value_gen",
+	IssueDate:         "issue_date",
+	ReasonForIssuance: "reason_for_issuance",
+	CreatedAt:         "created_at",
+	UpdatedAt:         "updated_at",
+	DeletedAt:         "deleted_at",
+	BaseDocument:      "base_document",
+	CustomerInfo:      "customer_info",
+	CreditNoteItems:   "credit_note_items",
 }
 
 var CreditNoteViewTableColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	CreditNoteNumber   string
-	ReferenceInvoiceID string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
-	BaseDocument       string
+	ID                string
+	BaseDocumentID    string
+	CreditNoteNumber  string
+	CustomerID        string
+	AdditionalCharges string
+	TotalValueGen     string
+	IssueDate         string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
+	BaseDocument      string
+	CustomerInfo      string
+	CreditNoteItems   string
 }{
-	ID:                 "credit_note_view.id",
-	BaseDocumentID:     "credit_note_view.base_document_id",
-	CreditNoteNumber:   "credit_note_view.credit_note_number",
-	ReferenceInvoiceID: "credit_note_view.reference_invoice_id",
-	ReasonForIssuance:  "credit_note_view.reason_for_issuance",
-	CreatedAt:          "credit_note_view.created_at",
-	UpdatedAt:          "credit_note_view.updated_at",
-	DeletedAt:          "credit_note_view.deleted_at",
-	BaseDocument:       "credit_note_view.base_document",
+	ID:                "credit_note_view.id",
+	BaseDocumentID:    "credit_note_view.base_document_id",
+	CreditNoteNumber:  "credit_note_view.credit_note_number",
+	CustomerID:        "credit_note_view.customer_id",
+	AdditionalCharges: "credit_note_view.additional_charges",
+	TotalValueGen:     "credit_note_view.total_value_gen",
+	IssueDate:         "credit_note_view.issue_date",
+	ReasonForIssuance: "credit_note_view.reason_for_issuance",
+	CreatedAt:         "credit_note_view.created_at",
+	UpdatedAt:         "credit_note_view.updated_at",
+	DeletedAt:         "credit_note_view.deleted_at",
+	BaseDocument:      "credit_note_view.base_document",
+	CustomerInfo:      "credit_note_view.customer_info",
+	CreditNoteItems:   "credit_note_view.credit_note_items",
 }
 
 // Generated where
 
-type whereHelpernull_JSON struct{ field string }
-
-func (w whereHelpernull_JSON) EQ(x null.JSON) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, false, x)
-}
-func (w whereHelpernull_JSON) NEQ(x null.JSON) qm.QueryMod {
-	return qmhelper.WhereNullEQ(w.field, true, x)
-}
-func (w whereHelpernull_JSON) LT(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpernull_JSON) LTE(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpernull_JSON) GT(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpernull_JSON) GTE(x null.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
-func (w whereHelpernull_JSON) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
-func (w whereHelpernull_JSON) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
-
 var CreditNoteViewWhere = struct {
-	ID                 whereHelpernull_Int
-	BaseDocumentID     whereHelpernull_Int
-	CreditNoteNumber   whereHelpernull_String
-	ReferenceInvoiceID whereHelpernull_Int
-	ReasonForIssuance  whereHelpernull_String
-	CreatedAt          whereHelpernull_Time
-	UpdatedAt          whereHelpernull_Time
-	DeletedAt          whereHelpernull_Time
-	BaseDocument       whereHelpernull_JSON
+	ID                whereHelpernull_Int
+	BaseDocumentID    whereHelpernull_Int
+	CreditNoteNumber  whereHelpernull_String
+	CustomerID        whereHelpernull_Int
+	AdditionalCharges whereHelpertypes_NullDecimal
+	TotalValueGen     whereHelpertypes_NullDecimal
+	IssueDate         whereHelpernull_Time
+	ReasonForIssuance whereHelpernull_String
+	CreatedAt         whereHelpernull_Time
+	UpdatedAt         whereHelpernull_Time
+	DeletedAt         whereHelpernull_Time
+	BaseDocument      whereHelpernull_JSON
+	CustomerInfo      whereHelpernull_JSON
+	CreditNoteItems   whereHelpernull_JSON
 }{
-	ID:                 whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"id\""},
-	BaseDocumentID:     whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"base_document_id\""},
-	CreditNoteNumber:   whereHelpernull_String{field: "\"invoice\".\"credit_note_view\".\"credit_note_number\""},
-	ReferenceInvoiceID: whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"reference_invoice_id\""},
-	ReasonForIssuance:  whereHelpernull_String{field: "\"invoice\".\"credit_note_view\".\"reason_for_issuance\""},
-	CreatedAt:          whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"created_at\""},
-	UpdatedAt:          whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"updated_at\""},
-	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"deleted_at\""},
-	BaseDocument:       whereHelpernull_JSON{field: "\"invoice\".\"credit_note_view\".\"base_document\""},
+	ID:                whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"id\""},
+	BaseDocumentID:    whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"base_document_id\""},
+	CreditNoteNumber:  whereHelpernull_String{field: "\"invoice\".\"credit_note_view\".\"credit_note_number\""},
+	CustomerID:        whereHelpernull_Int{field: "\"invoice\".\"credit_note_view\".\"customer_id\""},
+	AdditionalCharges: whereHelpertypes_NullDecimal{field: "\"invoice\".\"credit_note_view\".\"additional_charges\""},
+	TotalValueGen:     whereHelpertypes_NullDecimal{field: "\"invoice\".\"credit_note_view\".\"total_value_gen\""},
+	IssueDate:         whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"issue_date\""},
+	ReasonForIssuance: whereHelpernull_String{field: "\"invoice\".\"credit_note_view\".\"reason_for_issuance\""},
+	CreatedAt:         whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"created_at\""},
+	UpdatedAt:         whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"updated_at\""},
+	DeletedAt:         whereHelpernull_Time{field: "\"invoice\".\"credit_note_view\".\"deleted_at\""},
+	BaseDocument:      whereHelpernull_JSON{field: "\"invoice\".\"credit_note_view\".\"base_document\""},
+	CustomerInfo:      whereHelpernull_JSON{field: "\"invoice\".\"credit_note_view\".\"customer_info\""},
+	CreditNoteItems:   whereHelpernull_JSON{field: "\"invoice\".\"credit_note_view\".\"credit_note_items\""},
 }
 
 var (
-	creditNoteViewAllColumns            = []string{"id", "base_document_id", "credit_note_number", "reference_invoice_id", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document"}
+	creditNoteViewAllColumns            = []string{"id", "base_document_id", "credit_note_number", "customer_id", "additional_charges", "total_value_gen", "issue_date", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document", "customer_info", "credit_note_items"}
 	creditNoteViewColumnsWithoutDefault = []string{}
-	creditNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "credit_note_number", "reference_invoice_id", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document"}
+	creditNoteViewColumnsWithDefault    = []string{"id", "base_document_id", "credit_note_number", "customer_id", "additional_charges", "total_value_gen", "issue_date", "reason_for_issuance", "created_at", "updated_at", "deleted_at", "base_document", "customer_info", "credit_note_items"}
 	creditNoteViewPrimaryKeyColumns     = []string{}
 	creditNoteViewGeneratedColumns      = []string{}
 )

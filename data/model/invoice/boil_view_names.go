@@ -4,6 +4,7 @@
 package invoice
 
 var ViewNames = struct {
+	CreditNoteItemView     string
 	CreditNoteView         string
 	DebitNoteView          string
 	InvoiceItemView        string
@@ -11,6 +12,7 @@ var ViewNames = struct {
 	PaymentReceiptItemView string
 	PaymentReceiptView     string
 }{
+	CreditNoteItemView:     "credit_note_item_view",
 	CreditNoteView:         "credit_note_view",
 	DebitNoteView:          "debit_note_view",
 	InvoiceItemView:        "invoice_item_view",

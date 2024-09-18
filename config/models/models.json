@@ -35,7 +35,9 @@
             "package": "invoice",
             "models": [
                 { "name": "CreditNote", "plural_name": "CreditNotes" },
+                { "name": "CreditNoteItem", "plural_name": "CreditNoteItems" },
                 { "name": "DebitNote", "plural_name": "DebitNotes" },
+                { "name": "DebitNoteItem", "plural_name": "DebitNoteItems" },
                 { "name": "Invoice", "plural_name": "Invoices" },
                 { "name": "InvoiceItem", "plural_name": "InvoiceItems" },
                 { "name": "PaymentReceipt", "plural_name": "PaymentReceipts" },

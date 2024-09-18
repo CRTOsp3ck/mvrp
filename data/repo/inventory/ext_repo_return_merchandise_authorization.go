@@ -13,3 +13,9 @@ func (r *InventoryRepository) GetReturnMerchandiseAuthorizationItemsByReturnMerc
 		qm.Where("rma_id=?", id),
 	).All(ctx, exec)
 }
+
+func (r *InventoryRepository) GetReturnMerchandiseAuthorizationByBaseDocumentID(ctx context.Context, exec boil.ContextExecutor, id int) (*inventory.ReturnMerchandiseAuthorization, error) {
+	return inventory.ReturnMerchandiseAuthorizations(
+		qm.Where("base_document_id=?", id),
+	).One(ctx, exec)
+}

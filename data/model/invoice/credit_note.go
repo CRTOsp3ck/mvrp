@@ -19,62 +19,78 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // CreditNote is an object representing the database table.
 type CreditNote struct {
-	ID                 int         `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentID     int         `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
-	CreditNoteNumber   string      `boil:"credit_note_number" json:"credit_note_number" toml:"credit_note_number" yaml:"credit_note_number"`
-	ReferenceInvoiceID null.Int    `boil:"reference_invoice_id" json:"reference_invoice_id,omitempty" toml:"reference_invoice_id" yaml:"reference_invoice_id,omitempty"`
-	ReasonForIssuance  null.String `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
-	CreatedAt          time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt          time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt          null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                int               `boil:"id" json:"id" toml:"id" yaml:"id"`
+	BaseDocumentID    int               `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
+	CreditNoteNumber  string            `boil:"credit_note_number" json:"credit_note_number" toml:"credit_note_number" yaml:"credit_note_number"`
+	CustomerID        null.Int          `boil:"customer_id" json:"customer_id,omitempty" toml:"customer_id" yaml:"customer_id,omitempty"`
+	AdditionalCharges types.NullDecimal `boil:"additional_charges" json:"additional_charges,omitempty" toml:"additional_charges" yaml:"additional_charges,omitempty"`
+	TotalValueGen     types.Decimal     `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	IssueDate         time.Time         `boil:"issue_date" json:"issue_date" toml:"issue_date" yaml:"issue_date"`
+	ReasonForIssuance null.String       `boil:"reason_for_issuance" json:"reason_for_issuance,omitempty" toml:"reason_for_issuance" yaml:"reason_for_issuance,omitempty"`
+	CreatedAt         time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt         time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *creditNoteR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L creditNoteL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var CreditNoteColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	CreditNoteNumber   string
-	ReferenceInvoiceID string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID                string
+	BaseDocumentID    string
+	CreditNoteNumber  string
+	CustomerID        string
+	AdditionalCharges string
+	TotalValueGen     string
+	IssueDate         string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:                 "id",
-	BaseDocumentID:     "base_document_id",
-	CreditNoteNumber:   "credit_note_number",
-	ReferenceInvoiceID: "reference_invoice_id",
-	ReasonForIssuance:  "reason_for_issuance",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
-	DeletedAt:          "deleted_at",
+	ID:                "id",
+	BaseDocumentID:    "base_document_id",
+	CreditNoteNumber:  "credit_note_number",
+	CustomerID:        "customer_id",
+	AdditionalCharges: "additional_charges",
+	TotalValueGen:     "total_value_gen",
+	IssueDate:         "issue_date",
+	ReasonForIssuance: "reason_for_issuance",
+	CreatedAt:         "created_at",
+	UpdatedAt:         "updated_at",
+	DeletedAt:         "deleted_at",
 }
 
 var CreditNoteTableColumns = struct {
-	ID                 string
-	BaseDocumentID     string
-	CreditNoteNumber   string
-	ReferenceInvoiceID string
-	ReasonForIssuance  string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID                string
+	BaseDocumentID    string
+	CreditNoteNumber  string
+	CustomerID        string
+	AdditionalCharges string
+	TotalValueGen     string
+	IssueDate         string
+	ReasonForIssuance string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:                 "credit_note.id",
-	BaseDocumentID:     "credit_note.base_document_id",
-	CreditNoteNumber:   "credit_note.credit_note_number",
-	ReferenceInvoiceID: "credit_note.reference_invoice_id",
-	ReasonForIssuance:  "credit_note.reason_for_issuance",
-	CreatedAt:          "credit_note.created_at",
-	UpdatedAt:          "credit_note.updated_at",
-	DeletedAt:          "credit_note.deleted_at",
+	ID:                "credit_note.id",
+	BaseDocumentID:    "credit_note.base_document_id",
+	CreditNoteNumber:  "credit_note.credit_note_number",
+	CustomerID:        "credit_note.customer_id",
+	AdditionalCharges: "credit_note.additional_charges",
+	TotalValueGen:     "credit_note.total_value_gen",
+	IssueDate:         "credit_note.issue_date",
+	ReasonForIssuance: "credit_note.reason_for_issuance",
+	CreatedAt:         "credit_note.created_at",
+	UpdatedAt:         "credit_note.updated_at",
+	DeletedAt:         "credit_note.deleted_at",
 }
 
 // Generated where
@@ -167,6 +183,74 @@ func (w whereHelpernull_Int) NIN(slice []int) qm.QueryMod {
 func (w whereHelpernull_Int) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_Int) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
+type whereHelpertypes_NullDecimal struct{ field string }
+
+func (w whereHelpertypes_NullDecimal) EQ(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpertypes_NullDecimal) NEQ(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpertypes_NullDecimal) LT(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertypes_NullDecimal) LTE(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertypes_NullDecimal) GT(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertypes_NullDecimal) GTE(x types.NullDecimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+func (w whereHelpertypes_NullDecimal) IsNull() qm.QueryMod { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpertypes_NullDecimal) IsNotNull() qm.QueryMod {
+	return qmhelper.WhereIsNotNull(w.field)
+}
+
+type whereHelpertypes_Decimal struct{ field string }
+
+func (w whereHelpertypes_Decimal) EQ(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertypes_Decimal) NEQ(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertypes_Decimal) LT(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertypes_Decimal) LTE(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertypes_Decimal) GT(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertypes_Decimal) GTE(x types.Decimal) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
+type whereHelpertime_Time struct{ field string }
+
+func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
 type whereHelpernull_String struct{ field string }
 
 func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
@@ -217,27 +301,6 @@ func (w whereHelpernull_String) NIN(slice []string) qm.QueryMod {
 func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
 func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
-type whereHelpertime_Time struct{ field string }
-
-func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
 type whereHelpernull_Time struct{ field string }
 
 func (w whereHelpernull_Time) EQ(x null.Time) qm.QueryMod {
@@ -263,35 +326,41 @@ func (w whereHelpernull_Time) IsNull() qm.QueryMod    { return qmhelper.WhereIsN
 func (w whereHelpernull_Time) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
 
 var CreditNoteWhere = struct {
-	ID                 whereHelperint
-	BaseDocumentID     whereHelperint
-	CreditNoteNumber   whereHelperstring
-	ReferenceInvoiceID whereHelpernull_Int
-	ReasonForIssuance  whereHelpernull_String
-	CreatedAt          whereHelpertime_Time
-	UpdatedAt          whereHelpertime_Time
-	DeletedAt          whereHelpernull_Time
+	ID                whereHelperint
+	BaseDocumentID    whereHelperint
+	CreditNoteNumber  whereHelperstring
+	CustomerID        whereHelpernull_Int
+	AdditionalCharges whereHelpertypes_NullDecimal
+	TotalValueGen     whereHelpertypes_Decimal
+	IssueDate         whereHelpertime_Time
+	ReasonForIssuance whereHelpernull_String
+	CreatedAt         whereHelpertime_Time
+	UpdatedAt         whereHelpertime_Time
+	DeletedAt         whereHelpernull_Time
 }{
-	ID:                 whereHelperint{field: "\"invoice\".\"credit_note\".\"id\""},
-	BaseDocumentID:     whereHelperint{field: "\"invoice\".\"credit_note\".\"base_document_id\""},
-	CreditNoteNumber:   whereHelperstring{field: "\"invoice\".\"credit_note\".\"credit_note_number\""},
-	ReferenceInvoiceID: whereHelpernull_Int{field: "\"invoice\".\"credit_note\".\"reference_invoice_id\""},
-	ReasonForIssuance:  whereHelpernull_String{field: "\"invoice\".\"credit_note\".\"reason_for_issuance\""},
-	CreatedAt:          whereHelpertime_Time{field: "\"invoice\".\"credit_note\".\"created_at\""},
-	UpdatedAt:          whereHelpertime_Time{field: "\"invoice\".\"credit_note\".\"updated_at\""},
-	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"credit_note\".\"deleted_at\""},
+	ID:                whereHelperint{field: "\"invoice\".\"credit_note\".\"id\""},
+	BaseDocumentID:    whereHelperint{field: "\"invoice\".\"credit_note\".\"base_document_id\""},
+	CreditNoteNumber:  whereHelperstring{field: "\"invoice\".\"credit_note\".\"credit_note_number\""},
+	CustomerID:        whereHelpernull_Int{field: "\"invoice\".\"credit_note\".\"customer_id\""},
+	AdditionalCharges: whereHelpertypes_NullDecimal{field: "\"invoice\".\"credit_note\".\"additional_charges\""},
+	TotalValueGen:     whereHelpertypes_Decimal{field: "\"invoice\".\"credit_note\".\"total_value_gen\""},
+	IssueDate:         whereHelpertime_Time{field: "\"invoice\".\"credit_note\".\"issue_date\""},
+	ReasonForIssuance: whereHelpernull_String{field: "\"invoice\".\"credit_note\".\"reason_for_issuance\""},
+	CreatedAt:         whereHelpertime_Time{field: "\"invoice\".\"credit_note\".\"created_at\""},
+	UpdatedAt:         whereHelpertime_Time{field: "\"invoice\".\"credit_note\".\"updated_at\""},
+	DeletedAt:         whereHelpernull_Time{field: "\"invoice\".\"credit_note\".\"deleted_at\""},
 }
 
 // CreditNoteRels is where relationship names are stored.
 var CreditNoteRels = struct {
-	ReferenceInvoice string
+	CreditNoteItems string
 }{
-	ReferenceInvoice: "ReferenceInvoice",
+	CreditNoteItems: "CreditNoteItems",
 }
 
 // creditNoteR is where relationships are stored.
 type creditNoteR struct {
-	ReferenceInvoice *Invoice `boil:"ReferenceInvoice" json:"ReferenceInvoice" toml:"ReferenceInvoice" yaml:"ReferenceInvoice"`
+	CreditNoteItems CreditNoteItemSlice `boil:"CreditNoteItems" json:"CreditNoteItems" toml:"CreditNoteItems" yaml:"CreditNoteItems"`
 }
 
 // NewStruct creates a new relationship struct
@@ -299,20 +368,20 @@ func (*creditNoteR) NewStruct() *creditNoteR {
 	return &creditNoteR{}
 }
 
-func (r *creditNoteR) GetReferenceInvoice() *Invoice {
+func (r *creditNoteR) GetCreditNoteItems() CreditNoteItemSlice {
 	if r == nil {
 		return nil
 	}
-	return r.ReferenceInvoice
+	return r.CreditNoteItems
 }
 
 // creditNoteL is where Load methods for each relationship are stored.
 type creditNoteL struct{}
 
 var (
-	creditNoteAllColumns            = []string{"id", "base_document_id", "credit_note_number", "reference_invoice_id", "reason_for_issuance", "created_at", "updated_at", "deleted_at"}
-	creditNoteColumnsWithoutDefault = []string{"id", "base_document_id", "credit_note_number", "created_at", "updated_at"}
-	creditNoteColumnsWithDefault    = []string{"reference_invoice_id", "reason_for_issuance", "deleted_at"}
+	creditNoteAllColumns            = []string{"id", "base_document_id", "credit_note_number", "customer_id", "additional_charges", "total_value_gen", "issue_date", "reason_for_issuance", "created_at", "updated_at", "deleted_at"}
+	creditNoteColumnsWithoutDefault = []string{"id", "base_document_id", "credit_note_number", "issue_date", "created_at", "updated_at"}
+	creditNoteColumnsWithDefault    = []string{"customer_id", "additional_charges", "total_value_gen", "reason_for_issuance", "deleted_at"}
 	creditNotePrimaryKeyColumns     = []string{"id"}
 	creditNoteGeneratedColumns      = []string{}
 )
@@ -622,20 +691,23 @@ func (q creditNoteQuery) Exists(ctx context.Context, exec boil.ContextExecutor) 
 	return count > 0, nil
 }
 
-// ReferenceInvoice pointed to by the foreign key.
-func (o *CreditNote) ReferenceInvoice(mods ...qm.QueryMod) invoiceQuery {
-	queryMods := []qm.QueryMod{
-		qm.Where("\"id\" = ?", o.ReferenceInvoiceID),
+// CreditNoteItems retrieves all the credit_note_item's CreditNoteItems with an executor.
+func (o *CreditNote) CreditNoteItems(mods ...qm.QueryMod) creditNoteItemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
 	}
 
-	queryMods = append(queryMods, mods...)
+	queryMods = append(queryMods,
+		qm.Where("\"invoice\".\"credit_note_item\".\"credit_note_id\"=?", o.ID),
+	)
 
-	return Invoices(queryMods...)
+	return CreditNoteItems(queryMods...)
 }
 
-// LoadReferenceInvoice allows an eager lookup of values, cached into the
-// loaded structs of the objects. This is for an N-1 relationship.
-func (creditNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCreditNote interface{}, mods queries.Applicator) error {
+// LoadCreditNoteItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (creditNoteL) LoadCreditNoteItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeCreditNote interface{}, mods queries.Applicator) error {
 	var slice []*CreditNote
 	var object *CreditNote
 
@@ -666,20 +738,13 @@ func (creditNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecu
 		if object.R == nil {
 			object.R = &creditNoteR{}
 		}
-		if !queries.IsNil(object.ReferenceInvoiceID) {
-			args[object.ReferenceInvoiceID] = struct{}{}
-		}
-
+		args[object.ID] = struct{}{}
 	} else {
 		for _, obj := range slice {
 			if obj.R == nil {
 				obj.R = &creditNoteR{}
 			}
-
-			if !queries.IsNil(obj.ReferenceInvoiceID) {
-				args[obj.ReferenceInvoiceID] = struct{}{}
-			}
-
+			args[obj.ID] = struct{}{}
 		}
 	}
 
@@ -695,8 +760,8 @@ func (creditNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecu
 	}
 
 	query := NewQuery(
-		qm.From(`invoice.invoice`),
-		qm.WhereIn(`invoice.invoice.id in ?`, argsSlice...),
+		qm.From(`invoice.credit_note_item`),
+		qm.WhereIn(`invoice.credit_note_item.credit_note_id in ?`, argsSlice...),
 	)
 	if mods != nil {
 		mods.Apply(query)
@@ -704,51 +769,47 @@ func (creditNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecu
 
 	results, err := query.QueryContext(ctx, e)
 	if err != nil {
-		return errors.Wrap(err, "failed to eager load Invoice")
+		return errors.Wrap(err, "failed to eager load credit_note_item")
 	}
 
-	var resultSlice []*Invoice
+	var resultSlice []*CreditNoteItem
 	if err = queries.Bind(results, &resultSlice); err != nil {
-		return errors.Wrap(err, "failed to bind eager loaded slice Invoice")
+		return errors.Wrap(err, "failed to bind eager loaded slice credit_note_item")
 	}
 
 	if err = results.Close(); err != nil {
-		return errors.Wrap(err, "failed to close results of eager load for invoice")
+		return errors.Wrap(err, "failed to close results in eager load on credit_note_item")
 	}
 	if err = results.Err(); err != nil {
-		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for invoice")
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for credit_note_item")
 	}
 
-	if len(invoiceAfterSelectHooks) != 0 {
+	if len(creditNoteItemAfterSelectHooks) != 0 {
 		for _, obj := range resultSlice {
 			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
 				return err
 			}
 		}
 	}
-
-	if len(resultSlice) == 0 {
-		return nil
-	}
-
 	if singular {
-		foreign := resultSlice[0]
-		object.R.ReferenceInvoice = foreign
-		if foreign.R == nil {
-			foreign.R = &invoiceR{}
+		object.R.CreditNoteItems = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &creditNoteItemR{}
+			}
+			foreign.R.CreditNote = object
 		}
-		foreign.R.ReferenceInvoiceCreditNotes = append(foreign.R.ReferenceInvoiceCreditNotes, object)
 		return nil
 	}
 
-	for _, local := range slice {
-		for _, foreign := range resultSlice {
-			if queries.Equal(local.ReferenceInvoiceID, foreign.ID) {
-				local.R.ReferenceInvoice = foreign
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.CreditNoteID {
+				local.R.CreditNoteItems = append(local.R.CreditNoteItems, foreign)
 				if foreign.R == nil {
-					foreign.R = &invoiceR{}
+					foreign.R = &creditNoteItemR{}
 				}
-				foreign.R.ReferenceInvoiceCreditNotes = append(foreign.R.ReferenceInvoiceCreditNotes, local)
+				foreign.R.CreditNote = local
 				break
 			}
 		}
@@ -757,82 +818,55 @@ func (creditNoteL) LoadReferenceInvoice(ctx context.Context, e boil.ContextExecu
 	return nil
 }
 
-// SetReferenceInvoice of the creditNote to the related item.
-// Sets o.R.ReferenceInvoice to related.
-// Adds o to related.R.ReferenceInvoiceCreditNotes.
-func (o *CreditNote) SetReferenceInvoice(ctx context.Context, exec boil.ContextExecutor, insert bool, related *Invoice) error {
+// AddCreditNoteItems adds the given related objects to the existing relationships
+// of the credit_note, optionally inserting them as new records.
+// Appends related to o.R.CreditNoteItems.
+// Sets related.R.CreditNote appropriately.
+func (o *CreditNote) AddCreditNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*CreditNoteItem) error {
 	var err error
-	if insert {
-		if err = related.Insert(ctx, exec, boil.Infer()); err != nil {
-			return errors.Wrap(err, "failed to insert into foreign table")
+	for _, rel := range related {
+		if insert {
+			rel.CreditNoteID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"invoice\".\"credit_note_item\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"credit_note_id"}),
+				strmangle.WhereClause("\"", "\"", 2, creditNoteItemPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.CreditNoteID = o.ID
 		}
 	}
 
-	updateQuery := fmt.Sprintf(
-		"UPDATE \"invoice\".\"credit_note\" SET %s WHERE %s",
-		strmangle.SetParamNames("\"", "\"", 1, []string{"reference_invoice_id"}),
-		strmangle.WhereClause("\"", "\"", 2, creditNotePrimaryKeyColumns),
-	)
-	values := []interface{}{related.ID, o.ID}
-
-	if boil.IsDebug(ctx) {
-		writer := boil.DebugWriterFrom(ctx)
-		fmt.Fprintln(writer, updateQuery)
-		fmt.Fprintln(writer, values)
-	}
-	if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
-		return errors.Wrap(err, "failed to update local table")
-	}
-
-	queries.Assign(&o.ReferenceInvoiceID, related.ID)
 	if o.R == nil {
 		o.R = &creditNoteR{
-			ReferenceInvoice: related,
+			CreditNoteItems: related,
 		}
 	} else {
-		o.R.ReferenceInvoice = related
+		o.R.CreditNoteItems = append(o.R.CreditNoteItems, related...)
 	}
 
-	if related.R == nil {
-		related.R = &invoiceR{
-			ReferenceInvoiceCreditNotes: CreditNoteSlice{o},
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &creditNoteItemR{
+				CreditNote: o,
+			}
+		} else {
+			rel.R.CreditNote = o
 		}
-	} else {
-		related.R.ReferenceInvoiceCreditNotes = append(related.R.ReferenceInvoiceCreditNotes, o)
-	}
-
-	return nil
-}
-
-// RemoveReferenceInvoice relationship.
-// Sets o.R.ReferenceInvoice to nil.
-// Removes o from all passed in related items' relationships struct.
-func (o *CreditNote) RemoveReferenceInvoice(ctx context.Context, exec boil.ContextExecutor, related *Invoice) error {
-	var err error
-
-	queries.SetScanner(&o.ReferenceInvoiceID, nil)
-	if _, err = o.Update(ctx, exec, boil.Whitelist("reference_invoice_id")); err != nil {
-		return errors.Wrap(err, "failed to update local table")
-	}
-
-	if o.R != nil {
-		o.R.ReferenceInvoice = nil
-	}
-	if related == nil || related.R == nil {
-		return nil
-	}
-
-	for i, ri := range related.R.ReferenceInvoiceCreditNotes {
-		if queries.Equal(o.ReferenceInvoiceID, ri.ReferenceInvoiceID) {
-			continue
-		}
-
-		ln := len(related.R.ReferenceInvoiceCreditNotes)
-		if ln > 1 && i < ln-1 {
-			related.R.ReferenceInvoiceCreditNotes[i] = related.R.ReferenceInvoiceCreditNotes[ln-1]
-		}
-		related.R.ReferenceInvoiceCreditNotes = related.R.ReferenceInvoiceCreditNotes[:ln-1]
-		break
 	}
 	return nil
 }

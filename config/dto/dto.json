@@ -267,7 +267,9 @@
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "invoice", "model": "CreditNote"}
                     ],
-                    "additional_fields": [],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateCreditNoteItemDTO" }
+                    ],
                     "exclude_fields_from_inherit": []
                 },
                 {
@@ -275,6 +277,43 @@
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "invoice", "model": "CreditNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateCreditNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchCreditNoteItemDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "GetCreditNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "CreditNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "CreateCreditNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "CreditNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdateCreditNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "CreditNoteItem"}
                     ],
                     "additional_fields": [],
                     "exclude_fields_from_inherit": []
@@ -302,7 +341,9 @@
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "invoice", "model": "DebitNote"}
                     ],
-                    "additional_fields": [],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]CreateDebitNoteItemDTO" }
+                    ],
                     "exclude_fields_from_inherit": []
                 },
                 {
@@ -310,6 +351,43 @@
                     "inherits": [
                         { "package": "base", "model": "BaseDocument"},
                         { "package": "invoice", "model": "DebitNote"}
+                    ],
+                    "additional_fields": [
+                        { "name": "Items", "type": "[]UpdateDebitNoteItemDTO" }
+                    ],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "SearchDebitNoteItemDTO",
+                    "inherits": [],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": [],
+                    "group_query_fields": [],
+                    "search_query_fields": []
+                },
+                {
+                    "name": "GetDebitNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "DebitNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "CreateDebitNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "DebitNoteItem"}
+                    ],
+                    "additional_fields": [],
+                    "exclude_fields_from_inherit": []
+                },
+                {
+                    "name": "UpdateDebitNoteItemDTO",
+                    "inherits": [
+                        { "package": "base", "model": "BaseDocumentItem"},
+                        { "package": "invoice", "model": "DebitNoteItem"}
                     ],
                     "additional_fields": [],
                     "exclude_fields_from_inherit": []

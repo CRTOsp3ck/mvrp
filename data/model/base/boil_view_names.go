@@ -4,4 +4,9 @@
 package base
 
 var ViewNames = struct {
-}{}
+	BaseDocumentItemView string
+	BaseDocumentView     string
+}{
+	BaseDocumentItemView: "base_document_item_view",
+	BaseDocumentView:     "base_document_view",
+}

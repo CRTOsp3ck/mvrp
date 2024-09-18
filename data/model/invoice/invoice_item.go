@@ -87,14 +87,20 @@ var InvoiceItemWhere = struct {
 
 // InvoiceItemRels is where relationship names are stored.
 var InvoiceItemRels = struct {
-	Invoice string
+	Invoice         string
+	CreditNoteItems string
+	DebitNoteItems  string
 }{
-	Invoice: "Invoice",
+	Invoice:         "Invoice",
+	CreditNoteItems: "CreditNoteItems",
+	DebitNoteItems:  "DebitNoteItems",
 }
 
 // invoiceItemR is where relationships are stored.
 type invoiceItemR struct {
-	Invoice *Invoice `boil:"Invoice" json:"Invoice" toml:"Invoice" yaml:"Invoice"`
+	Invoice         *Invoice            `boil:"Invoice" json:"Invoice" toml:"Invoice" yaml:"Invoice"`
+	CreditNoteItems CreditNoteItemSlice `boil:"CreditNoteItems" json:"CreditNoteItems" toml:"CreditNoteItems" yaml:"CreditNoteItems"`
+	DebitNoteItems  DebitNoteItemSlice  `boil:"DebitNoteItems" json:"DebitNoteItems" toml:"DebitNoteItems" yaml:"DebitNoteItems"`
 }
 
 // NewStruct creates a new relationship struct
@@ -107,6 +113,20 @@ func (r *invoiceItemR) GetInvoice() *Invoice {
 		return nil
 	}
 	return r.Invoice
+}
+
+func (r *invoiceItemR) GetCreditNoteItems() CreditNoteItemSlice {
+	if r == nil {
+		return nil
+	}
+	return r.CreditNoteItems
+}
+
+func (r *invoiceItemR) GetDebitNoteItems() DebitNoteItemSlice {
+	if r == nil {
+		return nil
+	}
+	return r.DebitNoteItems
 }
 
 // invoiceItemL is where Load methods for each relationship are stored.
@@ -436,6 +456,34 @@ func (o *InvoiceItem) Invoice(mods ...qm.QueryMod) invoiceQuery {
 	return Invoices(queryMods...)
 }
 
+// CreditNoteItems retrieves all the credit_note_item's CreditNoteItems with an executor.
+func (o *InvoiceItem) CreditNoteItems(mods ...qm.QueryMod) creditNoteItemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"invoice\".\"credit_note_item\".\"invoice_item_id\"=?", o.ID),
+	)
+
+	return CreditNoteItems(queryMods...)
+}
+
+// DebitNoteItems retrieves all the debit_note_item's DebitNoteItems with an executor.
+func (o *InvoiceItem) DebitNoteItems(mods ...qm.QueryMod) debitNoteItemQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"invoice\".\"debit_note_item\".\"invoice_item_id\"=?", o.ID),
+	)
+
+	return DebitNoteItems(queryMods...)
+}
+
 // LoadInvoice allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for an N-1 relationship.
 func (invoiceItemL) LoadInvoice(ctx context.Context, e boil.ContextExecutor, singular bool, maybeInvoiceItem interface{}, mods queries.Applicator) error {
@@ -556,6 +604,232 @@ func (invoiceItemL) LoadInvoice(ctx context.Context, e boil.ContextExecutor, sin
 	return nil
 }
 
+// LoadCreditNoteItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (invoiceItemL) LoadCreditNoteItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeInvoiceItem interface{}, mods queries.Applicator) error {
+	var slice []*InvoiceItem
+	var object *InvoiceItem
+
+	if singular {
+		var ok bool
+		object, ok = maybeInvoiceItem.(*InvoiceItem)
+		if !ok {
+			object = new(InvoiceItem)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeInvoiceItem)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeInvoiceItem))
+			}
+		}
+	} else {
+		s, ok := maybeInvoiceItem.(*[]*InvoiceItem)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeInvoiceItem)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeInvoiceItem))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &invoiceItemR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &invoiceItemR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`invoice.credit_note_item`),
+		qm.WhereIn(`invoice.credit_note_item.invoice_item_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load credit_note_item")
+	}
+
+	var resultSlice []*CreditNoteItem
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice credit_note_item")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on credit_note_item")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for credit_note_item")
+	}
+
+	if len(creditNoteItemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.CreditNoteItems = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &creditNoteItemR{}
+			}
+			foreign.R.InvoiceItem = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if queries.Equal(local.ID, foreign.InvoiceItemID) {
+				local.R.CreditNoteItems = append(local.R.CreditNoteItems, foreign)
+				if foreign.R == nil {
+					foreign.R = &creditNoteItemR{}
+				}
+				foreign.R.InvoiceItem = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadDebitNoteItems allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (invoiceItemL) LoadDebitNoteItems(ctx context.Context, e boil.ContextExecutor, singular bool, maybeInvoiceItem interface{}, mods queries.Applicator) error {
+	var slice []*InvoiceItem
+	var object *InvoiceItem
+
+	if singular {
+		var ok bool
+		object, ok = maybeInvoiceItem.(*InvoiceItem)
+		if !ok {
+			object = new(InvoiceItem)
+			ok = queries.SetFromEmbeddedStruct(&object, &maybeInvoiceItem)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", object, maybeInvoiceItem))
+			}
+		}
+	} else {
+		s, ok := maybeInvoiceItem.(*[]*InvoiceItem)
+		if ok {
+			slice = *s
+		} else {
+			ok = queries.SetFromEmbeddedStruct(&slice, maybeInvoiceItem)
+			if !ok {
+				return errors.New(fmt.Sprintf("failed to set %T from embedded struct %T", slice, maybeInvoiceItem))
+			}
+		}
+	}
+
+	args := make(map[interface{}]struct{})
+	if singular {
+		if object.R == nil {
+			object.R = &invoiceItemR{}
+		}
+		args[object.ID] = struct{}{}
+	} else {
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &invoiceItemR{}
+			}
+			args[obj.ID] = struct{}{}
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	argsSlice := make([]interface{}, len(args))
+	i := 0
+	for arg := range args {
+		argsSlice[i] = arg
+		i++
+	}
+
+	query := NewQuery(
+		qm.From(`invoice.debit_note_item`),
+		qm.WhereIn(`invoice.debit_note_item.invoice_item_id in ?`, argsSlice...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load debit_note_item")
+	}
+
+	var resultSlice []*DebitNoteItem
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice debit_note_item")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on debit_note_item")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for debit_note_item")
+	}
+
+	if len(debitNoteItemAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.DebitNoteItems = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &debitNoteItemR{}
+			}
+			foreign.R.InvoiceItem = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if queries.Equal(local.ID, foreign.InvoiceItemID) {
+				local.R.DebitNoteItems = append(local.R.DebitNoteItems, foreign)
+				if foreign.R == nil {
+					foreign.R = &debitNoteItemR{}
+				}
+				foreign.R.InvoiceItem = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
 // SetInvoice of the invoiceItem to the related item.
 // Sets o.R.Invoice to related.
 // Adds o to related.R.InvoiceItems.
@@ -598,6 +872,260 @@ func (o *InvoiceItem) SetInvoice(ctx context.Context, exec boil.ContextExecutor,
 		}
 	} else {
 		related.R.InvoiceItems = append(related.R.InvoiceItems, o)
+	}
+
+	return nil
+}
+
+// AddCreditNoteItems adds the given related objects to the existing relationships
+// of the invoice_item, optionally inserting them as new records.
+// Appends related to o.R.CreditNoteItems.
+// Sets related.R.InvoiceItem appropriately.
+func (o *InvoiceItem) AddCreditNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*CreditNoteItem) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			queries.Assign(&rel.InvoiceItemID, o.ID)
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"invoice\".\"credit_note_item\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"invoice_item_id"}),
+				strmangle.WhereClause("\"", "\"", 2, creditNoteItemPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			queries.Assign(&rel.InvoiceItemID, o.ID)
+		}
+	}
+
+	if o.R == nil {
+		o.R = &invoiceItemR{
+			CreditNoteItems: related,
+		}
+	} else {
+		o.R.CreditNoteItems = append(o.R.CreditNoteItems, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &creditNoteItemR{
+				InvoiceItem: o,
+			}
+		} else {
+			rel.R.InvoiceItem = o
+		}
+	}
+	return nil
+}
+
+// SetCreditNoteItems removes all previously related items of the
+// invoice_item replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.InvoiceItem's CreditNoteItems accordingly.
+// Replaces o.R.CreditNoteItems with related.
+// Sets related.R.InvoiceItem's CreditNoteItems accordingly.
+func (o *InvoiceItem) SetCreditNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*CreditNoteItem) error {
+	query := "update \"invoice\".\"credit_note_item\" set \"invoice_item_id\" = null where \"invoice_item_id\" = $1"
+	values := []interface{}{o.ID}
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, query)
+		fmt.Fprintln(writer, values)
+	}
+	_, err := exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	if o.R != nil {
+		for _, rel := range o.R.CreditNoteItems {
+			queries.SetScanner(&rel.InvoiceItemID, nil)
+			if rel.R == nil {
+				continue
+			}
+
+			rel.R.InvoiceItem = nil
+		}
+		o.R.CreditNoteItems = nil
+	}
+
+	return o.AddCreditNoteItems(ctx, exec, insert, related...)
+}
+
+// RemoveCreditNoteItems relationships from objects passed in.
+// Removes related items from R.CreditNoteItems (uses pointer comparison, removal does not keep order)
+// Sets related.R.InvoiceItem.
+func (o *InvoiceItem) RemoveCreditNoteItems(ctx context.Context, exec boil.ContextExecutor, related ...*CreditNoteItem) error {
+	if len(related) == 0 {
+		return nil
+	}
+
+	var err error
+	for _, rel := range related {
+		queries.SetScanner(&rel.InvoiceItemID, nil)
+		if rel.R != nil {
+			rel.R.InvoiceItem = nil
+		}
+		if _, err = rel.Update(ctx, exec, boil.Whitelist("invoice_item_id")); err != nil {
+			return err
+		}
+	}
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.CreditNoteItems {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.CreditNoteItems)
+			if ln > 1 && i < ln-1 {
+				o.R.CreditNoteItems[i] = o.R.CreditNoteItems[ln-1]
+			}
+			o.R.CreditNoteItems = o.R.CreditNoteItems[:ln-1]
+			break
+		}
+	}
+
+	return nil
+}
+
+// AddDebitNoteItems adds the given related objects to the existing relationships
+// of the invoice_item, optionally inserting them as new records.
+// Appends related to o.R.DebitNoteItems.
+// Sets related.R.InvoiceItem appropriately.
+func (o *InvoiceItem) AddDebitNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*DebitNoteItem) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			queries.Assign(&rel.InvoiceItemID, o.ID)
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"invoice\".\"debit_note_item\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"invoice_item_id"}),
+				strmangle.WhereClause("\"", "\"", 2, debitNoteItemPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			queries.Assign(&rel.InvoiceItemID, o.ID)
+		}
+	}
+
+	if o.R == nil {
+		o.R = &invoiceItemR{
+			DebitNoteItems: related,
+		}
+	} else {
+		o.R.DebitNoteItems = append(o.R.DebitNoteItems, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &debitNoteItemR{
+				InvoiceItem: o,
+			}
+		} else {
+			rel.R.InvoiceItem = o
+		}
+	}
+	return nil
+}
+
+// SetDebitNoteItems removes all previously related items of the
+// invoice_item replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.InvoiceItem's DebitNoteItems accordingly.
+// Replaces o.R.DebitNoteItems with related.
+// Sets related.R.InvoiceItem's DebitNoteItems accordingly.
+func (o *InvoiceItem) SetDebitNoteItems(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*DebitNoteItem) error {
+	query := "update \"invoice\".\"debit_note_item\" set \"invoice_item_id\" = null where \"invoice_item_id\" = $1"
+	values := []interface{}{o.ID}
+	if boil.IsDebug(ctx) {
+		writer := boil.DebugWriterFrom(ctx)
+		fmt.Fprintln(writer, query)
+		fmt.Fprintln(writer, values)
+	}
+	_, err := exec.ExecContext(ctx, query, values...)
+	if err != nil {
+		return errors.Wrap(err, "failed to remove relationships before set")
+	}
+
+	if o.R != nil {
+		for _, rel := range o.R.DebitNoteItems {
+			queries.SetScanner(&rel.InvoiceItemID, nil)
+			if rel.R == nil {
+				continue
+			}
+
+			rel.R.InvoiceItem = nil
+		}
+		o.R.DebitNoteItems = nil
+	}
+
+	return o.AddDebitNoteItems(ctx, exec, insert, related...)
+}
+
+// RemoveDebitNoteItems relationships from objects passed in.
+// Removes related items from R.DebitNoteItems (uses pointer comparison, removal does not keep order)
+// Sets related.R.InvoiceItem.
+func (o *InvoiceItem) RemoveDebitNoteItems(ctx context.Context, exec boil.ContextExecutor, related ...*DebitNoteItem) error {
+	if len(related) == 0 {
+		return nil
+	}
+
+	var err error
+	for _, rel := range related {
+		queries.SetScanner(&rel.InvoiceItemID, nil)
+		if rel.R != nil {
+			rel.R.InvoiceItem = nil
+		}
+		if _, err = rel.Update(ctx, exec, boil.Whitelist("invoice_item_id")); err != nil {
+			return err
+		}
+	}
+	if o.R == nil {
+		return nil
+	}
+
+	for _, rel := range related {
+		for i, ri := range o.R.DebitNoteItems {
+			if rel != ri {
+				continue
+			}
+
+			ln := len(o.R.DebitNoteItems)
+			if ln > 1 && i < ln-1 {
+				o.R.DebitNoteItems[i] = o.R.DebitNoteItems[ln-1]
+			}
+			o.R.DebitNoteItems = o.R.DebitNoteItems[:ln-1]
+			break
+		}
 	}
 
 	return nil
