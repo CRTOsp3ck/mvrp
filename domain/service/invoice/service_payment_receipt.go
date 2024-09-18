@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/base"
 	"mvrp/data/model/invoice"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -14,7 +15,8 @@ import (
 
 // LIST PAYMENT RECEIPT
 type ListPaymentReceiptRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InvoiceService) NewListPaymentReceiptRequest(ctx context.Context) *ListPaymentReceiptRequest {
@@ -30,20 +32,29 @@ func (s *InvoiceService) NewListPaymentReceiptResponse(payload invoice.PaymentRe
 }
 
 func (s *InvoiceService) ListPaymentReceipt(req *ListPaymentReceiptRequest) (*ListPaymentReceiptResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.ListAllPaymentReceipts(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListPaymentReceiptResponse{
 		Payload: res,
 	}
@@ -87,6 +98,7 @@ func (s *InvoiceService) PreviewPaymentReceipt(req *PreviewPaymentReceiptRequest
 // SEARCH PAYMENT RECEIPT
 type SearchPaymentReceiptRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchPaymentReceiptDTO
 }
 
@@ -104,20 +116,27 @@ func (s *InvoiceService) NewSearchPaymentReceiptResponse(payload invoice.Payment
 }
 
 func (s *InvoiceService) SearchPaymentReceipt(req *SearchPaymentReceiptRequest) (*SearchPaymentReceiptResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Invoice.SearchPaymentReceipts(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -136,8 +155,9 @@ func (s *InvoiceService) SearchPaymentReceipt(req *SearchPaymentReceiptRequest) 
 
 // GET PAYMENT RECEIPT
 type GetPaymentReceiptRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewGetPaymentReceiptRequest(ctx context.Context, id int) *GetPaymentReceiptRequest {
@@ -153,20 +173,29 @@ func (s *InvoiceService) NewGetPaymentReceiptResponse(payload invoice.PaymentRec
 }
 
 func (s *InvoiceService) GetPaymentReceipt(req *GetPaymentReceiptRequest) (*GetPaymentReceiptResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.GetPaymentReceiptByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := GetPaymentReceiptResponse{
 		Payload: *res,
 	}
@@ -176,6 +205,7 @@ func (s *InvoiceService) GetPaymentReceipt(req *GetPaymentReceiptRequest) (*GetP
 // CREATE PAYMENT RECEIPT
 type CreatePaymentReceiptRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreatePaymentReceiptDTO
 }
 
@@ -198,11 +228,17 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 		3. Create Base Document Items
 		4. Create PaymentReceipt Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -272,9 +308,11 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreatePaymentReceiptResponse{
@@ -286,6 +324,7 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 // UPDATE PAYMENT RECEIPT
 type UpdatePaymentReceiptRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdatePaymentReceiptDTO
 }
 
@@ -308,11 +347,17 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 		3. Update Base Document Items
 		4. Update PaymentReceipt Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -430,11 +475,12 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	resp := UpdatePaymentReceiptResponse{
 		Payload: *res,
 	}
@@ -443,8 +489,9 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 
 // DELETE PAYMENT RECEIPT
 type DeletePaymentReceiptRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewDeletePaymentReceiptRequest(ctx context.Context, id int) *DeletePaymentReceiptRequest {
@@ -466,11 +513,17 @@ func (s *InvoiceService) DeletePaymentReceipt(req *DeletePaymentReceiptRequest) 
 		3. Delete Base Document Items
 		4. Delete PaymentReceipt Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get payment receipt
 	inv, err := s.Repo.Invoice.GetPaymentReceiptByID(req.Ctx, tx, req.ID)
@@ -520,9 +573,11 @@ func (s *InvoiceService) DeletePaymentReceipt(req *DeletePaymentReceiptRequest) 
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeletePaymentReceiptResponse{

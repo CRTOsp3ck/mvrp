@@ -3,12 +3,14 @@ package entity
 import (
 	"context"
 	"mvrp/data/model/entity"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST ENTITY
 type ListEntityRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *EntityService) NewListEntityRequest(ctx context.Context) *ListEntityRequest {
@@ -27,20 +29,29 @@ func (s *EntityService) NewListEntityResponse(payload entity.EntitySlice) *ListE
 	}
 }
 func (s *EntityService) ListEntity(req *ListEntityRequest) (*ListEntityResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Entity.ListAllEntities(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListEntityResponse{
 		Payload: res,
 	}
@@ -50,6 +61,7 @@ func (s *EntityService) ListEntity(req *ListEntityRequest) (*ListEntityResponse,
 // SEARCH ENTITY
 type SearchEntityRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchEntityDTO
 }
 
@@ -72,20 +84,27 @@ func (s *EntityService) NewSearchEntityResponse(payload entity.EntitySlice) *Sea
 }
 
 func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, count, err := s.Repo.Entity.SearchEntities(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Pagination
@@ -105,8 +124,9 @@ func (s *EntityService) SearchEntity(req *SearchEntityRequest) (*SearchEntityRes
 
 // GET ENTITY
 type GetEntityRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *EntityService) NewGetEntityRequest(ctx context.Context, id int) *GetEntityRequest {
@@ -127,21 +147,29 @@ func (s *EntityService) NewGetEntityResponse(payload entity.Entity) *GetEntityRe
 }
 
 func (s *EntityService) GetEntity(req *GetEntityRequest) (*GetEntityResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Entity.GetEntityByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := GetEntityResponse{
 		Payload: *res,
 	}
@@ -151,6 +179,7 @@ func (s *EntityService) GetEntity(req *GetEntityRequest) (*GetEntityResponse, er
 // CREATE ENTITY
 type CreateEntityRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateEntityDTO
 }
 
@@ -176,11 +205,16 @@ func (s *EntityService) CreateEntity(req *CreateEntityRequest) (*CreateEntityRes
 		1. Create Entity
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create entity
 	nextID, err := s.Repo.Entity.GetNextEntryEntityID(req.Ctx, tx)
@@ -199,9 +233,11 @@ func (s *EntityService) CreateEntity(req *CreateEntityRequest) (*CreateEntityRes
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateEntityResponse{
@@ -213,6 +249,7 @@ func (s *EntityService) CreateEntity(req *CreateEntityRequest) (*CreateEntityRes
 // UPDATE ENTITY
 type UpdateEntityRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateEntityDTO
 }
 
@@ -238,11 +275,16 @@ func (s *EntityService) UpdateEntity(req *UpdateEntityRequest) (*UpdateEntityRes
 		1. Update Entity
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// update entity
 	err = s.Repo.Entity.UpdateEntity(req.Ctx, tx, &req.Payload.Entity)
@@ -256,9 +298,11 @@ func (s *EntityService) UpdateEntity(req *UpdateEntityRequest) (*UpdateEntityRes
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateEntityResponse{
@@ -269,8 +313,9 @@ func (s *EntityService) UpdateEntity(req *UpdateEntityRequest) (*UpdateEntityRes
 
 // DELETE ENTITY
 type DeleteEntityRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *EntityService) NewDeleteEntityRequest(ctx context.Context, id int) *DeleteEntityRequest {
@@ -295,11 +340,16 @@ func (s *EntityService) DeleteEntity(req *DeleteEntityRequest) (*DeleteEntityRes
 		1. Delete Entity
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get entity
 	entity, err := s.Repo.Entity.GetEntityByID(req.Ctx, tx, req.ID)
@@ -313,9 +363,11 @@ func (s *EntityService) DeleteEntity(req *DeleteEntityRequest) (*DeleteEntityRes
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteEntityResponse{

@@ -8,6 +8,7 @@ import (
 	"mvrp/data/model/invoice"
 	itemModel "mvrp/data/model/item"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -19,7 +20,8 @@ import (
 
 // LIST GOODS RETURN NOTE
 type ListGoodsReturnNoteRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListGoodsReturnNoteRequest(ctx context.Context) *ListGoodsReturnNoteRequest {
@@ -35,20 +37,29 @@ func (s *SaleService) NewListGoodsReturnNoteResponse(payload sale.GoodsReturnNot
 }
 
 func (s *SaleService) ListGoodsReturnNote(req *ListGoodsReturnNoteRequest) (*ListGoodsReturnNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllGoodsReturnNotes(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListGoodsReturnNoteResponse{
 		Payload: res,
 	}
@@ -93,6 +104,7 @@ func (s *SaleService) PreviewGoodsReturnNote(req *PreviewGoodsReturnNoteRequest)
 // SEARCH GOODS RETURN NOTE
 type SearchGoodsReturnNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchGoodsReturnNoteDTO
 }
 
@@ -110,20 +122,27 @@ func (s *SaleService) NewSearchGoodsReturnNoteResponse(payload sale.GoodsReturnN
 }
 
 func (s *SaleService) SearchGoodsReturnNote(req *SearchGoodsReturnNoteRequest) (*SearchGoodsReturnNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchGoodsReturnNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -142,8 +161,9 @@ func (s *SaleService) SearchGoodsReturnNote(req *SearchGoodsReturnNoteRequest) (
 
 // GET GOODS RETURN NOTE
 type GetGoodsReturnNoteRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetGoodsReturnNoteRequest(ctx context.Context, id int) *GetGoodsReturnNoteRequest {
@@ -159,20 +179,27 @@ func (s *SaleService) NewGetGoodsReturnNoteResponse(payload sale.GoodsReturnNote
 }
 
 func (s *SaleService) GetGoodsReturnNote(req *GetGoodsReturnNoteRequest) (*GetGoodsReturnNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetGoodsReturnNoteByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetGoodsReturnNoteResponse{
@@ -184,6 +211,7 @@ func (s *SaleService) GetGoodsReturnNote(req *GetGoodsReturnNoteRequest) (*GetGo
 // CREATE GOODS RETURN NOTE
 type CreateGoodsReturnNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateGoodsReturnNoteDTO
 }
 
@@ -213,11 +241,16 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		10. Create Credit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -438,9 +471,11 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateGoodsReturnNoteResponse{
@@ -453,6 +488,7 @@ func (s *SaleService) CreateGoodsReturnNote(req *CreateGoodsReturnNoteRequest) (
 // UPDATE GOODS RETURN NOTE
 type UpdateGoodsReturnNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateGoodsReturnNoteDTO
 }
 
@@ -482,11 +518,16 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		10. Update Credit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	currGrn, err := s.Repo.Sale.GetGoodsReturnNoteByID(req.Ctx, tx, req.Payload.GoodsReturnNote.ID)
 	if err != nil {
@@ -857,9 +898,11 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateGoodsReturnNoteResponse{
@@ -871,8 +914,9 @@ func (s *SaleService) UpdateGoodsReturnNote(req *UpdateGoodsReturnNoteRequest) (
 
 // DELETE GOODS RETURN NOTE
 type DeleteGoodsReturnNoteRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewDeleteGoodsReturnNoteRequest(ctx context.Context, id int) *DeleteGoodsReturnNoteRequest {
@@ -900,11 +944,16 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		9. Delete Credit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get goods return note
 	goodsReturnNote, err := s.Repo.Sale.GetGoodsReturnNoteByID(req.Ctx, tx, req.ID)
@@ -1067,9 +1116,11 @@ func (s *SaleService) DeleteGoodsReturnNote(req *DeleteGoodsReturnNoteRequest) (
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteGoodsReturnNoteResponse{

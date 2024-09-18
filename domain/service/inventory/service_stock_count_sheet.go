@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -15,7 +16,8 @@ import (
 
 // LIST STOCK COUNT SHEET
 type ListStockCountSheetRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListStockCountSheetRequest(ctx context.Context) *ListStockCountSheetRequest {
@@ -35,20 +37,29 @@ func (s *InventoryService) NewListStockCountSheetResponse(payload inventory.Stoc
 }
 
 func (s *InventoryService) ListStockCountSheet(req *ListStockCountSheetRequest) (*ListStockCountSheetResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllStockCountSheets(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListStockCountSheetResponse{
 		Payload: res,
 	}
@@ -58,6 +69,7 @@ func (s *InventoryService) ListStockCountSheet(req *ListStockCountSheetRequest) 
 // SEARCH STOCK COUNT SHEET
 type SearchStockCountSheetRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchStockCountSheetDTO
 }
 
@@ -80,20 +92,27 @@ func (s *InventoryService) NewSearchStockCountSheetResponse(payload inventory.St
 }
 
 func (s *InventoryService) SearchStockCountSheet(req *SearchStockCountSheetRequest) (*SearchStockCountSheetResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchStockCountSheets(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -112,8 +131,9 @@ func (s *InventoryService) SearchStockCountSheet(req *SearchStockCountSheetReque
 
 // GET STOCK COUNT SHEET
 type GetStockCountSheetRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetStockCountSheetRequest(ctx context.Context, id int) *GetStockCountSheetRequest {
@@ -134,20 +154,27 @@ func (s *InventoryService) NewGetStockCountSheetResponse(payload inventory.Stock
 }
 
 func (s *InventoryService) GetStockCountSheet(req *GetStockCountSheetRequest) (*GetStockCountSheetResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetStockCountSheetResponse{
@@ -159,6 +186,7 @@ func (s *InventoryService) GetStockCountSheet(req *GetStockCountSheetRequest) (*
 // CREATE STOCK COUNT SHEET
 type CreateStockCountSheetRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateStockCountSheetDTO
 }
 
@@ -186,11 +214,16 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 		3. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create stock count sheet
 	nextID, err := s.Repo.Inventory.GetNextEntryStockCountSheetID(req.Ctx, tx)
@@ -248,9 +281,11 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateStockCountSheetResponse{
@@ -263,6 +298,7 @@ func (s *InventoryService) CreateStockCountSheet(req *CreateStockCountSheetReque
 // UPDATE STOCK COUNT SHEET
 type UpdateStockCountSheetRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateStockCountSheetDTO
 }
 
@@ -290,11 +326,16 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 		3. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// update stock count sheet
 	currScs, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.Payload.StockCountSheet.ID)
@@ -360,9 +401,11 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateStockCountSheetResponse{
@@ -374,8 +417,9 @@ func (s *InventoryService) UpdateStockCountSheet(req *UpdateStockCountSheetReque
 
 // DELETE STOCK COUNT SHEET
 type DeleteStockCountSheetRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewDeleteStockCountSheetRequest(ctx context.Context, id int) *DeleteStockCountSheetRequest {
@@ -402,11 +446,16 @@ func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetReque
 		3. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get stock count sheet
 	scs, err := s.Repo.Inventory.GetStockCountSheetByID(req.Ctx, tx, req.ID)
@@ -459,9 +508,11 @@ func (s *InventoryService) DeleteStockCountSheet(req *DeleteStockCountSheetReque
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteStockCountSheetResponse{

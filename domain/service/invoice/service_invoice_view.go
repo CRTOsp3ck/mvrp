@@ -3,12 +3,14 @@ package invoice
 import (
 	"context"
 	"mvrp/data/model/invoice"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST DELIVERY NOTE
 type ListInvoiceViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InvoiceService) NewListInvoiceViewRequest(ctx context.Context) *ListInvoiceViewRequest {
@@ -24,20 +26,29 @@ func (s *InvoiceService) NewListInvoiceViewResponse(payload invoice.InvoiceViewS
 }
 
 func (s *InvoiceService) ListInvoiceView(req *ListInvoiceViewRequest) (*ListInvoiceViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.ListAllInvoiceViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInvoiceViewResponse{
 		Payload: res,
 	}
@@ -47,6 +58,7 @@ func (s *InvoiceService) ListInvoiceView(req *ListInvoiceViewRequest) (*ListInvo
 // SEARCH DELIVERY NOTE
 type SearchInvoiceViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInvoiceDTO
 }
 
@@ -64,20 +76,27 @@ func (s *InvoiceService) NewSearchInvoiceViewResponse(payload invoice.InvoiceVie
 }
 
 func (s *InvoiceService) SearchInvoiceView(req *SearchInvoiceViewRequest) (*SearchInvoiceViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Invoice.SearchInvoiceViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -96,8 +115,9 @@ func (s *InvoiceService) SearchInvoiceView(req *SearchInvoiceViewRequest) (*Sear
 
 // GET DELIVERY NOTE
 type GetInvoiceViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewGetInvoiceViewRequest(ctx context.Context, id int) *GetInvoiceViewRequest {
@@ -113,20 +133,27 @@ func (s *InvoiceService) NewGetInvoiceViewResponse(payload invoice.InvoiceView) 
 }
 
 func (s *InvoiceService) GetInvoiceView(req *GetInvoiceViewRequest) (*GetInvoiceViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.GetInvoiceViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetInvoiceViewResponse{

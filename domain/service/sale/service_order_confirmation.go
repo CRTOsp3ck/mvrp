@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/base"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -13,7 +14,8 @@ import (
 
 // LIST ORDER CONFIRMATION
 type ListOrderConfirmationRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListOrderConfirmationRequest(ctx context.Context) *ListOrderConfirmationRequest {
@@ -29,20 +31,29 @@ func (s *SaleService) NewListOrderConfirmationResponse(payload sale.OrderConfirm
 }
 
 func (s *SaleService) ListOrderConfirmation(req *ListOrderConfirmationRequest) (*ListOrderConfirmationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllOrderConfirmations(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListOrderConfirmationResponse{
 		Payload: res,
 	}
@@ -87,6 +98,7 @@ func (s *SaleService) PreviewOrderConfirmation(req *PreviewOrderConfirmationRequ
 // SEARCH ORDER CONFIRMATION
 type SearchOrderConfirmationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchOrderConfirmationDTO
 }
 
@@ -104,20 +116,27 @@ func (s *SaleService) NewSearchOrderConfirmationResponse(payload sale.OrderConfi
 }
 
 func (s *SaleService) SearchOrderConfirmation(req *SearchOrderConfirmationRequest) (*SearchOrderConfirmationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchOrderConfirmations(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -136,8 +155,9 @@ func (s *SaleService) SearchOrderConfirmation(req *SearchOrderConfirmationReques
 
 // GET ORDER CONFIRMATION
 type GetOrderConfirmationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetOrderConfirmationRequest(ctx context.Context, id int) *GetOrderConfirmationRequest {
@@ -153,20 +173,27 @@ func (s *SaleService) NewGetOrderConfirmationResponse(payload sale.OrderConfirma
 }
 
 func (s *SaleService) GetOrderConfirmation(req *GetOrderConfirmationRequest) (*GetOrderConfirmationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetOrderConfirmationResponse{
@@ -178,6 +205,7 @@ func (s *SaleService) GetOrderConfirmation(req *GetOrderConfirmationRequest) (*G
 // CREATE ORDER CONFIRMATION
 type CreateOrderConfirmationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateOrderConfirmationDTO
 }
 
@@ -199,11 +227,16 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		2. Create Order Confirmation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	if req.Payload.ToCreateFromSalesOrder {
 		// get sales order
@@ -362,9 +395,11 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateOrderConfirmationResponse{
@@ -377,6 +412,7 @@ func (s *SaleService) CreateOrderConfirmation(req *CreateOrderConfirmationReques
 // UPDATE ORDER CONFIRMATION
 type UpdateOrderConfirmationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateOrderConfirmationDTO
 }
 
@@ -398,11 +434,16 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 		2. Update Order Confirmation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	currOc, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.Payload.OrderConfirmation.ID)
 	if err != nil {
@@ -519,9 +560,11 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateOrderConfirmationResponse{
@@ -533,8 +576,9 @@ func (s *SaleService) UpdateOrderConfirmation(req *UpdateOrderConfirmationReques
 
 // DELETE ORDER CONFIRMATION
 type DeleteOrderConfirmationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewDeleteOrderConfirmationRequest(ctx context.Context, id int) *DeleteOrderConfirmationRequest {
@@ -555,11 +599,16 @@ func (s *SaleService) DeleteOrderConfirmation(req *DeleteOrderConfirmationReques
 		2. Delete Order Confirmation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get order confirmation
 	OrderConfirmation, err := s.Repo.Sale.GetOrderConfirmationByID(req.Ctx, tx, req.ID)
@@ -609,9 +658,11 @@ func (s *SaleService) DeleteOrderConfirmation(req *DeleteOrderConfirmationReques
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteOrderConfirmationResponse{

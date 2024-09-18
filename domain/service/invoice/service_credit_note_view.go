@@ -3,12 +3,14 @@ package invoice
 import (
 	"context"
 	"mvrp/data/model/invoice"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST DELIVERY NOTE
 type ListCreditNoteViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InvoiceService) NewListCreditNoteViewRequest(ctx context.Context) *ListCreditNoteViewRequest {
@@ -24,20 +26,29 @@ func (s *InvoiceService) NewListCreditNoteViewResponse(payload invoice.CreditNot
 }
 
 func (s *InvoiceService) ListCreditNoteView(req *ListCreditNoteViewRequest) (*ListCreditNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.ListAllCreditNoteViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListCreditNoteViewResponse{
 		Payload: res,
 	}
@@ -47,6 +58,7 @@ func (s *InvoiceService) ListCreditNoteView(req *ListCreditNoteViewRequest) (*Li
 // SEARCH DELIVERY NOTE
 type SearchCreditNoteViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchCreditNoteDTO
 }
 
@@ -64,20 +76,27 @@ func (s *InvoiceService) NewSearchCreditNoteViewResponse(payload invoice.CreditN
 }
 
 func (s *InvoiceService) SearchCreditNoteView(req *SearchCreditNoteViewRequest) (*SearchCreditNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Invoice.SearchCreditNoteViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -96,8 +115,9 @@ func (s *InvoiceService) SearchCreditNoteView(req *SearchCreditNoteViewRequest) 
 
 // GET DELIVERY NOTE
 type GetCreditNoteViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewGetCreditNoteViewRequest(ctx context.Context, id int) *GetCreditNoteViewRequest {
@@ -113,20 +133,27 @@ func (s *InvoiceService) NewGetCreditNoteViewResponse(payload invoice.CreditNote
 }
 
 func (s *InvoiceService) GetCreditNoteView(req *GetCreditNoteViewRequest) (*GetCreditNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.GetCreditNoteViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetCreditNoteViewResponse{

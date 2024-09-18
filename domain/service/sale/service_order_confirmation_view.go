@@ -3,12 +3,14 @@ package sale
 import (
 	"context"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST ORDER CONFIRMATION VIEW
 type ListOrderConfirmationViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListOrderConfirmationViewRequest(ctx context.Context) *ListOrderConfirmationViewRequest {
@@ -28,20 +30,29 @@ func (s *SaleService) NewListOrderConfirmationViewResponse(payload sale.OrderCon
 }
 
 func (s *SaleService) ListOrderConfirmationView(req *ListOrderConfirmationViewRequest) (*ListOrderConfirmationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllOrderConfirmationViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListOrderConfirmationViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *SaleService) ListOrderConfirmationView(req *ListOrderConfirmationViewRe
 // SEARCH ORDER CONFIRMATION VIEW
 type SearchOrderConfirmationViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchOrderConfirmationDTO
 }
 
@@ -73,20 +85,27 @@ func (s *SaleService) NewSearchOrderConfirmationViewResponse(payload sale.OrderC
 }
 
 func (s *SaleService) SearchOrderConfirmationView(req *SearchOrderConfirmationViewRequest) (*SearchOrderConfirmationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchOrderConfirmationViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *SaleService) SearchOrderConfirmationView(req *SearchOrderConfirmationVi
 
 // GET ORDER CONFIRMATION VIEW
 type GetOrderConfirmationViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetOrderConfirmationViewRequest(ctx context.Context, id int) *GetOrderConfirmationViewRequest {
@@ -127,20 +147,27 @@ func (s *SaleService) NewGetOrderConfirmationViewResponse(payload sale.OrderConf
 }
 
 func (s *SaleService) GetOrderConfirmationView(req *GetOrderConfirmationViewRequest) (*GetOrderConfirmationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetOrderConfirmationViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetOrderConfirmationViewResponse{

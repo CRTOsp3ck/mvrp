@@ -3,12 +3,14 @@ package sale
 import (
 	"context"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST GOODS RETURN NOTE VIEW
 type ListGoodsReturnNoteViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListGoodsReturnNoteViewRequest(ctx context.Context) *ListGoodsReturnNoteViewRequest {
@@ -28,20 +30,29 @@ func (s *SaleService) NewListGoodsReturnNoteViewResponse(payload sale.GoodsRetur
 }
 
 func (s *SaleService) ListGoodsReturnNoteView(req *ListGoodsReturnNoteViewRequest) (*ListGoodsReturnNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllGoodsReturnNoteViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListGoodsReturnNoteViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *SaleService) ListGoodsReturnNoteView(req *ListGoodsReturnNoteViewReques
 // SEARCH GOODS RETURN NOTE VIEW
 type SearchGoodsReturnNoteViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchGoodsReturnNoteDTO
 }
 
@@ -73,20 +85,27 @@ func (s *SaleService) NewSearchGoodsReturnNoteViewResponse(payload sale.GoodsRet
 }
 
 func (s *SaleService) SearchGoodsReturnNoteView(req *SearchGoodsReturnNoteViewRequest) (*SearchGoodsReturnNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchGoodsReturnNoteViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *SaleService) SearchGoodsReturnNoteView(req *SearchGoodsReturnNoteViewRe
 
 // GET GOODS RETURN NOTE VIEW
 type GetGoodsReturnNoteViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetGoodsReturnNoteViewRequest(ctx context.Context, id int) *GetGoodsReturnNoteViewRequest {
@@ -127,20 +147,27 @@ func (s *SaleService) NewGetGoodsReturnNoteViewResponse(payload sale.GoodsReturn
 }
 
 func (s *SaleService) GetGoodsReturnNoteView(req *GetGoodsReturnNoteViewRequest) (*GetGoodsReturnNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetGoodsReturnNoteViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetGoodsReturnNoteViewResponse{

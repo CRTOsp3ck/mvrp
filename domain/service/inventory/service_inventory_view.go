@@ -3,12 +3,14 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST INVENTORY
 type ListInventoryViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListInventoryViewRequest(ctx context.Context) *ListInventoryViewRequest {
@@ -28,20 +30,29 @@ func (s *InventoryService) NewListInventoryViewResponse(payload inventory.Invent
 }
 
 func (s *InventoryService) ListInventoryView(req *ListInventoryViewRequest) (*ListInventoryViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllInventoryViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInventoryViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *InventoryService) ListInventoryView(req *ListInventoryViewRequest) (*Li
 // SEARCH INVENTORY
 type SearchInventoryViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInventoryDTO
 }
 
@@ -73,20 +85,27 @@ func (s *InventoryService) NewSearchInventoryViewResponse(payload inventory.Inve
 }
 
 func (s *InventoryService) SearchInventoryView(req *SearchInventoryViewRequest) (*SearchInventoryViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchInventoryViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *InventoryService) SearchInventoryView(req *SearchInventoryViewRequest) 
 
 // GET INVENTORY
 type GetInventoryViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetInventoryViewRequest(ctx context.Context, id int) *GetInventoryViewRequest {
@@ -127,20 +147,27 @@ func (s *InventoryService) NewGetInventoryViewResponse(payload inventory.Invento
 }
 
 func (s *InventoryService) GetInventoryView(req *GetInventoryViewRequest) (*GetInventoryViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetInventoryViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetInventoryViewResponse{

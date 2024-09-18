@@ -3,12 +3,14 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST GOODS ISSUE NOTE VIEW
 type ListGoodsIssueNoteViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListGoodsIssueNoteViewRequest(ctx context.Context) *ListGoodsIssueNoteViewRequest {
@@ -28,20 +30,29 @@ func (s *InventoryService) NewListGoodsIssueNoteViewResponse(payload inventory.G
 }
 
 func (s *InventoryService) ListGoodsIssueNoteView(req *ListGoodsIssueNoteViewRequest) (*ListGoodsIssueNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllGoodsIssueNoteViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListGoodsIssueNoteViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *InventoryService) ListGoodsIssueNoteView(req *ListGoodsIssueNoteViewReq
 // SEARCH GOODS ISSUE NOTE VIEW
 type SearchGoodsIssueNoteViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchGoodsIssueNoteDTO
 }
 
@@ -73,20 +85,27 @@ func (s *InventoryService) NewSearchGoodsIssueNoteViewResponse(payload inventory
 }
 
 func (s *InventoryService) SearchGoodsIssueNoteView(req *SearchGoodsIssueNoteViewRequest) (*SearchGoodsIssueNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchGoodsIssueNoteViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *InventoryService) SearchGoodsIssueNoteView(req *SearchGoodsIssueNoteVie
 
 // GET GOODS ISSUE NOTE VIEW
 type GetGoodsIssueNoteViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetGoodsIssueNoteViewRequest(ctx context.Context, id int) *GetGoodsIssueNoteViewRequest {
@@ -127,20 +147,27 @@ func (s *InventoryService) NewGetGoodsIssueNoteViewResponse(payload inventory.Go
 }
 
 func (s *InventoryService) GetGoodsIssueNoteView(req *GetGoodsIssueNoteViewRequest) (*GetGoodsIssueNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetGoodsIssueNoteViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetGoodsIssueNoteViewResponse{

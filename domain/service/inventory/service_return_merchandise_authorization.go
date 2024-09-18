@@ -3,6 +3,7 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -14,7 +15,8 @@ import (
 
 // LIST RETURN MERCHANDISE AUTHORIZATION
 type ListReturnMerchandiseAuthorizationRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListReturnMerchandiseAuthorizationRequest(ctx context.Context) *ListReturnMerchandiseAuthorizationRequest {
@@ -34,20 +36,29 @@ func (s *InventoryService) NewListReturnMerchandiseAuthorizationResponse(payload
 }
 
 func (s *InventoryService) ListReturnMerchandiseAuthorization(req *ListReturnMerchandiseAuthorizationRequest) (*ListReturnMerchandiseAuthorizationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllReturnMerchandiseAuthorizations(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListReturnMerchandiseAuthorizationResponse{
 		Payload: res,
 	}
@@ -57,6 +68,7 @@ func (s *InventoryService) ListReturnMerchandiseAuthorization(req *ListReturnMer
 // SEARCH RETURN MERCHANDISE AUTHORIZATION
 type SearchReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchReturnMerchandiseAuthorizationDTO
 }
 
@@ -79,20 +91,27 @@ func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationResponse(paylo
 }
 
 func (s *InventoryService) SearchReturnMerchandiseAuthorization(req *SearchReturnMerchandiseAuthorizationRequest) (*SearchReturnMerchandiseAuthorizationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchReturnMerchandiseAuthorizations(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -111,8 +130,9 @@ func (s *InventoryService) SearchReturnMerchandiseAuthorization(req *SearchRetur
 
 // GET RETURN MERCHANDISE AUTHORIZATION
 type GetReturnMerchandiseAuthorizationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *GetReturnMerchandiseAuthorizationRequest {
@@ -133,11 +153,16 @@ func (s *InventoryService) NewGetReturnMerchandiseAuthorizationResponse(payload 
 }
 
 func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerchandiseAuthorizationRequest) (*GetReturnMerchandiseAuthorizationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	ginRes, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
 	if err != nil {
@@ -156,9 +181,11 @@ func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerch
 		})
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetReturnMerchandiseAuthorizationResponse{
@@ -173,6 +200,7 @@ func (s *InventoryService) GetReturnMerchandiseAuthorization(req *GetReturnMerch
 // CREATE RETURN MERCHANDISE AUTHORIZATION
 type CreateReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateReturnMerchandiseAuthorizationDTO
 }
 
@@ -201,11 +229,16 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		4. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create return merchandise authorization
 	nextID, err := s.Repo.Inventory.GetNextEntryReturnMerchandiseAuthorizationID(req.Ctx, tx)
@@ -287,9 +320,11 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateReturnMerchandiseAuthorizationResponse{
@@ -302,6 +337,7 @@ func (s *InventoryService) CreateReturnMerchandiseAuthorization(req *CreateRetur
 // UPDATE RETURN MERCHANDISE AUTHORIZATION
 type UpdateReturnMerchandiseAuthorizationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateReturnMerchandiseAuthorizationDTO
 }
 
@@ -330,11 +366,16 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 		4. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	currRma, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.Payload.ReturnMerchandiseAuthorization.ID)
 	if err != nil {
@@ -527,9 +568,11 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateReturnMerchandiseAuthorizationResponse{
@@ -541,8 +584,9 @@ func (s *InventoryService) UpdateReturnMerchandiseAuthorization(req *UpdateRetur
 
 // DELETE RETURN MERCHANDISE AUTHORIZATION
 type DeleteReturnMerchandiseAuthorizationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewDeleteReturnMerchandiseAuthorizationRequest(ctx context.Context, id int) *DeleteReturnMerchandiseAuthorizationRequest {
@@ -570,11 +614,16 @@ func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteRetur
 		4. Create InventoryTransaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get return merchandise authorization
 	gin, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationByID(req.Ctx, tx, req.ID)
@@ -633,9 +682,11 @@ func (s *InventoryService) DeleteReturnMerchandiseAuthorization(req *DeleteRetur
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteReturnMerchandiseAuthorizationResponse{

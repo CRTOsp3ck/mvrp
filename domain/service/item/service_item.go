@@ -3,14 +3,16 @@ package item
 import (
 	"context"
 	"mvrp/data/model/item"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/errors"
 )
 
 // LIST ITEM
 type ListItemRequest struct {
-	Ctx  context.Context
-	Type *item.ItemType
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	Type   *item.ItemType
 }
 
 func (s *ItemService) NewListItemRequest(ctx context.Context) *ListItemRequest {
@@ -30,20 +32,29 @@ func (s *ItemService) NewListItemResponse(payload item.ItemSlice) *ListItemRespo
 }
 
 func (s *ItemService) ListItem(req *ListItemRequest) (*ListItemResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Item.ListAllItems(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListItemResponse{
 		Payload: res,
 	}
@@ -55,20 +66,29 @@ func (s *ItemService) ListItemByType(req *ListItemRequest) (*ListItemResponse, e
 		return nil, errors.WrapError(errors.ErrTypeMissingField, "Item type is required")
 	}
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Item.ListItemsByType(req.Ctx, tx, req.Type.String())
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListItemResponse{
 		Payload: res,
 	}
@@ -78,6 +98,7 @@ func (s *ItemService) ListItemByType(req *ListItemRequest) (*ListItemResponse, e
 // SEARCH ITEM
 type SearchItemRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchItemDTO
 }
 
@@ -93,21 +114,29 @@ type SearchItemResponse struct {
 func (s *ItemService) NewSearchItemResponse(payload item.ItemSlice) *SearchItemResponse {
 	return &SearchItemResponse{Payload: payload}
 }
+
 func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Item.SearchItems(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -126,8 +155,9 @@ func (s *ItemService) SearchItem(req *SearchItemRequest) (*SearchItemResponse, e
 
 // GET ITEM
 type GetItemRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *ItemService) NewGetItemRequest(ctx context.Context, id int) *GetItemRequest {
@@ -143,21 +173,29 @@ func (s *ItemService) NewGetItemResponse(payload item.Item) *GetItemResponse {
 }
 
 func (s *ItemService) GetItem(req *GetItemRequest) (*GetItemResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Item.GetItemByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := GetItemResponse{
 		Payload: *res,
 	}
@@ -167,6 +205,7 @@ func (s *ItemService) GetItem(req *GetItemRequest) (*GetItemResponse, error) {
 // CREATE ITEM
 type CreateItemRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateItemDTO
 }
 
@@ -187,11 +226,16 @@ func (s *ItemService) CreateItem(req *CreateItemRequest) (*CreateItemResponse, e
 		1. Create Item
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create item
 	nextID, err := s.Repo.Item.GetNextEntryItemID(req.Ctx, tx)
@@ -210,9 +254,11 @@ func (s *ItemService) CreateItem(req *CreateItemRequest) (*CreateItemResponse, e
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateItemResponse{
@@ -224,6 +270,7 @@ func (s *ItemService) CreateItem(req *CreateItemRequest) (*CreateItemResponse, e
 // UPDATE ITEM
 type UpdateItemRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateItemDTO
 }
 
@@ -244,11 +291,16 @@ func (s *ItemService) UpdateItem(req *UpdateItemRequest) (*UpdateItemResponse, e
 		1. Update Item
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// update item
 	err = s.Repo.Item.UpdateItem(req.Ctx, tx, &req.Payload.Item)
@@ -262,9 +314,11 @@ func (s *ItemService) UpdateItem(req *UpdateItemRequest) (*UpdateItemResponse, e
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateItemResponse{
@@ -275,8 +329,9 @@ func (s *ItemService) UpdateItem(req *UpdateItemRequest) (*UpdateItemResponse, e
 
 // DELETE ITEM
 type DeleteItemRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *ItemService) NewDeleteItemRequest(ctx context.Context, id int) *DeleteItemRequest {
@@ -296,11 +351,16 @@ func (s *ItemService) DeleteItem(req *DeleteItemRequest) (*DeleteItemResponse, e
 		1. Delete Item
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get item
 	item, err := s.Repo.Item.GetItemByID(req.Ctx, tx, req.ID)
@@ -314,9 +374,11 @@ func (s *ItemService) DeleteItem(req *DeleteItemRequest) (*DeleteItemResponse, e
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteItemResponse{

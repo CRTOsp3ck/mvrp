@@ -3,6 +3,7 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/errors"
@@ -17,6 +18,7 @@ import (
 // LIST INVENTORY
 type ListInventoryRequest struct {
 	Ctx      context.Context
+	RepoTx   *repo.RepoTx
 	ItemType *string
 }
 
@@ -44,20 +46,29 @@ func (s *InventoryService) NewListInventoryResponse(payload inventory.InventoryS
 }
 
 func (s *InventoryService) ListInventory(req *ListInventoryRequest) (*ListInventoryResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllInventories(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInventoryResponse{
 		Payload: res,
 	}
@@ -69,20 +80,29 @@ func (s *InventoryService) ListInventoryByItemType(req *ListInventoryRequest) (*
 		return nil, errors.WrapError(errors.ErrTypeMissingField, "ItemType is required")
 	}
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListInventoriesByItemType(req.Ctx, tx, *req.ItemType)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInventoryResponse{
 		Payload: res,
 	}
@@ -92,6 +112,7 @@ func (s *InventoryService) ListInventoryByItemType(req *ListInventoryRequest) (*
 // SEARCH INVENTORY
 type SearchInventoryRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInventoryDTO
 }
 
@@ -114,20 +135,27 @@ func (s *InventoryService) NewSearchInventoryResponse(payload inventory.Inventor
 }
 
 func (s *InventoryService) SearchInventory(req *SearchInventoryRequest) (*SearchInventoryResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchInventories(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -146,8 +174,9 @@ func (s *InventoryService) SearchInventory(req *SearchInventoryRequest) (*Search
 
 // GET INVENTORY
 type GetInventoryRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetInventoryRequest(ctx context.Context, id int) *GetInventoryRequest {
@@ -168,20 +197,27 @@ func (s *InventoryService) NewGetInventoryResponse(payload inventory.Inventory) 
 }
 
 func (s *InventoryService) GetInventory(req *GetInventoryRequest) (*GetInventoryResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetInventoryResponse{
@@ -193,6 +229,7 @@ func (s *InventoryService) GetInventory(req *GetInventoryRequest) (*GetInventory
 // CREATE INVENTORY
 type CreateInventoryRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateInventoryDTO
 }
 
@@ -218,11 +255,16 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 		1. Create Inventory
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// process inventory
 	err = proc.ProcessInventoryAmounts(&req.Payload.Inventory)
@@ -275,9 +317,11 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateInventoryResponse{
@@ -290,6 +334,7 @@ func (s *InventoryService) CreateInventory(req *CreateInventoryRequest) (*Create
 // UPDATE INVENTORY
 type UpdateInventoryRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateInventoryDTO
 }
 
@@ -316,11 +361,16 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 		2. Create Inventory Transaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get current inventory amount
 	currInventory, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.Payload.Inventory.ID)
@@ -367,9 +417,11 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateInventoryResponse{
@@ -381,8 +433,9 @@ func (s *InventoryService) UpdateInventory(req *UpdateInventoryRequest) (*Update
 
 // DELETE INVENTORY
 type DeleteInventoryRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewDeleteInventoryRequest(ctx context.Context, id int) *DeleteInventoryRequest {
@@ -407,11 +460,16 @@ func (s *InventoryService) DeleteInventory(req *DeleteInventoryRequest) (*Delete
 		1. Delete Inventory
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get inventory
 	inventory, err := s.Repo.Inventory.GetInventoryByID(req.Ctx, tx, req.ID)
@@ -425,9 +483,11 @@ func (s *InventoryService) DeleteInventory(req *DeleteInventoryRequest) (*Delete
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteInventoryResponse{
@@ -440,6 +500,7 @@ func (s *InventoryService) DeleteInventory(req *DeleteInventoryRequest) (*Delete
 // GET INVENTORY EXISTS BY ITEM ID
 type GetInventoryExistsByItemIDRequest struct {
 	Ctx    context.Context
+	RepoTx *repo.RepoTx
 	ItemID int
 }
 
@@ -461,20 +522,27 @@ func (s *InventoryService) NewGetInventoryExistsByItemIDResponse(payload bool) *
 }
 
 func (s *InventoryService) GetInventoryExistsByItemID(req *GetInventoryExistsByItemIDRequest) (*GetInventoryExistsByItemIDResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	exists, err := s.Repo.Inventory.GetInventoryExistsByItemID(req.Ctx, tx, req.ItemID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetInventoryExistsByItemIDResponse{

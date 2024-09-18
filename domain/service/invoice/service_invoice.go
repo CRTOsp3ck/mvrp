@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/base"
 	"mvrp/data/model/invoice"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -14,7 +15,8 @@ import (
 
 // LIST INVOICE
 type ListInvoiceRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InvoiceService) NewListInvoiceRequest(ctx context.Context) *ListInvoiceRequest {
@@ -30,20 +32,29 @@ func (s *InvoiceService) NewListInvoiceResponse(payload invoice.InvoiceSlice) *L
 }
 
 func (s *InvoiceService) ListInvoice(req *ListInvoiceRequest) (*ListInvoiceResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.ListAllInvoices(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInvoiceResponse{
 		Payload: res,
 	}
@@ -87,6 +98,7 @@ func (s *InvoiceService) PreviewInvoice(req *PreviewInvoiceRequest) (*PreviewInv
 // SEARCH INVOICE
 type SearchInvoiceRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInvoiceDTO
 }
 
@@ -104,20 +116,27 @@ func (s *InvoiceService) NewSearchInvoiceResponse(payload invoice.InvoiceSlice) 
 }
 
 func (s *InvoiceService) SearchInvoice(req *SearchInvoiceRequest) (*SearchInvoiceResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Invoice.SearchInvoices(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -136,8 +155,9 @@ func (s *InvoiceService) SearchInvoice(req *SearchInvoiceRequest) (*SearchInvoic
 
 // GET INVOICE
 type GetInvoiceRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewGetInvoiceRequest(ctx context.Context, id int) *GetInvoiceRequest {
@@ -153,20 +173,29 @@ func (s *InvoiceService) NewGetInvoiceResponse(payload invoice.Invoice) *GetInvo
 }
 
 func (s *InvoiceService) GetInvoice(req *GetInvoiceRequest) (*GetInvoiceResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.GetInvoiceByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := GetInvoiceResponse{
 		Payload: *res,
 	}
@@ -176,6 +205,7 @@ func (s *InvoiceService) GetInvoice(req *GetInvoiceRequest) (*GetInvoiceResponse
 // CREATE INVOICE
 type CreateInvoiceRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateInvoiceDTO
 }
 
@@ -198,11 +228,17 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 		3. Create Base Document Items
 		4. Create Invoice Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -272,9 +308,11 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateInvoiceResponse{
@@ -286,6 +324,7 @@ func (s *InvoiceService) CreateInvoice(req *CreateInvoiceRequest) (*CreateInvoic
 // UPDATE INVOICE
 type UpdateInvoiceRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateInvoiceDTO
 }
 
@@ -308,11 +347,17 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 		3. Update Base Document Items
 		4. Update Invoice Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -430,9 +475,11 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateInvoiceResponse{
@@ -443,8 +490,9 @@ func (s *InvoiceService) UpdateInvoice(req *UpdateInvoiceRequest) (*UpdateInvoic
 
 // DELETE INVOICE
 type DeleteInvoiceRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewDeleteInvoiceRequest(ctx context.Context, id int) *DeleteInvoiceRequest {
@@ -466,11 +514,17 @@ func (s *InvoiceService) DeleteInvoice(req *DeleteInvoiceRequest) (*DeleteInvoic
 		3. Delete Base Document Items
 		4. Delete Invoice Items
 	*/
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get invoice
 	inv, err := s.Repo.Invoice.GetInvoiceByID(req.Ctx, tx, req.ID)
@@ -520,9 +574,11 @@ func (s *InvoiceService) DeleteInvoice(req *DeleteInvoiceRequest) (*DeleteInvoic
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteInvoiceResponse{

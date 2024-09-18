@@ -4,6 +4,7 @@ import (
 	"context"
 	"mvrp/data/model/base"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -11,7 +12,8 @@ import (
 
 // LIST SALES QUOTATION
 type ListSalesQuotationRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListSalesQuotationRequest(ctx context.Context) *ListSalesQuotationRequest {
@@ -27,20 +29,29 @@ func (s *SaleService) NewListSalesQuotationResponse(payload sale.SalesQuotationS
 }
 
 func (s *SaleService) ListSalesQuotation(req *ListSalesQuotationRequest) (*ListSalesQuotationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllSalesQuotations(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListSalesQuotationResponse{
 		Payload: res,
 	}
@@ -85,6 +96,7 @@ func (s *SaleService) PreviewSalesQuotation(req *PreviewSalesQuotationRequest) (
 // SEARCH SALES QUOTATION
 type SearchSalesQuotationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchSalesQuotationDTO
 }
 
@@ -102,22 +114,28 @@ func (s *SaleService) NewSearchSalesQuotationResponse(payload sale.SalesQuotatio
 }
 
 func (s *SaleService) SearchSalesQuotation(req *SearchSalesQuotationRequest) (*SearchSalesQuotationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchSalesQuotations(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	pd := dto.PaginationDTO{
 		TotalItems:   totalCount,
 		ItemsPerPage: req.Payload.ItemsPerPage,
@@ -134,8 +152,9 @@ func (s *SaleService) SearchSalesQuotation(req *SearchSalesQuotationRequest) (*S
 
 // GET SALES QUOTATION
 type GetSalesQuotationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetSalesQuotationRequest(ctx context.Context, id int) *GetSalesQuotationRequest {
@@ -151,20 +170,27 @@ func (s *SaleService) NewGetSalesQuotationResponse(payload sale.SalesQuotation) 
 }
 
 func (s *SaleService) GetSalesQuotation(req *GetSalesQuotationRequest) (*GetSalesQuotationResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetSalesQuotationResponse{
@@ -176,6 +202,7 @@ func (s *SaleService) GetSalesQuotation(req *GetSalesQuotationRequest) (*GetSale
 // CREATE SALES QUOTATION
 type CreateSalesQuotationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateSalesQuotationDTO
 }
 
@@ -200,11 +227,16 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 		5. Create Sales Quotation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -275,9 +307,11 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateSalesQuotationResponse{
@@ -290,6 +324,7 @@ func (s *SaleService) CreateSalesQuotation(req *CreateSalesQuotationRequest) (*C
 // UPDATE SALES QUOTATION
 type UpdateSalesQuotationRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateSalesQuotationDTO
 }
 
@@ -314,11 +349,16 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 		5. Update Sales Quotation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -430,9 +470,11 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateSalesQuotationResponse{
@@ -444,8 +486,9 @@ func (s *SaleService) UpdateSalesQuotation(req *UpdateSalesQuotationRequest) (*U
 
 // DELETE SALES QUOTATION
 type DeleteSalesQuotationRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewDeleteSalesQuotationRequest(ctx context.Context, id int) *DeleteSalesQuotationRequest {
@@ -472,11 +515,16 @@ func (s *SaleService) DeleteSalesQuotation(req *DeleteSalesQuotationRequest) (*D
 		8. Delete Sales Quotation Items
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get sales quotation
 	SalesQuotation, err := s.Repo.Sale.GetSalesQuotationByID(req.Ctx, tx, req.ID)
@@ -526,9 +574,11 @@ func (s *SaleService) DeleteSalesQuotation(req *DeleteSalesQuotationRequest) (*D
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteSalesQuotationResponse{

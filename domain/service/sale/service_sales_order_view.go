@@ -3,12 +3,14 @@ package sale
 import (
 	"context"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST SALES ORDER VIEW
 type ListSalesOrderViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListSalesOrderViewRequest(ctx context.Context) *ListSalesOrderViewRequest {
@@ -28,20 +30,29 @@ func (s *SaleService) NewListSalesOrderViewResponse(payload sale.SalesOrderViewS
 }
 
 func (s *SaleService) ListSalesOrderView(req *ListSalesOrderViewRequest) (*ListSalesOrderViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllSalesOrderViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListSalesOrderViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *SaleService) ListSalesOrderView(req *ListSalesOrderViewRequest) (*ListS
 // SEARCH SALES ORDER VIEW
 type SearchSalesOrderViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchSalesOrderDTO
 }
 
@@ -73,20 +85,27 @@ func (s *SaleService) NewSearchSalesOrderViewResponse(payload sale.SalesOrderVie
 }
 
 func (s *SaleService) SearchSalesOrderView(req *SearchSalesOrderViewRequest) (*SearchSalesOrderViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchSalesOrderViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *SaleService) SearchSalesOrderView(req *SearchSalesOrderViewRequest) (*S
 
 // GET SALES ORDER VIEW
 type GetSalesOrderViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetSalesOrderViewRequest(ctx context.Context, id int) *GetSalesOrderViewRequest {
@@ -127,20 +147,27 @@ func (s *SaleService) NewGetSalesOrderViewResponse(payload sale.SalesOrderView) 
 }
 
 func (s *SaleService) GetSalesOrderView(req *GetSalesOrderViewRequest) (*GetSalesOrderViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetSalesOrderViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetSalesOrderViewResponse{

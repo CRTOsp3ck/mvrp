@@ -7,6 +7,7 @@ import (
 	"mvrp/data/model/inventory"
 	"mvrp/data/model/invoice"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
@@ -19,7 +20,8 @@ import (
 
 // LIST SALES ORDER
 type ListSalesOrderRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListSalesOrderRequest(ctx context.Context) *ListSalesOrderRequest {
@@ -35,20 +37,29 @@ func (s *SaleService) NewListSalesOrderResponse(payload sale.SalesOrderSlice) *L
 }
 
 func (s *SaleService) ListSalesOrder(req *ListSalesOrderRequest) (*ListSalesOrderResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllSalesOrders(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListSalesOrderResponse{
 		Payload: res,
 	}
@@ -93,6 +104,7 @@ func (s *SaleService) PreviewSalesOrder(req *PreviewSalesOrderRequest) (*Preview
 // SEARCH SALES ORDER
 type SearchSalesOrderRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchSalesOrderDTO
 }
 
@@ -110,20 +122,27 @@ func (s *SaleService) NewSearchSalesOrderResponse(payload sale.SalesOrderSlice) 
 }
 
 func (s *SaleService) SearchSalesOrder(req *SearchSalesOrderRequest) (*SearchSalesOrderResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchSalesOrders(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -142,8 +161,9 @@ func (s *SaleService) SearchSalesOrder(req *SearchSalesOrderRequest) (*SearchSal
 
 // GET SALES ORDER
 type GetSalesOrderRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetSalesOrderRequest(ctx context.Context, id int) *GetSalesOrderRequest {
@@ -159,20 +179,27 @@ func (s *SaleService) NewGetSalesOrderResponse(payload sale.SalesOrder) *GetSale
 }
 
 func (s *SaleService) GetSalesOrder(req *GetSalesOrderRequest) (*GetSalesOrderResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetSalesOrderByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetSalesOrderResponse{
@@ -184,6 +211,7 @@ func (s *SaleService) GetSalesOrder(req *GetSalesOrderRequest) (*GetSalesOrderRe
 // CREATE SALES ORDER
 type CreateSalesOrderRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateSalesOrderDTO
 }
 
@@ -214,11 +242,16 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		11. Create Inventory Transaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// preprocess amounts
 	bdis := make([]*base.BaseDocumentItem, 0)
@@ -384,9 +417,11 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateSalesOrderResponse{
@@ -399,6 +434,7 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 // UPDATE SALES ORDER
 type UpdateSalesOrderRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateSalesOrderDTO
 }
 
@@ -429,11 +465,16 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 		11. Create Inventory Transaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	currSo, err := s.Repo.Sale.GetSalesOrderByID(req.Ctx, tx, req.Payload.SalesOrder.ID)
 	if err != nil {
@@ -706,9 +747,11 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateSalesOrderResponse{
@@ -720,8 +763,9 @@ func (s *SaleService) UpdateSalesOrder(req *UpdateSalesOrderRequest) (*UpdateSal
 
 // DELETE SALES ORDER
 type DeleteSalesOrderRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewDeleteSalesOrderRequest(ctx context.Context, id int) *DeleteSalesOrderRequest {
@@ -750,11 +794,16 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		10. Create Inventory Transaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get sales order
 	salesOrder, err := s.Repo.Sale.GetSalesOrderByID(req.Ctx, tx, req.ID)
@@ -877,9 +926,11 @@ func (s *SaleService) DeleteSalesOrder(req *DeleteSalesOrderRequest) (*DeleteSal
 		}
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteSalesOrderResponse{

@@ -3,12 +3,14 @@ package sale
 import (
 	"context"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST DELIVERY NOTE VIEW
 type ListDeliveryNoteViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListDeliveryNoteViewRequest(ctx context.Context) *ListDeliveryNoteViewRequest {
@@ -28,20 +30,29 @@ func (s *SaleService) NewListDeliveryNoteViewResponse(payload sale.DeliveryNoteV
 }
 
 func (s *SaleService) ListDeliveryNoteView(req *ListDeliveryNoteViewRequest) (*ListDeliveryNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllDeliveryNoteViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListDeliveryNoteViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *SaleService) ListDeliveryNoteView(req *ListDeliveryNoteViewRequest) (*L
 // SEARCH DELIVERY NOTE VIEW
 type SearchDeliveryNoteViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchDeliveryNoteDTO
 }
 
@@ -73,20 +85,27 @@ func (s *SaleService) NewSearchDeliveryNoteViewResponse(payload sale.DeliveryNot
 }
 
 func (s *SaleService) SearchDeliveryNoteView(req *SearchDeliveryNoteViewRequest) (*SearchDeliveryNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchDeliveryNoteViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *SaleService) SearchDeliveryNoteView(req *SearchDeliveryNoteViewRequest)
 
 // GET DELIVERY NOTE VIEW
 type GetDeliveryNoteViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetDeliveryNoteViewRequest(ctx context.Context, id int) *GetDeliveryNoteViewRequest {
@@ -127,20 +147,27 @@ func (s *SaleService) NewGetDeliveryNoteViewResponse(payload sale.DeliveryNoteVi
 }
 
 func (s *SaleService) GetDeliveryNoteView(req *GetDeliveryNoteViewRequest) (*GetDeliveryNoteViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetDeliveryNoteViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetDeliveryNoteViewResponse{

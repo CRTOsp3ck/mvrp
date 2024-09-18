@@ -3,12 +3,14 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST INVENTORY TRANSACTION
 type ListInventoryTransactionRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListInventoryTransactionRequest(ctx context.Context) *ListInventoryTransactionRequest {
@@ -28,20 +30,29 @@ func (s *InventoryService) NewListInventoryTransactionResponse(payload inventory
 }
 
 func (s *InventoryService) ListInventoryTransaction(req *ListInventoryTransactionRequest) (*ListInventoryTransactionResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllInventoryTransactions(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListInventoryTransactionResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *InventoryService) ListInventoryTransaction(req *ListInventoryTransactio
 // SEARCH INVENTORY TRANSACTION
 type SearchInventoryTransactionRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInventoryTransactionDTO
 }
 
@@ -73,20 +85,27 @@ func (s *InventoryService) NewSearchInventoryTransactionResponse(payload invento
 }
 
 func (s *InventoryService) SearchInventoryTransaction(req *SearchInventoryTransactionRequest) (*SearchInventoryTransactionResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchInventoryTransactions(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *InventoryService) SearchInventoryTransaction(req *SearchInventoryTransa
 
 // GET INVENTORY TRANSACTION
 type GetInventoryTransactionRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetInventoryTransactionRequest(ctx context.Context, id int) *GetInventoryTransactionRequest {
@@ -127,22 +147,28 @@ func (s *InventoryService) NewGetInventoryTransactionResponse(payload inventory.
 }
 
 func (s *InventoryService) GetInventoryTransaction(req *GetInventoryTransactionRequest) (*GetInventoryTransactionResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetInventoryTransactionByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	resp := GetInventoryTransactionResponse{
 		Payload: *res,
 	}
@@ -152,6 +178,7 @@ func (s *InventoryService) GetInventoryTransaction(req *GetInventoryTransactionR
 // CREATE INVENTORY TRANSACTION
 type CreateInventoryTransactionRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateInventoryTransactionDTO
 }
 
@@ -177,11 +204,16 @@ func (s *InventoryService) CreateInventoryTransaction(req *CreateInventoryTransa
 		1. Create Inventory
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create inventory
 	nextID, err := s.Repo.Inventory.GetNextEntryInventoryTransactionID(req.Ctx, tx)
@@ -200,9 +232,11 @@ func (s *InventoryService) CreateInventoryTransaction(req *CreateInventoryTransa
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateInventoryTransactionResponse{
@@ -215,6 +249,7 @@ func (s *InventoryService) CreateInventoryTransaction(req *CreateInventoryTransa
 // UPDATE INVENTORY TRANSACTION
 type UpdateInventoryTransactionRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateInventoryTransactionDTO
 }
 
@@ -241,11 +276,16 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 		2. Create Inventory Transaction
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// update inventory
 	err = s.Repo.Inventory.UpdateInventoryTransaction(req.Ctx, tx, &req.Payload.InventoryTransaction)
@@ -259,9 +299,11 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateInventoryTransactionResponse{
@@ -273,8 +315,9 @@ func (s *InventoryService) UpdateInventoryTransaction(req *UpdateInventoryTransa
 
 // DELETE INVENTORY TRANSACTION
 type DeleteInventoryTransactionRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewDeleteInventoryTransactionRequest(ctx context.Context, id int) *DeleteInventoryTransactionRequest {
@@ -299,11 +342,16 @@ func (s *InventoryService) DeleteInventoryTransaction(req *DeleteInventoryTransa
 		1. Delete Inventory
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get inventory
 	invTx, err := s.Repo.Inventory.GetInventoryTransactionByID(req.Ctx, tx, req.ID)
@@ -317,9 +365,11 @@ func (s *InventoryService) DeleteInventoryTransaction(req *DeleteInventoryTransa
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteInventoryTransactionResponse{
@@ -332,6 +382,7 @@ func (s *InventoryService) DeleteInventoryTransaction(req *DeleteInventoryTransa
 // SEARCH ALL INVENTORY TRANSACTIONS
 type SearchAllInventoryTransactionRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchInventoryTransactionDTO
 }
 
@@ -354,22 +405,28 @@ func (s *InventoryService) NewSearchAllInventoryTransactionResponse(payload inve
 }
 
 func (s *InventoryService) SearchAllInventoryTransaction(req *SearchAllInventoryTransactionRequest) (*SearchAllInventoryTransactionResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchAllInventoryTransactions(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	pd := dto.PaginationDTO{
 		TotalItems:   totalCount,
 		ItemsPerPage: req.Payload.ItemsPerPage,

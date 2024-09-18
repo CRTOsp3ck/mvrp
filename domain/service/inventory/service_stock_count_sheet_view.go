@@ -3,12 +3,14 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST GOODS ISSUE NOTE VIEW
 type ListStockCountSheetViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListStockCountSheetViewRequest(ctx context.Context) *ListStockCountSheetViewRequest {
@@ -28,20 +30,29 @@ func (s *InventoryService) NewListStockCountSheetViewResponse(payload inventory.
 }
 
 func (s *InventoryService) ListStockCountSheetView(req *ListStockCountSheetViewRequest) (*ListStockCountSheetViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllStockCountSheetViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListStockCountSheetViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *InventoryService) ListStockCountSheetView(req *ListStockCountSheetViewR
 // SEARCH GOODS ISSUE NOTE VIEW
 type SearchStockCountSheetViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchStockCountSheetDTO
 }
 
@@ -73,20 +85,27 @@ func (s *InventoryService) NewSearchStockCountSheetViewResponse(payload inventor
 }
 
 func (s *InventoryService) SearchStockCountSheetView(req *SearchStockCountSheetViewRequest) (*SearchStockCountSheetViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchStockCountSheetViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *InventoryService) SearchStockCountSheetView(req *SearchStockCountSheetV
 
 // GET GOODS ISSUE NOTE VIEW
 type GetStockCountSheetViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetStockCountSheetViewRequest(ctx context.Context, id int) *GetStockCountSheetViewRequest {
@@ -127,20 +147,27 @@ func (s *InventoryService) NewGetStockCountSheetViewResponse(payload inventory.S
 }
 
 func (s *InventoryService) GetStockCountSheetView(req *GetStockCountSheetViewRequest) (*GetStockCountSheetViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetStockCountSheetViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetStockCountSheetViewResponse{

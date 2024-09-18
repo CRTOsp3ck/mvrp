@@ -3,13 +3,15 @@ package invoice
 import (
 	"context"
 	"mvrp/data/model/invoice"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/util"
 )
 
 // LIST DEBIT NOTE
 type ListDebitNoteRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InvoiceService) NewListDebitNoteRequest(ctx context.Context) *ListDebitNoteRequest {
@@ -25,20 +27,29 @@ func (s *InvoiceService) NewListDebitNoteResponse(payload invoice.DebitNoteSlice
 }
 
 func (s *InvoiceService) ListDebitNote(req *ListDebitNoteRequest) (*ListDebitNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.ListAllDebitNotes(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListDebitNoteResponse{
 		Payload: res,
 	}
@@ -48,6 +59,7 @@ func (s *InvoiceService) ListDebitNote(req *ListDebitNoteRequest) (*ListDebitNot
 // SEARCH DEBIT NOTE
 type SearchDebitNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchDebitNoteDTO
 }
 
@@ -65,20 +77,27 @@ func (s *InvoiceService) NewSearchDebitNoteResponse(payload invoice.DebitNoteSli
 }
 
 func (s *InvoiceService) SearchDebitNote(req *SearchDebitNoteRequest) (*SearchDebitNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Invoice.SearchDebitNotes(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -97,8 +116,9 @@ func (s *InvoiceService) SearchDebitNote(req *SearchDebitNoteRequest) (*SearchDe
 
 // GET DEBIT NOTE
 type GetDebitNoteRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewGetDebitNoteRequest(ctx context.Context, id int) *GetDebitNoteRequest {
@@ -114,20 +134,27 @@ func (s *InvoiceService) NewGetDebitNoteResponse(payload invoice.DebitNote) *Get
 }
 
 func (s *InvoiceService) GetDebitNote(req *GetDebitNoteRequest) (*GetDebitNoteResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Invoice.GetDebitNoteByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetDebitNoteResponse{
@@ -139,6 +166,7 @@ func (s *InvoiceService) GetDebitNote(req *GetDebitNoteRequest) (*GetDebitNoteRe
 // CREATE DEBIT NOTE
 type CreateDebitNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.CreateDebitNoteDTO
 }
 
@@ -160,11 +188,16 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 		2. Create Debit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// create base document
 	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
@@ -198,9 +231,11 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := CreateDebitNoteResponse{
@@ -213,6 +248,7 @@ func (s *InvoiceService) CreateDebitNote(req *CreateDebitNoteRequest) (*CreateDe
 // UPDATE DEBIT NOTE
 type UpdateDebitNoteRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.UpdateDebitNoteDTO
 }
 
@@ -234,11 +270,16 @@ func (s *InvoiceService) UpdateDebitNote(req *UpdateDebitNoteRequest) (*UpdateDe
 		2. Update Debit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// update base document
 	err = s.Repo.Base.UpdateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
@@ -258,9 +299,11 @@ func (s *InvoiceService) UpdateDebitNote(req *UpdateDebitNoteRequest) (*UpdateDe
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := UpdateDebitNoteResponse{
@@ -272,8 +315,9 @@ func (s *InvoiceService) UpdateDebitNote(req *UpdateDebitNoteRequest) (*UpdateDe
 
 // DELETE DEBIT NOTE
 type DeleteDebitNoteRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InvoiceService) NewDeleteDebitNoteRequest(ctx context.Context, id int) *DeleteDebitNoteRequest {
@@ -294,11 +338,16 @@ func (s *InvoiceService) DeleteDebitNote(req *DeleteDebitNoteRequest) (*DeleteDe
 		2. Delete Debit Note
 	*/
 
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	// get debit note
 	debitNote, err := s.Repo.Invoice.GetDebitNoteByID(req.Ctx, tx, req.ID)
@@ -324,9 +373,11 @@ func (s *InvoiceService) DeleteDebitNote(req *DeleteDebitNoteRequest) (*DeleteDe
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := DeleteDebitNoteResponse{

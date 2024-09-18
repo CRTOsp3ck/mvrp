@@ -3,12 +3,14 @@ package inventory
 import (
 	"context"
 	"mvrp/data/model/inventory"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST RETURN MERCHANDISE AUTHORIZATION VIEW
 type ListReturnMerchandiseAuthorizationViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *InventoryService) NewListReturnMerchandiseAuthorizationViewRequest(ctx context.Context) *ListReturnMerchandiseAuthorizationViewRequest {
@@ -28,20 +30,29 @@ func (s *InventoryService) NewListReturnMerchandiseAuthorizationViewResponse(pay
 }
 
 func (s *InventoryService) ListReturnMerchandiseAuthorizationView(req *ListReturnMerchandiseAuthorizationViewRequest) (*ListReturnMerchandiseAuthorizationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.ListAllReturnMerchandiseAuthorizationViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListReturnMerchandiseAuthorizationViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *InventoryService) ListReturnMerchandiseAuthorizationView(req *ListRetur
 // SEARCH RETURN MERCHANDISE AUTHORIZATION VIEW
 type SearchReturnMerchandiseAuthorizationViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchReturnMerchandiseAuthorizationDTO
 }
 
@@ -73,20 +85,27 @@ func (s *InventoryService) NewSearchReturnMerchandiseAuthorizationViewResponse(p
 }
 
 func (s *InventoryService) SearchReturnMerchandiseAuthorizationView(req *SearchReturnMerchandiseAuthorizationViewRequest) (*SearchReturnMerchandiseAuthorizationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Inventory.SearchReturnMerchandiseAuthorizationViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *InventoryService) SearchReturnMerchandiseAuthorizationView(req *SearchR
 
 // GET RETURN MERCHANDISE AUTHORIZATION VIEW
 type GetReturnMerchandiseAuthorizationViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *InventoryService) NewGetReturnMerchandiseAuthorizationViewRequest(ctx context.Context, id int) *GetReturnMerchandiseAuthorizationViewRequest {
@@ -127,20 +147,27 @@ func (s *InventoryService) NewGetReturnMerchandiseAuthorizationViewResponse(payl
 }
 
 func (s *InventoryService) GetReturnMerchandiseAuthorizationView(req *GetReturnMerchandiseAuthorizationViewRequest) (*GetReturnMerchandiseAuthorizationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Inventory.GetReturnMerchandiseAuthorizationViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetReturnMerchandiseAuthorizationViewResponse{

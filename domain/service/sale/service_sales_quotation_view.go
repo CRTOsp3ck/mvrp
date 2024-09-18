@@ -3,12 +3,14 @@ package sale
 import (
 	"context"
 	"mvrp/data/model/sale"
+	"mvrp/data/repo"
 	"mvrp/domain/dto"
 )
 
 // LIST SALES QUOTATION VIEW
 type ListSalesQuotationViewRequest struct {
-	Ctx context.Context
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
 }
 
 func (s *SaleService) NewListSalesQuotationViewRequest(ctx context.Context) *ListSalesQuotationViewRequest {
@@ -28,20 +30,29 @@ func (s *SaleService) NewListSalesQuotationViewResponse(payload sale.SalesQuotat
 }
 
 func (s *SaleService) ListSalesQuotationView(req *ListSalesQuotationViewRequest) (*ListSalesQuotationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.ListAllSalesQuotationViews(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := ListSalesQuotationViewResponse{
 		Payload: res,
 	}
@@ -51,6 +62,7 @@ func (s *SaleService) ListSalesQuotationView(req *ListSalesQuotationViewRequest)
 // SEARCH SALES QUOTATION VIEW
 type SearchSalesQuotationViewRequest struct {
 	Ctx     context.Context
+	RepoTx  *repo.RepoTx
 	Payload dto.SearchSalesQuotationDTO
 }
 
@@ -73,20 +85,27 @@ func (s *SaleService) NewSearchSalesQuotationViewResponse(payload sale.SalesQuot
 }
 
 func (s *SaleService) SearchSalesQuotationView(req *SearchSalesQuotationViewRequest) (*SearchSalesQuotationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, totalCount, err := s.Repo.Sale.SearchSalesQuotationViews(req.Ctx, tx, req.Payload)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	pd := dto.PaginationDTO{
@@ -105,8 +124,9 @@ func (s *SaleService) SearchSalesQuotationView(req *SearchSalesQuotationViewRequ
 
 // GET SALES QUOTATION VIEW
 type GetSalesQuotationViewRequest struct {
-	Ctx context.Context
-	ID  int
+	Ctx    context.Context
+	RepoTx *repo.RepoTx
+	ID     int
 }
 
 func (s *SaleService) NewGetSalesQuotationViewRequest(ctx context.Context, id int) *GetSalesQuotationViewRequest {
@@ -127,20 +147,27 @@ func (s *SaleService) NewGetSalesQuotationViewResponse(payload sale.SalesQuotati
 }
 
 func (s *SaleService) GetSalesQuotationView(req *GetSalesQuotationViewRequest) (*GetSalesQuotationViewResponse, error) {
-	tx, err := s.Repo.Begin(req.Ctx)
-	if err != nil {
-		return nil, err
+	rtx := req.RepoTx
+	var err error
+	if rtx == nil {
+		rtx, err = s.Repo.BeginRepoTx(req.Ctx)
+		if err != nil {
+			return nil, err
+		}
+		defer rtx.Tx.Rollback()
 	}
-	defer tx.Rollback()
+	tx := rtx.Tx
 
 	res, err := s.Repo.Sale.GetSalesQuotationViewByID(req.Ctx, tx, req.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
+	if req.RepoTx == nil {
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := GetSalesQuotationViewResponse{
