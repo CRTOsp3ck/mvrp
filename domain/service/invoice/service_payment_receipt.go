@@ -2,15 +2,11 @@ package invoice
 
 import (
 	"context"
-	"mvrp/data/model/base"
 	"mvrp/data/model/invoice"
 	"mvrp/data/repo"
 	"mvrp/domain/dto"
 	"mvrp/domain/proc"
 	"mvrp/util"
-
-	"github.com/ericlagergren/decimal"
-	"github.com/volatiletech/sqlboiler/v4/types"
 )
 
 // LIST PAYMENT RECEIPT
@@ -81,11 +77,11 @@ func (s *InvoiceService) NewPreviewPaymentReceiptResponse(payload dto.CreatePaym
 
 func (s *InvoiceService) PreviewPaymentReceipt(req *PreviewPaymentReceiptRequest) (*PreviewPaymentReceiptResponse, error) {
 	// preprocess amounts
-	bdis := make([]*base.BaseDocumentItem, 0)
+	pris := make([]*invoice.PaymentReceiptItem, 0)
 	for _, item := range req.Payload.Items {
-		bdis = append(bdis, &item.BaseDocumentItem)
+		pris = append(pris, &item.PaymentReceiptItem)
 	}
-	err := proc.ProcessBaseDocumentAmounts(&req.Payload.BaseDocument, bdis)
+	err := proc.ProcessPaymentReceiptAmounts(&req.Payload.PaymentReceipt, pris)
 	if err != nil {
 		return nil, err
 	}
@@ -223,10 +219,8 @@ func (s *InvoiceService) NewCreatePaymentReceiptResponse(payload invoice.Payment
 
 func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) (*CreatePaymentReceiptResponse, error) {
 	/*
-		1. Create Base Document
-		2. Create PaymentReceipt
-		3. Create Base Document Items
-		4. Create PaymentReceipt Items
+		1. Create PaymentReceipt
+		2. Create PaymentReceipt Items
 	*/
 
 	rtx := req.RepoTx
@@ -240,34 +234,12 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 	}
 	tx := rtx.Tx
 
-	// preprocess amounts
-	bdis := make([]*base.BaseDocumentItem, 0)
-	for _, item := range req.Payload.Items {
-		bdis = append(bdis, &item.BaseDocumentItem)
-	}
-	err = proc.ProcessBaseDocumentAmounts(&req.Payload.BaseDocument, bdis)
-	if err != nil {
-		return nil, err
-	}
-
-	// create base document
-	nextID, err := s.Repo.Base.GetNextEntryBaseDocumentID(req.Ctx, tx)
-	if err != nil {
-		return nil, err
-	}
-	req.Payload.BaseDocument.ID = nextID
-	err = s.Repo.Base.CreateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
-	if err != nil {
-		return nil, err
-	}
-
 	// create payment receipt
-	nextID, err = s.Repo.Invoice.GetNextEntryPaymentReceiptID(req.Ctx, tx)
+	nextID, err := s.Repo.Invoice.GetNextEntryPaymentReceiptID(req.Ctx, tx)
 	if err != nil {
 		return nil, err
 	}
 	req.Payload.PaymentReceipt.ID = nextID
-	req.Payload.PaymentReceipt.BaseDocumentID = req.Payload.BaseDocument.ID
 	if req.Payload.PaymentReceipt.PaymentReceiptNumber == "" {
 		req.Payload.PaymentReceipt.PaymentReceiptNumber = util.Util.Str.ToString(nextID)
 	}
@@ -277,18 +249,6 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 	}
 
 	for _, item := range req.Payload.Items {
-		// create base document item
-		nextID, err = s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
-		if err != nil {
-			return nil, err
-		}
-		item.BaseDocumentItem.ID = nextID
-		item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
-		err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
-		if err != nil {
-			return nil, err
-		}
-
 		// create payment receipt item
 		nextID, err = s.Repo.Invoice.GetNextEntryPaymentReceiptItemID(req.Ctx, tx)
 		if err != nil {
@@ -296,7 +256,6 @@ func (s *InvoiceService) CreatePaymentReceipt(req *CreatePaymentReceiptRequest) 
 		}
 		item.PaymentReceiptItem.ID = nextID
 		item.PaymentReceiptItem.PaymentReceiptID = req.Payload.PaymentReceipt.ID
-		item.PaymentReceiptItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 		err = s.Repo.Invoice.CreatePaymentReceiptItem(req.Ctx, tx, &item.PaymentReceiptItem)
 		if err != nil {
 			return nil, err
@@ -342,10 +301,8 @@ func (s *InvoiceService) NewUpdatePaymentReceiptResponse(payload invoice.Payment
 
 func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) (*UpdatePaymentReceiptResponse, error) {
 	/*
-		1. Update Base Document
-		2. Update PaymentReceipt
-		3. Update Base Document Items
-		4. Update PaymentReceipt Items
+		1. Update PaymentReceipt
+		2. Update PaymentReceipt Items
 	*/
 
 	rtx := req.RepoTx
@@ -360,17 +317,11 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 	tx := rtx.Tx
 
 	// preprocess amounts
-	bdis := make([]*base.BaseDocumentItem, 0)
+	pris := make([]*invoice.PaymentReceiptItem, 0)
 	for _, item := range req.Payload.Items {
-		bdis = append(bdis, &item.BaseDocumentItem)
+		pris = append(pris, &item.PaymentReceiptItem)
 	}
-	err = proc.ProcessBaseDocumentAmounts(&req.Payload.BaseDocument, bdis)
-	if err != nil {
-		return nil, err
-	}
-
-	// update base document
-	err = s.Repo.Base.UpdateBaseDocument(req.Ctx, tx, &req.Payload.BaseDocument)
+	err = proc.ProcessPaymentReceiptAmounts(&req.Payload.PaymentReceipt, pris)
 	if err != nil {
 		return nil, err
 	}
@@ -395,18 +346,6 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 			}
 		}
 		if !found {
-			// get base document item
-			baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
-			if err != nil {
-				return nil, err
-			}
-
-			// delete base document item
-			err = s.Repo.Base.DeleteBaseDocumentItem(req.Ctx, tx, baseDocumentItem)
-			if err != nil {
-				return nil, err
-			}
-
 			// delete payment receipt item
 			err = s.Repo.Invoice.DeletePaymentReceiptItem(req.Ctx, tx, item)
 			if err != nil {
@@ -424,15 +363,8 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 		}
 
 		if itemExists {
-			currBaseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItem.ID)
-			if err != nil {
-				return nil, err
-			}
-			amountOffset := types.NewNullDecimal(decimal.New(0, 2))
-			amountOffset.Sub(item.Quantity.Big, currBaseDocumentItem.Quantity.Big)
-
-			// update base document items
-			err = s.Repo.Base.UpdateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
+			// preprocess amounts
+			err = proc.ProcessPaymentReceiptItemAmounts(&item.PaymentReceiptItem)
 			if err != nil {
 				return nil, err
 			}
@@ -443,26 +375,20 @@ func (s *InvoiceService) UpdatePaymentReceipt(req *UpdatePaymentReceiptRequest) 
 				return nil, err
 			}
 		} else {
-			// create base document items
-			nextID, err := s.Repo.Base.GetNextEntryBaseDocumentItemID(req.Ctx, tx)
-			if err != nil {
-				return nil, err
-			}
-			item.BaseDocumentItem.ID = nextID
-			item.BaseDocumentItem.BaseDocumentID = req.Payload.BaseDocument.ID
-			err = s.Repo.Base.CreateBaseDocumentItem(req.Ctx, tx, &item.BaseDocumentItem)
-			if err != nil {
-				return nil, err
-			}
-
 			// create payment receipt items
-			nextID, err = s.Repo.Invoice.GetNextEntryPaymentReceiptItemID(req.Ctx, tx)
+			nextID, err := s.Repo.Invoice.GetNextEntryPaymentReceiptItemID(req.Ctx, tx)
 			if err != nil {
 				return nil, err
 			}
 			item.PaymentReceiptItem.ID = nextID
-			item.PaymentReceiptItem.BaseDocumentItemID = item.BaseDocumentItem.ID
 			item.PaymentReceiptItem.PaymentReceiptID = req.Payload.PaymentReceipt.ID
+
+			// preprocess amounts
+			err = proc.ProcessPaymentReceiptItemAmounts(&item.PaymentReceiptItem)
+			if err != nil {
+				return nil, err
+			}
+
 			err = s.Repo.Invoice.CreatePaymentReceiptItem(req.Ctx, tx, &item.PaymentReceiptItem)
 			if err != nil {
 				return nil, err
@@ -537,35 +463,11 @@ func (s *InvoiceService) DeletePaymentReceipt(req *DeletePaymentReceiptRequest) 
 		return nil, err
 	}
 
-	// get base document
-	baseDocument, err := s.Repo.Base.GetBaseDocumentByID(req.Ctx, tx, inv.BaseDocumentID)
-	if err != nil {
-		return nil, err
-	}
-
-	// delete base document
-	err = s.Repo.Base.DeleteBaseDocument(req.Ctx, tx, baseDocument)
-	if err != nil {
-		return nil, err
-	}
-
 	items, err := s.Repo.Invoice.GetPaymentReceiptItemsByPaymentReceiptID(req.Ctx, tx, inv.ID)
 	if err != nil {
 		return nil, err
 	}
 	for _, item := range items {
-		// get base document item
-		baseDocumentItem, err := s.Repo.Base.GetBaseDocumentItemByID(req.Ctx, tx, item.BaseDocumentItemID)
-		if err != nil {
-			return nil, err
-		}
-
-		// delete base document item
-		err = s.Repo.Base.DeleteBaseDocumentItem(req.Ctx, tx, baseDocumentItem)
-		if err != nil {
-			return nil, err
-		}
-
 		// delete payment receipt item
 		err = s.Repo.Invoice.DeletePaymentReceiptItem(req.Ctx, tx, item)
 		if err != nil {

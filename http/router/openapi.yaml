@@ -1116,6 +1116,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/HtrespResponse'
           description: OK
+  /v1/main/invoice/payment_receipt_view:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/payment_receipt_view/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
+  /v1/main/invoice/payment_receipt_view/search:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DtoSearchPaymentReceiptDTO'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HtrespResponse'
+          description: OK
   /v1/main/item/item:
     get:
       responses:
@@ -1843,6 +1881,8 @@ components:
           type: number
         other_fees:
           type: number
+        payment_amount:
+          type: number
         payment_instructions:
           type: string
         payment_status:
@@ -2090,8 +2130,6 @@ components:
       type: object
     DtoCreatePaymentReceiptDTO:
       properties:
-        base_document:
-          $ref: '#/components/schemas/BaseBaseDocument'
         items:
           items:
             $ref: '#/components/schemas/DtoCreatePaymentReceiptItemDTO'
@@ -2102,8 +2140,6 @@ components:
       type: object
     DtoCreatePaymentReceiptItemDTO:
       properties:
-        base_document_item:
-          $ref: '#/components/schemas/BaseBaseDocumentItem'
         payment_receipt_item:
           $ref: '#/components/schemas/InvoicePaymentReceiptItem'
       type: object
@@ -2646,8 +2682,6 @@ components:
       type: object
     DtoUpdatePaymentReceiptDTO:
       properties:
-        base_document:
-          $ref: '#/components/schemas/BaseBaseDocument'
         items:
           items:
             $ref: '#/components/schemas/DtoUpdatePaymentReceiptItemDTO'
@@ -2658,8 +2692,6 @@ components:
       type: object
     DtoUpdatePaymentReceiptItemDTO:
       properties:
-        base_document_item:
-          $ref: '#/components/schemas/BaseBaseDocumentItem'
         payment_receipt_item:
           $ref: '#/components/schemas/InvoicePaymentReceiptItem'
       type: object
@@ -3123,8 +3155,6 @@ components:
       type: object
     InvoicePaymentReceipt:
       properties:
-        base_document_id:
-          type: integer
         created_at:
           format: date-time
           type: string
@@ -3144,24 +3174,34 @@ components:
           type: integer
         payment_receipt_number:
           type: string
+        total_value_gen:
+          type: number
         updated_at:
           format: date-time
           type: string
       type: object
     InvoicePaymentReceiptItem:
       properties:
-        base_document_item_id:
-          type: integer
         created_at:
           format: date-time
           type: string
         deleted_at:
           format: date-time
           type: string
+        description:
+          type: string
         id:
           type: integer
+        name:
+          type: string
         payment_receipt_id:
           type: integer
+        quantity:
+          type: number
+        total_value_gen:
+          type: number
+        unit_value:
+          type: number
         updated_at:
           format: date-time
           type: string

@@ -238,6 +238,7 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 		7. Create Order Confirmation Items
 		8. Create Invoice
 		9. Create Invoice Items
+		10. Create Payment Receipt
 		10. Update Inventory
 		11. Create Inventory Transaction
 	*/
@@ -323,6 +324,59 @@ func (s *SaleService) CreateSalesOrder(req *CreateSalesOrderRequest) (*CreateSal
 	err = s.Repo.Invoice.CreateInvoice(req.Ctx, tx, orderInvoice)
 	if err != nil {
 		return nil, err
+	}
+
+	// create payment receipt
+	if req.Payload.BaseDocument.PaymentAmount.Big.Cmp(decimal.New(0, 0)) != 0 {
+		nextID, err = s.Repo.Invoice.GetNextEntryPaymentReceiptID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		paymentReceipt := &invoice.PaymentReceipt{
+			ID:                   nextID,
+			PaymentReceiptNumber: util.Util.Str.ToString(nextID),
+			InvoiceID:            orderInvoice.ID,
+			DateOfPayment:        null.TimeFrom(time.Now()),
+			PayerID:              req.Payload.CustomerID,
+			PayeeID:              null.IntFrom(1),
+		}
+		err = s.Repo.Invoice.CreatePaymentReceipt(req.Ctx, tx, paymentReceipt)
+		if err != nil {
+			return nil, err
+		}
+
+		// create payment receipt items
+		nextID, err = s.Repo.Invoice.GetNextEntryPaymentReceiptItemID(req.Ctx, tx)
+		if err != nil {
+			return nil, err
+		}
+		paymentAmount := req.Payload.BaseDocument.PaymentAmount
+		paymentReceiptItem := &invoice.PaymentReceiptItem{
+			ID:               nextID,
+			PaymentReceiptID: paymentReceipt.ID,
+			Name:             "Payment for Sales Order #" + req.Payload.SalesOrder.SalesOrderNumber,
+			Description:      "Invoice #" + orderInvoice.InvoiceNumber,
+			Quantity:         types.NewDecimal(decimal.New(1, 0)),
+			UnitValue:        types.NewDecimal(paymentAmount.Big),
+		}
+		err = proc.ProcessPaymentReceiptItemAmounts(paymentReceiptItem)
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Invoice.CreatePaymentReceiptItem(req.Ctx, tx, paymentReceiptItem)
+		if err != nil {
+			return nil, err
+		}
+
+		// update payment receipt total value
+		err = proc.ProcessPaymentReceiptAmounts(paymentReceipt, []*invoice.PaymentReceiptItem{paymentReceiptItem})
+		if err != nil {
+			return nil, err
+		}
+		err = s.Repo.Invoice.UpdatePaymentReceipt(req.Ctx, tx, paymentReceipt)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	for _, item := range req.Payload.Items {

@@ -3,10 +3,19 @@ CREATE OR REPLACE VIEW invoice.invoice_item_view AS
 SELECT
     ii.*,
     (
-        SELECT row_to_json(bdiv)
-        FROM base.base_document_item_view bdiv
-        WHERE bdiv.id = ii.base_document_item_id
-    ) AS base_document_item
+        SELECT row_to_json(bdi)
+        FROM base.base_document_item bdi
+        WHERE bdi.id = ii.base_document_item_id
+    ) AS base_document_item,
+    (
+        SELECT row_to_json(iv)
+        FROM inventory.inventory_view iv
+        WHERE iv.id = (
+            SELECT bdi.inventory_id
+            FROM base.base_document_item bdi
+            WHERE bdi.id = ii.base_document_item_id
+        )
+    ) AS inventory_info
 FROM
     invoice.invoice_item ii;
 
@@ -19,21 +28,20 @@ SELECT
         WHERE bdv.id = i.base_document_id
     ) AS base_document,
     (
-        SELECT json_agg(row_to_json(iiv))
-        FROM invoice.invoice_item_view iiv
-        WHERE iiv.invoice_id = i.id
-    ) AS invoice_items,
-    (
         SELECT row_to_json(e)
         FROM entity.entity e
         WHERE e.id = i.vendor_id
     ) AS vendor_info,
-
     (
         SELECT row_to_json(e)
         FROM entity.entity e
         WHERE e.id = i.customer_id
-    ) AS customer_info
+    ) AS customer_info,
+    (
+        SELECT json_agg(row_to_json(iiv))
+        FROM invoice.invoice_item_view iiv
+        WHERE iiv.invoice_id = i.id
+    ) AS invoice_items
 FROM
     invoice.invoice i;
 

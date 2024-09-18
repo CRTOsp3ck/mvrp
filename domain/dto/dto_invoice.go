@@ -69,19 +69,16 @@ type SearchPaymentReceiptDTO struct {
 }
 
 type GetPaymentReceiptDTO struct {
-    base.BaseDocument                 `json:"base_document"`
     invoice.PaymentReceipt                 `json:"payment_receipt"`
     Items []CreatePaymentReceiptItemDTO                     `json:"items"`
 }
 
 type CreatePaymentReceiptDTO struct {
-    base.BaseDocument                 `json:"base_document"`
     invoice.PaymentReceipt                 `json:"payment_receipt"`
     Items []CreatePaymentReceiptItemDTO                     `json:"items"`
 }
 
 type UpdatePaymentReceiptDTO struct {
-    base.BaseDocument                 `json:"base_document"`
     invoice.PaymentReceipt                 `json:"payment_receipt"`
     Items []UpdatePaymentReceiptItemDTO                     `json:"items"`
 }
@@ -96,17 +93,14 @@ type SearchPaymentReceiptItemDTO struct {
 }
 
 type GetPaymentReceiptItemDTO struct {
-    base.BaseDocumentItem                 `json:"base_document_item"`
     invoice.PaymentReceiptItem                 `json:"payment_receipt_item"`
 }
 
 type CreatePaymentReceiptItemDTO struct {
-    base.BaseDocumentItem                 `json:"base_document_item"`
     invoice.PaymentReceiptItem                 `json:"payment_receipt_item"`
 }
 
 type UpdatePaymentReceiptItemDTO struct {
-    base.BaseDocumentItem                 `json:"base_document_item"`
     invoice.PaymentReceiptItem                 `json:"payment_receipt_item"`
 }
 

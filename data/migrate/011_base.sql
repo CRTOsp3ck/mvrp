@@ -64,6 +64,7 @@ CREATE TABLE base.base_document (
     shipping_terms base.shipping_terms,
     shipping_method base.shipping_method,
     shipping_date TIMESTAMPTZ,
+    payment_amount NUMERIC(12, 2) DEFAULT 0,
     payment_terms base.payment_terms,
     payment_instructions TEXT,
     payment_status base.payment_status,

@@ -4,19 +4,17 @@
 package invoice
 
 var ViewNames = struct {
-	CreditNoteItemView     string
-	CreditNoteView         string
-	DebitNoteView          string
-	InvoiceItemView        string
-	InvoiceView            string
-	PaymentReceiptItemView string
-	PaymentReceiptView     string
+	CreditNoteItemView string
+	CreditNoteView     string
+	DebitNoteView      string
+	InvoiceItemView    string
+	InvoiceView        string
+	PaymentReceiptView string
 }{
-	CreditNoteItemView:     "credit_note_item_view",
-	CreditNoteView:         "credit_note_view",
-	DebitNoteView:          "debit_note_view",
-	InvoiceItemView:        "invoice_item_view",
-	InvoiceView:            "invoice_view",
-	PaymentReceiptItemView: "payment_receipt_item_view",
-	PaymentReceiptView:     "payment_receipt_view",
+	CreditNoteItemView: "credit_note_item_view",
+	CreditNoteView:     "credit_note_view",
+	DebitNoteView:      "debit_note_view",
+	InvoiceItemView:    "invoice_item_view",
+	InvoiceView:        "invoice_view",
+	PaymentReceiptView: "payment_receipt_view",
 }

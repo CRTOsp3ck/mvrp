@@ -252,6 +252,15 @@ func getMainRoutes() func(chi.Router) {
 				})
 			})
 			
+			r.Route("/payment_receipt_view", func(r chi.Router) {
+				r.Get("/", invoice.ListPaymentReceiptView)
+				r.Post("/search", invoice.SearchPaymentReceiptView)
+				r.Route("/{id}", func(r chi.Router) {
+					r.Use(invoice.PaymentReceiptViewContext)
+					r.Get("/", invoice.GetPaymentReceiptView)
+				})
+			})
+			
 		})
 		
 		r.Route("/item", func(r chi.Router) {

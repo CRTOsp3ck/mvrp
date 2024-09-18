@@ -24,12 +24,12 @@ CREATE TABLE invoice.invoice_item (
 
 CREATE TABLE invoice.payment_receipt (
     id INT PRIMARY KEY,
-    base_document_id INT NOT NULL REFERENCES base.base_document(id) ON DELETE CASCADE,
     payment_receipt_number VARCHAR(50) UNIQUE NOT NULL,
     invoice_id INT NOT NULL REFERENCES invoice.invoice(id) ON DELETE CASCADE,
     date_of_payment DATE,
     payer_id INT REFERENCES entity.entity(id),
     payee_id INT REFERENCES entity.entity(id),
+    total_value_gen NUMERIC(12, 2) NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
     deleted_at TIMESTAMPTZ
@@ -37,8 +37,12 @@ CREATE TABLE invoice.payment_receipt (
 
 CREATE TABLE invoice.payment_receipt_item (
     id INT PRIMARY KEY,
-    base_document_item_id INT NOT NULL REFERENCES base.base_document_item(id) ON DELETE CASCADE,
     payment_receipt_id INT NOT NULL REFERENCES invoice.payment_receipt(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    quantity NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    unit_value NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    total_value_gen NUMERIC(12, 2) NOT NULL DEFAULT 0,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ NOT NULL,
     deleted_at TIMESTAMPTZ
@@ -124,29 +128,23 @@ SELECT
 FROM
     invoice.debit_note dn;
 
-CREATE VIEW invoice.payment_receipt_item_view AS
-SELECT
-    pri.*,
-    (
-        SELECT row_to_json(bdi)
-        FROM base.base_document_item bdi
-        WHERE bdi.id = pri.base_document_item_id
-    ) AS base_document_item
-FROM
-    invoice.payment_receipt_item pri;
-
 CREATE VIEW invoice.payment_receipt_view AS
 SELECT
     pr.*,
     (
-        SELECT row_to_json(bd)
-        FROM base.base_document bd
-        WHERE bd.id = pr.base_document_id
-    ) AS base_document,
+        SELECT row_to_json(payer)
+        FROM entity.entity payer
+        WHERE payer.id = pr.payer_id
+    ) AS payer_info,
     (
-        SELECT json_agg(row_to_json(priv))
-        FROM invoice.payment_receipt_item_view priv
-        WHERE priv.payment_receipt_id = pr.id
+        SELECT row_to_json(payee)
+        FROM entity.entity payee
+        WHERE payee.id = pr.payee_id
+    ) AS payee_info,
+    (
+        SELECT json_agg(row_to_json(pri))
+        FROM invoice.payment_receipt_item pri
+        WHERE pri.payment_receipt_id = pr.id
     ) AS payment_receipt_items
 FROM
     invoice.payment_receipt pr;
@@ -170,6 +168,16 @@ SELECT
         FROM base.base_document bd
         WHERE bd.id = i.base_document_id
     ) AS base_document,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = i.vendor_id
+    ) AS vendor_info,
+    (
+        SELECT row_to_json(e)
+        FROM entity.entity e
+        WHERE e.id = i.customer_id
+    ) AS customer_info,
     (
         SELECT json_agg(row_to_json(iiv))
         FROM invoice.invoice_item_view iiv
@@ -223,7 +231,6 @@ DROP VIEW IF EXISTS invoice.invoice_view;
 DROP VIEW IF EXISTS invoice.invoice_item_view;
 
 DROP VIEW IF EXISTS invoice.payment_receipt_view;
-DROP VIEW IF EXISTS invoice.payment_receipt_item_view;
 
 DROP VIEW IF EXISTS invoice.debit_note_view;
 

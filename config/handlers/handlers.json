@@ -173,6 +173,14 @@
                         { "method": "Delete", "path": "/payment_receipt/{id}", "handler": "DeletePaymentReceipt", "type": "delete" },
                         { "method": "Post", "path": "/payment_receipt/search", "handler": "SearchPaymentReceipt", "type": "search" }
                     ] 
+                },
+                {
+                    "name": "payment_receipt_view",
+                    "routes": [
+                        { "method": "Get", "path": "/payment_receipt_view", "handler": "ListPaymentReceiptView", "type": "list" },
+                        { "method": "Get", "path": "/payment_receipt_view/{id}", "handler": "GetPaymentReceiptView", "type": "get" },
+                        { "method": "Post", "path": "/payment_receipt_view/search", "handler": "SearchPaymentReceiptView", "type": "search" }
+                    ]
                 }
             ]
         },

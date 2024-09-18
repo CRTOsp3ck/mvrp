@@ -19,24 +19,35 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // PaymentReceiptItemView is an object representing the database table.
 type PaymentReceiptItemView struct {
-	ID                 null.Int  `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	BaseDocumentItemID null.Int  `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
-	PaymentReceiptID   null.Int  `boil:"payment_receipt_id" json:"payment_receipt_id,omitempty" toml:"payment_receipt_id" yaml:"payment_receipt_id,omitempty"`
-	CreatedAt          null.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-	UpdatedAt          null.Time `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
-	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-	BaseDocumentItem   null.JSON `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
+	ID                 null.Int          `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	BaseDocumentItemID null.Int          `boil:"base_document_item_id" json:"base_document_item_id,omitempty" toml:"base_document_item_id" yaml:"base_document_item_id,omitempty"`
+	PaymentReceiptID   null.Int          `boil:"payment_receipt_id" json:"payment_receipt_id,omitempty" toml:"payment_receipt_id" yaml:"payment_receipt_id,omitempty"`
+	Name               null.String       `boil:"name" json:"name,omitempty" toml:"name" yaml:"name,omitempty"`
+	Description        null.String       `boil:"description" json:"description,omitempty" toml:"description" yaml:"description,omitempty"`
+	Quantity           types.NullDecimal `boil:"quantity" json:"quantity,omitempty" toml:"quantity" yaml:"quantity,omitempty"`
+	UnitValue          types.NullDecimal `boil:"unit_value" json:"unit_value,omitempty" toml:"unit_value" yaml:"unit_value,omitempty"`
+	TotalValueGen      types.NullDecimal `boil:"total_value_gen" json:"total_value_gen,omitempty" toml:"total_value_gen" yaml:"total_value_gen,omitempty"`
+	CreatedAt          null.Time         `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
+	UpdatedAt          null.Time         `boil:"updated_at" json:"updated_at,omitempty" toml:"updated_at" yaml:"updated_at,omitempty"`
+	DeletedAt          null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	BaseDocumentItem   null.JSON         `boil:"base_document_item" json:"base_document_item,omitempty" toml:"base_document_item" yaml:"base_document_item,omitempty"`
 }
 
 var PaymentReceiptItemViewColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	PaymentReceiptID   string
+	Name               string
+	Description        string
+	Quantity           string
+	UnitValue          string
+	TotalValueGen      string
 	CreatedAt          string
 	UpdatedAt          string
 	DeletedAt          string
@@ -45,6 +56,11 @@ var PaymentReceiptItemViewColumns = struct {
 	ID:                 "id",
 	BaseDocumentItemID: "base_document_item_id",
 	PaymentReceiptID:   "payment_receipt_id",
+	Name:               "name",
+	Description:        "description",
+	Quantity:           "quantity",
+	UnitValue:          "unit_value",
+	TotalValueGen:      "total_value_gen",
 	CreatedAt:          "created_at",
 	UpdatedAt:          "updated_at",
 	DeletedAt:          "deleted_at",
@@ -55,6 +71,11 @@ var PaymentReceiptItemViewTableColumns = struct {
 	ID                 string
 	BaseDocumentItemID string
 	PaymentReceiptID   string
+	Name               string
+	Description        string
+	Quantity           string
+	UnitValue          string
+	TotalValueGen      string
 	CreatedAt          string
 	UpdatedAt          string
 	DeletedAt          string
@@ -63,6 +84,11 @@ var PaymentReceiptItemViewTableColumns = struct {
 	ID:                 "payment_receipt_item_view.id",
 	BaseDocumentItemID: "payment_receipt_item_view.base_document_item_id",
 	PaymentReceiptID:   "payment_receipt_item_view.payment_receipt_id",
+	Name:               "payment_receipt_item_view.name",
+	Description:        "payment_receipt_item_view.description",
+	Quantity:           "payment_receipt_item_view.quantity",
+	UnitValue:          "payment_receipt_item_view.unit_value",
+	TotalValueGen:      "payment_receipt_item_view.total_value_gen",
 	CreatedAt:          "payment_receipt_item_view.created_at",
 	UpdatedAt:          "payment_receipt_item_view.updated_at",
 	DeletedAt:          "payment_receipt_item_view.deleted_at",
@@ -75,6 +101,11 @@ var PaymentReceiptItemViewWhere = struct {
 	ID                 whereHelpernull_Int
 	BaseDocumentItemID whereHelpernull_Int
 	PaymentReceiptID   whereHelpernull_Int
+	Name               whereHelpernull_String
+	Description        whereHelpernull_String
+	Quantity           whereHelpertypes_NullDecimal
+	UnitValue          whereHelpertypes_NullDecimal
+	TotalValueGen      whereHelpertypes_NullDecimal
 	CreatedAt          whereHelpernull_Time
 	UpdatedAt          whereHelpernull_Time
 	DeletedAt          whereHelpernull_Time
@@ -83,6 +114,11 @@ var PaymentReceiptItemViewWhere = struct {
 	ID:                 whereHelpernull_Int{field: "\"invoice\".\"payment_receipt_item_view\".\"id\""},
 	BaseDocumentItemID: whereHelpernull_Int{field: "\"invoice\".\"payment_receipt_item_view\".\"base_document_item_id\""},
 	PaymentReceiptID:   whereHelpernull_Int{field: "\"invoice\".\"payment_receipt_item_view\".\"payment_receipt_id\""},
+	Name:               whereHelpernull_String{field: "\"invoice\".\"payment_receipt_item_view\".\"name\""},
+	Description:        whereHelpernull_String{field: "\"invoice\".\"payment_receipt_item_view\".\"description\""},
+	Quantity:           whereHelpertypes_NullDecimal{field: "\"invoice\".\"payment_receipt_item_view\".\"quantity\""},
+	UnitValue:          whereHelpertypes_NullDecimal{field: "\"invoice\".\"payment_receipt_item_view\".\"unit_value\""},
+	TotalValueGen:      whereHelpertypes_NullDecimal{field: "\"invoice\".\"payment_receipt_item_view\".\"total_value_gen\""},
 	CreatedAt:          whereHelpernull_Time{field: "\"invoice\".\"payment_receipt_item_view\".\"created_at\""},
 	UpdatedAt:          whereHelpernull_Time{field: "\"invoice\".\"payment_receipt_item_view\".\"updated_at\""},
 	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"payment_receipt_item_view\".\"deleted_at\""},
@@ -90,9 +126,9 @@ var PaymentReceiptItemViewWhere = struct {
 }
 
 var (
-	paymentReceiptItemViewAllColumns            = []string{"id", "base_document_item_id", "payment_receipt_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	paymentReceiptItemViewAllColumns            = []string{"id", "base_document_item_id", "payment_receipt_id", "name", "description", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	paymentReceiptItemViewColumnsWithoutDefault = []string{}
-	paymentReceiptItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "payment_receipt_id", "created_at", "updated_at", "deleted_at", "base_document_item"}
+	paymentReceiptItemViewColumnsWithDefault    = []string{"id", "base_document_item_id", "payment_receipt_id", "name", "description", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at", "deleted_at", "base_document_item"}
 	paymentReceiptItemViewPrimaryKeyColumns     = []string{}
 	paymentReceiptItemViewGeneratedColumns      = []string{}
 )

@@ -19,70 +19,99 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // PaymentReceiptItem is an object representing the database table.
 type PaymentReceiptItem struct {
-	ID                 int       `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentItemID int       `boil:"base_document_item_id" json:"base_document_item_id" toml:"base_document_item_id" yaml:"base_document_item_id"`
-	PaymentReceiptID   int       `boil:"payment_receipt_id" json:"payment_receipt_id" toml:"payment_receipt_id" yaml:"payment_receipt_id"`
-	CreatedAt          time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt          time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt          null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID               int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	PaymentReceiptID int           `boil:"payment_receipt_id" json:"payment_receipt_id" toml:"payment_receipt_id" yaml:"payment_receipt_id"`
+	Name             string        `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Description      string        `boil:"description" json:"description" toml:"description" yaml:"description"`
+	Quantity         types.Decimal `boil:"quantity" json:"quantity" toml:"quantity" yaml:"quantity"`
+	UnitValue        types.Decimal `boil:"unit_value" json:"unit_value" toml:"unit_value" yaml:"unit_value"`
+	TotalValueGen    types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	CreatedAt        time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt        time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt        null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *paymentReceiptItemR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L paymentReceiptItemL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var PaymentReceiptItemColumns = struct {
-	ID                 string
-	BaseDocumentItemID string
-	PaymentReceiptID   string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID               string
+	PaymentReceiptID string
+	Name             string
+	Description      string
+	Quantity         string
+	UnitValue        string
+	TotalValueGen    string
+	CreatedAt        string
+	UpdatedAt        string
+	DeletedAt        string
 }{
-	ID:                 "id",
-	BaseDocumentItemID: "base_document_item_id",
-	PaymentReceiptID:   "payment_receipt_id",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
-	DeletedAt:          "deleted_at",
+	ID:               "id",
+	PaymentReceiptID: "payment_receipt_id",
+	Name:             "name",
+	Description:      "description",
+	Quantity:         "quantity",
+	UnitValue:        "unit_value",
+	TotalValueGen:    "total_value_gen",
+	CreatedAt:        "created_at",
+	UpdatedAt:        "updated_at",
+	DeletedAt:        "deleted_at",
 }
 
 var PaymentReceiptItemTableColumns = struct {
-	ID                 string
-	BaseDocumentItemID string
-	PaymentReceiptID   string
-	CreatedAt          string
-	UpdatedAt          string
-	DeletedAt          string
+	ID               string
+	PaymentReceiptID string
+	Name             string
+	Description      string
+	Quantity         string
+	UnitValue        string
+	TotalValueGen    string
+	CreatedAt        string
+	UpdatedAt        string
+	DeletedAt        string
 }{
-	ID:                 "payment_receipt_item.id",
-	BaseDocumentItemID: "payment_receipt_item.base_document_item_id",
-	PaymentReceiptID:   "payment_receipt_item.payment_receipt_id",
-	CreatedAt:          "payment_receipt_item.created_at",
-	UpdatedAt:          "payment_receipt_item.updated_at",
-	DeletedAt:          "payment_receipt_item.deleted_at",
+	ID:               "payment_receipt_item.id",
+	PaymentReceiptID: "payment_receipt_item.payment_receipt_id",
+	Name:             "payment_receipt_item.name",
+	Description:      "payment_receipt_item.description",
+	Quantity:         "payment_receipt_item.quantity",
+	UnitValue:        "payment_receipt_item.unit_value",
+	TotalValueGen:    "payment_receipt_item.total_value_gen",
+	CreatedAt:        "payment_receipt_item.created_at",
+	UpdatedAt:        "payment_receipt_item.updated_at",
+	DeletedAt:        "payment_receipt_item.deleted_at",
 }
 
 // Generated where
 
 var PaymentReceiptItemWhere = struct {
-	ID                 whereHelperint
-	BaseDocumentItemID whereHelperint
-	PaymentReceiptID   whereHelperint
-	CreatedAt          whereHelpertime_Time
-	UpdatedAt          whereHelpertime_Time
-	DeletedAt          whereHelpernull_Time
+	ID               whereHelperint
+	PaymentReceiptID whereHelperint
+	Name             whereHelperstring
+	Description      whereHelperstring
+	Quantity         whereHelpertypes_Decimal
+	UnitValue        whereHelpertypes_Decimal
+	TotalValueGen    whereHelpertypes_Decimal
+	CreatedAt        whereHelpertime_Time
+	UpdatedAt        whereHelpertime_Time
+	DeletedAt        whereHelpernull_Time
 }{
-	ID:                 whereHelperint{field: "\"invoice\".\"payment_receipt_item\".\"id\""},
-	BaseDocumentItemID: whereHelperint{field: "\"invoice\".\"payment_receipt_item\".\"base_document_item_id\""},
-	PaymentReceiptID:   whereHelperint{field: "\"invoice\".\"payment_receipt_item\".\"payment_receipt_id\""},
-	CreatedAt:          whereHelpertime_Time{field: "\"invoice\".\"payment_receipt_item\".\"created_at\""},
-	UpdatedAt:          whereHelpertime_Time{field: "\"invoice\".\"payment_receipt_item\".\"updated_at\""},
-	DeletedAt:          whereHelpernull_Time{field: "\"invoice\".\"payment_receipt_item\".\"deleted_at\""},
+	ID:               whereHelperint{field: "\"invoice\".\"payment_receipt_item\".\"id\""},
+	PaymentReceiptID: whereHelperint{field: "\"invoice\".\"payment_receipt_item\".\"payment_receipt_id\""},
+	Name:             whereHelperstring{field: "\"invoice\".\"payment_receipt_item\".\"name\""},
+	Description:      whereHelperstring{field: "\"invoice\".\"payment_receipt_item\".\"description\""},
+	Quantity:         whereHelpertypes_Decimal{field: "\"invoice\".\"payment_receipt_item\".\"quantity\""},
+	UnitValue:        whereHelpertypes_Decimal{field: "\"invoice\".\"payment_receipt_item\".\"unit_value\""},
+	TotalValueGen:    whereHelpertypes_Decimal{field: "\"invoice\".\"payment_receipt_item\".\"total_value_gen\""},
+	CreatedAt:        whereHelpertime_Time{field: "\"invoice\".\"payment_receipt_item\".\"created_at\""},
+	UpdatedAt:        whereHelpertime_Time{field: "\"invoice\".\"payment_receipt_item\".\"updated_at\""},
+	DeletedAt:        whereHelpernull_Time{field: "\"invoice\".\"payment_receipt_item\".\"deleted_at\""},
 }
 
 // PaymentReceiptItemRels is where relationship names are stored.
@@ -113,9 +142,9 @@ func (r *paymentReceiptItemR) GetPaymentReceipt() *PaymentReceipt {
 type paymentReceiptItemL struct{}
 
 var (
-	paymentReceiptItemAllColumns            = []string{"id", "base_document_item_id", "payment_receipt_id", "created_at", "updated_at", "deleted_at"}
-	paymentReceiptItemColumnsWithoutDefault = []string{"id", "base_document_item_id", "payment_receipt_id", "created_at", "updated_at"}
-	paymentReceiptItemColumnsWithDefault    = []string{"deleted_at"}
+	paymentReceiptItemAllColumns            = []string{"id", "payment_receipt_id", "name", "description", "quantity", "unit_value", "total_value_gen", "created_at", "updated_at", "deleted_at"}
+	paymentReceiptItemColumnsWithoutDefault = []string{"id", "payment_receipt_id", "name", "description", "created_at", "updated_at"}
+	paymentReceiptItemColumnsWithDefault    = []string{"quantity", "unit_value", "total_value_gen", "deleted_at"}
 	paymentReceiptItemPrimaryKeyColumns     = []string{"id"}
 	paymentReceiptItemGeneratedColumns      = []string{}
 )

@@ -19,21 +19,22 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // PaymentReceipt is an object representing the database table.
 type PaymentReceipt struct {
-	ID                   int       `boil:"id" json:"id" toml:"id" yaml:"id"`
-	BaseDocumentID       int       `boil:"base_document_id" json:"base_document_id" toml:"base_document_id" yaml:"base_document_id"`
-	PaymentReceiptNumber string    `boil:"payment_receipt_number" json:"payment_receipt_number" toml:"payment_receipt_number" yaml:"payment_receipt_number"`
-	InvoiceID            int       `boil:"invoice_id" json:"invoice_id" toml:"invoice_id" yaml:"invoice_id"`
-	DateOfPayment        null.Time `boil:"date_of_payment" json:"date_of_payment,omitempty" toml:"date_of_payment" yaml:"date_of_payment,omitempty"`
-	PayerID              null.Int  `boil:"payer_id" json:"payer_id,omitempty" toml:"payer_id" yaml:"payer_id,omitempty"`
-	PayeeID              null.Int  `boil:"payee_id" json:"payee_id,omitempty" toml:"payee_id" yaml:"payee_id,omitempty"`
-	CreatedAt            time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt            time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt            null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                   int           `boil:"id" json:"id" toml:"id" yaml:"id"`
+	PaymentReceiptNumber string        `boil:"payment_receipt_number" json:"payment_receipt_number" toml:"payment_receipt_number" yaml:"payment_receipt_number"`
+	InvoiceID            int           `boil:"invoice_id" json:"invoice_id" toml:"invoice_id" yaml:"invoice_id"`
+	DateOfPayment        null.Time     `boil:"date_of_payment" json:"date_of_payment,omitempty" toml:"date_of_payment" yaml:"date_of_payment,omitempty"`
+	PayerID              null.Int      `boil:"payer_id" json:"payer_id,omitempty" toml:"payer_id" yaml:"payer_id,omitempty"`
+	PayeeID              null.Int      `boil:"payee_id" json:"payee_id,omitempty" toml:"payee_id" yaml:"payee_id,omitempty"`
+	TotalValueGen        types.Decimal `boil:"total_value_gen" json:"total_value_gen" toml:"total_value_gen" yaml:"total_value_gen"`
+	CreatedAt            time.Time     `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt            time.Time     `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt            null.Time     `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *paymentReceiptR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L paymentReceiptL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -41,23 +42,23 @@ type PaymentReceipt struct {
 
 var PaymentReceiptColumns = struct {
 	ID                   string
-	BaseDocumentID       string
 	PaymentReceiptNumber string
 	InvoiceID            string
 	DateOfPayment        string
 	PayerID              string
 	PayeeID              string
+	TotalValueGen        string
 	CreatedAt            string
 	UpdatedAt            string
 	DeletedAt            string
 }{
 	ID:                   "id",
-	BaseDocumentID:       "base_document_id",
 	PaymentReceiptNumber: "payment_receipt_number",
 	InvoiceID:            "invoice_id",
 	DateOfPayment:        "date_of_payment",
 	PayerID:              "payer_id",
 	PayeeID:              "payee_id",
+	TotalValueGen:        "total_value_gen",
 	CreatedAt:            "created_at",
 	UpdatedAt:            "updated_at",
 	DeletedAt:            "deleted_at",
@@ -65,23 +66,23 @@ var PaymentReceiptColumns = struct {
 
 var PaymentReceiptTableColumns = struct {
 	ID                   string
-	BaseDocumentID       string
 	PaymentReceiptNumber string
 	InvoiceID            string
 	DateOfPayment        string
 	PayerID              string
 	PayeeID              string
+	TotalValueGen        string
 	CreatedAt            string
 	UpdatedAt            string
 	DeletedAt            string
 }{
 	ID:                   "payment_receipt.id",
-	BaseDocumentID:       "payment_receipt.base_document_id",
 	PaymentReceiptNumber: "payment_receipt.payment_receipt_number",
 	InvoiceID:            "payment_receipt.invoice_id",
 	DateOfPayment:        "payment_receipt.date_of_payment",
 	PayerID:              "payment_receipt.payer_id",
 	PayeeID:              "payment_receipt.payee_id",
+	TotalValueGen:        "payment_receipt.total_value_gen",
 	CreatedAt:            "payment_receipt.created_at",
 	UpdatedAt:            "payment_receipt.updated_at",
 	DeletedAt:            "payment_receipt.deleted_at",
@@ -91,23 +92,23 @@ var PaymentReceiptTableColumns = struct {
 
 var PaymentReceiptWhere = struct {
 	ID                   whereHelperint
-	BaseDocumentID       whereHelperint
 	PaymentReceiptNumber whereHelperstring
 	InvoiceID            whereHelperint
 	DateOfPayment        whereHelpernull_Time
 	PayerID              whereHelpernull_Int
 	PayeeID              whereHelpernull_Int
+	TotalValueGen        whereHelpertypes_Decimal
 	CreatedAt            whereHelpertime_Time
 	UpdatedAt            whereHelpertime_Time
 	DeletedAt            whereHelpernull_Time
 }{
 	ID:                   whereHelperint{field: "\"invoice\".\"payment_receipt\".\"id\""},
-	BaseDocumentID:       whereHelperint{field: "\"invoice\".\"payment_receipt\".\"base_document_id\""},
 	PaymentReceiptNumber: whereHelperstring{field: "\"invoice\".\"payment_receipt\".\"payment_receipt_number\""},
 	InvoiceID:            whereHelperint{field: "\"invoice\".\"payment_receipt\".\"invoice_id\""},
 	DateOfPayment:        whereHelpernull_Time{field: "\"invoice\".\"payment_receipt\".\"date_of_payment\""},
 	PayerID:              whereHelpernull_Int{field: "\"invoice\".\"payment_receipt\".\"payer_id\""},
 	PayeeID:              whereHelpernull_Int{field: "\"invoice\".\"payment_receipt\".\"payee_id\""},
+	TotalValueGen:        whereHelpertypes_Decimal{field: "\"invoice\".\"payment_receipt\".\"total_value_gen\""},
 	CreatedAt:            whereHelpertime_Time{field: "\"invoice\".\"payment_receipt\".\"created_at\""},
 	UpdatedAt:            whereHelpertime_Time{field: "\"invoice\".\"payment_receipt\".\"updated_at\""},
 	DeletedAt:            whereHelpernull_Time{field: "\"invoice\".\"payment_receipt\".\"deleted_at\""},
@@ -151,9 +152,9 @@ func (r *paymentReceiptR) GetPaymentReceiptItems() PaymentReceiptItemSlice {
 type paymentReceiptL struct{}
 
 var (
-	paymentReceiptAllColumns            = []string{"id", "base_document_id", "payment_receipt_number", "invoice_id", "date_of_payment", "payer_id", "payee_id", "created_at", "updated_at", "deleted_at"}
-	paymentReceiptColumnsWithoutDefault = []string{"id", "base_document_id", "payment_receipt_number", "invoice_id", "created_at", "updated_at"}
-	paymentReceiptColumnsWithDefault    = []string{"date_of_payment", "payer_id", "payee_id", "deleted_at"}
+	paymentReceiptAllColumns            = []string{"id", "payment_receipt_number", "invoice_id", "date_of_payment", "payer_id", "payee_id", "total_value_gen", "created_at", "updated_at", "deleted_at"}
+	paymentReceiptColumnsWithoutDefault = []string{"id", "payment_receipt_number", "invoice_id", "created_at", "updated_at"}
+	paymentReceiptColumnsWithDefault    = []string{"date_of_payment", "payer_id", "payee_id", "total_value_gen", "deleted_at"}
 	paymentReceiptPrimaryKeyColumns     = []string{"id"}
 	paymentReceiptGeneratedColumns      = []string{}
 )

@@ -52,9 +52,9 @@ func NewRepoContainer() *RepoContainer {
 	return repo
 }
 
-// func (rc *RepoContainer) Begin(ctx context.Context) (*sql.Tx, error) {
-// 	return boil.BeginTx(ctx, nil)
-// }
+func (rc *RepoContainer) Begin(ctx context.Context) (*sql.Tx, error) {
+	return boil.BeginTx(ctx, nil)
+}
 
 type RepoTx struct {
 	Tx *sql.Tx

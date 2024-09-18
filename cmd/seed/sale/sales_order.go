@@ -103,6 +103,21 @@ func SeedSalesOrder(count int) error {
 		payStatus := allPayStatus[gofakeit.Number(0, len(allPayStatus)-1)]
 		shipDate := gofakeit.FutureDate().Add(time.Hour * 24 * 7)
 
+		payAmt := decimal.New(0, 2)
+		if payStatus.Value == "partially_paid" || payStatus.Value == "paid" {
+			for _, item := range crSoItDto {
+				qty, _ := item.Quantity.Float64()
+				unitPrice, _ := item.UnitPrice.Float64()
+				unitDiscAmt, _ := item.UnitDiscountAmount.Float64()
+				unitTaxAmt, _ := item.UnitTaxAmount.Float64()
+				unitSfAmt, _ := item.UnitShippingFees.Float64()
+				payAmt = payAmt.Add(payAmt, decimal.New(int64((qty*unitPrice-unitDiscAmt+unitTaxAmt+unitSfAmt)*100), 2))
+			}
+			if payStatus.Value == "partially_paid" {
+				payAmt = payAmt.Quo(payAmt, decimal.New(2, 0))
+			}
+		}
+
 		shipToInfoJson := fmt.Sprintf(`{"address": "%s"}`, gofakeit.Address().Address)
 		shipToInfoByte := []byte(shipToInfoJson)
 		shipFromInfoJson := fmt.Sprintf(`{"address": "%s"}`, proprietorData.Address.String)
@@ -126,6 +141,7 @@ func SeedSalesOrder(count int) error {
 				ShippingTerms:            base.NewNullShippingTerms(base.ShippingTerms(shipTerm.Value), true),
 				ShippingMethod:           base.NewNullShippingMethod(base.ShippingMethod(shipMethod.Value), true),
 				ShippingDate:             null.TimeFrom(shipDate),
+				PaymentAmount:            types.NewNullDecimal(payAmt),
 				PaymentTerms:             base.NewNullPaymentTerms(base.PaymentTerms(payTerm.Value), true),
 				PaymentStatus:            base.NewNullPaymentStatus(base.PaymentStatus(payStatus.Value), true),
 				PaymentInstructions:      null.StringFrom(gofakeit.Sentence(5)),

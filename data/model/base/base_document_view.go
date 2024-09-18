@@ -45,6 +45,7 @@ type BaseDocumentView struct {
 	ShippingTerms               NullShippingTerms  `boil:"shipping_terms" json:"shipping_terms,omitempty" toml:"shipping_terms" yaml:"shipping_terms,omitempty"`
 	ShippingMethod              NullShippingMethod `boil:"shipping_method" json:"shipping_method,omitempty" toml:"shipping_method" yaml:"shipping_method,omitempty"`
 	ShippingDate                null.Time          `boil:"shipping_date" json:"shipping_date,omitempty" toml:"shipping_date" yaml:"shipping_date,omitempty"`
+	PaymentAmount               types.NullDecimal  `boil:"payment_amount" json:"payment_amount,omitempty" toml:"payment_amount" yaml:"payment_amount,omitempty"`
 	PaymentTerms                NullPaymentTerms   `boil:"payment_terms" json:"payment_terms,omitempty" toml:"payment_terms" yaml:"payment_terms,omitempty"`
 	PaymentInstructions         null.String        `boil:"payment_instructions" json:"payment_instructions,omitempty" toml:"payment_instructions" yaml:"payment_instructions,omitempty"`
 	PaymentStatus               NullPaymentStatus  `boil:"payment_status" json:"payment_status,omitempty" toml:"payment_status" yaml:"payment_status,omitempty"`
@@ -74,6 +75,7 @@ var BaseDocumentViewColumns = struct {
 	ShippingTerms               string
 	ShippingMethod              string
 	ShippingDate                string
+	PaymentAmount               string
 	PaymentTerms                string
 	PaymentInstructions         string
 	PaymentStatus               string
@@ -101,6 +103,7 @@ var BaseDocumentViewColumns = struct {
 	ShippingTerms:               "shipping_terms",
 	ShippingMethod:              "shipping_method",
 	ShippingDate:                "shipping_date",
+	PaymentAmount:               "payment_amount",
 	PaymentTerms:                "payment_terms",
 	PaymentInstructions:         "payment_instructions",
 	PaymentStatus:               "payment_status",
@@ -130,6 +133,7 @@ var BaseDocumentViewTableColumns = struct {
 	ShippingTerms               string
 	ShippingMethod              string
 	ShippingDate                string
+	PaymentAmount               string
 	PaymentTerms                string
 	PaymentInstructions         string
 	PaymentStatus               string
@@ -157,6 +161,7 @@ var BaseDocumentViewTableColumns = struct {
 	ShippingTerms:               "base_document_view.shipping_terms",
 	ShippingMethod:              "base_document_view.shipping_method",
 	ShippingDate:                "base_document_view.shipping_date",
+	PaymentAmount:               "base_document_view.payment_amount",
 	PaymentTerms:                "base_document_view.payment_terms",
 	PaymentInstructions:         "base_document_view.payment_instructions",
 	PaymentStatus:               "base_document_view.payment_status",
@@ -188,6 +193,7 @@ var BaseDocumentViewWhere = struct {
 	ShippingTerms               whereHelperNullShippingTerms
 	ShippingMethod              whereHelperNullShippingMethod
 	ShippingDate                whereHelpernull_Time
+	PaymentAmount               whereHelpertypes_NullDecimal
 	PaymentTerms                whereHelperNullPaymentTerms
 	PaymentInstructions         whereHelpernull_String
 	PaymentStatus               whereHelperNullPaymentStatus
@@ -215,6 +221,7 @@ var BaseDocumentViewWhere = struct {
 	ShippingTerms:               whereHelperNullShippingTerms{field: "\"base\".\"base_document_view\".\"shipping_terms\""},
 	ShippingMethod:              whereHelperNullShippingMethod{field: "\"base\".\"base_document_view\".\"shipping_method\""},
 	ShippingDate:                whereHelpernull_Time{field: "\"base\".\"base_document_view\".\"shipping_date\""},
+	PaymentAmount:               whereHelpertypes_NullDecimal{field: "\"base\".\"base_document_view\".\"payment_amount\""},
 	PaymentTerms:                whereHelperNullPaymentTerms{field: "\"base\".\"base_document_view\".\"payment_terms\""},
 	PaymentInstructions:         whereHelpernull_String{field: "\"base\".\"base_document_view\".\"payment_instructions\""},
 	PaymentStatus:               whereHelperNullPaymentStatus{field: "\"base\".\"base_document_view\".\"payment_status\""},
@@ -224,9 +231,9 @@ var BaseDocumentViewWhere = struct {
 }
 
 var (
-	baseDocumentViewAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions", "base_document_items"}
+	baseDocumentViewAllColumns            = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_amount", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions", "base_document_items"}
 	baseDocumentViewColumnsWithoutDefault = []string{}
-	baseDocumentViewColumnsWithDefault    = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions", "base_document_items"}
+	baseDocumentViewColumnsWithDefault    = []string{"id", "created_at", "updated_at", "deleted_at", "issue_date", "gross_amount_gen", "discount_amount_gen", "discount_rate_gen", "additional_discount_amount", "additional_discount_rate_gen", "gross_amount_after_discount_gen", "tax_amount_gen", "tax_rate_gen", "shipping_fees_gen", "other_fees", "custom_adjustment_amount", "net_amount_gen", "shipping_terms", "shipping_method", "shipping_date", "payment_amount", "payment_terms", "payment_instructions", "payment_status", "remarks", "terms_and_conditions", "base_document_items"}
 	baseDocumentViewPrimaryKeyColumns     = []string{}
 	baseDocumentViewGeneratedColumns      = []string{}
 )
